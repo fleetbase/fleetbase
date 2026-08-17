@@ -293,3 +293,135 @@ module('Unit | Controller | console/account/organizations', function (hooks) {
         assert.strictEqual(this.notifications.successes.length, 1);
     });
 });
+
+/**
+ * Each modal flow swallows a failure from the record or the API and reports it rather than
+ * letting it escape the confirm callback. These drive those catch arms.
+ */
+module('Unit | Controller | console/account/organizations | failures', function (hooks) {
+    setupTest(hooks);
+
+    hooks.beforeEach(function () {
+        this.owner.register('service:modals-manager', ModalsManagerStub);
+        this.owner.register('service:notifications', NotificationsStub);
+        this.owner.register('service:intl', IntlStub);
+
+        this.posted = [];
+        const context = this;
+        class FetchStub extends Service {
+            post(path, payload) {
+                context.posted.push({ path, payload });
+                return context.postRejectsWith ? Promise.reject(context.postRejectsWith) : Promise.resolve({});
+            }
+            flushRequestCache() {}
+        }
+        class CrudStub extends Service {
+            deleted = [];
+            delete(record, options) {
+                this.deleted.push({ record, options });
+            }
+        }
+        this.owner.register('service:fetch', FetchStub);
+        this.owner.register('service:crud', CrudStub);
+
+        this.controller = this.owner.lookup('controller:console/account/organizations');
+        this.modals = this.owner.lookup('service:modals-manager');
+        this.notifications = this.owner.lookup('service:notifications');
+        this.crud = this.owner.lookup('service:crud');
+        this.refreshed = 0;
+        this.controller.router.refresh = () => this.refreshed++;
+
+        // isOwner compares currentUser.id, which aliases userSnapshot.id, against the
+        // organization's owner_uuid.
+        this.controller.currentUser.userSnapshot = { id: 'user_1' };
+    });
+
+    test('selectNewOwner records the choice and enables the accept button', async function (assert) {
+        const org = organization({ users_count: 3 });
+        this.controller.model = [org, organization()];
+
+        await this.controller.leaveOrganization(org);
+        assert.true(this.modals.lastOptions.acceptButtonDisabled, 'an owner cannot leave until a successor is picked');
+
+        this.modals.lastOptions.selectNewOwner('user_2');
+
+        assert.strictEqual(this.modals.getOption('newOwnerId'), 'user_2');
+        assert.false(this.modals.getOption('acceptButtonDisabled'), 'picking a successor unlocks the button');
+    });
+
+    test('a failed ownership transfer is reported and the page still refreshes', async function (assert) {
+        const failure = new Error('transfer rejected');
+        const org = organization({
+            users_count: 3,
+            transferOwnership: () => Promise.reject(failure),
+        });
+        this.controller.model = [org, organization()];
+
+        await this.controller.leaveOrganization(org);
+        this.modals.lastOptions.selectNewOwner('user_2');
+        await this.modals.lastOptions.confirm(fakeModal());
+
+        assert.deepEqual(this.notifications.errors, [failure]);
+        assert.strictEqual(this.refreshed, 1, 'the list reloads either way');
+    });
+
+    test('a failed delete while leaving as the sole owner is reported', async function (assert) {
+        const failure = new Error('destroy rejected');
+        const org = organization({ destroyRecord: () => Promise.reject(failure) });
+        this.controller.model = [org, organization()];
+
+        await this.controller.leaveOrganization(org);
+        await this.modals.lastOptions.confirm(fakeModal());
+
+        assert.deepEqual(this.notifications.errors, [failure]);
+        assert.strictEqual(this.refreshed, 1);
+    });
+
+    test('a failed leave is reported', async function (assert) {
+        const failure = new Error('leave rejected');
+        const org = organization({ owner_uuid: 'someone-else', leave: () => Promise.reject(failure) });
+        this.controller.model = [org, organization()];
+
+        await this.controller.leaveOrganization(org);
+        await this.modals.lastOptions.confirm(fakeModal());
+
+        assert.deepEqual(this.notifications.errors, [failure]);
+        assert.strictEqual(this.refreshed, 1);
+    });
+
+    test('a failed delete from the delete flow is reported without refreshing', async function (assert) {
+        const failure = new Error('destroy rejected');
+        const org = organization({ destroyRecord: () => Promise.reject(failure) });
+        this.controller.model = [org, organization()];
+
+        this.controller.deleteOrganization(org);
+        await this.crud.deleted[0].options.confirm(fakeModal());
+
+        assert.deepEqual(this.notifications.errors, [failure]);
+        assert.strictEqual(this.refreshed, 0, 'the page is left alone so the error stays visible');
+    });
+
+    test('a failed edit save is reported without refreshing', async function (assert) {
+        const failure = new Error('save rejected');
+        const org = organization({ save: () => Promise.reject(failure) });
+
+        this.controller.editOrganization(org);
+        await this.modals.lastOptions.confirm(fakeModal());
+
+        assert.deepEqual(this.notifications.errors, [failure]);
+        assert.strictEqual(this.refreshed, 0);
+    });
+
+    test('a failed create stops the modal loading and reports the error', async function (assert) {
+        const failure = new Error('create rejected');
+        this.postRejectsWith = failure;
+
+        this.controller.createOrganization();
+        const modal = fakeModal({ organization: { name: 'New Co' } });
+        await this.modals.lastOptions.confirm(modal);
+
+        assert.deepEqual(this.notifications.errors, [failure]);
+        assert.false(modal.loading, 'the modal is released so the user can retry');
+        assert.strictEqual(this.refreshed, 0);
+    });
+});
