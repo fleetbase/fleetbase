@@ -27,6 +27,9 @@ export default class MetricComponent extends Component {
         try {
             dashboards = yield this.fetch.get(this.args.options.endpoint, params, { namespace: '' });
         } catch {
+            // Clear the flag before bailing out, otherwise a failed request leaves the
+            // metric stuck on its loading state for the life of the dashboard.
+            this.isLoading = false;
             return;
         }
 
