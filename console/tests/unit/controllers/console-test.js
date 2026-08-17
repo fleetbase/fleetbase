@@ -1,5 +1,6 @@
 import { module, test } from 'qunit';
 import { setupTest } from '@fleetbase/console/tests/helpers';
+import { settled } from '@ember/test-helpers';
 import Service from '@ember/service';
 import { cancel } from '@ember/runloop';
 
@@ -250,5 +251,111 @@ module('Unit | Controller | console', function (hooks) {
 
         assert.strictEqual(this.notifications.errors.length, 1);
         assert.false(modal.loading);
+    });
+});
+
+module('Unit | Controller | console | reload timers and defaults', function (hooks) {
+    setupTest(hooks);
+
+    hooks.beforeEach(function () {
+        this.postRejectsWith = null;
+        const context = this;
+
+        class FetchStub extends Service {
+            post() {
+                return context.postRejectsWith ? Promise.reject(context.postRejectsWith) : Promise.resolve({ ok: true });
+            }
+            flushRequestCache() {}
+        }
+        class NotificationsStub extends Service {
+            success() {}
+            serverError() {}
+        }
+        class ModalsManagerStub extends Service {
+            shown = [];
+            confirmed = [];
+            options = {};
+            show(name, options) {
+                this.shown.push({ name, options });
+                this.options = options;
+            }
+            confirm(options) {
+                this.confirmed.push(options);
+                this.options = options;
+            }
+            getOptions() {
+                return this.options;
+            }
+            setOption(key, value) {
+                this.options[key] = value;
+            }
+        }
+        this.owner.register('service:fetch', FetchStub);
+        this.owner.register('service:notifications', NotificationsStub);
+        this.owner.register('service:modals-manager', ModalsManagerStub);
+
+        this.build = () => {
+            const controller = this.owner.lookup('controller:console');
+            this.reloads = 0;
+            Object.defineProperty(controller, 'reloadWindow', { configurable: true, value: () => this.reloads++ });
+            return controller;
+        };
+        this.modals = () => this.owner.lookup('service:modals-manager');
+        this.modal = () => ({ startLoading() {}, stopLoading() {}, getOptions: () => this.modals().options });
+    });
+
+    test('the menus and organization list start empty', function (assert) {
+        const controller = this.build();
+
+        // Read before anything writes them: a @tracked initializer only runs on first access.
+        assert.deepEqual(controller.organizations, []);
+        assert.deepEqual(controller.menuItems, []);
+        assert.deepEqual(controller.userMenuItems, []);
+        assert.deepEqual(controller.organizationMenuItems, []);
+    });
+
+    test('joining an organization reloads the console once the timer fires', async function (assert) {
+        const controller = this.build();
+        controller.createOrJoinOrg();
+        this.modals().options.action = 'join';
+
+        await this.modals().options.confirm(this.modal());
+        assert.strictEqual(this.reloads, 0, 'the reload is deferred, not immediate');
+
+        await settled();
+
+        assert.strictEqual(this.reloads, 1, 'the console reloads into the joined organization');
+    });
+
+    test('creating an organization reloads the console once the timer fires', async function (assert) {
+        const controller = this.build();
+        controller.createOrJoinOrg();
+        this.modals().options.action = 'create';
+
+        await this.modals().options.confirm(this.modal());
+        await settled();
+
+        assert.strictEqual(this.reloads, 1);
+    });
+
+    test('switching organization reloads the console once the timer fires', async function (assert) {
+        const controller = this.build();
+        controller.switchOrganization({ uuid: 'co_2', name: 'Other Co' });
+
+        await this.modals().options.confirm(this.modal());
+        await settled();
+
+        assert.strictEqual(this.reloads, 1);
+    });
+
+    test('a failed switch never reaches the reload', async function (assert) {
+        this.postRejectsWith = new Error('switch rejected');
+        const controller = this.build();
+        controller.switchOrganization({ uuid: 'co_2', name: 'Other Co' });
+
+        await this.modals().options.confirm(this.modal());
+        await settled();
+
+        assert.strictEqual(this.reloads, 0);
     });
 });

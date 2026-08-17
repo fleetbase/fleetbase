@@ -86,7 +86,7 @@ export default class ConsoleController extends Controller {
                         return later(
                             this,
                             () => {
-                                window.location.reload();
+                                this.reloadWindow();
                             },
                             900
                         );
@@ -110,7 +110,7 @@ export default class ConsoleController extends Controller {
                     return later(
                         this,
                         () => {
-                            window.location.reload();
+                            this.reloadWindow();
                         },
                         900
                     );
@@ -147,7 +147,7 @@ export default class ConsoleController extends Controller {
                     return later(
                         this,
                         () => {
-                            window.location.reload();
+                            this.reloadWindow();
                         },
                         900
                     );
@@ -157,6 +157,15 @@ export default class ConsoleController extends Controller {
                 }
             },
         });
+    }
+
+    /* istanbul ignore next -- window.location.reload() cannot be stubbed: the HTML spec
+       makes every Location member an own, non-configurable property, so defineProperty
+       throws and calling it for real would reload the test runner. Extracted so the reload
+       timers above can be tested by replacing this on the instance, mirroring
+       InstallationService.reloadConsole(). */
+    reloadWindow() {
+        window.location.reload();
     }
 
     @action viewChangelog() {
