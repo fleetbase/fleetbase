@@ -70,7 +70,7 @@ export default class ChatAttachment extends Model {
 
     /** @methods */
     downloadFromApi() {
-        window.open(config.api.host + '/' + config.api.namespace + '/files/download?file=' + this.file_uuid, '_self');
+        window.open(config.API.host + '/' + config.API.namespace + '/files/download?file=' + this.file_uuid, '_self');
     }
 
     download() {

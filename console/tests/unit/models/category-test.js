@@ -11,3 +11,14 @@ module('Unit | Model | category', function (hooks) {
         assert.ok(model);
     });
 });
+
+module('Unit | Model | category | customerId', function (hooks) {
+    setupTest(hooks);
+
+    test('customerId rewrites a contact public id as a customer one', function (assert) {
+        const store = this.owner.lookup('service:store');
+
+        assert.strictEqual(store.createRecord('category', { public_id: 'contact_abc123' }).customerId, 'customer_abc123');
+        assert.strictEqual(store.createRecord('category', { public_id: 'category_xyz' }).customerId, 'category_xyz', 'ids that are not contacts are left alone');
+    });
+});

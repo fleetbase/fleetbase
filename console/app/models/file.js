@@ -64,7 +64,7 @@ export default class FileModel extends Model {
 
     /** @methods */
     downloadFromApi() {
-        window.open(config.api.host + '/' + config.api.namespace + '/files/download?file=' + this.id, '_self');
+        window.open(config.API.host + '/' + config.API.namespace + '/files/download?file=' + this.id, '_self');
     }
 
     download() {
