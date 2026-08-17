@@ -130,7 +130,10 @@ export default class ConsoleAdminOrganizationsIndexUsersController extends Contr
             await this.router.transitionTo('console');
             this.session.manuallyAuthenticate(token);
             this.notifications.info(`Now impersonating ${user.email}...`);
-            later(
+
+            // Handed back so the caller can cancel the pending reload; the same timer on
+            // ImpersonatorTray was unreachable once scheduled.
+            return later(
                 this,
                 () => {
                     window.location.reload();
