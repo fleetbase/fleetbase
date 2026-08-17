@@ -1,5 +1,6 @@
 import { module, test } from 'qunit';
 import { setupTest } from '@fleetbase/console/tests/helpers';
+import { format, formatDistanceToNow } from 'date-fns';
 import Service from '@ember/service';
 
 module('Unit | Model | user', function (hooks) {
@@ -167,5 +168,18 @@ module('Unit | Model | user', function (hooks) {
 
         await user.resendInvite();
         assert.deepEqual(this.calls.at(-1), { method: 'post', path: 'users/resend-invite', payload: { user: 'user_1' } });
+    });
+});
+
+module('Unit | Model | user | timestamps', function (hooks) {
+    setupTest(hooks);
+
+    test('the short updated stamp and the relative created stamp are exposed', function (assert) {
+        const created = new Date('2026-01-15T10:30:00Z');
+        const updated = new Date('2026-02-20T08:05:00Z');
+        const user = this.owner.lookup('service:store').createRecord('user', { created_at: created, updated_at: updated });
+
+        assert.strictEqual(user.updatedAtShort, format(updated, 'PP'));
+        assert.strictEqual(user.createdAgo, formatDistanceToNow(created));
     });
 });

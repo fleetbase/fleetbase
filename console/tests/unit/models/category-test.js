@@ -22,3 +22,15 @@ module('Unit | Model | category | customerId', function (hooks) {
         assert.strictEqual(store.createRecord('category', { public_id: 'category_xyz' }).customerId, 'category_xyz', 'ids that are not contacts are left alone');
     });
 });
+
+module('Unit | Model | category | editing state', function (hooks) {
+    setupTest(hooks);
+
+    test('a category starts with no custom fields and not in edit mode', function (assert) {
+        const category = this.owner.lookup('service:store').createRecord('category');
+
+        assert.deepEqual(category.customFields, [], 'no custom fields are attached yet');
+        assert.false(category.isEditing, 'and it is not being edited');
+        assert.strictEqual(category.parent_category, undefined, 'nor nested under a parent');
+    });
+});

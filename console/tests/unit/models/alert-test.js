@@ -1,4 +1,5 @@
 import { module, test } from 'qunit';
+import { format } from 'date-fns';
 import { setupTest } from '@fleetbase/console/tests/helpers';
 import { subMinutes } from 'date-fns';
 
@@ -179,5 +180,62 @@ module('Unit | Model | alert', function (hooks) {
         assert.true(this.alert({ context: { value: 10 }, rule: { threshold: 5 } }).thresholdExceeded, 'defaults to >');
         assert.strictEqual(this.alert({ context: { value: 10 }, rule: {} }).thresholdExceeded, null);
         assert.strictEqual(this.alert({ context: {}, rule: { threshold: 5 } }).thresholdExceeded, null);
+    });
+});
+
+module('Unit | Model | alert | duration formatting', function (hooks) {
+    setupTest(hooks);
+
+    hooks.beforeEach(function () {
+        this.store = this.owner.lookup('service:store');
+        // These three getters read derived minute counts the model does not declare as
+        // attributes, so each case needs its own record — assigning would not invalidate
+        // the @computed that already cached a value.
+        this.withMinutes = (property, minutes) => {
+            const alert = this.store.createRecord('alert');
+            Object.defineProperty(alert, property, { configurable: true, value: minutes });
+            return alert;
+        };
+    });
+
+    test('acknowledgment duration is shown in minutes, hours or days', function (assert) {
+        assert.strictEqual(this.withMinutes('acknowledgmentDurationMinutes', 0).acknowledgmentDurationFormatted, null, 'nothing to report');
+        assert.strictEqual(this.withMinutes('acknowledgmentDurationMinutes', 45).acknowledgmentDurationFormatted, '45m');
+        assert.strictEqual(this.withMinutes('acknowledgmentDurationMinutes', 150).acknowledgmentDurationFormatted, '2h 30m');
+        assert.strictEqual(this.withMinutes('acknowledgmentDurationMinutes', 1560).acknowledgmentDurationFormatted, '1d 2h');
+    });
+
+    test('resolution duration is shown in minutes, hours or days', function (assert) {
+        assert.strictEqual(this.withMinutes('resolutionDurationMinutes', 0).resolutionDurationFormatted, null);
+        assert.strictEqual(this.withMinutes('resolutionDurationMinutes', 5).resolutionDurationFormatted, '5m');
+        assert.strictEqual(this.withMinutes('resolutionDurationMinutes', 90).resolutionDurationFormatted, '1h 30m');
+        assert.strictEqual(this.withMinutes('resolutionDurationMinutes', 2880).resolutionDurationFormatted, '2d 0h');
+    });
+
+    test('age is shown in minutes, hours or days', function (assert) {
+        assert.strictEqual(this.withMinutes('ageMinutes', 30).ageFormatted, '30m');
+        assert.strictEqual(this.withMinutes('ageMinutes', 61).ageFormatted, '1h 1m');
+        assert.strictEqual(this.withMinutes('ageMinutes', 4321).ageFormatted, '3d 0h');
+    });
+
+    test('an unrecognised urgency falls back to the low styling', function (assert) {
+        const low = this.store.createRecord('alert');
+        Object.defineProperty(low, 'urgencyLevel', { configurable: true, value: 'low' });
+
+        const unknown = this.store.createRecord('alert');
+        Object.defineProperty(unknown, 'urgencyLevel', { configurable: true, value: 'not-a-level' });
+
+        assert.strictEqual(unknown.urgencyBadgeClass, low.urgencyBadgeClass, 'unknown urgencies are styled as low');
+    });
+
+    test('the created and updated getters read as relative durations', function (assert) {
+        const alert = this.store.createRecord('alert', {
+            created_at: new Date('2026-01-15T10:30:00Z'),
+            updated_at: new Date('2026-02-20T08:05:00Z'),
+        });
+
+        assert.ok(alert.createdAgo.endsWith(' ago'), `createdAgo reads as a duration (got ${alert.createdAgo})`);
+        assert.ok(alert.updatedAgo.endsWith(' ago'), `updatedAgo reads as a duration (got ${alert.updatedAgo})`);
+        assert.strictEqual(alert.updatedAt, format(new Date('2026-02-20T08:05:00Z'), 'yyyy-MM-dd HH:mm'));
     });
 });

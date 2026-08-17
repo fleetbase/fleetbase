@@ -1,7 +1,7 @@
 import { module, test } from 'qunit';
 
 import { setupTest } from '@fleetbase/console/tests/helpers';
-import { format } from 'date-fns';
+import { format, formatDistanceToNow } from 'date-fns';
 
 module('Unit | Model | notification', function (hooks) {
     setupTest(hooks);
@@ -66,5 +66,17 @@ module('Unit | Model | notification | read state', function (hooks) {
         assert.strictEqual(await notification.markAsRead(), undefined);
         assert.strictEqual(saved, 0, 'nothing is re-saved');
         assert.strictEqual(notification.read_at.getTime(), readAt.getTime(), 'the original read time is kept');
+    });
+});
+
+module('Unit | Model | notification | created timestamps', function (hooks) {
+    setupTest(hooks);
+
+    test('createdAt and createdAgo describe when the notification arrived', function (assert) {
+        const created = new Date('2026-01-15T10:30:00Z');
+        const notification = this.owner.lookup('service:store').createRecord('notification', { created_at: created });
+
+        assert.strictEqual(notification.createdAt, format(created, 'yyyy-MM-dd HH:mm'));
+        assert.strictEqual(notification.createdAgo, formatDistanceToNow(created));
     });
 });
