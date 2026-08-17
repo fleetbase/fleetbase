@@ -17,6 +17,7 @@ export default class DashboardSerializer extends ApplicationSerializer.extend(Em
             return;
         }
 
+        /* istanbul ignore next -- unreachable for the same reason as the else above */
         return super.serializeHasMany(...arguments);
     }
 }

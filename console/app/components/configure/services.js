@@ -354,7 +354,9 @@ export default class ConfigureServicesComponent extends Component {
     }
 
     syncSmsJsonText() {
-        const customHttpConfig = this.normalizedSms.providers.custom_http || {};
+        // normalizeSmsConfig() always builds a custom_http provider, so there is nothing to
+        // fall back to here.
+        const customHttpConfig = this.normalizedSms.providers.custom_http;
         this.customHttpHeadersText = JSON.stringify(customHttpConfig.headers || {}, null, 2);
         this.customHttpQueryParamsText = JSON.stringify(customHttpConfig.query_params || {}, null, 2);
         this.customHttpBodyText = JSON.stringify(

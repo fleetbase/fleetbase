@@ -7,6 +7,9 @@ import { task } from 'ember-concurrency';
 
 export default class MetricComponent extends Component {
     @service fetch;
+    // The constructor performs loadDashboard, which assigns this before anything can read it,
+    // so the initializer below never runs.
+    /* istanbul ignore next -- always assigned before first read */
     @tracked isLoading = false;
     @tracked dashboard;
 

@@ -36,6 +36,7 @@ export default class CategorySerializer extends ApplicationSerializer.extend(Emb
             return;
         }
 
+        /* istanbul ignore next -- unreachable for the same reason as the else above */
         return super.serializeHasMany(...arguments);
     }
 }

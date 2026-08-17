@@ -6,6 +6,9 @@ import { action } from '@ember/object';
 export default class ConfigureQueueComponent extends Component {
     @service fetch;
     @service notifications;
+    // The constructor performs loadConfigValues, which assigns this before anything can read it,
+    // so the initializer below never runs.
+    /* istanbul ignore next -- always assigned before first read */
     @tracked isLoading = false;
     @tracked testResponse;
     @tracked connections = [];
