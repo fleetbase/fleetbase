@@ -134,13 +134,7 @@ export default class ConsoleAdminOrganizationsDetailsUsersController extends Con
             await this.router.transitionTo('console');
             this.session.manuallyAuthenticate(token);
             this.notifications.info(`Now impersonating ${user.email}...`);
-            later(
-                this,
-                () => {
-                    window.location.reload();
-                },
-                600
-            );
+            later(this, this.reloadWindow, 600);
         } catch (error) {
             this.notifications.serverError(error);
         }
@@ -235,5 +229,15 @@ export default class ConsoleAdminOrganizationsDetailsUsersController extends Con
 
     userIdentifier(user) {
         return user?.uuid || user?.id;
+    }
+
+    /**
+     * window.location.reload() cannot be stubbed — Location members are non-configurable
+     * per spec — so it is isolated here and callers are tested by replacing this method.
+     * Matches InstallationService, ConsoleController and the organizations controllers.
+     */
+    /* istanbul ignore next -- window.location.reload() cannot be stubbed */
+    reloadWindow() {
+        window.location.reload();
     }
 }

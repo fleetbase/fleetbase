@@ -3,8 +3,8 @@ import { setupRenderingTest } from '@fleetbase/console/tests/helpers';
 import { render, click } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import Service from '@ember/service';
-import ConfigureQueueComponent from '@fleetbase/console/components/configure/queue';
 import { captureComponent } from '@fleetbase/console/tests/helpers/capture-component';
+import ConfigureQueueComponent from '@fleetbase/console/components/configure/queue';
 
 /**
  * Lets the fire-and-forget promise chains the component starts run to completion. They are
@@ -146,5 +146,33 @@ module('Integration | Component | configure/queue', function (hooks) {
         assert.deepEqual(this.posted.at(-1), { path: 'settings/test-queue-config', payload: { queue: 'beanstalkd' } });
         assert.deepEqual(component.testResponse, this.postResponse);
         assert.false(component.isLoading);
+    });
+});
+
+module('Integration | Component | configure/queue | defaults', function (hooks) {
+    setupRenderingTest(hooks);
+
+    test('a server that reports no connections leaves the picker empty rather than undefined', async function (assert) {
+        class FetchStub extends Service {
+            async get() {
+                return { driver: 'sync' };
+            }
+            async post() {
+                return {};
+            }
+        }
+        class NotificationsStub extends Service {
+            success() {}
+            serverError() {}
+        }
+        this.owner.register('service:fetch', FetchStub);
+        this.owner.register('service:notifications', NotificationsStub);
+
+        const captured = captureComponent(this.owner, 'configure/queue', ConfigureQueueComponent);
+        await render(hbs`<div id="next-view-section-subheader-actions"></div><Configure::Queue />`);
+
+        assert.deepEqual(captured.instance.connections, [], 'the connection list defaults to empty');
+        assert.strictEqual(captured.instance.beanstalkdHost, 'localhost', 'and the shipped beanstalkd defaults survive');
+        assert.strictEqual(captured.instance.beanstalkdQueue, 'default');
     });
 });

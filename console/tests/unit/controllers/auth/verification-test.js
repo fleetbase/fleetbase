@@ -1,6 +1,7 @@
 import { module, test } from 'qunit';
 import { setupTest } from '@fleetbase/console/tests/helpers';
 import Service from '@ember/service';
+import { cancel } from '@ember/runloop';
 
 module('Unit | Controller | auth/verification', function (hooks) {
     setupTest(hooks);
@@ -314,10 +315,38 @@ module('Unit | Controller | auth/verification | resend and verify', function (ho
 
     test('willDestroy cancels the still-waiting timer', function (assert) {
         const controller = this.build();
-        assert.ok(controller.stillWaitingTimer, 'a timer was scheduled on construction');
+        assert.notStrictEqual(controller.stillWaitingTimer, undefined, 'a timer was scheduled on construction');
 
         controller.willDestroy();
 
         assert.false(controller.stillWaiting, 'the timer never fired, so the flag is untouched');
+    });
+});
+
+module('Unit | Controller | auth/verification | still-waiting timer', function (hooks) {
+    setupTest(hooks);
+
+    test('the wait timer shows the "still waiting" prompt when it fires', function (assert) {
+        // Looked up without settling: the constructor schedules this for waitTimeout ms,
+        // which is far longer than a test may run, so the callback is driven directly.
+        const controller = this.owner.lookup('controller:auth/verification');
+
+        assert.false(controller.stillWaiting, 'nothing is shown while the code is still expected');
+
+        controller.markStillWaiting();
+
+        assert.true(controller.stillWaiting, 'the prompt appears once the code is overdue');
+    });
+
+    test('teardown with no pending timer is a no-op', function (assert) {
+        const controller = this.owner.lookup('controller:auth/verification');
+        // Cancel the real timer before clearing the handle: with nothing left to cancel,
+        // teardown's settled() would otherwise wait out the whole waitTimeout.
+        cancel(controller.stillWaitingTimer);
+        controller.stillWaitingTimer = null;
+
+        controller.willDestroy();
+
+        assert.strictEqual(controller.stillWaitingTimer, null, 'there is nothing to cancel and nothing throws');
     });
 });

@@ -40,3 +40,19 @@ module('Unit | Transform | array', function (hooks) {
         assert.deepEqual(transform.serialize('bad'), []);
     });
 });
+
+module('Unit | Transform | array | iterables', function (hooks) {
+    setupTest(hooks);
+
+    test('a non-string iterable is copied into a real array', function (assert) {
+        const transform = this.owner.lookup('transform:array');
+
+        assert.deepEqual(transform.deserialize(new Set(['a', 'b', 'a'])), ['a', 'b'], 'a Set is flattened to its members');
+    });
+
+    test('any other iterable is spread into an array too', function (assert) {
+        const transform = this.owner.lookup('transform:array');
+
+        assert.deepEqual(transform.deserialize(new Map([['a', 1]])), [['a', 1]], 'a Map deserializes to its entries');
+    });
+});

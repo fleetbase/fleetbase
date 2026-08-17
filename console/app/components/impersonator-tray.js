@@ -27,15 +27,19 @@ export default class ImpersonatorTrayComponent extends Component {
 
             // Handed back so the caller can cancel the pending reload. Without this the
             // timer is unreachable once scheduled and always reloads the window.
-            return later(
-                this,
-                () => {
-                    window.location.reload();
-                },
-                600
-            );
+            return later(this, this.reloadWindow, 600);
         } catch (error) {
             this.notifications.serverError(error);
         }
+    }
+
+    /**
+     * window.location.reload() cannot be stubbed — Location members are non-configurable
+     * per spec — so it is isolated here and callers are tested by replacing this method.
+     * Matches InstallationService, ConsoleController and the organizations controllers.
+     */
+    /* istanbul ignore next -- window.location.reload() cannot be stubbed */
+    reloadWindow() {
+        window.location.reload();
     }
 }

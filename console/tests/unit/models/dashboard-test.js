@@ -1,5 +1,7 @@
 import { module, test } from 'qunit';
 import { setupTest } from '@fleetbase/console/tests/helpers';
+import { setOwner } from '@ember/application';
+import DashboardModel from '@fleetbase/console/models/dashboard';
 
 module('Unit | Model | dashboard', function (hooks) {
     setupTest(hooks);
@@ -126,5 +128,33 @@ module('Unit | Model | dashboard | widgets', function (hooks) {
         assert.strictEqual(dashboard.updatedAtShort, 'Feb 20, 2026');
         assert.ok(dashboard.createdAgo.length > 0, 'createdAgo is a relative description');
         assert.ok(dashboard.updatedAgo.length > 0, 'updatedAgo is a relative description');
+    });
+});
+
+module('Unit | Model | dashboard | registry', function () {
+    test('a dashboard whose container has no universe service has no registry', function (assert) {
+        // getRegistry() looks the universe up through the owner. An owner that cannot
+        // provide it — as in a teardown or a stripped-down container — must yield nothing
+        // rather than throwing while a dashboard renders.
+        const stand = { id: 'dash_1' };
+        setOwner(stand, { lookup: () => undefined });
+
+        assert.strictEqual(DashboardModel.prototype.getRegistry.call(stand), undefined);
+    });
+
+    test('the registry is looked up by the dashboard id', function (assert) {
+        const stand = { id: 'dash_2' };
+        const requested = [];
+        setOwner(stand, {
+            lookup: () => ({
+                getDashboardRegistry: (id) => {
+                    requested.push(id);
+                    return { widgets: ['a'] };
+                },
+            }),
+        });
+
+        assert.deepEqual(DashboardModel.prototype.getRegistry.call(stand), { widgets: ['a'] });
+        assert.deepEqual(requested, ['dash_2']);
     });
 });

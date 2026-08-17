@@ -24,6 +24,8 @@ export function initialize(application) {
             const endTime = performance.now();
             debug(`[Runtime Config] Runtime config loaded in ${(endTime - startTime).toFixed(2)}ms`);
             application.advanceReadiness();
+            /* istanbul ignore next -- loadRuntimeConfig catches every failure internally, so
+               this outer guard cannot fire; it exists only in case that ever stops being true */
         } catch (error) {
             console.error('[Runtime Config] Failed to load runtime config:', error);
             // Still advance readiness to prevent hanging

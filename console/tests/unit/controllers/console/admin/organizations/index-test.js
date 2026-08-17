@@ -523,3 +523,67 @@ module('Unit | Controller | console/admin/organizations/index | actions', functi
         assert.deepEqual(written, ['company_1', 'uuid-1']);
     });
 });
+
+module('Unit | Controller | console/admin/organizations/index | saved views', function (hooks) {
+    setupTest(hooks);
+
+    hooks.beforeEach(function () {
+        this.owner.register('service:intl', IntlStub);
+        this.owner.register('service:notifications', NotificationsStub);
+        this.controller = this.owner.lookup('controller:console/admin/organizations/index');
+        this.viewItems = () => this.controller.actionButtons[0].items.filter((item) => !item.separator);
+    });
+
+    test('the table starts on its first page, twenty at a time, newest first', function (assert) {
+        assert.strictEqual(this.controller.page, 1);
+        assert.strictEqual(this.controller.limit, 20);
+        assert.strictEqual(this.controller.sort, '-created_at');
+        assert.deepEqual(this.controller.companies, [], 'nothing is listed before the model loads');
+    });
+
+    test('each saved view in the Views menu applies its own filter', function (assert) {
+        const expected = [
+            { label: 'Needs Attention', filter: 'needs_attention', value: 1 },
+            { label: 'Missing Owner', filter: 'missing_owner', value: 1 },
+            { label: 'Incomplete Onboarding', filter: 'onboarding_completed', value: false },
+            { label: 'Inactive Status', filter: 'inactive_status', value: 1 },
+        ];
+
+        expected.forEach(({ label, filter, value }) => {
+            this.controller.page = 4;
+            const item = this.viewItems().find((entry) => entry.label === label);
+
+            item.onClick();
+
+            assert.strictEqual(this.controller[filter], value, `${label} sets ${filter}`);
+            assert.strictEqual(this.controller.page, 1, `${label} returns to the first page`);
+        });
+    });
+
+    test('applying one saved view clears the previous one', function (assert) {
+        this.viewItems()
+            .find((entry) => entry.label === 'Missing Owner')
+            .onClick();
+        this.viewItems()
+            .find((entry) => entry.label === 'Inactive Status')
+            .onClick();
+
+        assert.strictEqual(this.controller.inactive_status, 1);
+        assert.strictEqual(this.controller.missing_owner, null, 'the earlier filter is dropped rather than stacked');
+    });
+
+    test('Clear View drops every saved filter', function (assert) {
+        this.viewItems()
+            .find((entry) => entry.label === 'Needs Attention')
+            .onClick();
+
+        this.viewItems()
+            .find((entry) => entry.label === 'Clear View')
+            .onClick();
+
+        assert.strictEqual(this.controller.needs_attention, null);
+        assert.strictEqual(this.controller.missing_owner, null);
+        assert.strictEqual(this.controller.inactive_status, null);
+        assert.strictEqual(this.controller.onboarding_completed, null);
+    });
+});

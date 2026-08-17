@@ -98,3 +98,32 @@ module('Unit | Model | company', function (hooks) {
         assert.deepEqual(company.get('users'), []);
     });
 });
+
+module('Unit | Model | company | ownership transfer defaults', function (hooks) {
+    setupTest(hooks);
+
+    hooks.beforeEach(function () {
+        const context = this;
+
+        class FetchStub extends Service {
+            post(path, payload) {
+                context.posted = { path, payload };
+                return Promise.resolve({ status: 'ok' });
+            }
+        }
+        this.owner.register('service:fetch', FetchStub);
+        this.company = this.owner.lookup('service:store').push({ data: { id: 'co_1', type: 'company', attributes: { name: 'Acme' } } });
+    });
+
+    test('transferring ownership without extra parameters posts just the company and new owner', async function (assert) {
+        await this.company.transferOwnership('user_2');
+
+        assert.deepEqual(this.posted, { path: 'companies/transfer-ownership', payload: { company: 'co_1', newOwner: 'user_2' } });
+    });
+
+    test('extra parameters are merged into the transfer payload', async function (assert) {
+        await this.company.transferOwnership('user_2', { leave: true });
+
+        assert.deepEqual(this.posted.payload, { company: 'co_1', newOwner: 'user_2', leave: true });
+    });
+});

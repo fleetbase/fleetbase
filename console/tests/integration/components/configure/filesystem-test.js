@@ -3,8 +3,8 @@ import { setupRenderingTest } from '@fleetbase/console/tests/helpers';
 import { render, click } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import Service from '@ember/service';
-import ConfigureFilesystemComponent from '@fleetbase/console/components/configure/filesystem';
 import { captureComponent } from '@fleetbase/console/tests/helpers/capture-component';
+import ConfigureFilesystemComponent from '@fleetbase/console/components/configure/filesystem';
 
 /**
  * Lets the fire-and-forget promise chains the component kicks off in its constructor and
@@ -214,5 +214,32 @@ module('Integration | Component | configure/filesystem', function (hooks) {
 
         assert.strictEqual(component.gcsCredentialsFileId, undefined);
         assert.strictEqual(component.gcsCredentialsFile, undefined);
+    });
+});
+
+module('Integration | Component | configure/filesystem | defaults', function (hooks) {
+    setupRenderingTest(hooks);
+
+    test('a server that reports no disks leaves the picker empty rather than undefined', async function (assert) {
+        class FetchStub extends Service {
+            async get() {
+                return { driver: 'local' };
+            }
+            async post() {
+                return {};
+            }
+        }
+        class NotificationsStub extends Service {
+            success() {}
+            serverError() {}
+        }
+        this.owner.register('service:fetch', FetchStub);
+        this.owner.register('service:notifications', NotificationsStub);
+
+        const captured = captureComponent(this.owner, 'configure/filesystem', ConfigureFilesystemComponent);
+        await render(hbs`<div id="next-view-section-subheader-actions"></div><Configure::Filesystem />`);
+
+        assert.deepEqual(captured.instance.disks, [], 'the disk list defaults to empty');
+        assert.strictEqual(captured.instance.driver, 'local');
     });
 });

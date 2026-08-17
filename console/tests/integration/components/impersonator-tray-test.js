@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from '@fleetbase/console/tests/helpers';
-import { render } from '@ember/test-helpers';
+import { render, settled } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import Service from '@ember/service';
 import { cancel } from '@ember/runloop';
@@ -145,5 +145,63 @@ module('Integration | Component | impersonator-tray | restoreSession', function 
         assert.strictEqual(timer, undefined, 'no reload is scheduled on failure');
         assert.deepEqual(this.owner.lookup('service:notifications').serverErrors, [failure]);
         assert.deepEqual(this.transitions, [], 'the user stays where they are');
+    });
+});
+
+module('Integration | Component | impersonator-tray | reload', function (hooks) {
+    setupRenderingTest(hooks);
+
+    hooks.beforeEach(function () {
+        this.owner.lookup('service:intl').setLocale('en-us');
+
+        class FetchStub extends Service {
+            async delete() {
+                return { token: 'restored-token' };
+            }
+        }
+        class NotificationsStub extends Service {
+            infos = [];
+            info(message) {
+                this.infos.push(message);
+            }
+            serverError() {}
+        }
+
+        this.owner.register('service:fetch', FetchStub);
+        this.owner.register('service:notifications', NotificationsStub);
+
+        const captured = captureComponent(this.owner, 'impersonator-tray', ImpersonatorTrayComponent);
+        this.build = async () => {
+            await render(hbs`
+                <div id="view-header-actions"></div>
+                <ImpersonatorTray />
+            `);
+            const component = captured.instance;
+
+            this.authenticated = [];
+            Object.defineProperty(component.session, 'manuallyAuthenticate', {
+                configurable: true,
+                value: (token) => this.authenticated.push(token),
+            });
+            Object.defineProperty(component.router, 'transitionTo', { configurable: true, value: () => Promise.resolve() });
+
+            this.reloads = 0;
+            Object.defineProperty(component, 'reloadWindow', { configurable: true, value: () => this.reloads++ });
+
+            return component;
+        };
+    });
+
+    test('restoring the session re-authenticates and reloads once the timer fires', async function (assert) {
+        const component = await this.build();
+
+        await component.restoreSession();
+
+        assert.deepEqual(this.authenticated, ['restored-token']);
+        assert.deepEqual(this.owner.lookup('service:notifications').infos, ['Ending impersonation session.']);
+        assert.strictEqual(this.reloads, 0, 'the reload is deferred so the notification is readable');
+
+        await settled();
+        assert.strictEqual(this.reloads, 1, 'and lands when the timer fires');
     });
 });

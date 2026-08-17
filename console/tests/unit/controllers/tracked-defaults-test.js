@@ -33,6 +33,23 @@ const CONTROLLERS = [
         name: 'controller:console/settings/notifications',
         defaults: { notificationSettings: {}, notificationTransportMethods: ['email', 'sms'] },
     },
+    {
+        name: 'controller:console/admin/branding',
+        defaults: { isLoading: false },
+    },
+    {
+        // The virtual admin screen is pure layout: these classes are the whole controller.
+        name: 'controller:console/admin/virtual',
+        defaults: {
+            bodyClass: 'overflow-y-scroll h-full',
+            containerClass: 'container mx-auto h-screen',
+            wrapperClass: 'max-w-3xl my-10 mx-auto',
+        },
+    },
+    {
+        name: 'controller:console/admin/schedule-monitor/logs',
+        defaults: { logs: [] },
+    },
 ];
 
 module('Unit | Controller | tracked defaults', function (hooks) {

@@ -222,3 +222,31 @@ module('Unit | Controller | auth/two-fa | verification flow', function (hooks) {
         assert.strictEqual(converted.getTime(), new Date(utc).getTime() - new Date().getTimezoneOffset() * 60 * 1000);
     });
 });
+
+module('Unit | Controller | auth/two-fa | client token expiry', function (hooks) {
+    setupTest(hooks);
+
+    hooks.beforeEach(function () {
+        this.controller = this.owner.lookup('controller:auth/two-fa');
+        // The token is base64 of "<expiry>|<identifier>".
+        this.token = (contents) => window.btoa(contents);
+    });
+
+    test('a token carrying a parseable expiry yields that date', function (assert) {
+        const expiry = this.controller.getExpirationDateFromClientToken(this.token('2026-05-06 14:30:00|session-1'));
+
+        assert.true(expiry instanceof Date, 'the expiry is handed back as a Date');
+    });
+
+    test('a token whose expiry cannot be read yields no expiry', function (assert) {
+        assert.strictEqual(
+            this.controller.getExpirationDateFromClientToken(this.token('not-a-timestamp|session-1')),
+            null,
+            'an unparseable stamp is treated as no expiry rather than an invalid Date'
+        );
+    });
+
+    test('a token with no separator yields no expiry', function (assert) {
+        assert.strictEqual(this.controller.getExpirationDateFromClientToken(this.token('sessiononly')), null);
+    });
+});

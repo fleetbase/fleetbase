@@ -646,4 +646,15 @@ module('Integration | Component | configure/services | sparse sms config', funct
         assert.strictEqual(component.customHttpBodyText, JSON.stringify({ to: '{{to}}', text: '{{text}}', from: '{{from}}' }, null, 2), 'a missing body falls back to the templated default');
         assert.strictEqual(component.smsSelectedProvider, 'custom_http', 'the saved provider is the one shown');
     });
+
+    test('headers and query params fall back independently of one another', async function (assert) {
+        this.getResponse = {
+            sms: { providers: { custom_http: { method: 'POST', headers: { 'X-Tenant': 'acme' } } } },
+        };
+
+        const component = await this.build();
+
+        assert.strictEqual(component.customHttpHeadersText, JSON.stringify({ 'X-Tenant': 'acme' }, null, 2), 'saved headers are shown as written');
+        assert.strictEqual(component.customHttpQueryParamsText, '{}', 'while the absent query params still default');
+    });
 });

@@ -100,3 +100,39 @@ module('Unit | Controller | onboard/verify-email | failure', function (hooks) {
         assert.false(transitioned, 'the user stays on the verification screen');
     });
 });
+
+module('Unit | Controller | onboard/verify-email | rejected codes', function (hooks) {
+    setupTest(hooks);
+
+    test('a status other than ok leaves the user on the form with nothing reported as verified', async function (assert) {
+        const notified = [];
+
+        class FetchStub extends Service {
+            post() {
+                return Promise.resolve({ status: 'invalid' });
+            }
+        }
+        class NotificationsStub extends Service {
+            success(message) {
+                notified.push(message);
+            }
+            info(message) {
+                notified.push(message);
+            }
+            serverError() {}
+        }
+        this.owner.register('service:fetch', FetchStub);
+        this.owner.register('service:notifications', NotificationsStub);
+
+        const controller = this.owner.lookup('controller:onboard/verify-email');
+        controller.transitions = [];
+        Object.defineProperty(controller.router, 'transitionTo', {
+            configurable: true,
+            value: (route) => controller.transitions.push(route),
+        });
+
+        assert.strictEqual(await controller.verifyCode.perform(), undefined, 'nothing is returned to act on');
+        assert.deepEqual(notified, [], 'no success or welcome message');
+        assert.deepEqual(controller.transitions, [], 'and no navigation');
+    });
+});

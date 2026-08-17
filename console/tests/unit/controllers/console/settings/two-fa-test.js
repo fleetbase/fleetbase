@@ -136,3 +136,33 @@ module('Unit | Controller | console/settings/two-fa | loading and saving', funct
         assert.deepEqual(this.notifications().successes, []);
     });
 });
+
+module('Unit | Controller | console/settings/two-fa | defaults', function (hooks) {
+    setupTest(hooks);
+
+    test('saving the company 2FA settings with nothing supplied posts an empty object', async function (assert) {
+        const posted = [];
+
+        class FetchStub extends Service {
+            get() {
+                return Promise.resolve({ enabled: false });
+            }
+            post(path, payload) {
+                posted.push({ path, payload });
+                return Promise.resolve({ ok: true });
+            }
+        }
+        class NotificationsStub extends Service {
+            success() {}
+            serverError() {}
+        }
+
+        this.owner.register('service:fetch', FetchStub);
+        this.owner.register('service:notifications', NotificationsStub);
+
+        const controller = this.owner.lookup('controller:console/settings/two-fa');
+        await controller.saveTwoFactorSettingsForCompany.perform();
+
+        assert.deepEqual(posted.at(-1).payload, { twoFaSettings: {} });
+    });
+});

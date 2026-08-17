@@ -1,6 +1,7 @@
 import { module, test } from 'qunit';
 import { setupTest } from '@fleetbase/console/tests/helpers';
 import Service from '@ember/service';
+import { settled } from '@ember/test-helpers';
 import { cancel } from '@ember/runloop';
 
 module('Unit | Controller | console/admin/organizations/index/users', function (hooks) {
@@ -197,5 +198,65 @@ module('Unit | Controller | console/admin/organizations/index/users | actions', 
         );
         assert.strictEqual(actionsColumn.actions[0].fn, controller.impersonateUser);
         assert.strictEqual(actionsColumn.actions[1].fn, controller.changeUserPassword);
+    });
+});
+
+module('Unit | Controller | console/admin/organizations/index/users | impersonation', function (hooks) {
+    setupTest(hooks);
+
+    hooks.beforeEach(function () {
+        const context = this;
+
+        class FetchStub extends Service {
+            post(path, payload) {
+                context.posted = { path, payload };
+                return Promise.resolve({ token: 'imp-token' });
+            }
+        }
+        class NotificationsStub extends Service {
+            infos = [];
+            info(message) {
+                this.infos.push(message);
+            }
+            serverError() {}
+        }
+        class SessionStub extends Service {
+            data = { authenticated: { user: { id: 'me' } } };
+            authenticated = [];
+            manuallyAuthenticate(token) {
+                this.authenticated.push(token);
+            }
+        }
+
+        this.owner.register('service:fetch', FetchStub);
+        this.owner.register('service:notifications', NotificationsStub);
+        this.owner.register('service:session', SessionStub);
+
+        this.controller = this.owner.lookup('controller:console/admin/organizations/index/users');
+        Object.defineProperty(this.controller.router, 'transitionTo', { configurable: true, value: () => Promise.resolve() });
+
+        this.reloads = 0;
+        Object.defineProperty(this.controller, 'reloadWindow', { configurable: true, value: () => this.reloads++ });
+    });
+
+    test('impersonating a user swaps the session and hands back a cancellable reload', async function (assert) {
+        const timer = await this.controller.impersonateUser({ id: 'user_3', email: 'ops@acme.test' });
+
+        assert.deepEqual(this.posted, { path: 'auth/impersonate', payload: { user: 'user_3' } });
+        assert.deepEqual(this.owner.lookup('service:session').authenticated, ['imp-token']);
+        assert.deepEqual(this.owner.lookup('service:notifications').infos, ['Now impersonating ops@acme.test...']);
+        assert.ok(timer, 'the pending reload is returned so a caller can cancel it');
+
+        await settled();
+        assert.strictEqual(this.reloads, 1);
+    });
+
+    test('the nested user table starts on its first page, newest first, with no query', function (assert) {
+        const controller = this.owner.lookup('controller:console/admin/organizations/index/users');
+
+        assert.strictEqual(controller.nestedPage, 1);
+        assert.strictEqual(controller.nestedLimit, 20);
+        assert.strictEqual(controller.nestedSort, '-created_at');
+        assert.strictEqual(controller.nestedQuery, '');
     });
 });

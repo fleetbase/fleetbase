@@ -2,6 +2,7 @@ import { module, test } from 'qunit';
 import { setupTest } from '@fleetbase/console/tests/helpers';
 import Service from '@ember/service';
 import { cancel } from '@ember/runloop';
+import { settled } from '@ember/test-helpers';
 
 // Captures whatever the controller hands to the modals manager so the modal's
 // `confirm` callback can be driven directly.
@@ -423,5 +424,65 @@ module('Unit | Controller | console/account/organizations | failures', function 
         assert.deepEqual(this.notifications.errors, [failure]);
         assert.false(modal.loading, 'the modal is released so the user can retry');
         assert.strictEqual(this.refreshed, 0);
+    });
+});
+
+module('Unit | Controller | console/account/organizations | reload and stale counts', function (hooks) {
+    setupTest(hooks);
+
+    hooks.beforeEach(function () {
+        this.owner.register('service:modals-manager', ModalsManagerStub);
+        this.owner.register('service:notifications', NotificationsStub);
+        this.owner.register('service:intl', IntlStub);
+
+        this.posted = [];
+        const posted = this.posted;
+        class FetchStub extends Service {
+            post(path, payload) {
+                posted.push({ path, payload });
+                return Promise.resolve({});
+            }
+            flushRequestCache(path) {
+                posted.push({ flushed: path });
+            }
+        }
+        this.owner.register('service:fetch', FetchStub);
+
+        this.controller = this.owner.lookup('controller:console/account/organizations');
+        this.modals = this.owner.lookup('service:modals-manager');
+        this.controller.currentUser.userSnapshot = { id: 'user_1' };
+        this.controller.model = [organization(), organization({ uuid: 'org_2' })];
+
+        this.refreshed = 0;
+        this.controller.router.refresh = () => this.refreshed++;
+
+        this.reloads = 0;
+        Object.defineProperty(this.controller, 'reloadWindow', { configurable: true, value: () => this.reloads++ });
+    });
+
+    test('switching organizations reloads the console once the timer fires', async function (assert) {
+        this.controller.switchOrganization(organization());
+
+        await this.modals.lastOptions.confirm(fakeModal());
+        assert.strictEqual(this.reloads, 0, 'the reload is deferred so the success notice is readable');
+
+        await settled();
+        assert.strictEqual(this.reloads, 1, 'the whole console is reloaded under the new organization');
+    });
+
+    test('an owner whose organization reports no members at all just leaves it', async function (assert) {
+        // users_count is server-supplied and can be missing or zero on a stale record, so
+        // neither the transfer nor the delete flow applies — leaving is the safe fallback.
+        const org = organization({ owner_uuid: 'user_1', users_count: 0 });
+        this.controller.leaveOrganization(org);
+
+        await this.modals.lastOptions.confirm(fakeModal());
+
+        assert.deepEqual(
+            org.calls.map((call) => call[0]),
+            ['leave'],
+            'the organization is neither transferred nor deleted'
+        );
+        assert.strictEqual(this.refreshed, 1);
     });
 });

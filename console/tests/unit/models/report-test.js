@@ -444,3 +444,51 @@ module('Unit | Model | report | execution display', function (hooks) {
         assert.strictEqual(zero.lastResultCountDisplay, '0', 'zero is a real count, not "no result"');
     });
 });
+
+module('Unit | Model | report | sparse query configs', function (hooks) {
+    setupTest(hooks);
+
+    hooks.beforeEach(function () {
+        this.report = (query_config) => this.owner.lookup('service:store').createRecord('report', { query_config });
+    });
+
+    test('a query with a table but no columns selects nothing', function (assert) {
+        const report = this.report({ table: { name: 'orders', label: 'Orders' } });
+
+        assert.deepEqual(report.selectedColumns, [], 'the column list is empty rather than undefined');
+        assert.strictEqual(report.totalSelectedColumns, 0);
+    });
+
+    test('a join that selects no columns is counted as zero rather than blank', function (assert) {
+        const report = this.report({
+            table: { name: 'orders' },
+            columns: ['id'],
+            joins: [
+                { table: 'drivers', type: 'left', selectedColumns: ['name', 'phone'] },
+                { table: 'payloads', type: 'inner' },
+            ],
+        });
+
+        assert.deepEqual(
+            report.joinedTables.map((join) => [join.table, join.label, join.columnsCount]),
+            [
+                ['drivers', 'drivers', 2],
+                ['payloads', 'payloads', 0],
+            ],
+            'a join with no selection contributes no columns and falls back to its table name as a label'
+        );
+    });
+
+    test('a condition with neither a field nor an operator is left out of the summary', function (assert) {
+        const report = this.report({
+            table: { name: 'orders' },
+            conditions: [{ field: { name: 'status', label: 'Status' }, operator: { value: '=', label: 'is' }, value: 'created' }, { logic: 'and' }, {}],
+        });
+
+        assert.deepEqual(
+            report.conditionsSummary.map((condition) => condition.field),
+            ['Status'],
+            'half-built conditions from the query builder are skipped rather than rendered blank'
+        );
+    });
+});

@@ -25,6 +25,8 @@ export function initialize(appInstance) {
 
         const endTime = performance.now();
         debug(`[Initializing Router Patch] Router fix applied in ${(endTime - startTime).toFixed(2)}ms`);
+        /* istanbul ignore next -- applyRouterFix catches every failure internally, so this
+           outer guard cannot fire; it exists only in case that ever stops being true */
     } catch (error) {
         console.error('[Initializing Router Patch] Failed to apply router fix:', error);
     }

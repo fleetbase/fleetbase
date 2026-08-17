@@ -82,3 +82,19 @@ module('Unit | Serializer | user | payload hygiene', function (hooks) {
         assert.strictEqual(normalized.data.attributes.avatar_url, '/avatar.png', 'nothing to protect, so everything lands');
     });
 });
+
+module('Unit | Serializer | user | reloading an existing record', function (hooks) {
+    setupTest(hooks);
+
+    test('a payload with no attributes at all is left alone', function (assert) {
+        const store = this.owner.lookup('service:store');
+        store.push({ data: { id: 'u1', type: 'user', attributes: { name: 'Existing' } } });
+
+        // A relationship-only payload normalizes to a resource with no attributes hash;
+        // the merge guard has to cope with that rather than reading through undefined.
+        const normalized = store.serializerFor('user').normalize(store.modelFor('user'), { uuid: 'u1' }, 'user');
+
+        assert.strictEqual(normalized.data.id, 'u1');
+        assert.strictEqual(store.peekRecord('user', 'u1').name, 'Existing', 'the loaded record keeps its name');
+    });
+});

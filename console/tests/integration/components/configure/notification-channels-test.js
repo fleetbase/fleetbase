@@ -3,8 +3,8 @@ import { setupRenderingTest } from '@fleetbase/console/tests/helpers';
 import { render, click } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import Service from '@ember/service';
-import ConfigureNotificationChannelsComponent from '@fleetbase/console/components/configure/notification-channels';
 import { captureComponent } from '@fleetbase/console/tests/helpers/capture-component';
+import ConfigureNotificationChannelsComponent from '@fleetbase/console/components/configure/notification-channels';
 
 /**
  * Lets the fire-and-forget promise chains the component starts run to completion. They are
@@ -257,5 +257,32 @@ module('Integration | Component | configure/notification-channels', function (ho
         assert.deepEqual(payload.apn, component.apn);
         assert.deepEqual(component.testResponse, this.postResponse);
         assert.false(component.isLoading);
+    });
+});
+
+module('Integration | Component | configure/notification-channels | defaults', function (hooks) {
+    setupRenderingTest(hooks);
+
+    test('the test push notification is pre-filled so an admin can send one straight away', async function (assert) {
+        class FetchStub extends Service {
+            async get() {
+                return {};
+            }
+            async post() {
+                return {};
+            }
+        }
+        class NotificationsStub extends Service {
+            success() {}
+            serverError() {}
+        }
+        this.owner.register('service:fetch', FetchStub);
+        this.owner.register('service:notifications', NotificationsStub);
+
+        const captured = captureComponent(this.owner, 'configure/notification-channels', ConfigureNotificationChannelsComponent);
+        await render(hbs`<div id="next-view-section-subheader-actions"></div><Configure::NotificationChannels />`);
+
+        assert.strictEqual(captured.instance.testTitle, 'Hello World from Fleetbase 🚀');
+        assert.strictEqual(captured.instance.testMessage, 'This is a test push notification!');
     });
 });

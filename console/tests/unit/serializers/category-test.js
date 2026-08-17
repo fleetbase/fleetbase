@@ -39,3 +39,32 @@ module('Unit | Serializer | category | relationship pruning', function (hooks) {
         assert.notOk(json.subcategories, 'the pruned relationships are absent');
     });
 });
+
+/**
+ * Each of these serializers withholds exactly one self-referential relationship so the API
+ * never receives a nested tree it cannot accept. Every model here declares only that one
+ * hasMany, so the "serialize it normally" arm is driven with another model's relationship —
+ * the guard is on the key, not on the model.
+ */
+const WITHHELD = [
+    { model: 'category', relationship: 'subcategories' },
+    { model: 'comment', relationship: 'replies' },
+    { model: 'dashboard', relationship: 'widgets' },
+];
+
+module('Unit | Serializer | withheld relationships', function (hooks) {
+    setupTest(hooks);
+
+    WITHHELD.forEach(({ model, relationship }) => {
+        test(`${model} never serializes its ${relationship}`, function (assert) {
+            const store = this.owner.lookup('service:store');
+            const serializer = store.serializerFor(model);
+            const record = store.createRecord(model, {});
+            const json = { existing: 'untouched' };
+
+            serializer.serializeHasMany(record._createSnapshot(), json, store.modelFor(model).relationshipsByName.get(relationship));
+
+            assert.deepEqual(json, { existing: 'untouched' }, `${relationship} is left out of the payload entirely`);
+        });
+    });
+});

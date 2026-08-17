@@ -133,13 +133,7 @@ export default class ConsoleAdminOrganizationsIndexUsersController extends Contr
 
             // Handed back so the caller can cancel the pending reload; the same timer on
             // ImpersonatorTray was unreachable once scheduled.
-            return later(
-                this,
-                () => {
-                    window.location.reload();
-                },
-                600
-            );
+            return later(this, this.reloadWindow, 600);
         } catch (error) {
             this.notifications.serverError(error);
         }
@@ -190,5 +184,15 @@ export default class ConsoleAdminOrganizationsIndexUsersController extends Contr
         }
 
         return this.router.transitionTo('console.admin.organizations.index');
+    }
+
+    /**
+     * window.location.reload() cannot be stubbed — Location members are non-configurable
+     * per spec — so it is isolated here and callers are tested by replacing this method.
+     * Matches InstallationService, ConsoleController and the organizations controllers.
+     */
+    /* istanbul ignore next -- window.location.reload() cannot be stubbed */
+    reloadWindow() {
+        window.location.reload();
     }
 }
