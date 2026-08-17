@@ -24,3 +24,61 @@ module('Unit | Serializer | user', function (hooks) {
         });
     });
 });
+
+module('Unit | Serializer | user | payload hygiene', function (hooks) {
+    setupTest(hooks);
+
+    hooks.beforeEach(function () {
+        this.store = this.owner.lookup('service:store');
+        this.serializer = this.store.serializerFor('user');
+    });
+
+    test('serialize never sends the password, verification flags or server timestamps', function (assert) {
+        const user = this.store.createRecord('user', {
+            name: 'Ron',
+            email: 'ron@fleetbase.io',
+            password: 'secret',
+            email_verified_at: new Date(),
+            phone_verified_at: new Date(),
+            created_at: new Date(),
+            updated_at: new Date(),
+            deleted_at: new Date(),
+        });
+
+        const json = user.serialize();
+
+        assert.strictEqual(json.name, 'Ron', 'the editable fields still go');
+        for (const key of ['password', 'email_verified_at', 'phone_verified_at', 'created_at', 'updated_at', 'deleted_at']) {
+            assert.notOk(key in json, `${key} is stripped`);
+        }
+    });
+
+    test('a partial payload does not blank out fields on an already-loaded user', function (assert) {
+        this.store.push({
+            data: { id: 'user_1', type: 'user', attributes: { name: 'Ron', phone: '+15550001111', avatar_url: '/original.png' } },
+        });
+
+        const normalized = this.serializer.normalize(this.store.modelFor('user'), {
+            uuid: 'user_1',
+            name: 'Ron Richardson',
+            phone: null,
+            avatar_url: '/replaced.png',
+        });
+
+        assert.strictEqual(normalized.data.attributes.name, 'Ron Richardson', 'real values still apply');
+        assert.notOk('phone' in normalized.data.attributes, 'a null does not wipe the loaded phone');
+        assert.notOk('avatar_url' in normalized.data.attributes, 'the avatar is always left to the loaded record');
+    });
+
+    test('a payload for a user that is not loaded yet is applied in full', function (assert) {
+        const normalized = this.serializer.normalize(this.store.modelFor('user'), {
+            uuid: 'user_new',
+            name: 'Sam',
+            phone: null,
+            avatar_url: '/avatar.png',
+        });
+
+        assert.strictEqual(normalized.data.attributes.name, 'Sam');
+        assert.strictEqual(normalized.data.attributes.avatar_url, '/avatar.png', 'nothing to protect, so everything lands');
+    });
+});
