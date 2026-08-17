@@ -336,3 +336,161 @@ module('Unit | Controller | console/admin/organizations/details', function (hook
         assert.deepEqual(this.transitions, [], 'no transition on failure');
     });
 });
+
+/**
+ * The tab and action registries are built from extension-supplied menu items, so nearly
+ * every field has a fallback. These drive the arms the happy-path tests do not: items with
+ * no priority, no visibility predicate, or a label under one of its alternative keys, and
+ * the owner/status getters when the organization supplies nothing.
+ */
+module('Unit | Controller | console/admin/organizations/details | registry fallbacks', function (hooks) {
+    setupTest(hooks);
+
+    hooks.beforeEach(function () {
+        this.controller = this.owner.lookup('controller:console/admin/organizations/details');
+        this.menuItems = {};
+        // universe/menu-service is a pre-resolved singleton; patch the injected instance.
+        Object.defineProperty(this.controller.menuService, 'getMenuItems', {
+            configurable: true,
+            value: (key) => this.menuItems[key],
+        });
+    });
+
+    test('a registry that returns nothing yields no extra tabs or actions', function (assert) {
+        this.menuItems = {};
+
+        assert.deepEqual(this.controller.visibleRegisteredTabs, [], 'a non-array tab registry is ignored');
+        assert.deepEqual(this.controller.registeredActions, [], 'so is a non-array action registry');
+        assert.strictEqual(this.controller.tabs.length, 5, 'only the five core tabs remain');
+    });
+
+    test('registered tabs must declare both a slug and a component', function (assert) {
+        this.menuItems['console:admin:organization:tabs'] = [{ slug: 'billing', component: 'billing-tab', label: 'Billing' }, { slug: 'no-component' }, { component: 'no-slug' }, {}];
+
+        assert.deepEqual(
+            this.controller.visibleRegisteredTabs.map((tab) => tab.slug),
+            ['billing'],
+            'incomplete registrations are dropped'
+        );
+    });
+
+    test('a tab visibility predicate receives the extension context and can hide the tab', function (assert) {
+        let received;
+        this.menuItems['console:admin:organization:tabs'] = [
+            { slug: 'always', component: 'c' },
+            {
+                slug: 'conditional',
+                component: 'c',
+                isVisible: (context) => {
+                    received = context;
+                    return false;
+                },
+            },
+        ];
+        this.controller.model = { public_id: 'company_1' };
+
+        const slugs = this.controller.visibleRegisteredTabs.map((tab) => tab.slug);
+
+        assert.deepEqual(slugs, ['always'], 'a tab with no predicate is shown, one returning false is not');
+        assert.strictEqual(received.organization, this.controller.model, 'the predicate sees the organization');
+    });
+
+    test('registered tabs without a priority sort after the core tabs', function (assert) {
+        this.menuItems['console:admin:organization:tabs'] = [
+            { slug: 'late', component: 'c', label: 'Late' },
+            { slug: 'early', component: 'c', label: 'Early', priority: 5 },
+        ];
+
+        const labels = this.controller.tabs.map((tab) => tab.label);
+
+        assert.strictEqual(labels[0], 'Overview', 'priority 0 still leads');
+        assert.strictEqual(labels[1], 'Early', 'an explicit priority slots the tab in');
+        assert.strictEqual(labels.at(-1), 'Late', 'no priority defaults to the end');
+    });
+
+    test('an action visibility predicate can hide it, and unprioritised actions sort last', function (assert) {
+        this.menuItems['console:admin:organization:actions'] = [{ label: 'Hidden', isVisible: () => false }, { label: 'Unprioritised' }, { label: 'First', priority: 1 }];
+
+        assert.deepEqual(
+            this.controller.registeredActions.map((action) => action.label),
+            ['First', 'Unprioritised']
+        );
+    });
+
+    test('a registered action label falls back through text and title', function (assert) {
+        this.menuItems['console:admin:organization:actions'] = [{ label: 'By label' }, { text: 'By text' }, { title: 'By title' }];
+
+        const labels = this.controller.actionMenuItems.slice(5).map((item) => item.label);
+
+        assert.deepEqual(labels, ['By label', 'By text', 'By title']);
+    });
+
+    test('the impersonate action is disabled until the organization has an owner', function (assert) {
+        this.controller.model = {};
+        assert.true(this.controller.actionMenuItems[0].disabled, 'nothing to impersonate');
+
+        this.controller.model = { owner_uuid: 'user_1' };
+        assert.false(this.controller.actionMenuItems[0].disabled, 'an owner uuid alone is enough');
+    });
+
+    test('ownerId falls back from the record id to its uuid to the organization owner_uuid', function (assert) {
+        this.controller.model = { owner: { id: 'user_1', uuid: 'uuid_1' }, owner_uuid: 'uuid_2' };
+        assert.strictEqual(this.controller.ownerId, 'user_1', 'the record id wins');
+
+        this.controller.model = { owner: { uuid: 'uuid_1' }, owner_uuid: 'uuid_2' };
+        assert.strictEqual(this.controller.ownerId, 'uuid_1', 'then the record uuid');
+
+        this.controller.model = { owner: null, owner_uuid: 'uuid_2' };
+        assert.strictEqual(this.controller.ownerId, 'uuid_2', 'then the organization owner_uuid');
+
+        this.controller.model = {};
+        assert.strictEqual(this.controller.ownerId, undefined, 'and nothing when none are set');
+    });
+
+    test('hasOwner accepts either a loaded owner or a bare owner_uuid', function (assert) {
+        this.controller.model = { owner: { id: 'user_1' } };
+        assert.true(this.controller.hasOwner);
+
+        this.controller.model = { owner_uuid: 'user_1' };
+        assert.true(this.controller.hasOwner, 'an unloaded owner still counts');
+
+        this.controller.model = {};
+        assert.false(this.controller.hasOwner);
+    });
+
+    test('the status getters fall back for an organization with nothing set', function (assert) {
+        this.controller.model = {};
+
+        assert.strictEqual(this.controller.organizationStatus, 'active');
+        assert.strictEqual(this.controller.onboardingStatus, 'incomplete');
+        assert.strictEqual(this.controller.billingStatus, 'not configured');
+        assert.strictEqual(this.controller.ownerName, undefined);
+        assert.strictEqual(this.controller.ownerEmail, undefined);
+    });
+
+    test('the status getters read the organization when it is populated', function (assert) {
+        this.controller.model = {
+            status: 'suspended',
+            onboarding_completed: true,
+            billing_status: 'past due',
+            owner: { name: 'Ron', email: 'ron@fleetbase.io' },
+        };
+
+        assert.strictEqual(this.controller.organizationStatus, 'suspended');
+        assert.strictEqual(this.controller.onboardingStatus, 'complete');
+        assert.strictEqual(this.controller.billingStatus, 'past due');
+        assert.strictEqual(this.controller.ownerName, 'Ron');
+        assert.strictEqual(this.controller.ownerEmail, 'ron@fleetbase.io');
+    });
+
+    test('the extension context carries the signed-in user when the session has one', function (assert) {
+        this.controller.model = { public_id: 'company_1' };
+
+        assert.strictEqual(this.controller.extensionContext.currentUser, undefined, 'an anonymous session contributes nothing');
+
+        // session.data is a read-only alias, so shadow it rather than assigning.
+        Object.defineProperty(this.controller.session, 'data', { configurable: true, value: { authenticated: { user: 'user_1' } } });
+        assert.strictEqual(this.controller.extensionContext.currentUser, 'user_1');
+        assert.strictEqual(this.controller.extensionContext.organization, this.controller.model);
+    });
+});
