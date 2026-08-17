@@ -284,6 +284,15 @@ jobs:
             exit 1
           fi
 
+          # The seeded template carries this marker. Without the check, bumping the
+          # version on line 1 would satisfy everything above and publish the template
+          # itself as the release notes — to the GitHub Release, and on the root repo to
+          # Discord as well.
+          if grep -q 'RELEASE_NOTES_PLACEHOLDER' "$NOTES"; then
+            echo "::error::${NOTES} still contains the template placeholder; write the notes before releasing."
+            exit 1
+          fi
+
           echo "title=${FIRST_LINE}" >> "$GITHUB_OUTPUT"
           echo "Release notes headline: ${FIRST_LINE}"
 
