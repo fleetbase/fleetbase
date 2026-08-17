@@ -68,3 +68,35 @@ module('Unit | Controller | onboard/verify-email', function (hooks) {
         assert.strictEqual(transitioned, 'auth.login');
     });
 });
+
+module('Unit | Controller | onboard/verify-email | failure', function (hooks) {
+    setupTest(hooks);
+
+    test('a failed verification is reported as a server error', async function (assert) {
+        const failure = new Error('verification service down');
+        class FetchStub extends Service {
+            post() {
+                return Promise.reject(failure);
+            }
+        }
+        class NotificationsStub extends Service {
+            serverErrors = [];
+            success() {}
+            info() {}
+            serverError(error) {
+                this.serverErrors.push(error);
+            }
+        }
+        this.owner.register('service:fetch', FetchStub);
+        this.owner.register('service:notifications', NotificationsStub);
+
+        const controller = this.owner.lookup('controller:onboard/verify-email');
+        let transitioned = false;
+        Object.defineProperty(controller.router, 'transitionTo', { configurable: true, value: () => (transitioned = true) });
+
+        await controller.verifyCode.perform();
+
+        assert.deepEqual(this.owner.lookup('service:notifications').serverErrors, [failure]);
+        assert.false(transitioned, 'the user stays on the verification screen');
+    });
+});
