@@ -18,7 +18,9 @@ export default class UserVerificationService extends Service {
     @tracked waiting = false;
 
     @action start(options = {}) {
-        this.#wait(options?.timeout ?? 75000);
+        // Hand the timer back so callers can cancel it. Without this the 75s wait is
+        // unreachable once scheduled and will still fire after its caller has gone away.
+        return this.#wait(options?.timeout ?? 75000);
     }
 
     @action didntReceiveCode() {
@@ -106,7 +108,9 @@ export default class UserVerificationService extends Service {
         this.code = code;
     }
 
-    #wait(timeout = 75000) {
+    // start() is the only caller and always resolves the timeout itself, so this takes no
+    // default of its own.
+    #wait(timeout) {
         return later(
             this,
             () => {

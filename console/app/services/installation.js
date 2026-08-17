@@ -93,7 +93,10 @@ export default class InstallationService extends Service {
     }
 
     async listenForInstallComplete() {
-        if (this.installChannel || this.listenRetry) {
+        // listenRetry holds a runloop timer id, and those are plain integers that can
+        // legitimately be 0 — compare against the null sentinel rather than truthiness, or a
+        // retry scheduled as timer 0 looks like "nothing pending" and we subscribe twice.
+        if (this.installChannel || this.listenRetry !== null) {
             return;
         }
 
@@ -121,7 +124,9 @@ export default class InstallationService extends Service {
     }
 
     stopListeningForInstallComplete() {
-        if (this.listenRetry) {
+        // Same reason as above: timer id 0 is falsy but perfectly valid, and skipping the
+        // cancel would leave the retry to fire after we have stopped listening.
+        if (this.listenRetry !== null) {
             cancel(this.listenRetry);
         }
 
@@ -157,6 +162,11 @@ export default class InstallationService extends Service {
         this.reloadConsole();
     }
 
+    /* istanbul ignore next -- window.location.reload() cannot be stubbed: the HTML spec
+       marks every Location member as an own, non-configurable property, so defineProperty
+       throws and calling it for real would reload the test runner. This wrapper exists
+       precisely so callers can be tested by replacing reloadConsole() on the instance,
+       which the handleInstallCompleteEvent tests do. */
     reloadConsole() {
         window.location.reload();
     }
