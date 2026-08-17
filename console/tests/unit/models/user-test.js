@@ -2,6 +2,7 @@ import { module, test } from 'qunit';
 import { setupTest } from '@fleetbase/console/tests/helpers';
 import { format, formatDistanceToNow } from 'date-fns';
 import Service from '@ember/service';
+import UserModel from '@fleetbase/console/models/user';
 
 module('Unit | Model | user', function (hooks) {
     setupTest(hooks);
@@ -181,5 +182,42 @@ module('Unit | Model | user | timestamps', function (hooks) {
 
         assert.strictEqual(user.updatedAtShort, format(updated, 'PP'));
         assert.strictEqual(user.createdAgo, formatDistanceToNow(created));
+    });
+});
+
+/**
+ * getPermissions guards every relationship it reads before walking it. Ember Data always
+ * hands back a ManyArray — empty or not — so a saved record can never take those guards'
+ * false arms; the only way to assert they actually guard is to run the method against a
+ * minimal `get`-shaped stand-in, which is exactly the shape it consumes.
+ */
+module('Unit | Model | user | getPermissions guards', function () {
+    const runOn = (values) => UserModel.prototype.getPermissions.call({ get: (key) => values[key] });
+    // Relationships are consumed via toArray(), so a stand-in policy has to offer one.
+    const policyWith = (...names) => ({ get: () => (names.length ? { toArray: () => names } : null) });
+
+    test('a user with nothing attached collects no permissions', function (assert) {
+        assert.deepEqual(runOn({}), [], 'no direct permissions, no role and no policies');
+    });
+
+    test('a role carrying neither permissions nor policies contributes nothing', function (assert) {
+        assert.deepEqual(runOn({ role: { id: 'role_1' } }), [], 'the role is entered but has nothing to give');
+    });
+
+    test('a role policy with no permissions is skipped', function (assert) {
+        const permissions = runOn({
+            role: { id: 'role_1' },
+            'role.policies': { length: 2, objectAt: (i) => [policyWith(), policyWith('granted')][i] },
+        });
+
+        assert.deepEqual(permissions, ['granted'], 'only the policy that has permissions contributes');
+    });
+
+    test('a directly attached policy with no permissions is skipped', function (assert) {
+        const permissions = runOn({
+            policies: { length: 2, objectAt: (i) => [policyWith(), policyWith('direct-grant')][i] },
+        });
+
+        assert.deepEqual(permissions, ['direct-grant']);
     });
 });

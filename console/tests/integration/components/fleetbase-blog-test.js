@@ -140,3 +140,101 @@ module('Integration | Component | fleetbase-blog | loading', function (hooks) {
         assert.strictEqual(formatted[0].title, 'Dated', 'the rest of the post is preserved');
     });
 });
+
+/**
+ * The blog caches its feed for six hours. These drive the cache-hit arm and the teardown
+ * guard, neither of which the loading module above ever reaches.
+ */
+module('Integration | Component | fleetbase-blog | cache', function (hooks) {
+    setupRenderingTest(hooks);
+
+    hooks.beforeEach(function () {
+        _resetStorages();
+        window.localStorage.clear();
+
+        this.getResponse = [{ title: 'Cached Post', pubDate: '2026-01-15T00:00:00Z' }];
+        this.requests = 0;
+        this.release = null;
+        this.park = false;
+        const context = this;
+
+        class FetchStub extends Service {
+            get() {
+                context.requests++;
+
+                if (context.park) {
+                    return new Promise((resolve) => (context.release = () => resolve(context.getResponse)));
+                }
+
+                return Promise.resolve(context.getResponse);
+            }
+        }
+        this.owner.register('service:fetch', FetchStub);
+
+        const captured = captureComponent(this.owner, 'fleetbase-blog', FleetbaseBlogComponent);
+        this.build = async () => {
+            await render(hbs`<FleetbaseBlog />`);
+            return captured.instance;
+        };
+    });
+
+    hooks.afterEach(function () {
+        _resetStorages();
+        window.localStorage.clear();
+    });
+
+    test('a second mount is served entirely from the cache', async function (assert) {
+        const first = await this.build();
+        assert.strictEqual(this.requests, 1, 'the first mount goes to the network');
+
+        this.getResponse = [{ title: 'Should not be requested' }];
+        const second = await this.build();
+
+        assert.strictEqual(this.requests, 1, 'the second mount never calls the endpoint');
+        assert.deepEqual(second.posts, first.localCache.get('fleetbase-blog-data'), 'it renders what was cached');
+        assert.strictEqual(second.posts[0].title, 'Cached Post');
+    });
+
+    test('an expired cache is refetched', async function (assert) {
+        const first = await this.build();
+        first.localCache.set('fleetbase-blog-data-expiration', new Date('2020-01-01T00:00:00Z'));
+
+        this.getResponse = [{ title: 'Fresh Post' }];
+        const second = await this.build();
+
+        assert.strictEqual(this.requests, 2, 'a stale stamp sends it back to the network');
+        assert.strictEqual(second.posts[0].title, 'Fresh Post');
+    });
+
+    test('a cache holding something other than a list is refetched', async function (assert) {
+        const first = await this.build();
+        first.localCache.set('fleetbase-blog-data', { error: 'corrupted' });
+
+        const second = await this.build();
+
+        assert.strictEqual(this.requests, 2, 'a non-list cache entry is not trusted');
+        assert.deepEqual(second.posts, this.getResponse);
+    });
+
+    test('an empty response is not cached', async function (assert) {
+        this.getResponse = null;
+        const component = await this.build();
+
+        assert.deepEqual(component.posts, [], 'there is nothing to show');
+        assert.strictEqual(component.localCache.get('fleetbase-blog-data'), undefined, 'and nothing is written to the cache');
+    });
+
+    test('a response arriving after teardown is dropped', async function (assert) {
+        this.park = true;
+        const component = await this.build();
+
+        // Racing clearRender() does not work: it waits on settled(), which the parked
+        // request blocks. Mark the component destroying instead, then let the response land.
+        Object.defineProperty(component, 'isDestroying', { configurable: true, value: true });
+        this.release();
+        await component.loadBlogPosts.last;
+
+        assert.deepEqual(component.posts, [], 'the tracked state is left alone');
+        assert.strictEqual(component.localCache.get('fleetbase-blog-data'), undefined, 'and nothing is cached');
+    });
+});
