@@ -7,7 +7,7 @@ Fleetbase `0.7.54` is a focused reliability and API hardening release. It update
 ---
 ## Component Versions
 - `console`: `0.7.54`
-- `core-api`: `1.6.57`
+- `core-api`: `1.6.58`
 - `fleetops`: `0.6.60`
 - `customer-portal`: `0.0.13`
 - `storefront`: `0.4.19`
@@ -18,6 +18,7 @@ Fleetbase `0.7.54` is a focused reliability and API hardening release. It update
 - Fixed system setting cache invalidation so writes clear the same cache entries read by `Setting::system()`.
 - Fixed platform API token validation after token rotation on file-cache installs.
 - Made Redis-only pattern cache clearing skip safely when Redis is unavailable.
+- Deferred the database-backed user deletion service until command execution so Composer package discovery no longer requires a live MySQL connection.
 - Kept the settings cache regression covered by the full Core API suite.
 
 ---
