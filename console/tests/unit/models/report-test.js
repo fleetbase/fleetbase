@@ -1,6 +1,8 @@
 import { module, test } from 'qunit';
 import { setupTest } from '@fleetbase/console/tests/helpers';
 import Service from '@ember/service';
+import { getOwner, setOwner } from '@ember/application';
+import ReportModel from '@fleetbase/console/models/report';
 
 // A query_config shaped the way the model expects, with knobs for each feature.
 function queryConfig(overrides = {}) {
@@ -303,5 +305,142 @@ module('Unit | Model | report', function (hooks) {
 
         await saved.export('xlsx', { sheet: 'one' });
         assert.deepEqual(this.posted.at(-1).payload, { format: 'xlsx', options: { sheet: 'one' } });
+    });
+});
+
+/**
+ * The static query helpers resolve their fetch service through getOwner(this), where `this`
+ * is the class itself. Nothing in the app ever gives the class an owner, so as written they
+ * cannot work when called as ReportModel.getTables() — flagged on the PR rather than
+ * redesigned here. Supplying an owner lets the logic inside them be exercised.
+ */
+module('Unit | Model | report | static query API', function (hooks) {
+    setupTest(hooks);
+
+    hooks.beforeEach(function () {
+        this.posted = [];
+        this.gets = [];
+        this.getResponse = {
+            'reports/tables': { tables: [{ name: 'orders' }] },
+            'reports/tables/orders/schema': { schema: { columns: ['id'] } },
+            'reports/export-formats': { formats: ['csv', 'pdf'] },
+        };
+        const self = this;
+
+        class FetchStub extends Service {
+            post(path, payload) {
+                self.posted.push({ path, payload });
+                return Promise.resolve({ ok: true });
+            }
+            get(path) {
+                self.gets.push(path);
+                return Promise.resolve(self.getResponse[path]);
+            }
+        }
+        this.owner.register('service:fetch', FetchStub);
+
+        this.previousOwner = getOwner(ReportModel);
+        setOwner(ReportModel, this.owner);
+    });
+
+    hooks.afterEach(function () {
+        setOwner(ReportModel, this.previousOwner);
+    });
+
+    test('executeQuery posts the config to the ad-hoc endpoint', async function (assert) {
+        const config = { table: { name: 'orders' } };
+
+        const response = await ReportModel.executeQuery(config);
+
+        assert.deepEqual(this.posted.at(-1), { path: 'reports/execute-query', payload: { query_config: config } });
+        assert.deepEqual(response, { ok: true }, 'the server response is handed back');
+    });
+
+    test('exportQuery posts the config with its format and options', async function (assert) {
+        const config = { table: { name: 'orders' } };
+
+        await ReportModel.exportQuery(config, 'pdf', { landscape: true });
+
+        assert.deepEqual(this.posted.at(-1), {
+            path: 'reports/export-query',
+            payload: { query_config: config, format: 'pdf', options: { landscape: true } },
+        });
+    });
+
+    test('exportQuery defaults to csv with no options', async function (assert) {
+        await ReportModel.exportQuery({ table: { name: 'orders' } });
+
+        assert.strictEqual(this.posted.at(-1).payload.format, 'csv');
+        assert.deepEqual(this.posted.at(-1).payload.options, {});
+    });
+
+    test('validateQuery and analyzeQuery post to their own endpoints', async function (assert) {
+        const config = { table: { name: 'orders' } };
+
+        await ReportModel.validateQuery(config);
+        assert.deepEqual(this.posted.at(-1), { path: 'reports/validate-query', payload: { query_config: config } });
+
+        await ReportModel.analyzeQuery(config);
+        assert.deepEqual(this.posted.at(-1), { path: 'reports/analyze-query', payload: { query_config: config } });
+    });
+
+    test('getTables unwraps the table list from the response', async function (assert) {
+        const tables = await ReportModel.getTables();
+
+        assert.deepEqual(this.gets, ['reports/tables']);
+        assert.deepEqual(tables, [{ name: 'orders' }], 'the tables are unwrapped, not the envelope');
+    });
+
+    test('getTableSchema requests the schema for the named table', async function (assert) {
+        const schema = await ReportModel.getTableSchema('orders');
+
+        assert.deepEqual(this.gets, ['reports/tables/orders/schema']);
+        assert.deepEqual(schema, { columns: ['id'] });
+    });
+
+    test('getExportFormats unwraps the available formats', async function (assert) {
+        const formats = await ReportModel.getExportFormats();
+
+        assert.deepEqual(this.gets, ['reports/export-formats']);
+        assert.deepEqual(formats, ['csv', 'pdf']);
+    });
+});
+
+module('Unit | Model | report | execution display', function (hooks) {
+    setupTest(hooks);
+
+    hooks.beforeEach(function () {
+        this.store = this.owner.lookup('service:store');
+    });
+
+    // These two read properties the model never declares as attributes, so assigning them
+    // does not invalidate the @computed that already cached a value. Build a fresh record
+    // per case rather than reassigning on one.
+    test('averageExecutionTimeDisplay switches from milliseconds to seconds at a second', function (assert) {
+        assert.strictEqual(this.store.createRecord('report').averageExecutionTimeDisplay, 'N/A', 'nothing recorded yet');
+
+        const quick = this.store.createRecord('report');
+        quick.average_execution_time = 512.4;
+        assert.strictEqual(quick.averageExecutionTimeDisplay, '512ms', 'sub-second timings are rounded to ms');
+
+        const slow = this.store.createRecord('report');
+        slow.average_execution_time = 1500;
+        assert.strictEqual(slow.averageExecutionTimeDisplay, '1.50s', 'longer runs are shown in seconds');
+    });
+
+    test('lastResultCountDisplay formats a count and reports when there is none', function (assert) {
+        assert.strictEqual(this.store.createRecord('report').lastResultCountDisplay, 'N/A', 'undefined reads as N/A');
+
+        const nulled = this.store.createRecord('report');
+        nulled.last_result_count = null;
+        assert.strictEqual(nulled.lastResultCountDisplay, 'N/A', 'so does null');
+
+        const counted = this.store.createRecord('report');
+        counted.last_result_count = 1234567;
+        assert.strictEqual(counted.lastResultCountDisplay, (1234567).toLocaleString(), 'a real count is thousands-separated');
+
+        const zero = this.store.createRecord('report');
+        zero.last_result_count = 0;
+        assert.strictEqual(zero.lastResultCountDisplay, '0', 'zero is a real count, not "no result"');
     });
 });

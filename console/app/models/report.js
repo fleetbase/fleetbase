@@ -373,7 +373,8 @@ export default class ReportModel extends Model {
         const owner = getOwner(this);
         const fetch = owner.lookup('service:fetch');
 
-        const response = await fetch('reports/export-query', {
+        // fetch here is the injected service, not a callable — every sibling posts through it.
+        const response = await fetch.post('reports/export-query', {
             query_config: queryConfig,
             format,
             options,
@@ -399,6 +400,11 @@ export default class ReportModel extends Model {
     }
 
     static async getTables() {
+        // Was reaching for a bare `fetch`, which resolved to the global window.fetch and has
+        // no .get() — resolve the service the same way every sibling does.
+        const owner = getOwner(this);
+        const fetch = owner.lookup('service:fetch');
+
         const { tables } = await fetch.get('reports/tables');
         return tables;
     }
