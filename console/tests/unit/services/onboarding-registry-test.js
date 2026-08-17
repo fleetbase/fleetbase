@@ -13,6 +13,15 @@ function validFlow(overrides = {}) {
 module('Unit | Service | onboarding-registry', function (hooks) {
     setupTest(hooks);
 
+    test('it starts out pointing at the built-in default flow', function (assert) {
+        const service = this.owner.lookup('service:onboarding-registry');
+
+        // Read defaultFlow before anything writes to it: @tracked initializers only run on
+        // first access, so a test that assigns first never evaluates this one.
+        assert.strictEqual(service.defaultFlow, 'default@v1');
+        assert.strictEqual(service.getFlow(service.defaultFlow)?.id, 'default@v1', 'and the app registers a flow under that id at boot');
+    });
+
     test('registerFlow stores a valid flow and getFlow returns it', function (assert) {
         const service = this.owner.lookup('service:onboarding-registry');
         const flow = validFlow();
