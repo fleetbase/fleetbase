@@ -477,7 +477,18 @@ runs:
           'import http.server' \
           'class H(http.server.BaseHTTPRequestHandler):' \
           '    def do_GET(self):' \
-          '        print("WIRE " + self.path.split("?")[0] + "  ->  " + str(self.headers.get("Authorization")), flush=True)' \
+          '        if self.path.startswith("/__ready"):' \
+          '            self.send_response(200)' \
+          '            self.end_headers()' \
+          '            return' \
+          '        v = self.headers.get("Authorization") or ""' \
+          '        if "SENTINEL_COLLECTION_AUTH" in v:' \
+          '            tag = "COLLECTION-BEARER (inherited)"' \
+          '        elif "SENTINEL_REQUEST_HEADER" in v:' \
+          '            tag = "REQUEST-LEVEL (the requests own credential)"' \
+          '        else:' \
+          '            tag = "NEITHER: " + repr(v)' \
+          '        print("WIRE " + self.path.split("?")[0] + "  ->  " + tag, flush=True)' \
           '        self.send_response(200)' \
           '        self.send_header("Content-Type", "application/json")' \
           '        self.end_headers()' \
@@ -489,7 +500,8 @@ runs:
         python3 "$ECHO" > "$WIRE" 2>&1 &
         echo_pid=$!
         for i in $(seq 1 20); do
-          # Distinct path so the readiness ping is filterable out of the wire log.
+          # The server answers /__ready without logging it, so the wire log contains
+          # only real requests and "did anything arrive?" is a straight emptiness test.
           curl -fsS --max-time 1 http://127.0.0.1:8099/__ready >/dev/null 2>&1 && break
           [[ $i -eq 20 ]] && { echo "::warning::wire echo server never came up; skipping"; kill "$echo_pid" 2>/dev/null; exit 0; }
           sleep 0.5
@@ -519,14 +531,22 @@ runs:
         kill "$echo_pid" 2>/dev/null || true
         wait "$echo_pid" 2>/dev/null || true
         echo "Postman CLI: $(postman --version 2>&1 | head -1)"
+        # The echo server maps the header to a LABEL rather than echoing it. Printing
+        # the raw value was useless: the runner rendered both lines as "***", so the
+        # log could not say which sentinel belonged to which request, and the verdict
+        # below would have read "collection" even if only one of the two did that.
         echo "--- what the two failing requests actually put on the wire ---"
-        grep -v "__ready" "$WIRE" || echo "(nothing reached the echo server)"
-        if grep -q 'SENTINEL_COLLECTION_AUTH' "$WIRE"; then
-          echo "=> The COLLECTION-level bearer overrode the request-level Authorization header."
-        elif grep -q 'SENTINEL_REQUEST_HEADER' "$WIRE"; then
-          echo "=> The request-level header won; the wrong credential is NOT coming from auth precedence."
+        cat "$WIRE" 2>/dev/null || true
+        [[ -s "$WIRE" ]] || echo "(nothing reached the echo server)"
+        # Verdict per request, not for the pair. Two requests, and they can disagree.
+        if [[ ! -s "$WIRE" ]]; then
+          echo "=> Neither request executed. Check for 'items were not found'."
+        elif grep -q "COLLECTION-BEARER" "$WIRE"; then
+          echo "=> At least one request still sends the COLLECTION bearer — read the lines above,"
+          echo "   each one names its own request. Expected after fleetbase/postman#50: both"
+          echo "   REQUEST-LEVEL, and both endpoints green in the collection run below."
         else
-          echo "=> Neither sentinel arrived — the requests did not execute. Check for 'items were not found'."
+          echo "=> Both requests send their own credential. This is the fixed state."
         fi
 
         # Belt and braces: a composite step cannot use continue-on-error, so the only
