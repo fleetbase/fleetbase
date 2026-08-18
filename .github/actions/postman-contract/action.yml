@@ -457,6 +457,14 @@ runs:
       if: steps.pmauth.outputs.available == 'true'
       shell: bash
       run: |
+        # set +e, not just -uo pipefail. GitHub runs composite steps under
+        # `bash -e -o pipefail`, and -uo does NOT clear the -e it inherits. That is
+        # not academic: `wait` on a process this step itself SIGTERMs returns 143,
+        # -e aborted the step there, and because a failed step skips the ones after
+        # it, the whole "Run Postman collections" step was skipped — the diagnostic
+        # took out the thing it was meant to diagnose. A diagnostic must never be
+        # able to fail the job, hence the explicit `exit 0` at the end too.
+        set +e
         set -uo pipefail
         POSTMAN_DIR="${GITHUB_WORKSPACE:-$PWD}/.postman"
         ECHO="${RUNNER_TEMP:-/tmp}/wire-echo.py"
@@ -483,7 +491,7 @@ runs:
         for i in $(seq 1 20); do
           # Distinct path so the readiness ping is filterable out of the wire log.
           curl -fsS --max-time 1 http://127.0.0.1:8099/__ready >/dev/null 2>&1 && break
-          [[ $i -eq 20 ]] && { echo "::warning::wire echo server never came up; skipping"; kill $echo_pid 2>/dev/null; exit 0; }
+          [[ $i -eq 20 ]] && { echo "::warning::wire echo server never came up; skipping"; kill "$echo_pid" 2>/dev/null; exit 0; }
           sleep 0.5
         done
 
@@ -506,10 +514,13 @@ runs:
         ) || true
 
         sleep 1
-        { kill $echo_pid; wait $echo_pid; } 2>/dev/null
+        # Every one of these is a plausible non-zero: kill races the exit, wait
+        # reports the signal as 143, and grep returns 1 when the log is empty.
+        kill "$echo_pid" 2>/dev/null || true
+        wait "$echo_pid" 2>/dev/null || true
         echo "Postman CLI: $(postman --version 2>&1 | head -1)"
         echo "--- what the two failing requests actually put on the wire ---"
-        grep -v "__ready" "$WIRE"
+        grep -v "__ready" "$WIRE" || echo "(nothing reached the echo server)"
         if grep -q 'SENTINEL_COLLECTION_AUTH' "$WIRE"; then
           echo "=> The COLLECTION-level bearer overrode the request-level Authorization header."
         elif grep -q 'SENTINEL_REQUEST_HEADER' "$WIRE"; then
@@ -517,6 +528,10 @@ runs:
         else
           echo "=> Neither sentinel arrived — the requests did not execute. Check for 'items were not found'."
         fi
+
+        # Belt and braces: a composite step cannot use continue-on-error, so the only
+        # way to guarantee this never blocks the collection run is to exit clean.
+        exit 0
 
     - name: Run Postman collections
       if: steps.pmauth.outputs.available == 'true'
