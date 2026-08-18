@@ -2,28 +2,28 @@ import Service, { inject as service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { later } from '@ember/runloop';
-import { task } from 'ember-concurrency';
 
-export default class UserVerificationService extends Service {
+/**
+ * Drives the verify-email step of the onboarding flow: tracks whether the entered code
+ * looks complete, prompts after the code has taken too long to arrive, and resends it by
+ * email or SMS. Submitting the code is the step component's own job — this service does not
+ * do it.
+ */
+export default class OnboardingVerificationService extends Service {
     @service fetch;
     @service notifications;
     @service modalsManager;
     @service currentUser;
-    @service router;
-    @service session;
-    @service intl;
-    @tracked token;
-    @tracked code;
     @tracked ready;
     @tracked waiting = false;
 
     /**
-     * The onboarding session the verification code was issued against, named for the
-     * `hello` query param the auth and onboard verification screens carry it in. The resend
-     * endpoints need it to tie a new code to the session already in progress; `session` is
-     * taken by the injected service above.
+     * The onboarding session the verification code was issued against. The resend endpoints
+     * need it to tie a new code to the session already in progress. The verification screens
+     * carry it in a `hello` query param, but that name only ever existed to dodge a clash
+     * with the session service, which this no longer injects.
      */
-    @tracked hello;
+    @tracked session;
 
     @action start(options = {}) {
         if (options?.session !== undefined) {
@@ -58,7 +58,7 @@ export default class UserVerificationService extends Service {
                 }
 
                 try {
-                    await this.fetch.post('onboard/send-verification-sms', { phone, session: this.hello });
+                    await this.fetch.post('onboard/send-verification-sms', { phone, session: this.session });
                     this.notifications.success('Verification code SMS sent!');
                     modal.done();
                 } catch (error) {
@@ -83,7 +83,7 @@ export default class UserVerificationService extends Service {
                 }
 
                 try {
-                    await this.fetch.post('onboard/send-verification-email', { email, session: this.hello });
+                    await this.fetch.post('onboard/send-verification-email', { email, session: this.session });
                     this.notifications.success('Verification code email sent!');
                     modal.done();
                 } catch (error) {
@@ -94,36 +94,8 @@ export default class UserVerificationService extends Service {
         });
     }
 
-    @task *verifyCode() {
-        try {
-            const { status, token } = yield this.fetch.post('auth/verify-email', { token: this.token, code: this.code, email: this.email, authenticate: true });
-            if (status === 'ok') {
-                this.notifications.success('Email successfully verified!');
-
-                if (token) {
-                    this.notifications.info(`Welcome to ${this.intl.t('app.name')}`);
-                    this.session.manuallyAuthenticate(token);
-
-                    return this.router.transitionTo('console');
-                }
-
-                return this.router.transitionTo('auth.login');
-            }
-        } catch (error) {
-            this.notifications.serverError(error);
-        }
-    }
-
-    setToken(token) {
-        this.token = token;
-    }
-
-    setCode(code) {
-        this.code = code;
-    }
-
     setSession(session) {
-        this.hello = session;
+        this.session = session;
     }
 
     // start() is the only caller and always resolves the timeout itself, so this takes no

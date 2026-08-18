@@ -56,11 +56,11 @@ function fakeModal(options = {}) {
     };
 }
 
-module('Unit | Service | user-verification', function (hooks) {
+module('Unit | Service | onboarding-verification', function (hooks) {
     setupTest(hooks);
 
     test('validateInput sets ready only when the value is longer than 5 chars', function (assert) {
-        const service = this.owner.lookup('service:user-verification');
+        const service = this.owner.lookup('service:onboarding-verification');
         service.validateInput({ target: { value: '123456' } });
         assert.true(service.ready);
         service.validateInput({ target: { value: '12345' } });
@@ -70,7 +70,7 @@ module('Unit | Service | user-verification', function (hooks) {
     });
 
     test('validateInput reads the value straight off a DOM element', function (assert) {
-        const service = this.owner.lookup('service:user-verification');
+        const service = this.owner.lookup('service:onboarding-verification');
         const input = document.createElement('input');
 
         input.value = '123456';
@@ -83,14 +83,14 @@ module('Unit | Service | user-verification', function (hooks) {
     });
 
     test('didntReceiveCode marks the service waiting', function (assert) {
-        const service = this.owner.lookup('service:user-verification');
+        const service = this.owner.lookup('service:onboarding-verification');
         assert.false(service.waiting);
         service.didntReceiveCode();
         assert.true(service.waiting);
     });
 
     test('start flips the service into waiting once the timeout elapses', async function (assert) {
-        const service = this.owner.lookup('service:user-verification');
+        const service = this.owner.lookup('service:onboarding-verification');
         assert.false(service.waiting, 'precondition: not waiting yet');
 
         service.start({ timeout: 1 });
@@ -100,7 +100,7 @@ module('Unit | Service | user-verification', function (hooks) {
     });
 
     test('start schedules the default wait when no timeout is given', async function (assert) {
-        const service = this.owner.lookup('service:user-verification');
+        const service = this.owner.lookup('service:onboarding-verification');
 
         // The default is 75 seconds, so this timer has to be cancelled rather than waited
         // out — left running it fires long after the test container is gone.
@@ -115,123 +115,9 @@ module('Unit | Service | user-verification', function (hooks) {
         assert.false(service.waiting, 'a cancelled wait never fires');
     });
 
-    test('setToken and setCode store their values', function (assert) {
-        const service = this.owner.lookup('service:user-verification');
-        service.setToken('tok');
-        service.setCode('123456');
-        assert.strictEqual(service.token, 'tok');
-        assert.strictEqual(service.code, '123456');
-    });
-
-    test('verifyCode authenticates and transitions to console when a token is returned', async function (assert) {
-        let authenticated, transitioned;
-        class FetchStub extends Service {
-            post() {
-                return Promise.resolve({ status: 'ok', token: 'auth-token' });
-            }
-        }
-        class SessionStub extends Service {
-            manuallyAuthenticate(t) {
-                authenticated = t;
-            }
-        }
-        class IntlStub extends Service {
-            t() {
-                return 'Fleetbase';
-            }
-        }
-        this.owner.register('service:fetch', FetchStub);
-        this.owner.register('service:session', SessionStub);
-        this.owner.register('service:notifications', NotificationsStub);
-        this.owner.register('service:intl', IntlStub);
-
-        const service = this.owner.lookup('service:user-verification');
-        // Ember's built-in RouterService can't be overridden via owner.register in setupTest,
-        // so spy on transitionTo on the injected instance the task actually calls.
-        service.router.transitionTo = (r) => {
-            transitioned = r;
-            return r;
-        };
-
-        await service.verifyCode.perform();
-
-        assert.strictEqual(authenticated, 'auth-token');
-        assert.strictEqual(transitioned, 'console');
-
-        const notifications = this.owner.lookup('service:notifications');
-        assert.deepEqual(notifications.successes, ['Email successfully verified!']);
-        assert.deepEqual(notifications.infos, ['Welcome to Fleetbase']);
-    });
-
-    test('verifyCode transitions to login when no token is returned', async function (assert) {
-        let transitioned;
-        class FetchStub extends Service {
-            post() {
-                return Promise.resolve({ status: 'ok' });
-            }
-        }
-        this.owner.register('service:fetch', FetchStub);
-        this.owner.register('service:notifications', NotificationsStub);
-
-        const service = this.owner.lookup('service:user-verification');
-        service.router.transitionTo = (r) => {
-            transitioned = r;
-            return r;
-        };
-
-        await service.verifyCode.perform();
-
-        assert.strictEqual(transitioned, 'auth.login');
-    });
-
-    test('verifyCode sends the stored token and code and stays put on a non-ok status', async function (assert) {
-        let payload;
-        class FetchStub extends Service {
-            post(path, body) {
-                payload = { path, body };
-                return Promise.resolve({ status: 'invalid' });
-            }
-        }
-        this.owner.register('service:fetch', FetchStub);
-        this.owner.register('service:notifications', NotificationsStub);
-
-        const service = this.owner.lookup('service:user-verification');
-        let transitioned = false;
-        service.router.transitionTo = () => (transitioned = true);
-
-        service.setToken('tok');
-        service.setCode('123456');
-        const result = await service.verifyCode.perform();
-
-        assert.strictEqual(payload.path, 'auth/verify-email');
-        assert.strictEqual(payload.body.token, 'tok');
-        assert.strictEqual(payload.body.code, '123456');
-        assert.true(payload.body.authenticate);
-        assert.strictEqual(result, undefined, 'nothing is returned for an unverified code');
-        assert.false(transitioned, 'and the user is left on the verification screen');
-        assert.deepEqual(this.owner.lookup('service:notifications').successes, [], 'no success is reported');
-    });
-
-    test('verifyCode reports a failed request as a server error', async function (assert) {
-        const failure = new Error('gateway timeout');
-        class FetchStub extends Service {
-            post() {
-                return Promise.reject(failure);
-            }
-        }
-        this.owner.register('service:fetch', FetchStub);
-        this.owner.register('service:notifications', NotificationsStub);
-
-        const service = this.owner.lookup('service:user-verification');
-
-        await service.verifyCode.perform();
-
-        assert.deepEqual(this.owner.lookup('service:notifications').serverErrors, [failure]);
-    });
-
     test('resendBySms opens the phone modal seeded with the current user phone', function (assert) {
         this.owner.register('service:modals-manager', ModalsManagerStub);
-        const service = this.owner.lookup('service:user-verification');
+        const service = this.owner.lookup('service:onboarding-verification');
 
         service.resendBySms();
 
@@ -254,7 +140,7 @@ module('Unit | Service | user-verification', function (hooks) {
         this.owner.register('service:notifications', NotificationsStub);
         this.owner.register('service:modals-manager', ModalsManagerStub);
 
-        const service = this.owner.lookup('service:user-verification');
+        const service = this.owner.lookup('service:onboarding-verification');
         service.setSession('sess_abc');
         service.resendBySms();
 
@@ -280,7 +166,7 @@ module('Unit | Service | user-verification', function (hooks) {
         this.owner.register('service:notifications', NotificationsStub);
         this.owner.register('service:modals-manager', ModalsManagerStub);
 
-        const service = this.owner.lookup('service:user-verification');
+        const service = this.owner.lookup('service:onboarding-verification');
         service.resendBySms();
 
         const modal = fakeModal({ phone: '' });
@@ -302,7 +188,7 @@ module('Unit | Service | user-verification', function (hooks) {
         this.owner.register('service:notifications', NotificationsStub);
         this.owner.register('service:modals-manager', ModalsManagerStub);
 
-        const service = this.owner.lookup('service:user-verification');
+        const service = this.owner.lookup('service:onboarding-verification');
         service.resendBySms();
 
         const modal = fakeModal({ phone: '+15550001111' });
@@ -314,7 +200,7 @@ module('Unit | Service | user-verification', function (hooks) {
 
     test('resendEmail opens the email modal seeded with the current user email', function (assert) {
         this.owner.register('service:modals-manager', ModalsManagerStub);
-        const service = this.owner.lookup('service:user-verification');
+        const service = this.owner.lookup('service:onboarding-verification');
 
         service.resendEmail();
 
@@ -337,7 +223,7 @@ module('Unit | Service | user-verification', function (hooks) {
         this.owner.register('service:notifications', NotificationsStub);
         this.owner.register('service:modals-manager', ModalsManagerStub);
 
-        const service = this.owner.lookup('service:user-verification');
+        const service = this.owner.lookup('service:onboarding-verification');
         service.resendEmail();
 
         const modal = fakeModal({ email: 'ron@fleetbase.io' });
@@ -361,7 +247,7 @@ module('Unit | Service | user-verification', function (hooks) {
         this.owner.register('service:notifications', NotificationsStub);
         this.owner.register('service:modals-manager', ModalsManagerStub);
 
-        const service = this.owner.lookup('service:user-verification');
+        const service = this.owner.lookup('service:onboarding-verification');
         service.resendEmail();
 
         const modal = fakeModal({ email: '' });
@@ -383,7 +269,7 @@ module('Unit | Service | user-verification', function (hooks) {
         this.owner.register('service:notifications', NotificationsStub);
         this.owner.register('service:modals-manager', ModalsManagerStub);
 
-        const service = this.owner.lookup('service:user-verification');
+        const service = this.owner.lookup('service:onboarding-verification');
         service.resendEmail();
 
         const modal = fakeModal({ email: 'ron@fleetbase.io' });
@@ -394,11 +280,11 @@ module('Unit | Service | user-verification', function (hooks) {
     });
 });
 
-module('Unit | Service | user-verification | session', function (hooks) {
+module('Unit | Service | onboarding-verification | session', function (hooks) {
     setupTest(hooks);
 
     hooks.beforeEach(function () {
-        this.service = this.owner.lookup('service:user-verification');
+        this.service = this.owner.lookup('service:onboarding-verification');
     });
 
     hooks.afterEach(function () {
@@ -406,11 +292,11 @@ module('Unit | Service | user-verification | session', function (hooks) {
     });
 
     test('start records the session the verification was issued against', function (assert) {
-        assert.strictEqual(this.service.hello, undefined, 'nothing is assumed before a caller supplies one');
+        assert.strictEqual(this.service.session, undefined, 'nothing is assumed before a caller supplies one');
 
         this.timer = this.service.start({ session: 'sess_from_caller' });
 
-        assert.strictEqual(this.service.hello, 'sess_from_caller');
+        assert.strictEqual(this.service.session, 'sess_from_caller');
     });
 
     test('start without a session leaves any previously recorded one alone', function (assert) {
@@ -418,7 +304,7 @@ module('Unit | Service | user-verification | session', function (hooks) {
 
         this.timer = this.service.start();
 
-        assert.strictEqual(this.service.hello, 'sess_existing', 'a bare start() does not wipe the session');
+        assert.strictEqual(this.service.session, 'sess_existing', 'a bare start() does not wipe the session');
     });
 
     test('an explicitly empty session is recorded as given', function (assert) {
@@ -426,6 +312,6 @@ module('Unit | Service | user-verification | session', function (hooks) {
 
         this.timer = this.service.start({ session: null });
 
-        assert.strictEqual(this.service.hello, null, 'the caller is trusted over the previous value');
+        assert.strictEqual(this.service.session, null, 'the caller is trusted over the previous value');
     });
 });

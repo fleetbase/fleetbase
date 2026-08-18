@@ -6,7 +6,7 @@ import { task } from 'ember-concurrency';
 
 export default class OnboardingVerifyEmailComponent extends Component {
     @service('session') authSession;
-    @service('user-verification') verification;
+    @service('onboarding-verification') verification;
     @service fetch;
     @service notifications;
     @service router;

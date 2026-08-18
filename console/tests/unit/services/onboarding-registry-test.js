@@ -13,13 +13,24 @@ function validFlow(overrides = {}) {
 module('Unit | Service | onboarding-registry', function (hooks) {
     setupTest(hooks);
 
-    test('it starts out pointing at the built-in default flow', function (assert) {
+    test('a registry nothing has claimed points at the built-in default flow', function (assert) {
+        // A fresh instance rather than the container's: registerFlow(flow, { default: true })
+        // is a supported extension feature, and an extension that uses it at boot assigns
+        // defaultFlow before this initializer would ever have run. @tracked initializers only
+        // evaluate on first access, so the assignment would hide it entirely.
+        const service = this.owner.factoryFor('service:onboarding-registry').create();
+
+        assert.strictEqual(service.defaultFlow, 'default@v1');
+    });
+
+    test('whatever the default points at is a flow that was actually registered', function (assert) {
         const service = this.owner.lookup('service:onboarding-registry');
 
-        // Read defaultFlow before anything writes to it: @tracked initializers only run on
-        // first access, so a test that assigns first never evaluates this one.
-        assert.strictEqual(service.defaultFlow, 'default@v1');
-        assert.strictEqual(service.getFlow(service.defaultFlow)?.id, 'default@v1', 'and the app registers a flow under that id at boot');
+        assert.strictEqual(
+            service.getFlow(service.defaultFlow)?.id,
+            service.defaultFlow,
+            'the default resolves to a registered flow, whether that is the built-in one or an extension that claimed it'
+        );
     });
 
     test('registerFlow stores a valid flow and getFlow returns it', function (assert) {
