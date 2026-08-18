@@ -265,6 +265,140 @@ runs:
         fi
         echo "✔ API key authenticates (HTTP 200)."
 
+    # ------------------------------------------------------------------------
+    # TEMPORARY DIAGNOSTIC — remove once the two failures below are explained.
+    #
+    # Two contract failures have survived repeated re-runs and every explanation
+    # so far has been inference rather than evidence:
+    #
+    #   fleetops    GET /v1/organizations        401 {"errors":["Invalid platform API token."]}
+    #   storefront  GET /storefront/v1/stores    400 {"errors":["Stores cannot have stores!"]}
+    #
+    # What is already ruled out, by a real Postman CLI 1.46.0 run of the
+    # PUBLISHED collections against a local echo server:
+    #   * Both requests carry a request-level Authorization header while their
+    #     collection also declares a collection-level bearer auth. The
+    #     request-level header WINS — the echo server received
+    #     "Bearer <platform_token>" and "Bearer <network_key>", not the
+    #     collection-level {{api_key}} / {{storefront_key}}. Auth precedence is
+    #     NOT the cause, and neither YAML header form (mapping vs list) matters.
+    #   * An EMPTY --env-var does not drop the header and does not fall back to
+    #     the collection auth either — the CLI sends a bare "Authorization: Bearer".
+    #
+    # That leaves exactly two possibilities per failure, and this step separates
+    # them. It deliberately sits in its own step with the SAME `env:` mapping as
+    # the collection run, so it exercises the real steps.key.outputs.* plumbing
+    # rather than the mint step's shell locals — an output that arrives empty is
+    # invisible in the log, because the value is masked either way.
+    #
+    #   A. the curls answer 200  -> the credentials are fine at the source and
+    #      the fault is in how the run carries them (env plumbing, or session
+    #      state accumulated across requests).
+    #   B. the curls answer 401/400 -> the credential is genuinely invalid at the
+    #      server and the fault is in rotation / persistence / caching.
+    #
+    # Nothing here is secret-revealing: only lengths and the public key prefixes
+    # are printed, never a token body.
+    # ------------------------------------------------------------------------
+    - name: Diagnose credential plumbing (temporary)
+      if: steps.pmauth.outputs.available == 'true'
+      shell: bash
+      env:
+        API_KEY: ${{ steps.key.outputs.api_key }}
+        PLATFORM_TOKEN: ${{ steps.key.outputs.platform_token }}
+        STOREFRONT_KEY: ${{ steps.key.outputs.storefront_key }}
+        NETWORK_KEY: ${{ steps.key.outputs.network_key }}
+        BASE_URL: ${{ inputs.base-url }}
+        NAMESPACE: ${{ inputs.namespace }}
+      run: |
+        set -uo pipefail
+
+        echo "::group::C. do the step outputs actually arrive non-empty?"
+        # ::add-mask:: hides the value, so a step output that arrived EMPTY and one that
+        # arrived correct are indistinguishable in the log — which is exactly how two
+        # earlier readings of this log went wrong. Length and shape cannot be masked and
+        # reveal nothing: no substring of any key is printed, because ::add-mask:: only
+        # redacts the whole value and a prefix would go out in the clear.
+        shape() {
+          if [[ -z "$2" ]]; then
+            verdict="EMPTY — this output never made it out of the mint step"
+          elif [[ "$2" =~ $3 ]]; then
+            verdict="well-formed"
+          else
+            verdict="NON-EMPTY but does not match $3"
+          fi
+          printf '%-16s len=%-4s %s\n' "$1" "${#2}" "$verdict"
+        }
+        shape API_KEY        "${API_KEY}"        '^flb_(live|test)_[A-Za-z0-9]+$'
+        shape PLATFORM_TOKEN "${PLATFORM_TOKEN}" '^flb_platform_[A-Za-z0-9]{64}$'
+        shape STOREFRONT_KEY "${STOREFRONT_KEY}" '^store_[a-f0-9]{32}$'
+        shape NETWORK_KEY    "${NETWORK_KEY}"    '^network_[a-f0-9]{32}$'
+        echo "::endgroup::"
+
+        echo "::group::A. do the credentials work straight from the runner?"
+        probe() {
+          # $1 label, $2 bearer, $3 url
+          code="$(curl -s -o /tmp/diag-body.txt -w '%{http_code}' -H "Authorization: Bearer $2" "$3" || echo 000)"
+          printf '%-46s %s  %s\n' "$1" "$code" "$(head -c 160 /tmp/diag-body.txt)"
+        }
+        probe "organizations  <- platform_token" "${PLATFORM_TOKEN}" "${BASE_URL}/${NAMESPACE}/organizations"
+        # Contrast probe: the org API key is what the collection-level auth would send.
+        # If THIS is the token reaching the endpoint, the 401 is an auth-precedence
+        # problem after all; if it 401s while the platform probe 200s, it is not.
+        probe "organizations  <- api_key (contrast)" "${API_KEY}" "${BASE_URL}/${NAMESPACE}/organizations"
+        probe "network stores <- network_key" "${NETWORK_KEY}" "${BASE_URL}/storefront/${NAMESPACE}/stores"
+        probe "network stores <- storefront_key (contrast)" "${STOREFRONT_KEY}" "${BASE_URL}/storefront/${NAMESPACE}/stores"
+        echo "::endgroup::"
+
+        echo "::group::D. does a shared session leak the store scope into the network call?"
+        # SetStorefrontSession is cookie-backed and the Postman CLI keeps a cookie jar
+        # for the whole collection, so every request in the Storefront run shares ONE
+        # Laravel session. setKey() nulls storefront_store before setting the network
+        # branch, so a network call after a store call SHOULD be clean — but that is
+        # the assumption the 400 contradicts, and it has never been tested with a jar.
+        #
+        # Sequence below mirrors the run: a store-key request first (List Network
+        # Stores is preceded by store-scoped requests), then the network-key request
+        # on the SAME jar. A 400 here while the jarless probe above returned 200 is
+        # the whole answer.
+        jar="$(mktemp)"
+        seq_probe() {
+          code="$(curl -s -o /tmp/diag-body.txt -w '%{http_code}' -c "$jar" -b "$jar" \
+                    -H "Authorization: Bearer $2" "$3" || echo 000)"
+          printf '%-46s %s  %s\n' "$1" "$code" "$(head -c 160 /tmp/diag-body.txt)"
+        }
+        seq_probe "1. about        <- storefront_key (jar)" "${STOREFRONT_KEY}" "${BASE_URL}/storefront/${NAMESPACE}/about"
+        seq_probe "2. network stores <- network_key (same jar)" "${NETWORK_KEY}" "${BASE_URL}/storefront/${NAMESPACE}/stores"
+        seq_probe "3. network stores <- network_key (repeat)" "${NETWORK_KEY}" "${BASE_URL}/storefront/${NAMESPACE}/stores"
+        rm -f "$jar"
+        echo "::endgroup::"
+
+        echo "::group::B. what does the API itself think, inside the container?"
+        # Read-only introspection. Only PHP double quotes are used below so the
+        # surrounding single-quoted --execute needs no escaping gymnastics.
+        #
+        # NOT probed here: opcache. `artisan tinker` runs under the CLI SAPI, whose
+        # opcache is a different arena from FrankenPHP's workers, so anything it
+        # reported about cached bytecode would be about the wrong process. Whether the
+        # workers are running the overlaid class is answered behaviourally by probes
+        # A and D instead.
+        docker compose exec -T application php artisan tinker --execute="
+          \$hash = \Fleetbase\Models\Setting::system(\"platform_api.token_hash\");
+          echo \"platform hash    = \" . (is_string(\$hash) && \$hash !== \"\" ? \"set, \" . strlen(\$hash) . \" chars, algo \" . substr(\$hash, 0, 4) : var_export(\$hash, true)) . PHP_EOL;
+          echo \"rotated_at       = \" . var_export(\Fleetbase\Models\Setting::system(\"platform_api.token_rotated_at\"), true) . PHP_EOL;
+          echo \"cache.default    = \" . config(\"cache.default\") . PHP_EOL;
+          echo \"session.driver   = \" . config(\"session.driver\") . PHP_EOL;
+          echo \"core-api         = \" . \Composer\InstalledVersions::getPrettyVersion(\"fleetbase/core-api\") . PHP_EOL;
+          if (class_exists(\"\Fleetbase\Storefront\Http\Middleware\SetStorefrontSession\")) {
+            echo \"storefront-api   = \" . \Composer\InstalledVersions::getPrettyVersion(\"fleetbase/storefront-api\") . PHP_EOL;
+            \$f = (new ReflectionClass(\"\Fleetbase\Storefront\Http\Middleware\SetStorefrontSession\"))->getFileName();
+            \$src = file_get_contents(\$f);
+            echo \"SetStorefrontSession = \" . \$f . \" (mtime \" . date(\"c\", filemtime(\$f)) . \")\" . PHP_EOL;
+            echo \"  setKey clears store scope on disk = \" . (preg_match(\"/storefront_store.{0,24}=> *null/\", \$src) ? \"yes\" : \"NO — the overlay did not land\") . PHP_EOL;
+          }
+        " 2>&1 || echo "(tinker probe failed)"
+        echo "::endgroup::"
+
     - name: Install Postman CLI
       if: steps.pmauth.outputs.available == 'true'
       shell: bash
