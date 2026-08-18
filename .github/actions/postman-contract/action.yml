@@ -420,6 +420,104 @@ runs:
         token: ${{ inputs.github-token }}
         path: .postman
 
+    # ------------------------------------------------------------------------
+    # TEMPORARY DIAGNOSTIC — the second half of the pair, remove with the other.
+    #
+    # The first diagnostic established, from this runner, that:
+    #   * every credential arrives well-formed and non-empty;
+    #   * platform_token gets 200 from /v1/organizations and network_key gets
+    #     200 from /storefront/v1/stores, jarless AND over a shared cookie jar;
+    #   * the CONTRAST probes reproduce both failures exactly — api_key gets
+    #     401 "Invalid platform API token." and storefront_key gets
+    #     400 "Stores cannot have stores!".
+    #
+    # So the credentials are fine and the run is reaching those endpoints with
+    # the COLLECTION-level credential instead of the request-level one. For
+    # storefront that is already conclusive: only a valid store key can produce
+    # a 400 there, an empty or unresolved bearer gives 401.
+    #
+    # What is still unproven is the mechanism, and it must not be guessed again.
+    # Locally, Postman CLI 1.46.0 sends the request-level header — verified
+    # against an echo server. This runner installs whatever is current (1.47.0
+    # on attempts 1-3, 1.47.2 on 4-5) and is logged in, neither of which the
+    # local test reproduced. A request-level `auth:` block is NOT the fix and
+    # must not be tried: it makes the request vanish from the collection and
+    # aborts the run with "items were not found", measured, id present or not.
+    #
+    # This step settles it by running the two failing requests through THIS
+    # runner's CLI, in its logged-in state, against a local echo server, with
+    # sentinel values in place of real credentials:
+    #
+    #   SENTINEL_COLLECTION_AUTH -> the collection-level bearer won
+    #   SENTINEL_REQUEST_HEADER  -> the request-level header won
+    #
+    # Nothing secret is involved and nothing leaves the runner.
+    # ------------------------------------------------------------------------
+    - name: Diagnose which credential goes on the wire (temporary)
+      if: steps.pmauth.outputs.available == 'true'
+      shell: bash
+      run: |
+        set -uo pipefail
+        POSTMAN_DIR="${GITHUB_WORKSPACE:-$PWD}/.postman"
+        ECHO="${RUNNER_TEMP:-/tmp}/wire-echo.py"
+        WIRE="${RUNNER_TEMP:-/tmp}/wire.log"
+
+        # printf rather than a heredoc: an unindented heredoc terminator would end
+        # this YAML block scalar. Double quotes only in the Python, so the
+        # single-quoted shell arguments need no escaping.
+        printf '%s\n' \
+          'import http.server' \
+          'class H(http.server.BaseHTTPRequestHandler):' \
+          '    def do_GET(self):' \
+          '        print("WIRE " + self.path.split("?")[0] + "  ->  " + str(self.headers.get("Authorization")), flush=True)' \
+          '        self.send_response(200)' \
+          '        self.send_header("Content-Type", "application/json")' \
+          '        self.end_headers()' \
+          '        self.wfile.write(b"[]")' \
+          '    def log_message(self, *a):' \
+          '        pass' \
+          'http.server.HTTPServer(("127.0.0.1", 8099), H).serve_forever()' > "$ECHO"
+
+        python3 "$ECHO" > "$WIRE" 2>&1 &
+        echo_pid=$!
+        for i in $(seq 1 20); do
+          # Distinct path so the readiness ping is filterable out of the wire log.
+          curl -fsS --max-time 1 http://127.0.0.1:8099/__ready >/dev/null 2>&1 && break
+          [[ $i -eq 20 ]] && { echo "::warning::wire echo server never came up; skipping"; kill $echo_pid 2>/dev/null; exit 0; }
+          sleep 0.5
+        done
+
+        # Same cd as the real runner: the CLI resolves paths against its own cwd.
+        (
+          cd "$POSTMAN_DIR" || exit 1
+          postman collection run "postman/collections/Fleetbase API" -r cli \
+            --env-var "base_url=http://127.0.0.1:8099" \
+            --env-var "namespace=v1" \
+            --env-var "api_key=SENTINEL_COLLECTION_AUTH" \
+            --env-var "platform_token=SENTINEL_REQUEST_HEADER" \
+            -i "List Organizations" > /dev/null 2>&1
+          postman collection run "postman/collections/Fleetbase Storefront API" -r cli \
+            --env-var "base_url=http://127.0.0.1:8099" \
+            --env-var "namespace=v1" \
+            --env-var "api_prefix=storefront" \
+            --env-var "storefront_key=SENTINEL_COLLECTION_AUTH" \
+            --env-var "network_key=SENTINEL_REQUEST_HEADER" \
+            -i "List Network Stores" > /dev/null 2>&1
+        ) || true
+
+        sleep 1
+        { kill $echo_pid; wait $echo_pid; } 2>/dev/null
+        echo "Postman CLI: $(postman --version 2>&1 | head -1)"
+        echo "--- what the two failing requests actually put on the wire ---"
+        grep -v "__ready" "$WIRE"
+        if grep -q 'SENTINEL_COLLECTION_AUTH' "$WIRE"; then
+          echo "=> The COLLECTION-level bearer overrode the request-level Authorization header."
+        elif grep -q 'SENTINEL_REQUEST_HEADER' "$WIRE"; then
+          echo "=> The request-level header won; the wrong credential is NOT coming from auth precedence."
+        else
+          echo "=> Neither sentinel arrived — the requests did not execute. Check for 'items were not found'."
+        fi
+
     - name: Run Postman collections
       if: steps.pmauth.outputs.available == 'true'
       shell: bash
