@@ -2,6 +2,7 @@ import { module, test } from 'qunit';
 import { setupTest } from '@fleetbase/console/tests/helpers';
 import Service from '@ember/service';
 import { settled } from '@ember/test-helpers';
+import window from 'ember-window-mock';
 
 class IntlStub extends Service {
     t(key) {
@@ -299,7 +300,7 @@ module('Unit | Controller | console/admin/organizations/details/users | imperson
         Object.defineProperty(this.controller.router, 'transitionTo', { configurable: true, value: () => Promise.resolve() });
 
         this.reloads = 0;
-        Object.defineProperty(this.controller, 'reloadWindow', { configurable: true, value: () => this.reloads++ });
+        window.location.reload = () => this.reloads++;
     });
 
     test('impersonating a user swaps the session and reloads once the timer fires', async function (assert) {

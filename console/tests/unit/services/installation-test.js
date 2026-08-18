@@ -3,6 +3,7 @@ import Service from '@ember/service';
 import { setupTest } from '@fleetbase/console/tests/helpers';
 import { settled } from '@ember/test-helpers';
 import { later } from '@ember/runloop';
+import window from 'ember-window-mock';
 
 /**
  * Builds a socket service whose channel yields the given payloads to the service's
@@ -255,7 +256,7 @@ module('Unit | Service | installation', function (hooks) {
         const service = this.owner.lookup('service:installation');
         let reloadCount = 0;
 
-        service.reloadConsole = () => {
+        window.location.reload = () => {
             reloadCount++;
         };
 
@@ -402,7 +403,7 @@ module('Unit | Service | installation', function (hooks) {
 
         const service = this.owner.lookup('service:installation');
         let reloads = 0;
-        service.reloadConsole = () => reloads++;
+        window.location.reload = () => reloads++;
 
         await service.listenForInstallComplete();
 

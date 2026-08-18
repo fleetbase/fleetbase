@@ -2,6 +2,7 @@ import Service from '@ember/service';
 import { inject as service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import { later, cancel } from '@ember/runloop';
+import window from 'ember-window-mock';
 
 const NOT_CONFIGURED_ERROR = 'fleetbase_not_configured';
 const INSTALL_CHANNEL = 'fleetbase.install';
@@ -159,15 +160,6 @@ export default class InstallationService extends Service {
         }
 
         this.isRefreshing = true;
-        this.reloadConsole();
-    }
-
-    /* istanbul ignore next -- window.location.reload() cannot be stubbed: the HTML spec
-       marks every Location member as an own, non-configurable property, so defineProperty
-       throws and calling it for real would reload the test runner. This wrapper exists
-       precisely so callers can be tested by replacing reloadConsole() on the instance,
-       which the handleInstallCompleteEvent tests do. */
-    reloadConsole() {
         window.location.reload();
     }
 

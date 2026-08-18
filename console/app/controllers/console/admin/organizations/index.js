@@ -2,6 +2,7 @@ import Controller from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
 import { action } from '@ember/object';
+import window from 'ember-window-mock';
 
 /**
  * Controller for managing organizations in the admin console.
@@ -311,19 +312,10 @@ export default class ConsoleAdminOrganizationsController extends Controller {
             await this.router.transitionTo('console');
             this.session.manuallyAuthenticate(token);
             this.notifications.info(`Now impersonating ${owner?.email || 'organization owner'}...`);
-            this.reloadWindow();
+            window.location.reload();
         } catch (error) {
             this.notifications.serverError(error);
         }
-    }
-
-    /* istanbul ignore next -- window.location.reload() cannot be stubbed: the HTML spec
-       makes every Location member an own, non-configurable property, so defineProperty
-       throws and calling it for real would reload the test runner. Extracted so callers can
-       be tested by replacing reloadWindow() on the instance, mirroring
-       InstallationService.reloadConsole(). */
-    reloadWindow() {
-        window.location.reload();
     }
 
     resolveBelongsTo(record) {

@@ -6,6 +6,7 @@ import Service from '@ember/service';
 import { cancel } from '@ember/runloop';
 import ImpersonatorTrayComponent from '@fleetbase/console/components/impersonator-tray';
 import { captureComponent } from '@fleetbase/console/tests/helpers/capture-component';
+import window from 'ember-window-mock';
 
 function registerSession(owner, authenticated) {
     class SessionStub extends Service {
@@ -186,7 +187,7 @@ module('Integration | Component | impersonator-tray | reload', function (hooks) 
             Object.defineProperty(component.router, 'transitionTo', { configurable: true, value: () => Promise.resolve() });
 
             this.reloads = 0;
-            Object.defineProperty(component, 'reloadWindow', { configurable: true, value: () => this.reloads++ });
+            window.location.reload = () => this.reloads++;
 
             return component;
         };

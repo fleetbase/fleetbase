@@ -3,6 +3,7 @@ import { setupTest } from '@fleetbase/console/tests/helpers';
 import Service from '@ember/service';
 import { cancel } from '@ember/runloop';
 import { settled } from '@ember/test-helpers';
+import window from 'ember-window-mock';
 
 // Captures whatever the controller hands to the modals manager so the modal's
 // `confirm` callback can be driven directly.
@@ -457,7 +458,7 @@ module('Unit | Controller | console/account/organizations | reload and stale cou
         this.controller.router.refresh = () => this.refreshed++;
 
         this.reloads = 0;
-        Object.defineProperty(this.controller, 'reloadWindow', { configurable: true, value: () => this.reloads++ });
+        window.location.reload = () => this.reloads++;
     });
 
     test('switching organizations reloads the console once the timer fires', async function (assert) {

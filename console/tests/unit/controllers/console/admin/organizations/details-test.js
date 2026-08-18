@@ -2,6 +2,7 @@ import { module, test } from 'qunit';
 import { setupTest } from '@fleetbase/console/tests/helpers';
 import Service from '@ember/service';
 import { settled } from '@ember/test-helpers';
+import window from 'ember-window-mock';
 
 class NotificationsStub extends Service {
     successes = [];
@@ -497,9 +498,8 @@ module('Unit | Controller | console/admin/organizations/details | registry fallb
 });
 
 /**
- * The impersonation success path ends in a window reload, which is isolated behind
- * reloadWindow() precisely so it can be replaced here — Location members are
- * non-configurable, so the real call can never be stubbed.
+ * The impersonation success path ends in a window reload. ember-window-mock makes that a
+ * no-op in tests and lets the call be spied on, so the whole path can be driven.
  */
 module('Unit | Controller | console/admin/organizations/details | impersonation', function (hooks) {
     setupTest(hooks);
@@ -541,7 +541,7 @@ module('Unit | Controller | console/admin/organizations/details | impersonation'
         });
 
         this.reloads = 0;
-        Object.defineProperty(this.controller, 'reloadWindow', { configurable: true, value: () => this.reloads++ });
+        window.location.reload = () => this.reloads++;
     });
 
     test('impersonating an owner authenticates as them and reloads the console', async function (assert) {

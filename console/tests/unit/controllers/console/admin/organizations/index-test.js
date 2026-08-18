@@ -1,6 +1,7 @@
 import { module, test } from 'qunit';
 import { setupTest } from '@fleetbase/console/tests/helpers';
 import Service from '@ember/service';
+import window from 'ember-window-mock';
 
 class IntlStub extends Service {
     t(key) {
@@ -338,7 +339,7 @@ module('Unit | Controller | console/admin/organizations/index | actions', functi
                 },
             });
             this.reloads = 0;
-            Object.defineProperty(controller, 'reloadWindow', { configurable: true, value: () => this.reloads++ });
+            window.location.reload = () => this.reloads++;
             return controller;
         };
         this.notifications = () => this.owner.lookup('service:notifications');

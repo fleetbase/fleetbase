@@ -6,6 +6,7 @@ import { action } from '@ember/object';
 import { isArray } from '@ember/array';
 import { dasherize } from '@ember/string';
 import first from '@fleetbase/ember-core/utils/first';
+import window from 'ember-window-mock';
 
 export default class ConsoleController extends Controller {
     @service currentUser;
@@ -86,7 +87,7 @@ export default class ConsoleController extends Controller {
                         return later(
                             this,
                             () => {
-                                this.reloadWindow();
+                                window.location.reload();
                             },
                             900
                         );
@@ -110,7 +111,7 @@ export default class ConsoleController extends Controller {
                     return later(
                         this,
                         () => {
-                            this.reloadWindow();
+                            window.location.reload();
                         },
                         900
                     );
@@ -147,7 +148,7 @@ export default class ConsoleController extends Controller {
                     return later(
                         this,
                         () => {
-                            this.reloadWindow();
+                            window.location.reload();
                         },
                         900
                     );
@@ -157,15 +158,6 @@ export default class ConsoleController extends Controller {
                 }
             },
         });
-    }
-
-    /* istanbul ignore next -- window.location.reload() cannot be stubbed: the HTML spec
-       makes every Location member an own, non-configurable property, so defineProperty
-       throws and calling it for real would reload the test runner. Extracted so the reload
-       timers above can be tested by replacing this on the instance, mirroring
-       InstallationService.reloadConsole(). */
-    reloadWindow() {
-        window.location.reload();
     }
 
     @action viewChangelog() {

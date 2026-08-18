@@ -1,6 +1,7 @@
 import { module, test } from 'qunit';
 import { setupTest } from '@fleetbase/console/tests/helpers';
 import Service from '@ember/service';
+import window from 'ember-window-mock';
 
 const ADMIN_MENU_ITEMS = [
     {
@@ -164,11 +165,15 @@ module('Unit | Controller | console/admin', function (hooks) {
         const navigatorAppItem = controller.navigationItems[7].children[0];
         const mapItem = controller.navigationItems[7].children[1];
 
-        // activeWhen delegates to isMenuItemActive, which reads window.location.pathname and
-        // (via getUrlParam) window.location.search off the real global window. replaceState
-        // rewrites both synchronously without navigating the test iframe.
-        const originalUrl = window.location.href;
-        const visit = (url) => window.history.replaceState(null, '', url);
+        // activeWhen delegates to ember-ui's isMenuItemActive, which reads location.pathname
+        // through ember-window-mock — but its collaborator getUrlParam has no such import and
+        // reads location.search off the real global window. The two therefore disagree unless
+        // both are pointed at the URL under test, so this sets each of them.
+        const originalUrl = globalThis.location.href;
+        const visit = (url) => {
+            window.location.href = url;
+            globalThis.history.replaceState(null, '', url);
+        };
 
         try {
             visit('/admin/fleet-ops?view=navigator-app');
@@ -182,7 +187,7 @@ module('Unit | Controller | console/admin', function (hooks) {
             assert.true(rootRegistryItem.activeWhen(), 'loose registry item is active for /admin/<slug>');
             assert.false(navigatorAppItem.activeWhen(), 'panel child is not active for loose registry URL');
         } finally {
-            window.history.replaceState(null, '', originalUrl);
+            globalThis.history.replaceState(null, '', originalUrl);
         }
     });
 

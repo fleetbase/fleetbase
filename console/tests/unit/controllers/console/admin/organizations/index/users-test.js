@@ -3,6 +3,7 @@ import { setupTest } from '@fleetbase/console/tests/helpers';
 import Service from '@ember/service';
 import { settled } from '@ember/test-helpers';
 import { cancel } from '@ember/runloop';
+import window from 'ember-window-mock';
 
 module('Unit | Controller | console/admin/organizations/index/users', function (hooks) {
     setupTest(hooks);
@@ -236,7 +237,7 @@ module('Unit | Controller | console/admin/organizations/index/users | impersonat
         Object.defineProperty(this.controller.router, 'transitionTo', { configurable: true, value: () => Promise.resolve() });
 
         this.reloads = 0;
-        Object.defineProperty(this.controller, 'reloadWindow', { configurable: true, value: () => this.reloads++ });
+        window.location.reload = () => this.reloads++;
     });
 
     test('impersonating a user swaps the session and hands back a cancellable reload', async function (assert) {

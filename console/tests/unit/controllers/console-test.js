@@ -3,6 +3,7 @@ import { setupTest } from '@fleetbase/console/tests/helpers';
 import { settled } from '@ember/test-helpers';
 import Service from '@ember/service';
 import { cancel } from '@ember/runloop';
+import window from 'ember-window-mock';
 
 class IntlStub extends Service {
     t(key) {
@@ -297,7 +298,7 @@ module('Unit | Controller | console | reload timers and defaults', function (hoo
         this.build = () => {
             const controller = this.owner.lookup('controller:console');
             this.reloads = 0;
-            Object.defineProperty(controller, 'reloadWindow', { configurable: true, value: () => this.reloads++ });
+            window.location.reload = () => this.reloads++;
             return controller;
         };
         this.modals = () => this.owner.lookup('service:modals-manager');

@@ -4,6 +4,7 @@ import { inject as service } from '@ember/service';
 import { later } from '@ember/runloop';
 import { isArray } from '@ember/array';
 import { task } from 'ember-concurrency';
+import window from 'ember-window-mock';
 
 export default class ConsoleAdminOrganizationsDetailsController extends Controller {
     @service router;
@@ -234,20 +235,9 @@ export default class ConsoleAdminOrganizationsDetailsController extends Controll
             yield this.router.transitionTo('console');
             this.session.manuallyAuthenticate(token);
             this.notifications.info(`Now impersonating ${this.ownerEmail || 'organization owner'}...`);
-            later(this, this.reloadWindow, 600);
+            later(() => window.location.reload(), 600);
         } catch (error) {
             this.notifications.serverError(error);
         }
-    }
-
-    /**
-     * Reloading the window is the last step of impersonation. Location members are
-     * non-configurable per spec, so this cannot be stubbed — it is isolated here so callers
-     * can be tested by replacing the method, matching InstallationService,
-     * ConsoleAdminOrganizationsController and ConsoleController.
-     */
-    /* istanbul ignore next -- window.location.reload() cannot be stubbed */
-    reloadWindow() {
-        window.location.reload();
     }
 }

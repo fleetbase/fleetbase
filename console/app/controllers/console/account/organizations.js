@@ -3,6 +3,7 @@ import { inject as service } from '@ember/service';
 import { action } from '@ember/object';
 import { later } from '@ember/runloop';
 import { htmlSafe } from '@ember/template';
+import window from 'ember-window-mock';
 
 export default class ConsoleAccountOrganizationsController extends Controller {
     @service currentUser;
@@ -91,7 +92,7 @@ export default class ConsoleAccountOrganizationsController extends Controller {
                     await this.fetch.post('auth/switch-organization', { next: organization.uuid });
                     this.fetch.flushRequestCache('auth/organizations');
                     this.notifications.success(this.intl.t('console.switch-organization.success-notification'));
-                    return later(this, this.reloadWindow, 900);
+                    return later(() => window.location.reload(), 900);
                 } catch (error) {
                     modal.stopLoading();
                     return this.notifications.serverError(error);
@@ -193,15 +194,5 @@ export default class ConsoleAccountOrganizationsController extends Controller {
                 }
             },
         });
-    }
-
-    /**
-     * window.location.reload() cannot be stubbed — Location members are non-configurable
-     * per spec — so it is isolated here and callers are tested by replacing this method.
-     * Matches InstallationService, ConsoleController and the organizations controllers.
-     */
-    /* istanbul ignore next -- window.location.reload() cannot be stubbed */
-    reloadWindow() {
-        window.location.reload();
     }
 }

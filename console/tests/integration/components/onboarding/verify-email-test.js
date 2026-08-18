@@ -17,7 +17,7 @@ module('Integration | Component | onboarding/verify-email', function (hooks) {
 
         const started = [];
 
-        // The real user-verification service schedules a 75s `later` in start(), which
+        // The real onboarding-verification service schedules a 75s `later` in start(), which
         // would keep settled() waiting for the whole timeout. The template also binds
         // several of its members directly, so the stub has to provide them all.
         class VerificationStub extends Service {
@@ -39,7 +39,7 @@ module('Integration | Component | onboarding/verify-email', function (hooks) {
             }
         }
 
-        this.owner.register('service:user-verification', VerificationStub);
+        this.owner.register('service:onboarding-verification', VerificationStub);
         this.owner.register('service:url-search-params', UrlSearchParamsStub);
         this.started = started;
     });
@@ -113,7 +113,7 @@ module('Integration | Component | onboarding/verify-email | verify', function (h
                 this.serverErrors.push(error);
             }
         }
-        this.owner.register('service:user-verification', VerificationStub);
+        this.owner.register('service:onboarding-verification', VerificationStub);
         this.owner.register('service:url-search-params', UrlSearchParamsStub);
         this.owner.register('service:fetch', FetchStub);
         this.owner.register('service:notifications', NotificationsStub);
