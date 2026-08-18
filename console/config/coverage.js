@@ -35,12 +35,7 @@ module.exports = {
     // Exclude generated/vendor and test files from the coverage denominator.
     // app/extensions/** are auto-generated extension manifests (declarative config
     // written by the extensions generator) — not hand-written, testable logic.
-    // app/resolver.js is dead code: app/app.js imports Resolver straight from 'ember-resolver'
-    // and nothing else references it. It is also broken — its resolveRoute() calls
-    // super.resolveRoute(), which ember-resolver does not define, so every non-'main' route
-    // would throw the moment the file was actually wired up. It is excluded rather than
-    // tested; the file should be deleted or repaired separately.
-    excludes: ['*/mirage/**', '*/tests/**', '**/*-test.js', '**/extensions/**', '**/resolver.js'],
+    excludes: ['*/mirage/**', '*/tests/**', '**/*-test.js', '**/extensions/**'],
 
     modifyAssetLocation(root, relativePath) {
         if (relativePath.startsWith(MODULE_PREFIX)) {

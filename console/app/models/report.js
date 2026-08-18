@@ -2,6 +2,7 @@ import Model, { attr } from '@ember-data/model';
 import { computed } from '@ember/object';
 import { isArray } from '@ember/array';
 import { getOwner } from '@ember/application';
+import fleetbaseApiFetch from '@fleetbase/ember-core/utils/fleetbase-api-fetch';
 import { isPresent } from '@ember/utils';
 import { format, formatDistanceToNow } from 'date-fns';
 
@@ -357,71 +358,49 @@ export default class ReportModel extends Model {
         return response;
     }
 
-    // Static methods for direct query operations
+    /**
+     * Ad-hoc query operations that are not tied to a saved report.
+     *
+     * These are static, so there is no container to resolve a service from — getOwner() on
+     * the class itself returns undefined, which meant every one of these threw the moment it
+     * was called. fleetbaseApiFetch needs no owner: it builds the URL from config and reads
+     * the bearer token out of the persisted session, so it works from a static context.
+     */
     static async executeQuery(queryConfig) {
-        const owner = getOwner(this);
-        const fetch = owner.lookup('service:fetch');
-
-        const response = await fetch.post('reports/execute-query', {
+        return fleetbaseApiFetch('POST', 'reports/execute-query', {
             query_config: queryConfig,
         });
-
-        return response;
     }
 
     static async exportQuery(queryConfig, format = 'csv', options = {}) {
-        const owner = getOwner(this);
-        const fetch = owner.lookup('service:fetch');
-
-        // fetch here is the injected service, not a callable — every sibling posts through it.
-        const response = await fetch.post('reports/export-query', {
+        return fleetbaseApiFetch('POST', 'reports/export-query', {
             query_config: queryConfig,
             format,
             options,
         });
-
-        return response;
     }
 
     static async validateQuery(queryConfig) {
-        const owner = getOwner(this);
-        const fetch = owner.lookup('service:fetch');
-
-        const response = await fetch.post('reports/validate-query', { query_config: queryConfig });
-        return response;
+        return fleetbaseApiFetch('POST', 'reports/validate-query', { query_config: queryConfig });
     }
 
     static async analyzeQuery(queryConfig) {
-        const owner = getOwner(this);
-        const fetch = owner.lookup('service:fetch');
-
-        const response = await fetch.post('reports/analyze-query', { query_config: queryConfig });
-        return response;
+        return fleetbaseApiFetch('POST', 'reports/analyze-query', { query_config: queryConfig });
     }
 
+    // null rather than the default {}, so the GET is not given an empty query string.
     static async getTables() {
-        // Was reaching for a bare `fetch`, which resolved to the global window.fetch and has
-        // no .get() — resolve the service the same way every sibling does.
-        const owner = getOwner(this);
-        const fetch = owner.lookup('service:fetch');
-
-        const { tables } = await fetch.get('reports/tables');
+        const { tables } = await fleetbaseApiFetch('GET', 'reports/tables', null);
         return tables;
     }
 
     static async getTableSchema(tableName) {
-        const owner = getOwner(this);
-        const fetch = owner.lookup('service:fetch');
-
-        const { schema } = await fetch.get(`reports/tables/${tableName}/schema`);
+        const { schema } = await fleetbaseApiFetch('GET', `reports/tables/${tableName}/schema`, null);
         return schema;
     }
 
     static async getExportFormats() {
-        const owner = getOwner(this);
-        const fetch = owner.lookup('service:fetch');
-
-        const { formats } = await fetch.get('reports/export-formats');
+        const { formats } = await fleetbaseApiFetch('GET', 'reports/export-formats', null);
         return formats;
     }
 

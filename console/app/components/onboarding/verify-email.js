@@ -24,7 +24,7 @@ export default class OnboardingVerifyEmailComponent extends Component {
         this.code = this.urlSearchParams.get('code');
         this.session = this.args.context.get('session') ?? this.urlSearchParams.get('session');
         this.initialized = true;
-        this.verification.start();
+        this.verification.start({ session: this.session });
     }
 
     @task *verify(event) {

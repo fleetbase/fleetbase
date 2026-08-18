@@ -255,6 +255,7 @@ module('Unit | Service | user-verification', function (hooks) {
         this.owner.register('service:modals-manager', ModalsManagerStub);
 
         const service = this.owner.lookup('service:user-verification');
+        service.setSession('sess_abc');
         service.resendBySms();
 
         const modal = fakeModal({ phone: '+15550001111' });
@@ -262,9 +263,7 @@ module('Unit | Service | user-verification', function (hooks) {
 
         assert.strictEqual(request.path, 'onboard/send-verification-sms');
         assert.strictEqual(request.body.phone, '+15550001111');
-        // Documenting current behaviour, not endorsing it: the service reads `this.hello`,
-        // which it never defines, so the session is always sent as undefined.
-        assert.strictEqual(request.body.session, undefined, 'session is always undefined — see this.hello');
+        assert.strictEqual(request.body.session, 'sess_abc', 'the resent code is tied to the session in progress');
         assert.deepEqual(modal.calls, ['startLoading', 'done']);
         assert.deepEqual(this.owner.lookup('service:notifications').successes, ['Verification code SMS sent!']);
     });
@@ -284,11 +283,12 @@ module('Unit | Service | user-verification', function (hooks) {
         const service = this.owner.lookup('service:user-verification');
         service.resendBySms();
 
-        await this.owner.lookup('service:modals-manager').shown[0].options.confirm(fakeModal({ phone: '' }));
+        const modal = fakeModal({ phone: '' });
+        await this.owner.lookup('service:modals-manager').shown[0].options.confirm(modal);
 
         assert.deepEqual(this.owner.lookup('service:notifications').errors, ['No phone number provided.']);
-        // Current behaviour: the guard has no `return`, so the request goes out anyway.
-        assert.true(posted, 'the request is still sent despite the missing number');
+        assert.false(posted, 'nothing is sent without a number to send it to');
+        assert.deepEqual(modal.calls, ['startLoading', 'stopLoading'], 'the modal stops spinning so the user can correct it');
     });
 
     test('a failed sms send is surfaced and the modal is left open', async function (assert) {
@@ -364,10 +364,12 @@ module('Unit | Service | user-verification', function (hooks) {
         const service = this.owner.lookup('service:user-verification');
         service.resendEmail();
 
-        await this.owner.lookup('service:modals-manager').shown[0].options.confirm(fakeModal({ email: '' }));
+        const modal = fakeModal({ email: '' });
+        await this.owner.lookup('service:modals-manager').shown[0].options.confirm(modal);
 
-        assert.deepEqual(this.owner.lookup('service:notifications').errors, ['No email number provided.']);
-        assert.true(posted, 'the request is still sent despite the missing address');
+        assert.deepEqual(this.owner.lookup('service:notifications').errors, ['No email address provided.']);
+        assert.false(posted, 'nothing is sent without an address to send it to');
+        assert.deepEqual(modal.calls, ['startLoading', 'stopLoading'], 'the modal stops spinning so the user can correct it');
     });
 
     test('a failed email send is surfaced and the modal is left open', async function (assert) {
@@ -389,5 +391,41 @@ module('Unit | Service | user-verification', function (hooks) {
 
         assert.deepEqual(this.owner.lookup('service:notifications').serverErrors, [failure]);
         assert.deepEqual(modal.calls, ['startLoading', 'stopLoading']);
+    });
+});
+
+module('Unit | Service | user-verification | session', function (hooks) {
+    setupTest(hooks);
+
+    hooks.beforeEach(function () {
+        this.service = this.owner.lookup('service:user-verification');
+    });
+
+    hooks.afterEach(function () {
+        cancel(this.timer);
+    });
+
+    test('start records the session the verification was issued against', function (assert) {
+        assert.strictEqual(this.service.hello, undefined, 'nothing is assumed before a caller supplies one');
+
+        this.timer = this.service.start({ session: 'sess_from_caller' });
+
+        assert.strictEqual(this.service.hello, 'sess_from_caller');
+    });
+
+    test('start without a session leaves any previously recorded one alone', function (assert) {
+        this.service.setSession('sess_existing');
+
+        this.timer = this.service.start();
+
+        assert.strictEqual(this.service.hello, 'sess_existing', 'a bare start() does not wipe the session');
+    });
+
+    test('an explicitly empty session is recorded as given', function (assert) {
+        this.service.setSession('sess_existing');
+
+        this.timer = this.service.start({ session: null });
+
+        assert.strictEqual(this.service.hello, null, 'the caller is trusted over the previous value');
     });
 });

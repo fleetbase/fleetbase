@@ -17,7 +17,19 @@ export default class UserVerificationService extends Service {
     @tracked ready;
     @tracked waiting = false;
 
+    /**
+     * The onboarding session the verification code was issued against, named for the
+     * `hello` query param the auth and onboard verification screens carry it in. The resend
+     * endpoints need it to tie a new code to the session already in progress; `session` is
+     * taken by the injected service above.
+     */
+    @tracked hello;
+
     @action start(options = {}) {
+        if (options?.session !== undefined) {
+            this.setSession(options.session);
+        }
+
         // Hand the timer back so callers can cancel it. Without this the 75s wait is
         // unreachable once scheduled and will still fire after its caller has gone away.
         return this.#wait(options?.timeout ?? 75000);
@@ -42,6 +54,7 @@ export default class UserVerificationService extends Service {
                 const phone = modal.getOption('phone');
                 if (!phone) {
                     this.notifications.error('No phone number provided.');
+                    return modal.stopLoading();
                 }
 
                 try {
@@ -65,7 +78,8 @@ export default class UserVerificationService extends Service {
                 modal.startLoading();
                 const email = modal.getOption('email');
                 if (!email) {
-                    this.notifications.error('No email number provided.');
+                    this.notifications.error('No email address provided.');
+                    return modal.stopLoading();
                 }
 
                 try {
@@ -106,6 +120,10 @@ export default class UserVerificationService extends Service {
 
     setCode(code) {
         this.code = code;
+    }
+
+    setSession(session) {
+        this.hello = session;
     }
 
     // start() is the only caller and always resolves the timeout itself, so this takes no

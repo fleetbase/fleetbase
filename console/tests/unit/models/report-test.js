@@ -1,8 +1,8 @@
 import { module, test } from 'qunit';
 import { setupTest } from '@fleetbase/console/tests/helpers';
 import Service from '@ember/service';
-import { getOwner, setOwner } from '@ember/application';
 import ReportModel from '@fleetbase/console/models/report';
+import config from 'ember-get-config';
 
 // A query_config shaped the way the model expects, with knobs for each feature.
 function queryConfig(overrides = {}) {
@@ -309,100 +309,124 @@ module('Unit | Model | report', function (hooks) {
 });
 
 /**
- * The static query helpers resolve their fetch service through getOwner(this), where `this`
- * is the class itself. Nothing in the app ever gives the class an owner, so as written they
- * cannot work when called as ReportModel.getTables() — flagged on the PR rather than
- * redesigned here. Supplying an owner lets the logic inside them be exercised.
+ * The static query helpers are not tied to a saved report and have no container to resolve a
+ * service from, so they go through fleetbaseApiFetch, which builds the request itself. That
+ * means stubbing the global fetch rather than service:fetch.
  */
 module('Unit | Model | report | static query API', function (hooks) {
     setupTest(hooks);
 
     hooks.beforeEach(function () {
-        this.posted = [];
-        this.gets = [];
-        this.getResponse = {
-            'reports/tables': { tables: [{ name: 'orders' }] },
-            'reports/tables/orders/schema': { schema: { columns: ['id'] } },
-            'reports/export-formats': { formats: ['csv', 'pdf'] },
-        };
+        this.requests = [];
+        this.response = {};
         const self = this;
 
-        class FetchStub extends Service {
-            post(path, payload) {
-                self.posted.push({ path, payload });
-                return Promise.resolve({ ok: true });
-            }
-            get(path) {
-                self.gets.push(path);
-                return Promise.resolve(self.getResponse[path]);
-            }
-        }
-        this.owner.register('service:fetch', FetchStub);
+        this.originalFetch = window.fetch;
+        window.fetch = (url, options) => {
+            self.requests.push({ url, method: options.method, body: options.body ? JSON.parse(options.body) : undefined, headers: options.headers });
 
-        this.previousOwner = getOwner(ReportModel);
-        setOwner(ReportModel, this.owner);
+            return Promise.resolve({
+                ok: true,
+                json: () => Promise.resolve(self.response),
+            });
+        };
+
+        // fleetbaseApiFetch prefixes every path with the configured API host and namespace.
+        this.prefix = `${config.API.host}/${config.API.namespace}/`;
+        this.lastRequest = () => self.requests.at(-1);
     });
 
     hooks.afterEach(function () {
-        setOwner(ReportModel, this.previousOwner);
+        window.fetch = this.originalFetch;
     });
 
     test('executeQuery posts the config to the ad-hoc endpoint', async function (assert) {
-        const config = { table: { name: 'orders' } };
+        this.response = { ok: true };
+        const queryConfig = { table: { name: 'orders' } };
 
-        const response = await ReportModel.executeQuery(config);
+        const response = await ReportModel.executeQuery(queryConfig);
 
-        assert.deepEqual(this.posted.at(-1), { path: 'reports/execute-query', payload: { query_config: config } });
+        const request = this.lastRequest();
+        assert.strictEqual(request.url, `${this.prefix}reports/execute-query`);
+        assert.strictEqual(request.method, 'POST');
+        assert.deepEqual(request.body, { query_config: queryConfig });
         assert.deepEqual(response, { ok: true }, 'the server response is handed back');
     });
 
     test('exportQuery posts the config with its format and options', async function (assert) {
-        const config = { table: { name: 'orders' } };
+        const queryConfig = { table: { name: 'orders' } };
 
-        await ReportModel.exportQuery(config, 'pdf', { landscape: true });
+        await ReportModel.exportQuery(queryConfig, 'pdf', { landscape: true });
 
-        assert.deepEqual(this.posted.at(-1), {
-            path: 'reports/export-query',
-            payload: { query_config: config, format: 'pdf', options: { landscape: true } },
-        });
+        const request = this.lastRequest();
+        assert.strictEqual(request.url, `${this.prefix}reports/export-query`);
+        assert.deepEqual(request.body, { query_config: queryConfig, format: 'pdf', options: { landscape: true } });
     });
 
     test('exportQuery defaults to csv with no options', async function (assert) {
         await ReportModel.exportQuery({ table: { name: 'orders' } });
 
-        assert.strictEqual(this.posted.at(-1).payload.format, 'csv');
-        assert.deepEqual(this.posted.at(-1).payload.options, {});
+        assert.strictEqual(this.lastRequest().body.format, 'csv');
+        assert.deepEqual(this.lastRequest().body.options, {});
     });
 
     test('validateQuery and analyzeQuery post to their own endpoints', async function (assert) {
-        const config = { table: { name: 'orders' } };
+        const queryConfig = { table: { name: 'orders' } };
 
-        await ReportModel.validateQuery(config);
-        assert.deepEqual(this.posted.at(-1), { path: 'reports/validate-query', payload: { query_config: config } });
+        await ReportModel.validateQuery(queryConfig);
+        assert.strictEqual(this.lastRequest().url, `${this.prefix}reports/validate-query`);
+        assert.deepEqual(this.lastRequest().body, { query_config: queryConfig });
 
-        await ReportModel.analyzeQuery(config);
-        assert.deepEqual(this.posted.at(-1), { path: 'reports/analyze-query', payload: { query_config: config } });
+        await ReportModel.analyzeQuery(queryConfig);
+        assert.strictEqual(this.lastRequest().url, `${this.prefix}reports/analyze-query`);
+        assert.deepEqual(this.lastRequest().body, { query_config: queryConfig });
     });
 
     test('getTables unwraps the table list from the response', async function (assert) {
+        this.response = { tables: [{ name: 'orders' }] };
+
         const tables = await ReportModel.getTables();
 
-        assert.deepEqual(this.gets, ['reports/tables']);
+        const request = this.lastRequest();
+        assert.strictEqual(request.url, `${this.prefix}reports/tables`, 'no empty query string is appended');
+        assert.strictEqual(request.method, 'GET');
         assert.deepEqual(tables, [{ name: 'orders' }], 'the tables are unwrapped, not the envelope');
     });
 
     test('getTableSchema requests the schema for the named table', async function (assert) {
+        this.response = { schema: { columns: ['id'] } };
+
         const schema = await ReportModel.getTableSchema('orders');
 
-        assert.deepEqual(this.gets, ['reports/tables/orders/schema']);
+        assert.strictEqual(this.lastRequest().url, `${this.prefix}reports/tables/orders/schema`);
         assert.deepEqual(schema, { columns: ['id'] });
     });
 
     test('getExportFormats unwraps the available formats', async function (assert) {
+        this.response = { formats: ['csv', 'pdf'] };
+
         const formats = await ReportModel.getExportFormats();
 
-        assert.deepEqual(this.gets, ['reports/export-formats']);
+        assert.strictEqual(this.lastRequest().url, `${this.prefix}reports/export-formats`);
         assert.deepEqual(formats, ['csv', 'pdf']);
+    });
+
+    test('a persisted session is sent as a bearer token', async function (assert) {
+        window.localStorage.setItem('ember_simple_auth-session', JSON.stringify({ authenticated: { token: 'session-token' } }));
+
+        try {
+            await ReportModel.getTables();
+
+            assert.strictEqual(this.lastRequest().headers.Authorization, 'Bearer session-token');
+        } finally {
+            window.localStorage.removeItem('ember_simple_auth-session');
+        }
+    });
+
+    test('an unauthenticated caller sends no authorization header', async function (assert) {
+        await ReportModel.getTables();
+
+        assert.strictEqual(this.lastRequest().headers.Authorization, undefined);
     });
 });
 
