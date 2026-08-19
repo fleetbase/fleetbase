@@ -1,13 +1,13 @@
-> v0.7.54 ~ "Marketplace APIs, Fleet-Ops hardening, portal visibility, and release CI fixes"
+> v0.7.55 ~ "Verification and credentials email delivery restored"
 
 ---
 ## Highlights
-Fleetbase `0.7.54` is a focused reliability and API hardening release. It updates Core API settings cache behavior, tightens Fleet-Ops public API and verification flows, restores Storefront marketplace backend support, fixes Customer Portal order visibility, and keeps Ledger wallet routes and release contract workflows aligned.
+Fleetbase `0.7.55` is a small, focused patch release. It ships Core API `1.6.59`, which repairs the verification and credentials mail templates: both failed to compile, so every flow that delivers a code — customer signup, SMS login with email fallback, password reset, account closure, and driver login — returned an error instead of sending. No other module changed in this release.
 
 ---
 ## Component Versions
-- `console`: `0.7.54`
-- `core-api`: `1.6.58`
+- `console`: `0.7.55`
+- `core-api`: `1.6.59`
 - `fleetops`: `0.6.60`
 - `customer-portal`: `0.0.13`
 - `storefront`: `0.4.19`
@@ -15,66 +15,25 @@ Fleetbase `0.7.54` is a focused reliability and API hardening release. It update
 
 ---
 ## Core API
-- Fixed system setting cache invalidation so writes clear the same cache entries read by `Setting::system()`.
-- Fixed platform API token validation after token rotation on file-cache installs.
-- Made Redis-only pattern cache clearing skip safely when Redis is unavailable.
-- Deferred the database-backed user deletion service until command execution so Composer package discovery no longer requires a live MySQL connection.
-- Kept the settings cache regression covered by the full Core API suite.
-
----
-## Fleet-Ops
-- Fixed driver verification-code bypass behavior and limited the review bypass to configured non-production review accounts.
-- Fixed unknown onboard organization lookups to return `404` instead of a server error.
-- Fixed duplicate part SKU and fuel provider transaction IDs to return validation errors instead of database exceptions.
-- Restored customer signup with place-backed addresses and maintenance vehicle schedule workflows.
-- Fixed sensor creation, driver register-device routes, fuel report creation without location data, geofence driver history lookup, QR debug content, and QR lookup failures.
-- Updated Fleet-Ops CI so server, Ember, and Postman workflows run on release branches.
-
----
-## Storefront
-- Restored the marketplace backend required by the refactored Storefront App.
-- Added paginated marketplace member-store APIs with search, category/tag, online, rating, trending, age, popularity, nearest, and distance filters.
-- Added marketplace member locations, categories, products, merchant metadata, reviews, and payment gateway surfaces.
-- Hardened carts and checkout across tenant scope, authenticated customer identity, merchant/store ownership, product availability, multi-store policy, currency, and service quote handling.
-- Fixed API errors around carts, unknown store locations, malformed Apple identity tokens, missing review subjects, SMS login without Twilio credentials, account closure, phone verification, checked-out carts, and checkout token responses.
-
----
-## Customer Portal
-- Fixed dispatcher-created order visibility by authorizing portal orders through tenant-scoped customer UUIDs instead of strict polymorphic type matching.
-- Kept other customers, companies, and soft-deleted orders isolated.
-- Added regression coverage for portal-created, dispatcher-created, contact, and vendor orders.
-
----
-## Ledger
-- Updated Ledger to `0.0.10` with release branch and contract-workflow alignment.
-- Fixed unauthenticated Ledger API responses so they return JSON errors instead of HTML pages.
-- Fixed public wallet routes that were unreachable by valid credentials.
-- Carried forward release-branch Postman contract workflow updates.
+- Fixed the verification and user-credentials mail views, which did not compile. Blade only treats `@` as a directive when the preceding character is not a word character — the rule that keeps `foo@bar.com` from compiling — so a greeting written as `Morning@if($user->name)` was left as literal text while its `@endif` compiled normally. The unmatched `endif` broke the enclosing conditional and the view threw on render.
+- Restored delivery for every endpoint that sends a code: customer signup, SMS login with email fallback, password reset, account closure, and driver login all returned a `400` carrying the Blade error.
+- The defect was introduced in `1.6.56` by the fix for a null user name, and shipped again in `1.6.57` and `1.6.58`. Anyone on those three versions is affected and should upgrade.
 
 ---
 ## Release and CI
-- Updated release branch contract workflows so module PRs test the branch API code instead of only the published package.
-- Added release-tag automation child updates for Fleet-Ops, Storefront, Ledger, and Customer Portal.
-- Kept Postman contract checks aligned with the latest release flow.
+- Fixed the two long-standing Postman contract failures. `List Organizations` and `List Network Stores` each need a credential the collection-level bearer cannot supply, and each expressed that with a raw `Authorization` header. A raw header overrides collection auth on Postman CLI `1.46.0` but not on `1.47.x`, where the collection bearer wins — so both requests were authenticating with the wrong credential and had been failing for several releases. Both now express the override as a request-level auth block.
+- Note for collection authors: on a request, `auth:` must be a mapping. The list form is the collection-level shape, and using it on a request removes the request from the collection and aborts the run.
+- The `Install Postman CLI` step installs whatever version is current, so contract behavior can change without any change in this repository. Read the CLI version out of the run log before treating a local reproduction as evidence.
 
 ---
 ## Bug Fixes
-- Fixed stale Core API system settings after updates.
-- Fixed Fleet-Ops verification-code bypass and duplicate-key API errors.
-- Fixed Fleet-Ops registration, sensor, fuel report, geofence, QR, and maintenance workflow regressions.
-- Fixed Storefront marketplace, checkout, customer verification, cart, review, and identity error paths.
-- Fixed Customer Portal order visibility for dispatcher-created orders.
-- Fixed Ledger wallet route access and unauthenticated response format.
+- Fixed verification and credentials emails failing to render, which surfaced as `400` responses across signup, login, password reset, account closure, and driver authentication.
+- Fixed the Fleet-Ops `List Organizations` contract request authenticating with the organization API key instead of the platform API token.
+- Fixed the Storefront `List Network Stores` contract request authenticating with the store key instead of the network key.
 
 ---
 ## API Changes
-- Core API system setting writes now invalidate direct setting cache keys reliably across cache drivers.
-- Fleet-Ops verification bypass behavior is gated by environment, configuration, and designated review accounts.
-- Fleet-Ops duplicate part SKU and fuel transaction ID conflicts now return validation responses.
-- Storefront marketplace APIs now expose network member stores, marketplace products, merchant metadata, reviews, member locations, categories, and payment gateway data with tenant-safe filtering.
-- Storefront checkout now treats authenticated `Customer-Token` identity as authoritative and rejects mismatched customer IDs.
-- Customer Portal order access now supports dispatcher-created orders through tenant-scoped customer UUID matching.
-- Ledger public wallet routes are reachable with valid credentials and unauthenticated failures return JSON.
+- No endpoint contracts changed. The Core API fix restores endpoints that were returning `400` because the mail view threw during rendering; request and response shapes are unchanged.
 
 ---
 ## Upgrade Steps
@@ -87,7 +46,3 @@ docker compose down && docker compose up -d
 # Run deploy script
 docker compose exec application bash -c "./deploy.sh"
 ```
-
----
-## Need help?
-Join the discussion on [GitHub Discussions](https://github.com/fleetbase/fleetbase/discussions) or drop by [#fleetbase on Discord](https://discord.com/invite/HnTqQ6zAVn)
