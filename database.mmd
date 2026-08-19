@@ -1,741 +1,13 @@
 erDiagram
 
-  fixflo_activity {
-    INTUNSIGNED id PK
-    CHAR uuid
-    VARCHAR log_name
-    TEXT description
-    VARCHAR company_id
-    VARCHAR subject_id
-    VARCHAR subject_type
-    VARCHAR causer_id
-    VARCHAR causer_type
-    TEXT properties
-    TIMESTAMP created_at
-    TIMESTAMP updated_at
-    TIMESTAMP deleted_at
-  }
-
-  fixflo_board_groups {
-    BIGINTUNSIGNED id PK
-    CHAR uuid UK
-    CHAR board_uuid FK
-    CHAR group_uuid FK
-    TIMESTAMP created_at
-    TIMESTAMP updated_at
-    TIMESTAMP deleted_at
-    BIT can_edit
-  }
-
-  fixflo_board_members {
-    BIGINTUNSIGNED id PK
-    CHAR uuid UK
-    CHAR board_uuid FK
-    CHAR user_uuid FK
-    TIMESTAMP created_at
-    TIMESTAMP updated_at
-    TIMESTAMP deleted_at
-    BIT can_edit
-  }
-
-  fixflo_board_orders {
-    CHAR board_uuid PK
-    CHAR user_uuid PK
-    INT order
-  }
-
-  fixflo_boards {
-    BIGINTUNSIGNED id PK
+  fleetbase_groups {
+    INTUNSIGNED id PK, UK
+    VARCHAR _key
     CHAR uuid UK
     CHAR company_uuid FK
-    CHAR owner_uuid FK
-    VARCHAR name
-    BIT is_sample
-    JSON tags
-    JSON params
-    VARCHAR type
-    VARCHAR slug
-    TIMESTAMP created_at
-    TIMESTAMP updated_at
-    TIMESTAMP deleted_at
-  }
-
-  fixflo_boundaries {
-    BIGINTUNSIGNED id PK
-    CHAR uuid UK
-    CHAR zone_uuid FK
-    GEOMETRY boundary
-    GEOMETRY location
-    TIMESTAMP created_at
-    TIMESTAMP updated_at
-    TIMESTAMP deleted_at
-  }
-
-  fixflo_cargo_grades {
-    INTUNSIGNED id PK
-    CHAR uuid UK
-    CHAR company_uuid FK
-    VARCHAR name
-    VARCHAR display_name
-    JSON aliases
-    VARCHAR slug
-    TIMESTAMP deleted_at
-    TIMESTAMP created_at
-    TIMESTAMP updated_at
-  }
-
-  fixflo_cell_comments {
-    BIGINTUNSIGNED id PK
-    CHAR uuid UK
-    CHAR company_uuid FK
-    CHAR user_uuid FK
-    CHAR subject_uuid
-    VARCHAR subject
-    VARCHAR content
-    JSON cell
-    VARCHAR slug
-    TIMESTAMP created_at
-    TIMESTAMP updated_at
-    TIMESTAMP deleted_at
-  }
-
-  fixflo_charterers {
-    INTUNSIGNED id PK
-    CHAR uuid UK
-    VARCHAR name
-    VARCHAR display_name
-    JSON aliases
-    VARCHAR slug
-    TIMESTAMP deleted_at
-    TIMESTAMP created_at
-    TIMESTAMP updated_at
-  }
-
-  fixflo_chat_messages {
-    BIGINTUNSIGNED id PK
-    CHAR uuid UK
-    CHAR chat_session_uuid FK
-    CHAR user_uuid FK
-    TEXT content
-    TIMESTAMP created_at
-    TIMESTAMP updated_at
-    TIMESTAMP deleted_at
-  }
-
-  fixflo_chat_participants {
-    BIGINTUNSIGNED id PK
-    CHAR uuid UK
-    CHAR chat_session_uuid FK
-    CHAR user_uuid FK
-    TIMESTAMP created_at
-    TIMESTAMP updated_at
-    TIMESTAMP deleted_at
-  }
-
-  fixflo_chat_sessions {
-    BIGINTUNSIGNED id PK
-    CHAR uuid UK
-    CHAR group_uuid FK
-    VARCHAR type
-    TIMESTAMP created_at
-    TIMESTAMP updated_at
-    TIMESTAMP deleted_at
-  }
-
-  fixflo_color_codes {
-    BIGINTUNSIGNED id PK
-    CHAR uuid UK
-    CHAR company_uuid FK
-    VARCHAR name
-    VARCHAR color
-    VARCHAR slug
-    TIMESTAMP created_at
-    TIMESTAMP updated_at
-    TIMESTAMP deleted_at
-  }
-
-  fixflo_column_states {
-    BIGINTUNSIGNED id PK
-    CHAR uuid UK
-    CHAR user_uuid FK
-    CHAR source_uuid
-    VARCHAR source
-    JSON state
-    TIMESTAMP created_at
-    TIMESTAMP updated_at
-    TIMESTAMP deleted_at
-  }
-
-  fixflo_companies {
-    BIGINTUNSIGNED id PK
-    CHAR uuid UK
-    CHAR owner_uuid FK
-    VARCHAR name
-    VARCHAR status
-    VARCHAR slug
-    TIMESTAMP created_at
-    TIMESTAMP updated_at
-    TIMESTAMP deleted_at
-  }
-
-  fixflo_completed_tours {
-    BIGINTUNSIGNED id PK
-    CHAR user_uuid FK
-    VARCHAR tour
-    TIMESTAMP deleted_at
-    TIMESTAMP created_at
-    TIMESTAMP updated_at
-  }
-
-  fixflo_confidentiality_levels {
-    BIGINTUNSIGNED id PK
-    CHAR uuid UK
-    CHAR company_uuid FK
-    VARCHAR name
-    VARCHAR slug
-    VARCHAR filter
-    TIMESTAMP created_at
-    TIMESTAMP updated_at
-    TIMESTAMP deleted_at
-  }
-
-  fixflo_files {
-    INTUNSIGNED id PK
-    CHAR uuid UK
-    CHAR company_uuid FK
-    CHAR uploader_uuid FK
-    CHAR key_uuid
-    VARCHAR caption
-    VARCHAR key
-    VARCHAR bucket
-    VARCHAR folder
-    VARCHAR etag
-    TEXT data_params
-    VARCHAR original_filename
-    VARCHAR type
-    VARCHAR content_type
-    INT file_size
-    VARCHAR slug
-    TIMESTAMP deleted_at
-    TIMESTAMP created_at
-    TIMESTAMP updated_at
-  }
-
-  fixflo_fixture_groups {
-    BIGINTUNSIGNED id PK
-    CHAR uuid UK
-    CHAR company_uuid FK
-    CHAR owner_uuid FK
-    VARCHAR name
-    VARCHAR status
-    BIT shared_with_company
-    VARCHAR slug
-    TIMESTAMP created_at
-    TIMESTAMP updated_at
-    TIMESTAMP deleted_at
-  }
-
-  fixflo_fixture_set_groups {
-    BIGINTUNSIGNED id PK
-    CHAR uuid UK
-    CHAR set_uuid FK
-    CHAR group_uuid FK
-    VARCHAR status
-    TIMESTAMP created_at
-    TIMESTAMP updated_at
-    TIMESTAMP deleted_at
-  }
-
-  fixflo_fixture_sets {
-    BIGINTUNSIGNED id PK
-    CHAR uuid UK
-    CHAR company_uuid FK
-    CHAR owner_uuid FK
-    VARCHAR name
-    VARCHAR status
-    VARCHAR slug
-    TIMESTAMP created_at
-    TIMESTAMP updated_at
-    TIMESTAMP deleted_at
-  }
-
-  fixflo_fixture_values {
-    BIGINTUNSIGNED id PK
-    CHAR uuid UK
-    CHAR fixture_uuid FK
-    CHAR relation_uuid
-    VARCHAR key
-    VARCHAR label
-    TEXT pattern
-    VARCHAR entry
-    INT pos
-    TIMESTAMP created_at
-    TIMESTAMP updated_at
-    TIMESTAMP deleted_at
-    VARCHAR rate
-    CHAR rate_binded_to
-    BIT rate_bind_primary
-  }
-
-  fixflo_fixtures {
-    BIGINTUNSIGNED id PK
-    CHAR uuid UK
-    CHAR set_uuid FK
-    CHAR updated_by_uuid FK
-    CHAR created_by_uuid FK
-    CHAR vessel_uuid FK
-    CHAR load_port_uuid FK
-    CHAR discharge_port_uuid FK
-    TEXT raw_text
-    INT import_position
-    VARCHAR charterer
-    CHAR charterer_uuid FK
-    VARCHAR laycan
-    DATETIME laycan_range_start
-    DATETIME laycan_range_end
-    VARCHAR quantity
-    VARCHAR grade
-    CHAR grade_uuid FK
-    VARCHAR rate
-    VARCHAR status
-    VARCHAR comments
-    VARCHAR load
-    VARCHAR discharge
-    VARCHAR vessel
-    VARCHAR cell_classname
-    VARCHAR confidentiality
-    TIMESTAMP created_at
-    TIMESTAMP updated_at
-    TIMESTAMP deleted_at
-    BIT is_duplicate
-    CHAR duplicate_source_uuid FK
-    CHAR duplicate_fixture_uuid FK
-    BIT internal
-    BIT ignore_as_duplicate
-    VARCHAR updated_by
-    VARCHAR created_by
-  }
-
-  fixflo_free_board_columns {
-    BIGINTUNSIGNED id PK
-    CHAR uuid UK
-    CHAR board_uuid FK
-    VARCHAR label
-    VARCHAR key
-    BIT read_only
-    INT order
-    TIMESTAMP created_at
-    TIMESTAMP updated_at
-    TIMESTAMP deleted_at
-  }
-
-  fixflo_free_board_inputs {
-    BIGINTUNSIGNED id PK
-    CHAR uuid UK
-    CHAR board_uuid FK
-    INT row
-    INT column
-    VARCHAR key
-    TEXT value
-    TIMESTAMP created_at
-    TIMESTAMP updated_at
-    TIMESTAMP deleted_at
-  }
-
-  fixflo_generated_reports {
-    BIGINTUNSIGNED id PK
-    CHAR uuid UK
-    CHAR user_uuid FK
-    CHAR source_uuid
-    CHAR report_template_uuid FK
-    VARCHAR format
-    VARCHAR sort
-    JSON fixtures
-    JSON filters
-    BIT saved
-    TIMESTAMP created_at
-    TIMESTAMP updated_at
-    TIMESTAMP deleted_at
-    VARCHAR source_type
-  }
-
-  fixflo_group_members {
-    BIGINTUNSIGNED id PK
-    CHAR uuid UK
-    CHAR user_uuid FK
-    CHAR group_uuid FK
-    VARCHAR status
-    TIMESTAMP created_at
-    TIMESTAMP updated_at
-    TIMESTAMP deleted_at
-  }
-
-  fixflo_groups {
-    BIGINTUNSIGNED id PK
-    CHAR uuid UK
-    CHAR owner_uuid FK
-    VARCHAR name
-    VARCHAR status
-    VARCHAR slug
-    TIMESTAMP created_at
-    TIMESTAMP updated_at
-    TIMESTAMP deleted_at
-    VARCHAR company_uuid FK
-  }
-
-  fixflo_login_attempts {
-    INTUNSIGNED id PK
-    VARCHAR uuid UK
-    VARCHAR session_uuid FK
-    VARCHAR identity
-    VARCHAR password
-    TIMESTAMP deleted_at
-    TIMESTAMP created_at
-    TIMESTAMP updated_at
-  }
-
-  fixflo_manual_cache_updates {
-    BIGINTUNSIGNED id PK
-    CHAR uuid UK
-    CHAR resource_uuid
-    VARCHAR resource_class
-    VARCHAR update_method
-    VARCHAR cache_key_pattern
-    BIT completed
-    TIMESTAMP deleted_at
-    TIMESTAMP created_at
-    TIMESTAMP updated_at
-  }
-
-  fixflo_migrations {
-    INTUNSIGNED id PK
-    VARCHAR migration
-    INT batch
-  }
-
-  fixflo_notes {
-    BIGINTUNSIGNED id PK
-    CHAR uuid UK
-    CHAR company_uuid FK
-    CHAR for_uuid
-    CHAR user_uuid FK
-    TEXT content
-    VARCHAR for
-    VARCHAR scope
-    TIMESTAMP created_at
-    TIMESTAMP updated_at
-    TIMESTAMP deleted_at
-  }
-
-  fixflo_password_resets {
-    BIGINTUNSIGNED id PK
-    CHAR uuid UK
-    VARCHAR email
-    VARCHAR token
-    TIMESTAMP created_at
-    TIMESTAMP updated_at
-    TIMESTAMP deleted_at
-  }
-
-  fixflo_permissions {
-    BIGINTUNSIGNED id PK
-    CHAR uuid UK
-    VARCHAR slug
-    TIMESTAMP created_at
-    TIMESTAMP updated_at
-    TIMESTAMP deleted_at
-    VARCHAR subject
-  }
-
-  fixflo_report_templates {
-    BIGINTUNSIGNED id PK
-    CHAR uuid UK
-    CHAR company_uuid FK
-    CHAR user_uuid FK
-    VARCHAR name
-    TEXT header
-    JSON columns
-    VARCHAR case
-    VARCHAR format
-    BIT zone_slash
-    BIT shared_with_company
-    VARCHAR slug
-    TIMESTAMP created_at
-    TIMESTAMP updated_at
-    TIMESTAMP deleted_at
-  }
-
-  fixflo_report_type_sorts {
-    BIGINTUNSIGNED id PK
-    CHAR uuid UK
-    CHAR report_type_uuid FK
-    VARCHAR sort_by
-    INT order
-    TIMESTAMP created_at
-    TIMESTAMP updated_at
-    TIMESTAMP deleted_at
-  }
-
-  fixflo_report_type_sources {
-    BIGINTUNSIGNED id PK
-    CHAR uuid UK
-    CHAR report_type_uuid FK
-    CHAR board_uuid FK
-    INT order
-    TIMESTAMP created_at
-    TIMESTAMP updated_at
-    TIMESTAMP deleted_at
-  }
-
-  fixflo_report_types {
-    BIGINTUNSIGNED id PK
-    CHAR uuid UK
-    CHAR company_uuid FK
-    CHAR user_uuid FK
-    CHAR report_template_uuid FK
+    VARCHAR public_id
     VARCHAR name
     VARCHAR description
-    VARCHAR format
-    JSON filters
-    VARCHAR slug
-    TIMESTAMP created_at
-    TIMESTAMP updated_at
-    TIMESTAMP deleted_at
-  }
-
-  fixflo_reports {
-    BIGINTUNSIGNED id PK
-    CHAR uuid UK
-    CHAR user_uuid FK
-    CHAR report_type_uuid FK
-    TIMESTAMP created_at
-    TIMESTAMP updated_at
-    TIMESTAMP deleted_at
-  }
-
-  fixflo_role_permissions {
-    BIGINTUNSIGNED id PK
-    CHAR uuid UK
-    CHAR role_uuid FK
-    CHAR permission_uuid FK
-    BIT create
-    BIT read
-    BIT update
-    BIT delete
-    BIT export
-    BIT import
-    BIT share
-    TIMESTAMP created_at
-    TIMESTAMP updated_at
-    TIMESTAMP deleted_at
-  }
-
-  fixflo_roles {
-    BIGINTUNSIGNED id PK
-    CHAR uuid UK
-    CHAR company_uuid FK
-    VARCHAR name
-    VARCHAR slug
-    TIMESTAMP created_at
-    TIMESTAMP updated_at
-    TIMESTAMP deleted_at
-  }
-
-  fixflo_saved_filters {
-    BIGINTUNSIGNED id PK
-    CHAR uuid UK
-    CHAR user_uuid FK
-    CHAR company_uuid FK
-    CHAR for_uuid
-    VARCHAR name
-    VARCHAR for
-    JSON params
-    BIT shared_with_company
-    VARCHAR slug
-    TIMESTAMP created_at
-    TIMESTAMP updated_at
-    TIMESTAMP deleted_at
-  }
-
-  fixflo_saved_reports {
-    BIGINTUNSIGNED id PK
-    CHAR uuid UK
-    CHAR user_uuid FK
-    CHAR company_uuid FK
-    CHAR report_type_uuid FK
-    VARCHAR name
-    VARCHAR description
-    VARCHAR format
-    VARCHAR sort
-    BIT shared_with_company
-    VARCHAR slug
-    TIMESTAMP created_at
-    TIMESTAMP updated_at
-    TIMESTAMP deleted_at
-    JSON quantity
-  }
-
-  fixflo_sessions {
-    INTUNSIGNED id PK
-    VARCHAR uuid UK
-    VARCHAR user_uuid FK
-    VARCHAR company_uuid FK
-    VARCHAR ip_address
-    TEXT token_hash
-    VARCHAR origin_app
-    VARCHAR x_forwarded_for
-    VARCHAR user_agent
-    VARCHAR isp
-    VARCHAR hostname
-    VARCHAR timezone
-    VARCHAR currency
-    VARCHAR country
-    VARCHAR region
-    VARCHAR city
-    VARCHAR postal_code
-    VARCHAR longitude
-    VARCHAR latitude
-    JSON info
-    JSON threat
-    TIMESTAMP deleted_at
-    TIMESTAMP created_at
-    TIMESTAMP updated_at
-    TIMESTAMP expire_at
-  }
-
-  fixflo_sidebar_folder_items {
-    BIGINTUNSIGNED id PK
-    CHAR uuid UK
-    CHAR sidebar_folder_uuid FK
-    CHAR item_uuid
-    VARCHAR item_type
-    TIMESTAMP created_at
-    TIMESTAMP updated_at
-    TIMESTAMP deleted_at
-  }
-
-  fixflo_sidebar_folders {
-    BIGINTUNSIGNED id PK
-    CHAR uuid UK
-    CHAR user_uuid FK
-    VARCHAR name
-    VARCHAR icon
-    VARCHAR slug
-    TIMESTAMP created_at
-    TIMESTAMP updated_at
-    TIMESTAMP deleted_at
-    VARCHAR type
-  }
-
-  fixflo_sub_cargo_grades {
-    BIGINTUNSIGNED id PK
-    CHAR uuid UK
-    CHAR parent_uuid FK
-    CHAR cargo_grade_uuid FK
-    TIMESTAMP created_at
-    TIMESTAMP updated_at
-    TIMESTAMP deleted_at
-  }
-
-  fixflo_user_confidentiality_settings {
-    BIGINTUNSIGNED id PK
-    CHAR uuid UK
-    CHAR user_uuid FK
-    CHAR level
-    VARCHAR font_color
-    BIT font_bold
-    BIT font_italic
-    VARCHAR background_color
-    TIMESTAMP created_at
-    TIMESTAMP updated_at
-    TIMESTAMP deleted_at
-  }
-
-  fixflo_users {
-    BIGINTUNSIGNED id PK
-    CHAR uuid UK
-    CHAR company_uuid FK
-    CHAR role_uuid FK
-    VARCHAR name
-    VARCHAR email UK
-    VARCHAR phone_number
-    VARCHAR timezone
-    JSON layout_state
-    TIMESTAMP email_verified_at
-    TIMESTAMP last_login
-    VARCHAR password
-    VARCHAR status
-    VARCHAR type
-    VARCHAR slug
-    VARCHAR remember_token
-    TIMESTAMP created_at
-    TIMESTAMP updated_at
-    TIMESTAMP deleted_at
-  }
-
-  fixflo_vessels {
-    INTUNSIGNED id PK
-    CHAR uuid UK
-    CHAR created_by_uuid FK
-    CHAR company_uuid FK
-    VARCHAR name
-    VARCHAR ex_name
-    VARCHAR imo
-    VARCHAR mmsi
-    VARCHAR call_sign
-    VARCHAR hull
-    VARCHAR age
-    VARCHAR flag
-    VARCHAR type
-    VARCHAR record_type
-    VARCHAR division
-    VARCHAR kind
-    VARCHAR category
-    VARCHAR class
-    JSON company
-    JSON measurement
-    JSON mechanical
-    JSON history
-    BIT scrapped
-    BIT total_loss
-    BIT cancelled
-    BIT active
-    DATETIME delivery_date
-    VARCHAR slug
-    TIMESTAMP deleted_at
-    TIMESTAMP created_at
-    TIMESTAMP updated_at
-    VARCHAR fleet
-  }
-
-  fixflo_widgets {
-    INTUNSIGNED id PK
-    CHAR uuid UK
-    CHAR company_uuid FK
-    CHAR owner_uuid FK
-    VARCHAR name
-    CHAR source_uuid
-    VARCHAR source_type
-    VARCHAR x_axis
-    VARCHAR y_axis
-    VARCHAR type
-    BIT shared_with_company
-    VARCHAR slug
-    TIMESTAMP deleted_at
-    TIMESTAMP created_at
-    TIMESTAMP updated_at
-  }
-
-  fixflo_zones {
-    INTUNSIGNED id PK
-    CHAR uuid UK
-    CHAR company_uuid
-    VARCHAR name
-    VARCHAR display_name
-    VARCHAR country
-    GEOMETRY location
-    JSON aliases
-    VARCHAR type
     VARCHAR slug
     TIMESTAMP deleted_at
     TIMESTAMP created_at
@@ -743,7 +15,7 @@ erDiagram
   }
 
   fleetbase_activity {
-    INTUNSIGNED id PK
+    INTUNSIGNED id PK, UK
     CHAR uuid
     VARCHAR log_name
     TEXT description
@@ -759,12 +31,117 @@ erDiagram
     TIMESTAMP updated_at
   }
 
-  fleetbase_api_credentials {
-    INTUNSIGNED id PK
+  fleetbase_ai_admin_access_logs {
+    INTUNSIGNED id PK, UK
+    CHAR uuid UK
+    CHAR company_uuid FK
+    CHAR ai_session_uuid FK
+    CHAR ai_task_uuid FK
+    CHAR viewed_by_uuid FK
+    VARCHAR action
+    VARCHAR ip_address
+    TEXT user_agent
+    JSON metadata
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  fleetbase_ai_sessions {
+    INTUNSIGNED id PK, UK
+    CHAR uuid UK
+    CHAR company_uuid FK
+    CHAR created_by_uuid FK
+    VARCHAR title
+    VARCHAR status
+    JSON metadata
+    TIMESTAMP last_message_at
+    TIMESTAMP ended_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fleetbase_ai_task_steps {
+    INTUNSIGNED id PK, UK
+    CHAR uuid UK
+    CHAR ai_task_uuid FK
+    CHAR company_uuid FK
+    CHAR created_by_uuid FK
+    VARCHAR type
+    VARCHAR status
+    VARCHAR provider
+    VARCHAR model
+    VARCHAR tool
+    JSON input
+    JSON output
+    JSON usage
+    JSON metadata
+    JSON error
+    TIMESTAMP started_at
+    TIMESTAMP completed_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fleetbase_ai_tasks {
+    INTUNSIGNED id PK, UK
+    CHAR uuid UK
+    CHAR ai_session_uuid FK
+    CHAR company_uuid FK
+    CHAR created_by_uuid FK
+    VARCHAR task_type
+    VARCHAR status
+    MEDIUMTEXT prompt
+    MEDIUMTEXT response
+    MEDIUMTEXT response_summary
+    VARCHAR provider
+    VARCHAR model
+    INTUNSIGNED input_tokens
+    INTUNSIGNED output_tokens
+    INTUNSIGNED total_tokens
+    JSON context
+    JSON usage
+    JSON metadata
+    JSON error
+    TIMESTAMP started_at
+    TIMESTAMP completed_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fleetbase_alerts {
+    INTUNSIGNED id PK, UK
+    CHAR uuid
     VARCHAR _key
-    VARCHAR uuid UK
-    VARCHAR user_uuid FK
-    VARCHAR company_uuid FK
+    CHAR company_uuid FK
+    CHAR category_uuid FK
+    CHAR acknowledged_by_uuid FK
+    CHAR resolved_by_uuid FK
+    VARCHAR type
+    VARCHAR severity
+    VARCHAR status
+    VARCHAR subject_type
+    CHAR subject_uuid
+    TEXT message
+    JSON rule
+    JSON context
+    JSON meta
+    TIMESTAMP triggered_at
+    TIMESTAMP acknowledged_at
+    TIMESTAMP resolved_at
+    TIMESTAMP deleted_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  fleetbase_api_credentials {
+    INTUNSIGNED id PK, UK
+    VARCHAR _key
+    CHAR uuid UK
+    CHAR user_uuid FK
+    CHAR company_uuid FK
     VARCHAR name
     VARCHAR key
     VARCHAR secret
@@ -779,12 +156,13 @@ erDiagram
   }
 
   fleetbase_api_events {
-    INTUNSIGNED id PK
+    INTUNSIGNED id PK, UK
     VARCHAR _key
-    VARCHAR uuid UK
+    CHAR uuid UK
     VARCHAR public_id UK
-    VARCHAR company_uuid
-    VARCHAR api_credential_uuid
+    CHAR company_uuid
+    CHAR api_credential_uuid
+    BIGINTUNSIGNED access_token_id FK
     VARCHAR event
     VARCHAR source
     JSON data
@@ -796,11 +174,12 @@ erDiagram
   }
 
   fleetbase_api_request_logs {
-    INTUNSIGNED id PK
+    INTUNSIGNED id PK, UK
     VARCHAR _key
     CHAR uuid UK
     CHAR company_uuid FK
     CHAR api_credential_uuid FK
+    BIGINTUNSIGNED access_token_id FK
     VARCHAR public_id
     VARCHAR method
     VARCHAR path
@@ -825,14 +204,74 @@ erDiagram
     TIMESTAMP deleted_at
   }
 
-  fleetbase_categories {
-    INTUNSIGNED id PK
+  fleetbase_assets {
+    INTUNSIGNED id PK, UK
+    CHAR uuid
     VARCHAR _key
-    VARCHAR uuid UK
+    CHAR company_uuid FK, UK
+    CHAR category_uuid FK
+    VARCHAR operator_type
+    CHAR operator_uuid
+    VARCHAR assigned_to_type
+    CHAR assigned_to_uuid
+    VARCHAR name
+    MEDIUMTEXT description
+    VARCHAR code UK
+    VARCHAR measurement_system
+    VARCHAR usage_type
+    VARCHAR type
+    VARCHAR ownership_type
+    VARCHAR status
+    GEOMETRY location
+    VARCHAR speed
+    VARCHAR heading
+    VARCHAR altitude
+    INT acquisition_cost
+    INT current_value
+    INT depreciation_rate
+    INT insurance_value
+    VARCHAR currency
+    VARCHAR financing_status
+    DATE lease_expires_at
+    VARCHAR vin
+    VARCHAR plate_number
+    VARCHAR make
+    VARCHAR model
+    SMALLINTUNSIGNED year
+    VARCHAR color
+    VARCHAR serial_number
+    VARCHAR call_sign
+    VARCHAR slug
+    CHAR vendor_uuid FK
+    CHAR current_place_uuid FK
+    CHAR telematic_uuid FK
+    BIGINTUNSIGNED odometer
+    VARCHAR odometer_unit
+    BIGINTUNSIGNED engine_hours
+    VARCHAR fuel_type
+    VARCHAR fuel_volume_unit
+    VARCHAR transmission
+    DECIMAL gvw
+    JSON capacity
+    JSON specs
+    JSON attributes
+    MEDIUMTEXT notes
+    CHAR created_by_uuid FK
+    CHAR updated_by_uuid FK
+    CHAR warranty_uuid FK
+    TIMESTAMP deleted_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  fleetbase_categories {
+    INTUNSIGNED id PK, UK
+    VARCHAR _key
+    CHAR uuid UK
     VARCHAR public_id
-    VARCHAR company_uuid
-    VARCHAR parent_uuid
-    VARCHAR owner_uuid
+    CHAR company_uuid
+    CHAR parent_uuid
+    CHAR owner_uuid
     VARCHAR owner_type
     VARCHAR name
     VARCHAR internal_id
@@ -853,7 +292,7 @@ erDiagram
   }
 
   fleetbase_chat_attachments {
-    INTUNSIGNED id PK
+    INTUNSIGNED id PK, UK
     CHAR uuid
     VARCHAR public_id
     CHAR company_uuid FK
@@ -867,7 +306,7 @@ erDiagram
   }
 
   fleetbase_chat_channels {
-    INTUNSIGNED id PK
+    INTUNSIGNED id PK, UK
     CHAR uuid
     CHAR company_uuid FK
     CHAR created_by_uuid FK
@@ -881,7 +320,7 @@ erDiagram
   }
 
   fleetbase_chat_logs {
-    BIGINTUNSIGNED id PK
+    BIGINTUNSIGNED id PK, UK
     CHAR uuid
     VARCHAR public_id
     CHAR company_uuid FK
@@ -898,7 +337,7 @@ erDiagram
   }
 
   fleetbase_chat_messages {
-    INTUNSIGNED id PK
+    INTUNSIGNED id PK, UK
     CHAR uuid
     VARCHAR public_id
     CHAR company_uuid FK
@@ -911,7 +350,7 @@ erDiagram
   }
 
   fleetbase_chat_participants {
-    INTUNSIGNED id PK
+    INTUNSIGNED id PK, UK
     CHAR uuid
     VARCHAR public_id
     CHAR company_uuid FK
@@ -923,7 +362,7 @@ erDiagram
   }
 
   fleetbase_chat_receipts {
-    INTUNSIGNED id PK
+    INTUNSIGNED id PK, UK
     CHAR uuid
     VARCHAR public_id
     CHAR company_uuid FK
@@ -936,7 +375,7 @@ erDiagram
   }
 
   fleetbase_comments {
-    INTUNSIGNED id PK
+    INTUNSIGNED id PK, UK
     CHAR uuid
     VARCHAR public_id UK
     CHAR company_uuid FK
@@ -953,27 +392,28 @@ erDiagram
   }
 
   fleetbase_companies {
-    INTUNSIGNED id PK
+    INTUNSIGNED id PK, UK
     VARCHAR _key
-    VARCHAR uuid UK
+    CHAR uuid UK
     VARCHAR public_id UK
     VARCHAR stripe_id
     VARCHAR stripe_connect_id
     TIMESTAMP trial_ends_at
     VARCHAR card_last_four
     VARCHAR card_brand
-    VARCHAR owner_uuid FK
-    VARCHAR logo_uuid FK
-    VARCHAR backdrop_uuid FK
+    CHAR owner_uuid FK
+    CHAR logo_uuid FK
+    CHAR backdrop_uuid FK
     VARCHAR name
     VARCHAR website_url
     VARCHAR description
     JSON options
+    JSON meta
     VARCHAR phone
     VARCHAR currency
     VARCHAR country
     VARCHAR timezone
-    VARCHAR place_uuid FK
+    CHAR place_uuid FK
     VARCHAR plan
     VARCHAR status
     VARCHAR type
@@ -981,34 +421,39 @@ erDiagram
     TIMESTAMP deleted_at
     TIMESTAMP created_at
     TIMESTAMP updated_at
+    TIMESTAMP onboarding_completed_at
+    VARCHAR onboarding_completed_by_uuid
   }
 
   fleetbase_company_users {
-    INTUNSIGNED id PK
+    INTUNSIGNED id PK, UK
     VARCHAR _key
     CHAR uuid UK
     CHAR company_uuid FK
     CHAR user_uuid FK
     VARCHAR status
+    BIT external
     TIMESTAMP deleted_at
     TIMESTAMP created_at
     TIMESTAMP updated_at
   }
 
   fleetbase_contacts {
-    INTUNSIGNED id PK
+    INTUNSIGNED id PK, UK
     VARCHAR _key
-    VARCHAR uuid UK
+    CHAR uuid UK
     VARCHAR public_id UK
     VARCHAR internal_id
     CHAR company_uuid FK
-    CHAR user_uuid
+    CHAR user_uuid FK
+    CHAR place_uuid FK
     CHAR photo_uuid FK
     VARCHAR name
     VARCHAR title
     VARCHAR email
     VARCHAR phone
     VARCHAR type
+    MEDIUMTEXT notes
     VARCHAR slug
     JSON meta
     TIMESTAMP deleted_at
@@ -1017,7 +462,7 @@ erDiagram
   }
 
   fleetbase_custom_field_values {
-    INTUNSIGNED id PK
+    INTUNSIGNED id PK, UK
     CHAR uuid
     CHAR company_uuid FK
     CHAR custom_field_uuid FK
@@ -1031,7 +476,7 @@ erDiagram
   }
 
   fleetbase_custom_fields {
-    INTUNSIGNED id PK
+    INTUNSIGNED id PK, UK
     CHAR uuid
     CHAR company_uuid FK
     CHAR category_uuid
@@ -1040,6 +485,7 @@ erDiagram
     VARCHAR name
     VARCHAR label
     VARCHAR type
+    VARCHAR for
     VARCHAR component
     JSON options
     BIT required
@@ -1056,7 +502,7 @@ erDiagram
   }
 
   fleetbase_dashboard_widgets {
-    BIGINTUNSIGNED id PK
+    BIGINTUNSIGNED id PK, UK
     CHAR uuid
     CHAR dashboard_uuid FK
     VARCHAR name
@@ -1069,21 +515,122 @@ erDiagram
   }
 
   fleetbase_dashboards {
-    BIGINTUNSIGNED id PK
+    BIGINTUNSIGNED id PK, UK
     CHAR uuid
     CHAR company_uuid
     CHAR user_uuid
     VARCHAR name
     BIT is_default
+    VARCHAR extension
+    JSON tags
+    JSON options
+    JSON meta
     TIMESTAMP deleted_at
     TIMESTAMP created_at
     TIMESTAMP updated_at
   }
 
-  fleetbase_drivers {
-    INTUNSIGNED id PK
+  fleetbase_device_events {
+    INTUNSIGNED id PK, UK
+    CHAR uuid
+    VARCHAR public_id
     VARCHAR _key
-    VARCHAR uuid UK
+    CHAR company_uuid FK
+    CHAR device_uuid FK
+    JSON payload
+    JSON data
+    JSON meta
+    VARCHAR ident
+    VARCHAR severity
+    TEXT message
+    TIMESTAMP occurred_at
+    TIMESTAMP processed_at
+    VARCHAR event_type
+    VARCHAR protocol
+    VARCHAR provider
+    GEOMETRY location
+    VARCHAR mileage
+    VARCHAR state
+    VARCHAR code
+    VARCHAR reason
+    MEDIUMTEXT comment
+    TIMESTAMP resolved_at
+    TIMESTAMP deleted_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  fleetbase_devices {
+    INTUNSIGNED id PK, UK
+    CHAR uuid
+    VARCHAR public_id
+    VARCHAR _key
+    CHAR company_uuid FK
+    CHAR telematic_uuid FK
+    CHAR photo_uuid FK
+    CHAR attachable_uuid
+    VARCHAR attachable_type
+    CHAR warranty_uuid FK
+    VARCHAR device_id
+    VARCHAR firmware_version
+    VARCHAR imsi
+    VARCHAR imei
+    VARCHAR internal_id
+    VARCHAR provider
+    VARCHAR type
+    VARCHAR name
+    VARCHAR location
+    VARCHAR model
+    VARCHAR manufacturer
+    VARCHAR serial_number
+    GEOMETRY last_position
+    DATE installation_date
+    DATE last_maintenance_date
+    JSON meta
+    JSON options
+    JSON data
+    BIT online
+    VARCHAR status
+    VARCHAR slug
+    VARCHAR data_frequency
+    TEXT notes
+    TIMESTAMP last_online_at
+    TIMESTAMP deleted_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  fleetbase_directives {
+    INTUNSIGNED id PK, UK
+    CHAR uuid
+    CHAR company_uuid FK
+    CHAR permission_uuid FK
+    VARCHAR subject_type
+    CHAR subject_uuid
+    MEDIUMTEXT key
+    JSON rules
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fleetbase_driver_geofence_states {
+    BIGINTUNSIGNED id PK, UK
+    CHAR driver_uuid FK, UK
+    CHAR geofence_uuid UK
+    VARCHAR geofence_type
+    BIT is_inside
+    TIMESTAMP entered_at
+    TIMESTAMP exited_at
+    VARCHAR dwell_job_id
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  fleetbase_drivers {
+    INTUNSIGNED id PK, UK
+    VARCHAR _key
+    CHAR uuid UK
     VARCHAR public_id UK
     VARCHAR internal_id
     CHAR company_uuid FK
@@ -1094,6 +641,7 @@ erDiagram
     CHAR user_uuid FK
     VARCHAR auth_token
     VARCHAR drivers_license_number
+    DATE license_expiry
     VARCHAR signup_token_used
     MEDIUMTEXT avatar_url
     GEOMETRY location
@@ -1107,7 +655,13 @@ erDiagram
     VARCHAR city
     VARCHAR currency
     INT online
+    VARCHAR current_status
     VARCHAR status
+    JSON skills
+    INTUNSIGNED max_travel_time "Seconds"
+    INTUNSIGNED max_distance "Metres"
+    TIME time_window_start
+    TIME time_window_end
     VARCHAR slug
     JSON meta
     TIMESTAMP deleted_at
@@ -1116,19 +670,19 @@ erDiagram
   }
 
   fleetbase_entities {
-    INTUNSIGNED id PK
+    INTUNSIGNED id PK, UK
     VARCHAR _key
-    VARCHAR uuid UK
+    CHAR uuid UK
     VARCHAR public_id UK
     CHAR payload_uuid FK
     CHAR company_uuid FK
     CHAR driver_assigned_uuid FK
     CHAR supplier_uuid FK
     CHAR destination_uuid FK
-    VARCHAR customer_uuid
+    CHAR customer_uuid
     VARCHAR customer_type
     CHAR tracking_number_uuid FK
-    MEDIUMTEXT photo_uuid
+    CHAR photo_uuid
     CHAR category_uuid FK
     VARCHAR _import_id
     VARCHAR internal_id
@@ -1155,12 +709,42 @@ erDiagram
     TIMESTAMP updated_at
   }
 
-  fleetbase_extension_installs {
-    BIGINTUNSIGNED id PK
+  fleetbase_equipments {
+    INTUNSIGNED id PK, UK
+    CHAR uuid
     VARCHAR _key
-    VARCHAR uuid UK
+    VARCHAR public_id UK
+    CHAR company_uuid FK
+    CHAR category_uuid FK
+    VARCHAR name
+    VARCHAR code
+    VARCHAR type
+    VARCHAR status
+    VARCHAR slug
+    VARCHAR serial_number
+    VARCHAR manufacturer
+    VARCHAR model
+    VARCHAR equipable_type
+    CHAR equipable_uuid
+    DATE purchased_at
+    INT purchase_price
+    VARCHAR currency
+    CHAR warranty_uuid FK
+    CHAR photo_uuid FK
+    JSON meta
+    CHAR created_by_uuid FK
+    CHAR updated_by_uuid FK
+    TIMESTAMP deleted_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  fleetbase_extension_installs {
+    BIGINTUNSIGNED id PK, UK
+    VARCHAR _key
+    CHAR uuid UK
     CHAR extension_uuid FK
-    VARCHAR company_uuid FK
+    CHAR company_uuid FK
     JSON config
     JSON meta
     JSON overwrite
@@ -1170,14 +754,14 @@ erDiagram
   }
 
   fleetbase_extensions {
-    INTUNSIGNED id PK
+    INTUNSIGNED id PK, UK
     VARCHAR _key
-    VARCHAR uuid UK
+    CHAR uuid UK
     VARCHAR public_id UK
     VARCHAR extension_id UK
-    VARCHAR author_uuid FK
-    VARCHAR category_uuid FK
-    VARCHAR type_uuid FK
+    CHAR author_uuid FK
+    CHAR category_uuid FK
+    CHAR type_uuid FK
     VARCHAR name
     VARCHAR display_name
     VARCHAR key
@@ -1190,7 +774,7 @@ erDiagram
     VARCHAR privacy_policy_url
     VARCHAR tos_url
     VARCHAR contact_email
-    VARCHAR icon_uuid FK
+    CHAR icon_uuid FK
     JSON domains
     BIT core_service
     VARCHAR internal_route
@@ -1208,8 +792,8 @@ erDiagram
   }
 
   fleetbase_failed_jobs {
-    BIGINTUNSIGNED id PK
-    VARCHAR uuid UK
+    BIGINTUNSIGNED id PK, UK
+    CHAR uuid UK
     TEXT connection
     TEXT queue
     LONGTEXT payload
@@ -1218,13 +802,13 @@ erDiagram
   }
 
   fleetbase_files {
-    INTUNSIGNED id PK
+    INTUNSIGNED id PK, UK
     VARCHAR _key
-    VARCHAR uuid UK
+    CHAR uuid UK
     VARCHAR public_id
-    VARCHAR company_uuid
-    VARCHAR uploader_uuid
-    VARCHAR subject_uuid
+    CHAR company_uuid
+    CHAR uploader_uuid
+    CHAR subject_uuid
     VARCHAR disk
     VARCHAR caption
     LONGTEXT path
@@ -1245,9 +829,9 @@ erDiagram
   }
 
   fleetbase_fleet_drivers {
-    INTUNSIGNED id PK
+    INTUNSIGNED id PK, UK
     VARCHAR _key
-    VARCHAR uuid UK
+    CHAR uuid UK
     CHAR fleet_uuid FK
     CHAR driver_uuid FK
     TIMESTAMP deleted_at
@@ -1256,7 +840,7 @@ erDiagram
   }
 
   fleetbase_fleet_vehicles {
-    INTUNSIGNED id PK
+    INTUNSIGNED id PK, UK
     VARCHAR _key
     CHAR uuid UK
     CHAR fleet_uuid FK
@@ -1267,16 +851,16 @@ erDiagram
   }
 
   fleetbase_fleets {
-    INTUNSIGNED id PK
+    INTUNSIGNED id PK, UK
     VARCHAR _key
-    VARCHAR uuid UK
+    CHAR uuid UK
     VARCHAR public_id UK
     CHAR company_uuid FK
     CHAR service_area_uuid FK
     CHAR zone_uuid FK
     CHAR vendor_uuid FK
     CHAR parent_fleet_uuid FK
-    VARCHAR image_uuid
+    CHAR image_uuid
     VARCHAR name
     VARCHAR color
     VARCHAR task
@@ -1287,10 +871,98 @@ erDiagram
     TIMESTAMP updated_at
   }
 
-  fleetbase_fuel_reports {
-    INTUNSIGNED id PK
-    VARCHAR _key
+  fleetbase_fuel_provider_connections {
+    INTUNSIGNED id PK, UK
     VARCHAR uuid UK
+    VARCHAR public_id UK
+    CHAR company_uuid UK
+    VARCHAR provider UK
+    VARCHAR name
+    VARCHAR environment UK
+    VARCHAR status
+    JSON credentials
+    JSON sync_settings
+    JSON last_sync_state
+    TIMESTAMP last_synced_at
+    TIMESTAMP last_tested_at
+    TEXT last_error
+    JSON meta
+    TIMESTAMP deleted_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  fleetbase_fuel_provider_sync_runs {
+    INTUNSIGNED id PK, UK
+    VARCHAR uuid UK
+    VARCHAR public_id UK
+    CHAR company_uuid
+    CHAR fuel_provider_connection_uuid
+    VARCHAR provider
+    VARCHAR status
+    TIMESTAMP from
+    TIMESTAMP to
+    INTUNSIGNED imported
+    INTUNSIGNED matched
+    INTUNSIGNED unmatched
+    INTUNSIGNED fuel_reports_created
+    DECIMAL liters
+    BIGINTUNSIGNED amount
+    TIMESTAMP started_at
+    TIMESTAMP finished_at
+    TEXT error
+    JSON summary
+    JSON meta
+    TIMESTAMP deleted_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  fleetbase_fuel_provider_transactions {
+    INTUNSIGNED id PK, UK
+    VARCHAR uuid UK
+    VARCHAR public_id UK
+    CHAR company_uuid UK
+    CHAR fuel_provider_connection_uuid
+    CHAR fuel_report_uuid
+    CHAR vehicle_uuid
+    CHAR driver_uuid
+    CHAR order_uuid
+    VARCHAR provider UK
+    VARCHAR provider_transaction_id
+    VARCHAR provider_vehicle_id
+    VARCHAR vehicle_card_id
+    VARCHAR internal_number
+    VARCHAR structure_number
+    VARCHAR plate_number
+    VARCHAR vin
+    VARCHAR serial_number
+    VARCHAR call_sign
+    VARCHAR trip_number
+    VARCHAR station_name
+    DECIMAL station_latitude
+    DECIMAL station_longitude
+    TIMESTAMP transaction_at
+    DECIMAL volume
+    VARCHAR metric_unit
+    BIGINTUNSIGNED amount
+    VARCHAR currency
+    VARCHAR odometer
+    VARCHAR sync_status
+    TIMESTAMP matched_at
+    JSON normalized_payload
+    JSON raw_payload
+    JSON meta
+    TIMESTAMP deleted_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    VARCHAR active_provider_transaction_id UK
+  }
+
+  fleetbase_fuel_reports {
+    INTUNSIGNED id PK, UK
+    VARCHAR _key
+    CHAR uuid UK
     VARCHAR public_id UK
     CHAR company_uuid FK
     CHAR driver_uuid FK
@@ -1310,10 +982,33 @@ erDiagram
     TIMESTAMP updated_at
   }
 
+  fleetbase_geofence_events_log {
+    BIGINTUNSIGNED id PK, UK
+    CHAR uuid UK
+    CHAR company_uuid
+    CHAR driver_uuid "(DC2Type:guid)"
+    CHAR vehicle_uuid
+    CHAR order_uuid
+    CHAR subject_uuid
+    VARCHAR subject_type
+    VARCHAR subject_name
+    CHAR geofence_uuid
+    VARCHAR geofence_type
+    VARCHAR geofence_name
+    ENUM event_type
+    DECIMAL latitude
+    DECIMAL longitude
+    DECIMAL speed_kmh
+    INTUNSIGNED dwell_duration_minutes
+    TIMESTAMP occurred_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
   fleetbase_group_users {
-    INTUNSIGNED id PK
+    INTUNSIGNED id PK, UK
     VARCHAR _key
-    VARCHAR uuid UK
+    CHAR uuid UK
     CHAR group_uuid FK
     CHAR user_uuid FK
     TIMESTAMP deleted_at
@@ -1321,22 +1016,8 @@ erDiagram
     TIMESTAMP updated_at
   }
 
-  fleetbase_groups {
-    INTUNSIGNED id PK
-    VARCHAR _key
-    VARCHAR uuid UK
-    VARCHAR company_uuid FK
-    VARCHAR public_id
-    VARCHAR name
-    VARCHAR description
-    VARCHAR slug
-    TIMESTAMP deleted_at
-    TIMESTAMP created_at
-    TIMESTAMP updated_at
-  }
-
   fleetbase_integrated_vendors {
-    BIGINTUNSIGNED id PK
+    BIGINTUNSIGNED id PK, UK
     VARCHAR _key
     CHAR uuid UK
     CHAR company_uuid FK
@@ -1346,6 +1027,7 @@ erDiagram
     VARCHAR namespace
     VARCHAR webhook_url
     VARCHAR provider
+    JSON provider_options
     JSON credentials
     JSON options
     BIT sandbox
@@ -1355,7 +1037,7 @@ erDiagram
   }
 
   fleetbase_invites {
-    BIGINTUNSIGNED id PK
+    BIGINTUNSIGNED id PK, UK
     VARCHAR _key
     CHAR uuid UK
     CHAR company_uuid FK
@@ -1368,6 +1050,7 @@ erDiagram
     VARCHAR protocol
     JSON recipients
     VARCHAR reason
+    JSON meta
     DATETIME expires_at
     TIMESTAMP deleted_at
     TIMESTAMP created_at
@@ -1375,16 +1058,18 @@ erDiagram
   }
 
   fleetbase_issues {
-    INTUNSIGNED id PK
+    INTUNSIGNED id PK, UK
     VARCHAR _key
-    VARCHAR uuid UK
+    CHAR uuid UK
     VARCHAR public_id UK
     VARCHAR issue_id UK
     CHAR company_uuid FK
     CHAR driver_uuid FK
     CHAR vehicle_uuid FK
+    CHAR order_uuid
     CHAR assigned_to_uuid FK
     CHAR reported_by_uuid FK
+    VARCHAR title
     GEOMETRY location
     VARCHAR type
     VARCHAR category
@@ -1399,10 +1084,179 @@ erDiagram
     TIMESTAMP updated_at
   }
 
-  fleetbase_login_attempts {
-    INTUNSIGNED id PK
+  fleetbase_ledger_accounts {
+    INTUNSIGNED id PK, UK
     VARCHAR _key
-    VARCHAR uuid UK
+    CHAR uuid UK
+    VARCHAR public_id UK
+    CHAR company_uuid UK
+    CHAR created_by_uuid
+    CHAR updated_by_uuid
+    VARCHAR name
+    VARCHAR code UK
+    VARCHAR type
+    TEXT description
+    BIT is_system_account
+    INT balance
+    VARCHAR currency
+    VARCHAR status
+    JSON meta
+    TIMESTAMP deleted_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  fleetbase_ledger_gateway_transactions {
+    BIGINTUNSIGNED id PK, UK
+    CHAR uuid UK
+    VARCHAR public_id UK
+    CHAR company_uuid
+    CHAR gateway_uuid
+    CHAR transaction_uuid
+    VARCHAR gateway_reference_id UK
+    VARCHAR type UK
+    VARCHAR event_type UK
+    BIGINTUNSIGNED amount
+    CHAR currency
+    VARCHAR status
+    TEXT message
+    JSON raw_response
+    TIMESTAMP processed_at
+    VARCHAR reconciliation_status
+    TIMESTAMP reconciliation_checked_at
+    JSON reconciliation_data
+    VARCHAR refund_status
+    TIMESTAMP refund_accepted_at
+    TIMESTAMP refund_expires_at
+    TIMESTAMP deleted_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  fleetbase_ledger_gateways {
+    BIGINTUNSIGNED id PK, UK
+    CHAR uuid UK
+    VARCHAR public_id UK
+    CHAR company_uuid
+    CHAR created_by_uuid
+    VARCHAR name
+    VARCHAR driver
+    TEXT description
+    TEXT config
+    JSON capabilities
+    BIT is_sandbox
+    VARCHAR environment
+    VARCHAR status
+    VARCHAR return_url
+    VARCHAR webhook_url
+    JSON meta
+    TIMESTAMP deleted_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  fleetbase_ledger_invoice_items {
+    INTUNSIGNED id PK, UK
+    VARCHAR _key
+    CHAR uuid UK
+    CHAR invoice_uuid
+    VARCHAR description
+    INT quantity
+    INT unit_price
+    INT amount
+    DECIMAL tax_rate
+    INT tax_amount
+    JSON meta
+    TIMESTAMP deleted_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  fleetbase_ledger_invoices {
+    INTUNSIGNED id PK, UK
+    VARCHAR _key
+    CHAR uuid UK
+    VARCHAR public_id UK
+    CHAR company_uuid
+    CHAR created_by_uuid
+    CHAR updated_by_uuid
+    CHAR customer_uuid
+    VARCHAR customer_type
+    CHAR order_uuid
+    CHAR transaction_uuid
+    CHAR template_uuid
+    VARCHAR number UK
+    DATE date
+    DATE due_date
+    INT subtotal
+    INT tax
+    INT total_amount
+    INT amount_paid
+    INT balance
+    VARCHAR currency
+    VARCHAR status
+    TEXT notes
+    TEXT terms
+    JSON meta
+    TIMESTAMP deleted_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP sent_at
+    TIMESTAMP viewed_at
+    TIMESTAMP paid_at
+  }
+
+  fleetbase_ledger_journals {
+    INTUNSIGNED id PK, UK
+    VARCHAR _key
+    VARCHAR public_id UK
+    VARCHAR number UK
+    VARCHAR type
+    VARCHAR status
+    VARCHAR reference
+    VARCHAR memo
+    BIT is_system_entry
+    CHAR uuid UK
+    CHAR company_uuid
+    CHAR transaction_uuid
+    CHAR debit_account_uuid
+    CHAR credit_account_uuid
+    INT amount
+    VARCHAR currency
+    TEXT description
+    DATE entry_date
+    JSON meta
+    TIMESTAMP deleted_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  fleetbase_ledger_wallets {
+    INTUNSIGNED id PK, UK
+    VARCHAR _key
+    CHAR uuid UK
+    VARCHAR public_id UK
+    CHAR company_uuid UK
+    CHAR created_by_uuid
+    CHAR updated_by_uuid
+    CHAR subject_uuid UK
+    VARCHAR subject_type UK
+    VARCHAR name UK
+    TEXT description
+    INT balance
+    VARCHAR currency
+    VARCHAR status
+    BIT is_frozen
+    JSON meta
+    TIMESTAMP deleted_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  fleetbase_login_attempts {
+    INTUNSIGNED id PK, UK
+    VARCHAR _key
+    CHAR uuid UK
     VARCHAR identity
     VARCHAR password
     TIMESTAMP deleted_at
@@ -1410,32 +1264,156 @@ erDiagram
     TIMESTAMP updated_at
   }
 
+  fleetbase_maintenance_schedule_reminders {
+    BIGINTUNSIGNED id PK, UK
+    VARCHAR schedule_uuid UK
+    TINYINTUNSIGNED offset_days UK "Which offset fired, e.g. 15 or 3"
+    DATE due_date_snapshot UK "The next_due_date at time of sending; advances each cycle so reminders re-fire"
+    TIMESTAMP sent_at
+  }
+
+  fleetbase_maintenance_schedules {
+    INTUNSIGNED id PK, UK
+    CHAR uuid
+    VARCHAR _key
+    VARCHAR public_id UK
+    CHAR company_uuid FK
+    VARCHAR subject_type
+    CHAR subject_uuid
+    VARCHAR name
+    VARCHAR type
+    VARCHAR status
+    VARCHAR interval_method
+    VARCHAR interval_type
+    INTUNSIGNED interval_value
+    VARCHAR interval_unit
+    BIGINTUNSIGNED interval_distance
+    BIGINTUNSIGNED interval_engine_hours
+    BIGINTUNSIGNED last_service_odometer
+    BIGINTUNSIGNED last_service_engine_hours
+    TIMESTAMP last_service_date
+    TIMESTAMP next_due_date
+    BIGINTUNSIGNED next_due_odometer
+    BIGINTUNSIGNED next_due_engine_hours
+    VARCHAR default_priority
+    VARCHAR default_assignee_type
+    CHAR default_assignee_uuid
+    TEXT instructions
+    JSON reminder_offsets "Array of integers: days before next_due_date to send reminder emails, e.g. [15, 7, 3]"
+    JSON meta
+    CHAR created_by_uuid FK
+    CHAR updated_by_uuid FK
+    TIMESTAMP deleted_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  fleetbase_maintenances {
+    INTUNSIGNED id PK, UK
+    CHAR uuid
+    VARCHAR _key
+    VARCHAR public_id UK
+    CHAR company_uuid FK
+    CHAR category_uuid FK
+    VARCHAR maintainable_type
+    CHAR maintainable_uuid
+    CHAR work_order_uuid FK
+    VARCHAR type
+    VARCHAR status
+    VARCHAR priority
+    TIMESTAMP scheduled_at
+    TIMESTAMP started_at
+    TIMESTAMP completed_at
+    BIGINTUNSIGNED odometer
+    BIGINTUNSIGNED engine_hours
+    INT estimated_downtime_hours
+    TIMESTAMP downtime_start
+    TIMESTAMP downtime_end
+    VARCHAR performed_by_type
+    CHAR performed_by_uuid
+    TEXT summary
+    TEXT notes
+    JSON line_items
+    INT labor_cost
+    INT parts_cost
+    INT tax
+    INT total_cost
+    VARCHAR currency
+    JSON attachments
+    JSON meta
+    CHAR created_by_uuid FK
+    CHAR updated_by_uuid FK
+    TIMESTAMP deleted_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  fleetbase_manifest_stops {
+    CHAR uuid PK, UK
+    VARCHAR public_id UK
+    CHAR manifest_uuid FK
+    CHAR order_uuid
+    CHAR place_uuid
+    CHAR waypoint_uuid
+    VARCHAR status
+    SMALLINTUNSIGNED sequence
+    TIMESTAMP estimated_arrival
+    TIMESTAMP actual_arrival
+    INTUNSIGNED distance_from_prev_m
+    INTUNSIGNED duration_from_prev_s
+    JSON meta
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fleetbase_manifests {
+    CHAR uuid PK, UK
+    VARCHAR public_id UK
+    VARCHAR internal_id
+    CHAR company_uuid
+    CHAR driver_uuid
+    CHAR vehicle_uuid
+    VARCHAR status
+    DATE scheduled_date
+    TIMESTAMP started_at
+    TIMESTAMP completed_at
+    INTUNSIGNED total_distance_m
+    INTUNSIGNED total_duration_s
+    INTUNSIGNED stop_count
+    TEXT notes
+    JSON meta
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
   fleetbase_migrations {
-    INTUNSIGNED id PK
+    INTUNSIGNED id PK, UK
     VARCHAR migration
     INT batch
   }
 
   fleetbase_model_has_permissions {
-    CHAR permission_id PK
-    VARCHAR model_type PK
-    CHAR model_uuid PK
+    CHAR permission_id PK, FK, UK
+    VARCHAR model_type PK, UK
+    CHAR model_uuid PK, UK
   }
 
   fleetbase_model_has_policies {
-    CHAR policy_id PK
-    VARCHAR model_type PK
-    CHAR model_uuid PK
+    CHAR policy_id PK, FK, UK
+    VARCHAR model_type PK, UK
+    CHAR model_uuid PK, UK
   }
 
   fleetbase_model_has_roles {
-    CHAR role_id PK
-    VARCHAR model_type PK
-    CHAR model_uuid PK
+    CHAR role_id PK, FK, UK
+    VARCHAR model_type PK, UK
+    CHAR model_uuid PK, UK
   }
 
   fleetbase_monitored_scheduled_task_log_items {
-    BIGINTUNSIGNED id PK
+    BIGINTUNSIGNED id PK, UK
     BIGINTUNSIGNED monitored_scheduled_task_id FK
     VARCHAR type
     JSON meta
@@ -1444,7 +1422,7 @@ erDiagram
   }
 
   fleetbase_monitored_scheduled_tasks {
-    BIGINTUNSIGNED id PK
+    BIGINTUNSIGNED id PK, UK
     VARCHAR name
     VARCHAR type
     VARCHAR cron_expression
@@ -1462,7 +1440,7 @@ erDiagram
   }
 
   fleetbase_notifications {
-    CHAR id PK
+    CHAR id PK, UK
     VARCHAR type
     VARCHAR notifiable_type
     CHAR notifiable_id
@@ -1473,7 +1451,7 @@ erDiagram
   }
 
   fleetbase_order_configs {
-    INTUNSIGNED id PK
+    INTUNSIGNED id PK, UK
     CHAR uuid
     VARCHAR public_id
     CHAR company_uuid FK
@@ -1497,9 +1475,9 @@ erDiagram
   }
 
   fleetbase_orders {
-    INTUNSIGNED id PK
+    INTUNSIGNED id PK, UK
     VARCHAR _key
-    VARCHAR uuid UK
+    CHAR uuid UK
     VARCHAR public_id UK
     CHAR company_uuid FK
     CHAR created_by_uuid FK
@@ -1508,7 +1486,7 @@ erDiagram
     VARCHAR internal_id
     CHAR customer_uuid
     VARCHAR customer_type
-    VARCHAR facilitator_uuid
+    CHAR facilitator_uuid
     VARCHAR facilitator_type
     CHAR session_uuid
     CHAR payload_uuid FK
@@ -1518,6 +1496,7 @@ erDiagram
     CHAR tracking_number_uuid FK
     CHAR driver_assigned_uuid FK
     CHAR vehicle_assigned_uuid FK
+    CHAR manifest_uuid
     JSON meta
     JSON options
     BIT dispatched
@@ -1535,20 +1514,70 @@ erDiagram
     DATETIME scheduled_at
     VARCHAR type
     VARCHAR status
+    TINYINTUNSIGNED orchestrator_priority
+    JSON required_skills
+    DATETIME time_window_start
+    DATETIME time_window_end
     TIMESTAMP deleted_at
     TIMESTAMP created_at
     TIMESTAMP updated_at
   }
 
-  fleetbase_payloads {
-    INTUNSIGNED id PK
+  fleetbase_parts {
+    INTUNSIGNED id PK, UK
+    CHAR uuid
     VARCHAR _key
-    VARCHAR uuid UK
+    VARCHAR public_id UK
+    CHAR company_uuid FK, UK
+    CHAR category_uuid FK
+    VARCHAR sku
+    VARCHAR name
+    VARCHAR manufacturer
+    VARCHAR model
+    VARCHAR serial_number
+    VARCHAR barcode
+    VARCHAR type
+    VARCHAR status
+    VARCHAR slug
+    TEXT description
+    CHAR vendor_uuid FK
+    INT quantity_on_hand
+    BIGINT unit_cost
+    BIGINT msrp
+    VARCHAR currency
+    INT reorder_point
+    INT reorder_quantity
+    INT max_stock_level
+    INT reserved_quantity
+    INT allocated_quantity
+    VARCHAR inventory_method
+    VARCHAR asset_type
+    CHAR asset_uuid
+    CHAR warranty_uuid FK
+    CHAR photo_uuid FK
+    JSON specs
+    JSON meta
+    CHAR created_by_uuid FK
+    CHAR updated_by_uuid FK
+    TIMESTAMP last_ordered_at
+    TIMESTAMP deleted_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    VARCHAR active_sku UK
+  }
+
+  fleetbase_payloads {
+    INTUNSIGNED id PK, UK
+    VARCHAR _key
+    CHAR uuid UK
     VARCHAR public_id UK
     CHAR company_uuid FK
     CHAR pickup_uuid FK
+    CHAR pickup_tracking_number_uuid
     CHAR dropoff_uuid FK
+    CHAR dropoff_tracking_number_uuid
     CHAR return_uuid FK
+    CHAR return_tracking_number_uuid
     CHAR current_waypoint_uuid FK
     VARCHAR provider
     VARCHAR payment_method
@@ -1566,12 +1595,13 @@ erDiagram
     CHAR id
     VARCHAR name UK
     VARCHAR guard_name UK
+    VARCHAR service
     TIMESTAMP created_at
     TIMESTAMP updated_at
   }
 
   fleetbase_personal_access_tokens {
-    BIGINTUNSIGNED id PK
+    BIGINTUNSIGNED id PK, UK
     VARCHAR tokenable_type
     CHAR tokenable_id "(DC2Type:guid)"
     VARCHAR name
@@ -1584,9 +1614,9 @@ erDiagram
   }
 
   fleetbase_places {
-    INTUNSIGNED id PK
+    INTUNSIGNED id PK, UK
     VARCHAR _key
-    VARCHAR uuid UK
+    CHAR uuid UK
     VARCHAR public_id UK
     VARCHAR _import_id
     CHAR company_uuid FK
@@ -1617,11 +1647,12 @@ erDiagram
   }
 
   fleetbase_policies {
-    CHAR id PK
+    CHAR id PK, UK
     VARCHAR _key
     CHAR company_uuid FK
     VARCHAR name
     VARCHAR guard_name
+    VARCHAR service
     VARCHAR description
     TIMESTAMP created_at
     TIMESTAMP updated_at
@@ -1629,7 +1660,7 @@ erDiagram
   }
 
   fleetbase_positions {
-    BIGINTUNSIGNED id PK
+    BIGINTUNSIGNED id PK, UK
     VARCHAR _key
     CHAR uuid UK
     CHAR company_uuid FK
@@ -1648,7 +1679,7 @@ erDiagram
   }
 
   fleetbase_proofs {
-    INTUNSIGNED id PK
+    INTUNSIGNED id PK, UK
     VARCHAR _key
     CHAR uuid UK
     VARCHAR public_id UK
@@ -1666,12 +1697,12 @@ erDiagram
   }
 
   fleetbase_purchase_rates {
-    INTUNSIGNED id PK
+    INTUNSIGNED id PK, UK
     VARCHAR _key
-    VARCHAR uuid UK
+    CHAR uuid UK
     VARCHAR public_id UK
     JSON meta
-    VARCHAR customer_uuid
+    CHAR customer_uuid
     VARCHAR customer_type
     CHAR company_uuid FK
     CHAR transaction_uuid FK
@@ -1683,8 +1714,27 @@ erDiagram
     TIMESTAMP updated_at
   }
 
+  fleetbase_registry_developer_accounts {
+    INTUNSIGNED id PK, UK
+    CHAR uuid UK
+    VARCHAR username UK
+    VARCHAR email UK
+    VARCHAR password
+    VARCHAR name
+    VARCHAR avatar_url
+    VARCHAR github_username
+    VARCHAR website
+    TEXT bio
+    TIMESTAMP email_verified_at
+    VARCHAR verification_token
+    ENUM status
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
   fleetbase_registry_extension_bundles {
-    INTUNSIGNED id PK
+    INTUNSIGNED id PK, UK
     CHAR uuid
     CHAR public_id
     CHAR bundle_id
@@ -1702,7 +1752,7 @@ erDiagram
   }
 
   fleetbase_registry_extension_installs {
-    INTUNSIGNED id PK
+    INTUNSIGNED id PK, UK
     CHAR uuid
     CHAR company_uuid FK
     CHAR extension_uuid FK
@@ -1713,8 +1763,10 @@ erDiagram
   }
 
   fleetbase_registry_extension_purchases {
-    INTUNSIGNED id PK
+    INTUNSIGNED id PK, UK
     CHAR uuid
+    VARCHAR purchaser_uuid
+    VARCHAR purchaser_type
     CHAR company_uuid FK
     CHAR extension_uuid FK
     VARCHAR stripe_checkout_session_id
@@ -1730,9 +1782,11 @@ erDiagram
   }
 
   fleetbase_registry_extensions {
-    INTUNSIGNED id PK
+    INTUNSIGNED id PK, UK
     CHAR uuid
     CHAR company_uuid FK
+    ENUM publisher_type
+    CHAR publisher_uuid
     CHAR created_by_uuid FK
     CHAR registry_user_uuid FK
     CHAR current_bundle_uuid FK
@@ -1780,10 +1834,12 @@ erDiagram
   }
 
   fleetbase_registry_users {
-    INTUNSIGNED id PK
+    INTUNSIGNED id PK, UK
     CHAR uuid
-    CHAR company_uuid FK
-    CHAR user_uuid FK
+    ENUM account_type
+    CHAR developer_account_uuid FK
+    CHAR company_uuid FK "(DC2Type:guid)"
+    CHAR user_uuid FK "(DC2Type:guid)"
     VARCHAR public_id
     VARCHAR token
     VARCHAR registry_token
@@ -1798,9 +1854,118 @@ erDiagram
     TIMESTAMP deleted_at
   }
 
+  fleetbase_report_audit_logs {
+    BIGINTUNSIGNED id PK, UK
+    CHAR uuid UK
+    CHAR report_uuid FK
+    CHAR user_uuid FK
+    CHAR company_uuid FK
+    VARCHAR action
+    VARCHAR status
+    JSON query_config
+    JSON metadata
+    TEXT error_message
+    INT execution_time
+    INT row_count
+    VARCHAR export_format
+    VARCHAR ip_address
+    VARCHAR user_agent
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  fleetbase_report_cache {
+    BIGINTUNSIGNED id PK, UK
+    CHAR uuid UK
+    CHAR report_uuid FK
+    VARCHAR cache_key UK
+    LONGTEXT cached_data
+    JSON metadata
+    INT row_count
+    INT execution_time
+    TIMESTAMP expires_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  fleetbase_report_executions {
+    BIGINTUNSIGNED id PK, UK
+    CHAR uuid UK
+    CHAR report_uuid FK
+    CHAR user_uuid FK
+    CHAR company_uuid FK
+    DECIMAL execution_time "Execution time in milliseconds"
+    INT result_count
+    JSON query_config
+    ENUM status
+    TEXT error_message
+    TIMESTAMP started_at
+    TIMESTAMP completed_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  fleetbase_report_templates {
+    BIGINTUNSIGNED id PK, UK
+    CHAR uuid UK
+    VARCHAR public_id UK
+    VARCHAR name
+    TEXT description
+    VARCHAR category
+    JSON query_config
+    JSON default_parameters
+    JSON required_parameters
+    BIT is_public
+    BIT is_system
+    CHAR company_uuid FK
+    CHAR created_by_uuid FK
+    CHAR updated_by_uuid FK
+    INT usage_count
+    TIMESTAMP last_used_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fleetbase_reports {
+    INTUNSIGNED id PK, UK
+    CHAR uuid
+    VARCHAR public_id UK
+    VARCHAR _key
+    CHAR company_uuid FK
+    CHAR category_uuid FK
+    CHAR created_by_uuid FK
+    CHAR updated_by_uuid FK
+    VARCHAR type
+    VARCHAR title
+    VARCHAR description
+    VARCHAR subject_type
+    CHAR subject_uuid
+    TIMESTAMP period_start
+    TIMESTAMP period_end
+    JSON data
+    TEXT body
+    JSON query_config
+    JSON result_columns
+    TIMESTAMP last_executed_at
+    INT execution_time "Execution time in milliseconds"
+    INT row_count
+    BIT is_scheduled
+    JSON schedule_config
+    JSON export_formats
+    BIT is_generated
+    JSON options
+    JSON meta
+    JSON tags
+    VARCHAR status
+    TIMESTAMP deleted_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
   fleetbase_role_has_permissions {
-    CHAR permission_id PK
-    CHAR role_id PK
+    CHAR permission_id PK, FK, UK
+    CHAR role_id PK, FK, UK
   }
 
   fleetbase_roles {
@@ -1808,6 +1973,7 @@ erDiagram
     CHAR company_uuid FK
     VARCHAR name UK
     VARCHAR guard_name UK
+    VARCHAR service
     VARCHAR description
     TIMESTAMP created_at
     TIMESTAMP updated_at
@@ -1815,7 +1981,7 @@ erDiagram
   }
 
   fleetbase_routes {
-    BIGINTUNSIGNED id PK
+    BIGINTUNSIGNED id PK, UK
     VARCHAR _key
     CHAR uuid UK
     CHAR company_uuid FK
@@ -1828,10 +1994,186 @@ erDiagram
     TIMESTAMP updated_at
   }
 
-  fleetbase_service_areas {
-    INTUNSIGNED id PK
+  fleetbase_schedule_availability {
+    INTUNSIGNED id PK, UK
     VARCHAR _key
     VARCHAR uuid UK
+    VARCHAR subject_uuid
+    VARCHAR subject_type
+    TIMESTAMP start_at
+    TIMESTAMP end_at
+    BIT is_available
+    TINYINT preference_level "1-5 preference strength"
+    TEXT rrule "RFC 5545 recurrence rule"
+    VARCHAR reason
+    TEXT notes
+    JSON meta
+    TIMESTAMP deleted_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  fleetbase_schedule_constraints {
+    INTUNSIGNED id PK, UK
+    VARCHAR _key
+    VARCHAR uuid UK
+    VARCHAR company_uuid
+    VARCHAR subject_uuid
+    VARCHAR subject_type
+    VARCHAR name
+    TEXT description
+    VARCHAR type "e.g., hos, labor, business, capacity"
+    VARCHAR category "e.g., compliance, optimization"
+    VARCHAR constraint_key
+    TEXT constraint_value
+    VARCHAR jurisdiction "e.g., US-Federal, US-CA, EU"
+    INT priority "Higher = more important"
+    BIT is_active
+    JSON meta
+    TIMESTAMP deleted_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  fleetbase_schedule_exceptions {
+    INTUNSIGNED id PK, UK
+    VARCHAR _key
+    VARCHAR uuid UK
+    VARCHAR public_id UK
+    VARCHAR company_uuid
+    VARCHAR subject_uuid
+    VARCHAR subject_type
+    VARCHAR schedule_uuid
+    TIMESTAMP start_at
+    TIMESTAMP end_at
+    VARCHAR type "e.g., time_off, sick, holiday, swap, training"
+    VARCHAR status "pending | approved | rejected | cancelled"
+    VARCHAR reason
+    TEXT notes
+    VARCHAR reviewed_by_uuid
+    TIMESTAMP reviewed_at
+    JSON meta
+    TIMESTAMP deleted_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  fleetbase_schedule_items {
+    INTUNSIGNED id PK, UK
+    VARCHAR _key
+    VARCHAR uuid UK
+    VARCHAR company_uuid
+    VARCHAR public_id UK
+    VARCHAR schedule_uuid
+    VARCHAR template_uuid "The ScheduleTemplate that generated this item via RRULE expansion"
+    VARCHAR assignee_uuid
+    VARCHAR assignee_type
+    VARCHAR resource_uuid
+    VARCHAR resource_type
+    TIMESTAMP start_at
+    TIMESTAMP end_at
+    INT duration "Duration in minutes"
+    TIMESTAMP break_start_at
+    TIMESTAMP break_end_at
+    ENUM status
+    BIT is_exception "True when this item has been manually edited and should not be overwritten by re-materialization"
+    VARCHAR exception_for_date "The original RRULE occurrence date (YYYY-MM-DD) this item is an exception for"
+    JSON meta
+    TIMESTAMP deleted_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  fleetbase_schedule_templates {
+    INTUNSIGNED id PK, UK
+    VARCHAR _key
+    VARCHAR uuid UK
+    VARCHAR public_id UK
+    VARCHAR company_uuid
+    VARCHAR schedule_uuid "UUID of the Schedule this template is applied to; NULL for library templates"
+    VARCHAR subject_uuid
+    VARCHAR subject_type
+    VARCHAR name
+    TEXT description
+    TIME start_time
+    TIME end_time
+    INT duration "Duration in minutes"
+    INT break_duration "Break duration in minutes"
+    TEXT rrule "RFC 5545 recurrence rule"
+    VARCHAR color "Hex colour for calendar rendering, e.g. #6366f1"
+    JSON meta
+    TIMESTAMP deleted_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  fleetbase_schedules {
+    INTUNSIGNED id PK, UK
+    VARCHAR _key
+    VARCHAR uuid UK
+    VARCHAR public_id UK
+    VARCHAR company_uuid
+    VARCHAR subject_uuid
+    VARCHAR subject_type
+    VARCHAR name
+    TEXT description
+    DATE start_date
+    DATE end_date
+    VARCHAR timezone
+    TINYINTUNSIGNED hos_daily_limit "Max driving hours per day. NULL = use global default (11h)."
+    TINYINTUNSIGNED hos_weekly_limit "Max driving hours per rolling 7-day period. NULL = use global default (70h)."
+    VARCHAR hos_source "Source used to calculate HOS hours: schedule | telematics | manual"
+    ENUM status
+    TIMESTAMP last_materialized_at "Timestamp of the last successful RRULE materialization run"
+    DATE materialization_horizon "The furthest future date up to which ScheduleItems have been generated"
+    JSON meta
+    TIMESTAMP deleted_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  fleetbase_sensors {
+    INTUNSIGNED id PK, UK
+    CHAR uuid
+    VARCHAR public_id
+    VARCHAR _key
+    CHAR company_uuid FK
+    CHAR telematic_uuid FK
+    CHAR photo_uuid FK
+    VARCHAR name
+    VARCHAR internal_id
+    VARCHAR serial_number
+    GEOMETRY last_position
+    VARCHAR imsi
+    VARCHAR imei
+    VARCHAR firmware_version
+    VARCHAR slug
+    VARCHAR unit
+    DOUBLE min_threshold
+    DOUBLE max_threshold
+    BIT threshold_inclusive
+    VARCHAR type
+    TIMESTAMP last_reading_at
+    VARCHAR last_value
+    VARCHAR status
+    JSON calibration
+    INTUNSIGNED report_frequency_sec
+    VARCHAR sensorable_type
+    CHAR sensorable_uuid
+    CHAR device_uuid FK
+    CHAR warranty_uuid FK
+    JSON meta
+    CHAR created_by_uuid FK
+    CHAR updated_by_uuid FK
+    TIMESTAMP deleted_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  fleetbase_service_areas {
+    INTUNSIGNED id PK, UK
+    VARCHAR _key
+    CHAR uuid UK
     VARCHAR public_id UK
     CHAR company_uuid FK
     VARCHAR name
@@ -1840,6 +2182,10 @@ erDiagram
     GEOMETRY border
     VARCHAR color
     VARCHAR stroke_color
+    BIT trigger_on_entry
+    BIT trigger_on_exit
+    SMALLINTUNSIGNED dwell_threshold_minutes
+    SMALLINTUNSIGNED speed_limit_kmh
     CHAR parent_uuid FK
     VARCHAR status
     TIMESTAMP deleted_at
@@ -1848,9 +2194,9 @@ erDiagram
   }
 
   fleetbase_service_quote_items {
-    INTUNSIGNED id PK
+    INTUNSIGNED id PK, UK
     VARCHAR _key
-    VARCHAR uuid UK
+    CHAR uuid UK
     CHAR service_quote_uuid FK
     VARCHAR amount
     VARCHAR currency
@@ -1862,15 +2208,15 @@ erDiagram
   }
 
   fleetbase_service_quotes {
-    INTUNSIGNED id PK
+    INTUNSIGNED id PK, UK
     VARCHAR _key
-    VARCHAR uuid UK
+    CHAR uuid UK
     VARCHAR public_id UK
     VARCHAR request_id
     CHAR company_uuid FK
     CHAR payload_uuid FK
     CHAR service_rate_uuid FK
-    INT amount
+    BIGINT amount
     VARCHAR currency
     JSON meta
     VARCHAR expired_at
@@ -1881,10 +2227,15 @@ erDiagram
   }
 
   fleetbase_service_rate_fees {
-    INTUNSIGNED id PK
+    INTUNSIGNED id PK, UK
     VARCHAR _key
-    VARCHAR uuid UK
+    CHAR uuid UK
     CHAR service_rate_uuid FK
+    CHAR service_area_uuid
+    CHAR zone_uuid
+    VARCHAR label
+    INT priority
+    BIT is_fallback
     INT distance
     INT min
     INT max
@@ -1898,9 +2249,9 @@ erDiagram
   }
 
   fleetbase_service_rate_parcel_fees {
-    INTUNSIGNED id PK
+    INTUNSIGNED id PK, UK
     VARCHAR _key
-    VARCHAR uuid UK
+    CHAR uuid UK
     CHAR service_rate_uuid FK
     VARCHAR size
     VARCHAR length
@@ -1917,9 +2268,9 @@ erDiagram
   }
 
   fleetbase_service_rates {
-    INTUNSIGNED id PK
+    INTUNSIGNED id PK, UK
     VARCHAR _key
-    VARCHAR uuid UK
+    CHAR uuid UK
     VARCHAR public_id UK
     CHAR company_uuid FK
     CHAR service_area_uuid FK
@@ -1928,6 +2279,8 @@ erDiagram
     VARCHAR service_name
     VARCHAR service_type
     INT base_fee
+    INT max_distance
+    VARCHAR max_distance_unit
     INT per_meter_flat_rate_fee
     VARCHAR per_meter_unit
     VARCHAR algorithm
@@ -1951,15 +2304,91 @@ erDiagram
   }
 
   fleetbase_settings {
-    INTUNSIGNED id PK
+    INTUNSIGNED id PK, UK
     VARCHAR key UK
     JSON value
   }
 
-  fleetbase_tracking_numbers {
-    INTUNSIGNED id PK
+  fleetbase_telematics {
+    INTUNSIGNED id PK, UK
+    CHAR uuid
+    VARCHAR public_id
     VARCHAR _key
+    CHAR company_uuid FK
+    VARCHAR name
+    VARCHAR provider
+    VARCHAR model
+    VARCHAR serial_number
+    VARCHAR firmware_version
+    VARCHAR status
+    VARCHAR imei
+    VARCHAR iccid
+    VARCHAR imsi
+    VARCHAR msisdn
+    VARCHAR type
+    JSON last_metrics
+    JSON config
+    JSON credentials
+    JSON meta
+    CHAR created_by_uuid FK
+    CHAR updated_by_uuid FK
+    CHAR warranty_uuid FK
+    TIMESTAMP last_seen_at
+    TIMESTAMP deleted_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  fleetbase_template_queries {
+    BIGINTUNSIGNED id PK, UK
     VARCHAR uuid UK
+    VARCHAR public_id UK
+    VARCHAR company_uuid FK
+    VARCHAR template_uuid FK
+    VARCHAR created_by_uuid FK
+    VARCHAR model_type
+    VARCHAR variable_name
+    VARCHAR label
+    JSON conditions
+    JSON sort
+    INTUNSIGNED limit
+    JSON with
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fleetbase_templates {
+    BIGINTUNSIGNED id PK, UK
+    VARCHAR uuid UK
+    VARCHAR public_id UK
+    VARCHAR company_uuid FK
+    VARCHAR created_by_uuid FK
+    VARCHAR updated_by_uuid FK
+    VARCHAR name
+    TEXT description
+    VARCHAR context_type
+    VARCHAR unit
+    DECIMAL width
+    DECIMAL height
+    VARCHAR orientation
+    JSON margins
+    VARCHAR background_color
+    VARCHAR background_image_uuid
+    LONGTEXT content
+    JSON element_schemas
+    BIT is_default
+    BIT is_system
+    BIT is_public
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fleetbase_tracking_numbers {
+    INTUNSIGNED id PK, UK
+    VARCHAR _key
+    CHAR uuid UK
     VARCHAR public_id UK
     CHAR company_uuid FK
     CHAR owner_uuid
@@ -1975,9 +2404,9 @@ erDiagram
   }
 
   fleetbase_tracking_statuses {
-    INTUNSIGNED id PK
+    INTUNSIGNED id PK, UK
     VARCHAR _key
-    VARCHAR uuid UK
+    CHAR uuid UK
     VARCHAR public_id UK
     CHAR company_uuid FK
     CHAR tracking_number_uuid FK
@@ -1986,6 +2415,7 @@ erDiagram
     VARCHAR status
     MEDIUMTEXT details
     VARCHAR code
+    BIT complete
     VARCHAR city
     VARCHAR province
     VARCHAR postal_code
@@ -1999,13 +2429,20 @@ erDiagram
   }
 
   fleetbase_transaction_items {
-    INTUNSIGNED id PK
+    INTUNSIGNED id PK, UK
     VARCHAR _key
-    VARCHAR uuid UK
-    VARCHAR transaction_uuid FK
-    VARCHAR amount
+    CHAR uuid UK
+    VARCHAR public_id UK
+    CHAR transaction_uuid FK
+    INT quantity
+    INT unit_price
+    BIGINT amount
     VARCHAR currency
+    DECIMAL tax_rate
+    INT tax_amount
     VARCHAR details
+    TEXT description
+    SMALLINTUNSIGNED sort_order
     VARCHAR code
     JSON meta
     TIMESTAMP deleted_at
@@ -2014,34 +2451,69 @@ erDiagram
   }
 
   fleetbase_transactions {
-    INTUNSIGNED id PK
+    INTUNSIGNED id PK, UK
     VARCHAR _key
-    VARCHAR uuid UK
+    CHAR uuid UK
     VARCHAR public_id UK
     CHAR owner_uuid
     VARCHAR owner_type
-    VARCHAR customer_uuid
+    CHAR subject_uuid
+    VARCHAR subject_type
+    CHAR payer_uuid
+    VARCHAR payer_type
+    CHAR payee_uuid
+    VARCHAR payee_type
+    CHAR initiator_uuid
+    VARCHAR initiator_type
+    CHAR context_uuid
+    VARCHAR context_type
+    CHAR customer_uuid
     VARCHAR customer_type
-    VARCHAR company_uuid FK
+    CHAR company_uuid FK
     CHAR gateway_uuid
     VARCHAR gateway_transaction_id
+    JSON gateway_response
+    VARCHAR payment_method
+    VARCHAR payment_method_last4
+    VARCHAR payment_method_brand
     VARCHAR gateway
     INT amount
+    INT fee_amount
+    INT tax_amount
+    INT net_amount
     VARCHAR currency
+    DECIMAL exchange_rate
+    VARCHAR settled_currency
+    INT settled_amount
     VARCHAR description
+    VARCHAR reference UK
+    CHAR parent_transaction_uuid
     VARCHAR type
     VARCHAR status
+    VARCHAR settlement_status
+    VARCHAR direction
+    INT balance_after
     JSON meta
+    VARCHAR ip_address
+    TEXT notes
+    VARCHAR failure_reason
+    VARCHAR failure_code
+    VARCHAR period
+    JSON tags
     TIMESTAMP deleted_at
     TIMESTAMP created_at
     TIMESTAMP updated_at
+    TIMESTAMP settled_at
+    TIMESTAMP voided_at
+    TIMESTAMP reversed_at
+    TIMESTAMP expires_at
   }
 
   fleetbase_types {
-    INTUNSIGNED id PK
+    INTUNSIGNED id PK, UK
     VARCHAR _key
-    VARCHAR uuid UK
-    VARCHAR company_uuid FK
+    CHAR uuid UK
+    CHAR company_uuid FK
     CHAR subject_uuid
     VARCHAR subject_type
     VARCHAR name
@@ -2056,11 +2528,11 @@ erDiagram
   }
 
   fleetbase_user_devices {
-    INTUNSIGNED id PK
+    INTUNSIGNED id PK, UK
     VARCHAR _key
-    VARCHAR uuid UK
+    CHAR uuid UK
     VARCHAR public_id
-    VARCHAR user_uuid FK
+    CHAR user_uuid FK
     VARCHAR platform
     MEDIUMTEXT token
     VARCHAR status
@@ -2070,14 +2542,17 @@ erDiagram
   }
 
   fleetbase_users {
-    INTUNSIGNED id PK
+    INTUNSIGNED id PK, UK
     VARCHAR _key
-    VARCHAR uuid UK
+    CHAR uuid UK
     VARCHAR public_id UK
-    VARCHAR company_uuid FK
-    VARCHAR avatar_uuid FK
+    CHAR company_uuid FK
+    CHAR avatar_uuid FK
     VARCHAR username UK
     VARCHAR email
+    VARCHAR apple_user_id UK
+    VARCHAR facebook_user_id UK
+    VARCHAR google_user_id UK
     VARCHAR phone
     VARCHAR password
     VARCHAR name
@@ -2090,6 +2565,7 @@ erDiagram
     VARCHAR type
     VARCHAR status
     JSON meta
+    JSON options
     VARCHAR remember_token
     DATETIME email_verified_at
     DATETIME phone_verified_at
@@ -2098,60 +2574,33 @@ erDiagram
     TIMESTAMP updated_at
   }
 
-  fleetbase_vehicle_device_events {
-    INTUNSIGNED id PK
-    CHAR uuid
-    CHAR vehicle_device_uuid FK
-    JSON payload
-    JSON meta
-    VARCHAR ident
-    VARCHAR protocol
-    VARCHAR provider
-    GEOMETRY location
-    VARCHAR mileage
-    VARCHAR state
-    VARCHAR code
-    VARCHAR reason
-    MEDIUMTEXT comment
-    TIMESTAMP resolved_at
-    TIMESTAMP deleted_at
-    TIMESTAMP created_at
-    TIMESTAMP updated_at
-  }
-
-  fleetbase_vehicle_devices {
-    INTUNSIGNED id PK
-    CHAR uuid
-    CHAR vehicle_uuid FK
-    VARCHAR device_id
-    VARCHAR device_provider
-    VARCHAR device_type
-    VARCHAR device_name
-    VARCHAR device_location
-    VARCHAR device_model
-    VARCHAR manufacturer
-    VARCHAR serial_number
-    DATE installation_date
-    DATE last_maintenance_date
-    JSON meta
-    JSON data
-    BIT online
-    VARCHAR status
-    VARCHAR data_frequency
-    TEXT notes
-    TIMESTAMP deleted_at
+  fleetbase_vehicle_geofence_states {
+    BIGINTUNSIGNED id PK, UK
+    CHAR vehicle_uuid FK, UK
+    CHAR geofence_uuid UK
+    VARCHAR geofence_type
+    BIT is_inside
+    TIMESTAMP entered_at
+    TIMESTAMP exited_at
+    VARCHAR dwell_job_id
     TIMESTAMP created_at
     TIMESTAMP updated_at
   }
 
   fleetbase_vehicles {
-    INTUNSIGNED id PK
+    INTUNSIGNED id PK, UK
     VARCHAR _key
-    VARCHAR uuid UK
+    CHAR uuid UK
     VARCHAR public_id UK
+    VARCHAR internal_id
     CHAR company_uuid FK
+    CHAR telematic_uuid FK
+    CHAR category_uuid FK
+    CHAR warranty_uuid FK
     CHAR vendor_uuid FK
     CHAR photo_uuid FK
+    VARCHAR name
+    MEDIUMTEXT description
     MEDIUMTEXT avatar_url
     GEOMETRY location
     VARCHAR speed
@@ -2159,27 +2608,112 @@ erDiagram
     VARCHAR altitude
     VARCHAR make
     VARCHAR model
+    VARCHAR model_type
     VARCHAR year
     VARCHAR trim
+    VARCHAR fuel_type
+    VARCHAR fuel_volume_unit
+    DECIMAL fuel_capacity
+    DECIMAL bed_length
+    DECIMAL ground_clearance
+    TINYINTUNSIGNED seating_capacity
+    DECIMAL payload_capacity
+    VARCHAR emission_standard
+    BIT dpf_equipped
+    BIT scr_equipped
+    DECIMAL gvwr
+    DECIMAL gcwr
+    DECIMAL towing_capacity
+    DECIMAL height
+    DECIMAL length
+    DECIMAL width
+    DECIMAL weight
+    DECIMAL interior_volume
+    DECIMAL passenger_volume
+    DECIMAL cargo_volume
+    VARCHAR color
+    VARCHAR transmission
     VARCHAR type
+    VARCHAR class
+    VARCHAR measurement_system
+    VARCHAR body_type
+    VARCHAR body_sub_type
+    VARCHAR usage_type
+    VARCHAR ownership_type
+    VARCHAR odometer
+    INTUNSIGNED odometer_at_purchase
+    VARCHAR odometer_unit
     VARCHAR plate_number
+    VARCHAR call_sign
+    VARCHAR fuel_card_number
+    VARCHAR serial_number
+    VARCHAR engine_number UK
+    VARCHAR engine_model
+    VARCHAR engine_make
+    VARCHAR engine_family
+    VARCHAR engine_configuration
+    DECIMAL engine_displacement
+    DECIMAL engine_size
+    DECIMAL horsepower
+    INTUNSIGNED horsepower_rpm
+    DECIMAL torque
+    INTUNSIGNED torque_rpm
+    TINYINTUNSIGNED number_of_cylinders
+    VARCHAR cylinder_arrangement
     VARCHAR vin
-    MEDIUMTEXT vin_data
+    JSON vin_data
+    VARCHAR financing_status
+    VARCHAR currency
+    INT insurance_value
+    INT depreciation_rate
+    INT current_value
+    INT acquisition_cost
+    INTUNSIGNED estimated_service_life_months
+    INTUNSIGNED estimated_service_life_distance
+    VARCHAR estimated_service_life_distance_unit
+    DECIMAL loan_amount
+    DATE loan_first_payment
+    INTUNSIGNED loan_number_of_payments
     JSON meta
+    MEDIUMTEXT notes
     JSON telematics
-    JSON model_data
+    JSON specs
+    JSON details
     VARCHAR status
+    JSON skills
+    DECIMALUNSIGNED payload_capacity_volume
+    INTUNSIGNED payload_capacity_pallets
+    INTUNSIGNED payload_capacity_parcels
+    INTUNSIGNED max_tasks
+    TIME time_window_start
+    TIME time_window_end
+    BIT return_to_depot
     BIT online
     VARCHAR slug
+    TIMESTAMP purchased_at
+    TIMESTAMP lease_expires_at
     TIMESTAMP deleted_at
     TIMESTAMP created_at
     TIMESTAMP updated_at
   }
 
+  fleetbase_vendor_personnels {
+    INTUNSIGNED id PK, UK
+    CHAR uuid
+    CHAR vendor_uuid FK
+    CHAR contact_uuid FK
+    VARCHAR role
+    VARCHAR status
+    CHAR invited_by_uuid FK
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
   fleetbase_vendors {
-    INTUNSIGNED id PK
+    INTUNSIGNED id PK, UK
     VARCHAR _key
-    VARCHAR uuid UK
+    CHAR uuid UK
     VARCHAR public_id UK
     CHAR company_uuid FK
     CHAR place_uuid FK
@@ -2197,6 +2731,7 @@ erDiagram
     JSON meta
     JSON callbacks
     VARCHAR type
+    MEDIUMTEXT notes
     VARCHAR status
     VARCHAR slug
     TIMESTAMP deleted_at
@@ -2205,7 +2740,7 @@ erDiagram
   }
 
   fleetbase_verification_codes {
-    INTUNSIGNED id PK
+    INTUNSIGNED id PK, UK
     VARCHAR _key
     CHAR uuid UK
     CHAR subject_uuid
@@ -2220,10 +2755,35 @@ erDiagram
     TIMESTAMP updated_at
   }
 
-  fleetbase_waypoints {
-    INTUNSIGNED id PK
+  fleetbase_warranties {
+    INTUNSIGNED id PK, UK
+    CHAR uuid
     VARCHAR _key
-    VARCHAR uuid UK
+    CHAR company_uuid FK
+    CHAR vendor_uuid FK
+    CHAR category_uuid FK
+    CHAR created_by_uuid FK
+    CHAR updated_by_uuid FK
+    VARCHAR subject_type
+    CHAR subject_uuid
+    VARCHAR provider
+    VARCHAR policy_number
+    VARCHAR type
+    DATE start_date
+    DATE end_date
+    JSON coverage
+    JSON terms
+    TEXT policy
+    JSON meta
+    TIMESTAMP deleted_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  fleetbase_waypoints {
+    INTUNSIGNED id PK, UK
+    VARCHAR _key
+    CHAR uuid UK
     VARCHAR public_id
     CHAR company_uuid FK
     CHAR place_uuid FK
@@ -2233,6 +2793,12 @@ erDiagram
     VARCHAR customer_type
     VARCHAR _import_id
     VARCHAR type
+    DATETIME time_window_start
+    DATETIME time_window_end
+    INTUNSIGNED service_time "Seconds"
+    TEXT notes
+    VARCHAR pod_method
+    BIT pod_required
     INT order
     TIMESTAMP deleted_at
     TIMESTAMP created_at
@@ -2240,13 +2806,13 @@ erDiagram
   }
 
   fleetbase_webhook_endpoints {
-    INTUNSIGNED id PK
+    INTUNSIGNED id PK, UK
     VARCHAR _key
-    VARCHAR uuid UK
-    VARCHAR company_uuid FK
+    CHAR uuid UK
+    CHAR company_uuid FK
     CHAR updated_by_uuid FK
     CHAR created_by_uuid FK
-    VARCHAR api_credential_uuid FK
+    CHAR api_credential_uuid FK
     VARCHAR url
     VARCHAR mode
     VARCHAR version
@@ -2259,13 +2825,14 @@ erDiagram
   }
 
   fleetbase_webhook_request_logs {
-    INTUNSIGNED id PK
+    INTUNSIGNED id PK, UK
     VARCHAR _key
     CHAR uuid UK
     VARCHAR public_id UK
     CHAR company_uuid FK
     CHAR webhook_uuid FK
     CHAR api_credential_uuid FK
+    BIGINTUNSIGNED access_token_id FK
     CHAR api_event_uuid FK
     VARCHAR method
     VARCHAR status_code
@@ -2283,10 +2850,57 @@ erDiagram
     TIMESTAMP deleted_at
   }
 
-  fleetbase_zones {
-    INTUNSIGNED id PK
+  fleetbase_work_orders {
+    INTUNSIGNED id PK, UK
+    CHAR uuid
     VARCHAR _key
-    VARCHAR uuid UK
+    VARCHAR public_id UK
+    CHAR company_uuid FK
+    CHAR schedule_uuid
+    CHAR category_uuid FK
+    VARCHAR code
+    VARCHAR subject
+    VARCHAR category
+    VARCHAR status
+    VARCHAR priority
+    VARCHAR target_type
+    CHAR target_uuid
+    VARCHAR assignee_type
+    CHAR assignee_uuid
+    TIMESTAMP opened_at
+    TIMESTAMP due_at
+    TIMESTAMP closed_at
+    JSON required_skills
+    JSON required_certifications
+    INT estimated_duration_hours
+    INT actual_duration_hours
+    JSON resource_requirements
+    TIMESTAMP earliest_start_date
+    TIMESTAMP latest_completion_date
+    VARCHAR scheduling_priority
+    BIT can_be_split
+    INT estimated_cost
+    INT approved_budget
+    INT actual_cost
+    VARCHAR currency
+    JSON cost_breakdown
+    VARCHAR cost_center
+    VARCHAR budget_code
+    TEXT instructions
+    TEXT completion_notes
+    JSON checklist
+    JSON meta
+    CHAR created_by_uuid FK
+    CHAR updated_by_uuid FK
+    TIMESTAMP deleted_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  fleetbase_zones {
+    INTUNSIGNED id PK, UK
+    VARCHAR _key
+    CHAR uuid UK
     VARCHAR public_id UK
     CHAR company_uuid FK
     CHAR service_area_uuid FK
@@ -2295,6 +2909,10 @@ erDiagram
     GEOMETRY border
     VARCHAR color
     VARCHAR stroke_color
+    BIT trigger_on_entry
+    BIT trigger_on_exit
+    SMALLINTUNSIGNED dwell_threshold_minutes
+    SMALLINTUNSIGNED speed_limit_kmh
     VARCHAR status
     TIMESTAMP deleted_at
     TIMESTAMP created_at
@@ -2302,7 +2920,7 @@ erDiagram
   }
 
   fleetbase_storefront_carts {
-    BIGINTUNSIGNED id PK
+    BIGINTUNSIGNED id PK, UK
     CHAR uuid UK
     VARCHAR public_id
     CHAR company_uuid FK
@@ -2320,8 +2938,59 @@ erDiagram
     TIMESTAMP updated_at
   }
 
+  fleetbase_storefront_catalog_category_products {
+    BIGINTUNSIGNED id PK, UK
+    CHAR uuid UK
+    CHAR catalog_category_uuid FK
+    CHAR product_uuid FK
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fleetbase_storefront_catalog_hours {
+    BIGINTUNSIGNED id PK, UK
+    CHAR uuid UK
+    CHAR catalog_uuid FK
+    VARCHAR day_of_week
+    TIME start
+    TIME end
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fleetbase_storefront_catalog_subjects {
+    BIGINTUNSIGNED id PK, UK
+    CHAR uuid UK
+    CHAR catalog_uuid FK
+    VARCHAR subject_type
+    CHAR subject_uuid
+    CHAR company_uuid FK
+    CHAR created_by_uuid FK
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fleetbase_storefront_catalogs {
+    BIGINTUNSIGNED id PK, UK
+    CHAR uuid UK
+    VARCHAR public_id UK
+    CHAR store_uuid FK
+    CHAR company_uuid FK
+    CHAR created_by_uuid FK
+    VARCHAR name
+    TEXT description
+    VARCHAR status
+    JSON meta
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
   fleetbase_storefront_checkouts {
-    BIGINTUNSIGNED id PK
+    BIGINTUNSIGNED id PK, UK
     CHAR uuid UK
     VARCHAR public_id
     CHAR company_uuid FK
@@ -2346,8 +3015,24 @@ erDiagram
     TIMESTAMP updated_at
   }
 
+  fleetbase_storefront_food_trucks {
+    BIGINTUNSIGNED id PK, UK
+    CHAR uuid UK
+    VARCHAR public_id UK
+    CHAR vehicle_uuid FK
+    CHAR service_area_uuid FK
+    CHAR zone_uuid FK
+    CHAR store_uuid FK
+    CHAR company_uuid FK
+    CHAR created_by_uuid FK
+    VARCHAR status
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
   fleetbase_storefront_gateways {
-    BIGINTUNSIGNED id PK
+    BIGINTUNSIGNED id PK, UK
     CHAR uuid UK
     VARCHAR public_id
     CHAR company_uuid FK
@@ -2370,7 +3055,7 @@ erDiagram
   }
 
   fleetbase_storefront_network_stores {
-    BIGINTUNSIGNED id PK
+    BIGINTUNSIGNED id PK, UK
     CHAR uuid UK
     VARCHAR network_uuid FK
     VARCHAR store_uuid FK
@@ -2381,13 +3066,14 @@ erDiagram
   }
 
   fleetbase_storefront_networks {
-    BIGINTUNSIGNED id PK
+    BIGINTUNSIGNED id PK, UK
     VARCHAR public_id
     CHAR uuid UK
     VARCHAR created_by_uuid FK
     VARCHAR company_uuid FK
     CHAR logo_uuid FK
     CHAR backdrop_uuid FK
+    CHAR order_config_uuid FK
     VARCHAR name
     LONGTEXT key
     BIT online
@@ -2412,7 +3098,7 @@ erDiagram
   }
 
   fleetbase_storefront_notification_channels {
-    BIGINTUNSIGNED id PK
+    BIGINTUNSIGNED id PK, UK
     CHAR uuid
     CHAR company_uuid FK
     CHAR created_by_uuid FK
@@ -2430,7 +3116,7 @@ erDiagram
   }
 
   fleetbase_storefront_payment_methods {
-    BIGINTUNSIGNED id PK
+    BIGINTUNSIGNED id PK, UK
     CHAR uuid UK
     VARCHAR public_id
     CHAR company_uuid FK
@@ -2449,7 +3135,7 @@ erDiagram
   }
 
   fleetbase_storefront_product_addon_categories {
-    BIGINTUNSIGNED id PK
+    BIGINTUNSIGNED id PK, UK
     CHAR uuid UK
     VARCHAR product_uuid FK
     VARCHAR category_uuid FK
@@ -2462,7 +3148,7 @@ erDiagram
   }
 
   fleetbase_storefront_product_addons {
-    BIGINTUNSIGNED id PK
+    BIGINTUNSIGNED id PK, UK
     VARCHAR public_id
     CHAR uuid UK
     VARCHAR created_by_uuid FK
@@ -2480,7 +3166,7 @@ erDiagram
   }
 
   fleetbase_storefront_product_hours {
-    BIGINTUNSIGNED id PK
+    BIGINTUNSIGNED id PK, UK
     CHAR uuid UK
     VARCHAR product_uuid FK
     VARCHAR day_of_week
@@ -2492,7 +3178,7 @@ erDiagram
   }
 
   fleetbase_storefront_product_store_locations {
-    BIGINTUNSIGNED id PK
+    BIGINTUNSIGNED id PK, UK
     VARCHAR product_uuid FK
     VARCHAR store_location_uuid FK
     TIMESTAMP deleted_at
@@ -2501,7 +3187,7 @@ erDiagram
   }
 
   fleetbase_storefront_product_variant_options {
-    BIGINTUNSIGNED id PK
+    BIGINTUNSIGNED id PK, UK
     VARCHAR public_id
     CHAR uuid UK
     VARCHAR product_variant_uuid FK
@@ -2516,7 +3202,7 @@ erDiagram
   }
 
   fleetbase_storefront_product_variants {
-    BIGINTUNSIGNED id PK
+    BIGINTUNSIGNED id PK, UK
     VARCHAR public_id
     CHAR uuid UK
     VARCHAR product_uuid FK
@@ -2535,7 +3221,7 @@ erDiagram
   }
 
   fleetbase_storefront_products {
-    BIGINTUNSIGNED id PK
+    BIGINTUNSIGNED id PK, UK
     VARCHAR public_id
     CHAR uuid UK
     VARCHAR company_uuid FK
@@ -2569,7 +3255,7 @@ erDiagram
   }
 
   fleetbase_storefront_reviews {
-    BIGINTUNSIGNED id PK
+    BIGINTUNSIGNED id PK, UK
     CHAR uuid UK
     VARCHAR public_id UK
     VARCHAR created_by_uuid FK
@@ -2585,7 +3271,7 @@ erDiagram
   }
 
   fleetbase_storefront_store_hours {
-    BIGINTUNSIGNED id PK
+    BIGINTUNSIGNED id PK, UK
     CHAR uuid UK
     CHAR store_location_uuid FK
     VARCHAR day_of_week
@@ -2597,7 +3283,7 @@ erDiagram
   }
 
   fleetbase_storefront_store_locations {
-    BIGINTUNSIGNED id PK
+    BIGINTUNSIGNED id PK, UK
     VARCHAR public_id
     CHAR uuid UK
     VARCHAR store_uuid FK
@@ -2610,13 +3296,14 @@ erDiagram
   }
 
   fleetbase_storefront_stores {
-    BIGINTUNSIGNED id PK
+    BIGINTUNSIGNED id PK, UK
     VARCHAR public_id
     CHAR uuid UK
     VARCHAR created_by_uuid FK
     VARCHAR company_uuid FK
     VARCHAR logo_uuid FK
     CHAR backdrop_uuid FK
+    CHAR order_config_uuid FK
     VARCHAR name
     LONGTEXT description
     VARCHAR phone
@@ -2642,7 +3329,7 @@ erDiagram
   }
 
   fleetbase_storefront_votes {
-    BIGINTUNSIGNED id PK
+    BIGINTUNSIGNED id PK, UK
     CHAR uuid UK
     VARCHAR public_id UK
     VARCHAR created_by_uuid FK
@@ -2655,96 +3342,32 @@ erDiagram
     TIMESTAMP updated_at
   }
 
-  fixflo_boards ||--o{ fixflo_board_groups : "foreign key"
-  fixflo_boards ||--o{ fixflo_board_members : "foreign key"
-  fixflo_boards ||--o{ fixflo_free_board_columns : "foreign key"
-  fixflo_boards ||--o{ fixflo_free_board_inputs : "foreign key"
-  fixflo_boards ||--o{ fixflo_report_type_sources : "foreign key"
-  fixflo_cargo_grades ||--o{ fixflo_fixtures : "foreign key"
-  fixflo_cargo_grades ||--o{ fixflo_sub_cargo_grades : "foreign key"
-  fixflo_charterers ||--o{ fixflo_fixtures : "foreign key"
-  fixflo_chat_sessions ||--o{ fixflo_chat_messages : "foreign key"
-  fixflo_chat_sessions ||--o{ fixflo_chat_participants : "foreign key"
-  fixflo_companies ||--o{ fixflo_boards : "foreign key"
-  fixflo_companies ||--o{ fixflo_cargo_grades : "foreign key"
-  fixflo_companies ||--o{ fixflo_cell_comments : "foreign key"
-  fixflo_companies ||--o{ fixflo_color_codes : "foreign key"
-  fixflo_companies ||--o{ fixflo_confidentiality_levels : "foreign key"
-  fixflo_companies ||--o{ fixflo_files : "foreign key"
-  fixflo_companies ||--o{ fixflo_fixture_groups : "foreign key"
-  fixflo_companies ||--o{ fixflo_fixture_sets : "foreign key"
-  fixflo_companies ||--o{ fixflo_groups : "foreign key"
-  fixflo_companies ||--o{ fixflo_notes : "foreign key"
-  fixflo_companies ||--o{ fixflo_report_templates : "foreign key"
-  fixflo_companies ||--o{ fixflo_report_types : "foreign key"
-  fixflo_companies ||--o{ fixflo_roles : "foreign key"
-  fixflo_companies ||--o{ fixflo_saved_filters : "foreign key"
-  fixflo_companies ||--o{ fixflo_saved_reports : "foreign key"
-  fixflo_companies ||--o{ fixflo_sessions : "foreign key"
-  fixflo_companies ||--o{ fixflo_users : "foreign key"
-  fixflo_companies ||--o{ fixflo_vessels : "foreign key"
-  fixflo_companies ||--o{ fixflo_widgets : "foreign key"
-  fixflo_fixture_sets ||--o{ fixflo_fixture_set_groups : "foreign key"
-  fixflo_fixture_sets ||--o{ fixflo_fixtures : "foreign key"
-  fixflo_fixtures ||--o{ fixflo_fixture_values : "foreign key"
-  fixflo_fixtures ||--o{ fixflo_fixtures : "foreign key"
-  fixflo_groups ||--o{ fixflo_board_groups : "foreign key"
-  fixflo_groups ||--o{ fixflo_chat_sessions : "foreign key"
-  fixflo_groups ||--o{ fixflo_fixture_set_groups : "foreign key"
-  fixflo_groups ||--o{ fixflo_group_members : "foreign key"
-  fixflo_permissions ||--o{ fixflo_role_permissions : "foreign key"
-  fixflo_report_templates ||--o{ fixflo_generated_reports : "foreign key"
-  fixflo_report_templates ||--o{ fixflo_report_types : "foreign key"
-  fixflo_report_types ||--o{ fixflo_report_type_sorts : "foreign key"
-  fixflo_report_types ||--o{ fixflo_report_type_sources : "foreign key"
-  fixflo_report_types ||--o{ fixflo_reports : "foreign key"
-  fixflo_report_types ||--o{ fixflo_saved_reports : "foreign key"
-  fixflo_roles ||--o{ fixflo_role_permissions : "foreign key"
-  fixflo_roles ||--o{ fixflo_users : "foreign key"
-  fixflo_sessions ||--o{ fixflo_login_attempts : "foreign key"
-  fixflo_sidebar_folders ||--o{ fixflo_sidebar_folder_items : "foreign key"
-  fixflo_sub_cargo_grades ||--o{ fixflo_sub_cargo_grades : "foreign key"
-  fixflo_users ||--o{ fixflo_board_members : "foreign key"
-  fixflo_users ||--o{ fixflo_boards : "foreign key"
-  fixflo_users ||--o{ fixflo_cell_comments : "foreign key"
-  fixflo_users ||--o{ fixflo_chat_messages : "foreign key"
-  fixflo_users ||--o{ fixflo_chat_participants : "foreign key"
-  fixflo_users ||--o{ fixflo_column_states : "foreign key"
-  fixflo_users ||--o{ fixflo_companies : "foreign key"
-  fixflo_users ||--o{ fixflo_completed_tours : "foreign key"
-  fixflo_users ||--o{ fixflo_files : "foreign key"
-  fixflo_users ||--o{ fixflo_fixture_groups : "foreign key"
-  fixflo_users ||--o{ fixflo_fixture_sets : "foreign key"
-  fixflo_users ||--o{ fixflo_fixtures : "foreign key"
-  fixflo_users ||--o{ fixflo_generated_reports : "foreign key"
-  fixflo_users ||--o{ fixflo_group_members : "foreign key"
-  fixflo_users ||--o{ fixflo_groups : "foreign key"
-  fixflo_users ||--o{ fixflo_notes : "foreign key"
-  fixflo_users ||--o{ fixflo_report_templates : "foreign key"
-  fixflo_users ||--o{ fixflo_report_types : "foreign key"
-  fixflo_users ||--o{ fixflo_reports : "foreign key"
-  fixflo_users ||--o{ fixflo_saved_filters : "foreign key"
-  fixflo_users ||--o{ fixflo_saved_reports : "foreign key"
-  fixflo_users ||--o{ fixflo_sessions : "foreign key"
-  fixflo_users ||--o{ fixflo_sidebar_folders : "foreign key"
-  fixflo_users ||--o{ fixflo_user_confidentiality_settings : "foreign key"
-  fixflo_users ||--o{ fixflo_vessels : "foreign key"
-  fixflo_users ||--o{ fixflo_widgets : "foreign key"
-  fixflo_vessels ||--o{ fixflo_fixtures : "foreign key"
-  fixflo_zones ||--o{ fixflo_boundaries : "foreign key"
-  fixflo_zones ||--o{ fixflo_fixtures : "foreign key"
+  fleetbase_ai_sessions ||--o{ fleetbase_ai_admin_access_logs : "foreign key"
+  fleetbase_ai_sessions ||--o{ fleetbase_ai_tasks : "foreign key"
+  fleetbase_ai_tasks ||--o{ fleetbase_ai_admin_access_logs : "foreign key"
+  fleetbase_ai_tasks ||--o{ fleetbase_ai_task_steps : "foreign key"
   fleetbase_api_credentials ||--o{ fleetbase_api_request_logs : "foreign key"
   fleetbase_api_credentials ||--o{ fleetbase_webhook_endpoints : "foreign key"
   fleetbase_api_credentials ||--o{ fleetbase_webhook_request_logs : "foreign key"
   fleetbase_api_events ||--o{ fleetbase_webhook_request_logs : "foreign key"
+  fleetbase_categories ||--o{ fleetbase_alerts : "foreign key"
+  fleetbase_categories ||--o{ fleetbase_assets : "foreign key"
   fleetbase_categories ||--o{ fleetbase_entities : "foreign key"
+  fleetbase_categories ||--o{ fleetbase_equipments : "foreign key"
   fleetbase_categories ||--o{ fleetbase_extensions : "foreign key"
+  fleetbase_categories ||--o{ fleetbase_maintenances : "foreign key"
   fleetbase_categories ||--o{ fleetbase_order_configs : "foreign key"
+  fleetbase_categories ||--o{ fleetbase_parts : "foreign key"
   fleetbase_categories ||--o{ fleetbase_registry_extensions : "foreign key"
+  fleetbase_categories ||--o{ fleetbase_reports : "foreign key"
+  fleetbase_categories ||--o{ fleetbase_storefront_catalog_category_products : "foreign key"
   fleetbase_categories ||--o{ fleetbase_storefront_network_stores : "foreign key"
   fleetbase_categories ||--o{ fleetbase_storefront_product_addon_categories : "foreign key"
   fleetbase_categories ||--o{ fleetbase_storefront_product_addons : "foreign key"
   fleetbase_categories ||--o{ fleetbase_storefront_products : "foreign key"
+  fleetbase_categories ||--o{ fleetbase_vehicles : "foreign key"
+  fleetbase_categories ||--o{ fleetbase_warranties : "foreign key"
+  fleetbase_categories ||--o{ fleetbase_work_orders : "foreign key"
   fleetbase_chat_channels ||--o{ fleetbase_chat_attachments : "foreign key"
   fleetbase_chat_channels ||--o{ fleetbase_chat_logs : "foreign key"
   fleetbase_chat_channels ||--o{ fleetbase_chat_messages : "foreign key"
@@ -2756,8 +3379,14 @@ erDiagram
   fleetbase_chat_participants ||--o{ fleetbase_chat_messages : "foreign key"
   fleetbase_chat_participants ||--o{ fleetbase_chat_receipts : "foreign key"
   fleetbase_comments ||--o{ fleetbase_comments : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_ai_admin_access_logs : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_ai_sessions : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_ai_task_steps : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_ai_tasks : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_alerts : "foreign key"
   fleetbase_companies ||--o{ fleetbase_api_credentials : "foreign key"
   fleetbase_companies ||--o{ fleetbase_api_request_logs : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_assets : "foreign key"
   fleetbase_companies ||--o{ fleetbase_chat_attachments : "foreign key"
   fleetbase_companies ||--o{ fleetbase_chat_channels : "foreign key"
   fleetbase_companies ||--o{ fleetbase_chat_logs : "foreign key"
@@ -2769,8 +3398,12 @@ erDiagram
   fleetbase_companies ||--o{ fleetbase_contacts : "foreign key"
   fleetbase_companies ||--o{ fleetbase_custom_field_values : "foreign key"
   fleetbase_companies ||--o{ fleetbase_custom_fields : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_device_events : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_devices : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_directives : "foreign key"
   fleetbase_companies ||--o{ fleetbase_drivers : "foreign key"
   fleetbase_companies ||--o{ fleetbase_entities : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_equipments : "foreign key"
   fleetbase_companies ||--o{ fleetbase_extension_installs : "foreign key"
   fleetbase_companies ||--o{ fleetbase_extensions : "foreign key"
   fleetbase_companies ||--o{ fleetbase_fleets : "foreign key"
@@ -2779,8 +3412,11 @@ erDiagram
   fleetbase_companies ||--o{ fleetbase_integrated_vendors : "foreign key"
   fleetbase_companies ||--o{ fleetbase_invites : "foreign key"
   fleetbase_companies ||--o{ fleetbase_issues : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_maintenance_schedules : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_maintenances : "foreign key"
   fleetbase_companies ||--o{ fleetbase_order_configs : "foreign key"
   fleetbase_companies ||--o{ fleetbase_orders : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_parts : "foreign key"
   fleetbase_companies ||--o{ fleetbase_payloads : "foreign key"
   fleetbase_companies ||--o{ fleetbase_places : "foreign key"
   fleetbase_companies ||--o{ fleetbase_policies : "foreign key"
@@ -2792,11 +3428,30 @@ erDiagram
   fleetbase_companies ||--o{ fleetbase_registry_extension_purchases : "foreign key"
   fleetbase_companies ||--o{ fleetbase_registry_extensions : "foreign key"
   fleetbase_companies ||--o{ fleetbase_registry_users : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_report_audit_logs : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_report_executions : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_report_templates : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_reports : "foreign key"
   fleetbase_companies ||--o{ fleetbase_roles : "foreign key"
   fleetbase_companies ||--o{ fleetbase_routes : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_sensors : "foreign key"
   fleetbase_companies ||--o{ fleetbase_service_areas : "foreign key"
   fleetbase_companies ||--o{ fleetbase_service_quotes : "foreign key"
   fleetbase_companies ||--o{ fleetbase_service_rates : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_storefront_carts : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_storefront_catalog_subjects : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_storefront_catalogs : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_storefront_checkouts : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_storefront_food_trucks : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_storefront_gateways : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_storefront_networks : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_storefront_notification_channels : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_storefront_payment_methods : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_storefront_products : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_storefront_stores : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_telematics : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_template_queries : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_templates : "foreign key"
   fleetbase_companies ||--o{ fleetbase_tracking_numbers : "foreign key"
   fleetbase_companies ||--o{ fleetbase_tracking_statuses : "foreign key"
   fleetbase_companies ||--o{ fleetbase_transactions : "foreign key"
@@ -2804,22 +3459,20 @@ erDiagram
   fleetbase_companies ||--o{ fleetbase_users : "foreign key"
   fleetbase_companies ||--o{ fleetbase_vehicles : "foreign key"
   fleetbase_companies ||--o{ fleetbase_vendors : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_warranties : "foreign key"
   fleetbase_companies ||--o{ fleetbase_waypoints : "foreign key"
   fleetbase_companies ||--o{ fleetbase_webhook_endpoints : "foreign key"
   fleetbase_companies ||--o{ fleetbase_webhook_request_logs : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_work_orders : "foreign key"
   fleetbase_companies ||--o{ fleetbase_zones : "foreign key"
-  fleetbase_companies ||--o{ fleetbase_storefront_carts : "foreign key"
-  fleetbase_companies ||--o{ fleetbase_storefront_checkouts : "foreign key"
-  fleetbase_companies ||--o{ fleetbase_storefront_gateways : "foreign key"
-  fleetbase_companies ||--o{ fleetbase_storefront_networks : "foreign key"
-  fleetbase_companies ||--o{ fleetbase_storefront_notification_channels : "foreign key"
-  fleetbase_companies ||--o{ fleetbase_storefront_payment_methods : "foreign key"
-  fleetbase_companies ||--o{ fleetbase_storefront_products : "foreign key"
-  fleetbase_companies ||--o{ fleetbase_storefront_stores : "foreign key"
   fleetbase_contacts ||--o{ fleetbase_storefront_reviews : "foreign key"
   fleetbase_contacts ||--o{ fleetbase_storefront_votes : "foreign key"
+  fleetbase_contacts ||--o{ fleetbase_vendor_personnels : "foreign key"
   fleetbase_custom_fields ||--o{ fleetbase_custom_field_values : "foreign key"
   fleetbase_dashboards ||--o{ fleetbase_dashboard_widgets : "foreign key"
+  fleetbase_devices ||--o{ fleetbase_device_events : "foreign key"
+  fleetbase_devices ||--o{ fleetbase_sensors : "foreign key"
+  fleetbase_drivers ||--o{ fleetbase_driver_geofence_states : "foreign key"
   fleetbase_drivers ||--o{ fleetbase_entities : "foreign key"
   fleetbase_drivers ||--o{ fleetbase_fleet_drivers : "foreign key"
   fleetbase_drivers ||--o{ fleetbase_fuel_reports : "foreign key"
@@ -2830,27 +3483,34 @@ erDiagram
   fleetbase_files ||--o{ fleetbase_chat_attachments : "foreign key"
   fleetbase_files ||--o{ fleetbase_companies : "foreign key"
   fleetbase_files ||--o{ fleetbase_contacts : "foreign key"
+  fleetbase_files ||--o{ fleetbase_devices : "foreign key"
+  fleetbase_files ||--o{ fleetbase_equipments : "foreign key"
   fleetbase_files ||--o{ fleetbase_extensions : "foreign key"
   fleetbase_files ||--o{ fleetbase_order_configs : "foreign key"
+  fleetbase_files ||--o{ fleetbase_parts : "foreign key"
   fleetbase_files ||--o{ fleetbase_proofs : "foreign key"
   fleetbase_files ||--o{ fleetbase_registry_extension_bundles : "foreign key"
   fleetbase_files ||--o{ fleetbase_registry_extensions : "foreign key"
-  fleetbase_files ||--o{ fleetbase_users : "foreign key"
-  fleetbase_files ||--o{ fleetbase_vehicles : "foreign key"
-  fleetbase_files ||--o{ fleetbase_vendors : "foreign key"
+  fleetbase_files ||--o{ fleetbase_sensors : "foreign key"
   fleetbase_files ||--o{ fleetbase_storefront_gateways : "foreign key"
   fleetbase_files ||--o{ fleetbase_storefront_networks : "foreign key"
   fleetbase_files ||--o{ fleetbase_storefront_notification_channels : "foreign key"
   fleetbase_files ||--o{ fleetbase_storefront_products : "foreign key"
   fleetbase_files ||--o{ fleetbase_storefront_stores : "foreign key"
+  fleetbase_files ||--o{ fleetbase_users : "foreign key"
+  fleetbase_files ||--o{ fleetbase_vehicles : "foreign key"
+  fleetbase_files ||--o{ fleetbase_vendors : "foreign key"
   fleetbase_fleets ||--o{ fleetbase_fleet_drivers : "foreign key"
   fleetbase_fleets ||--o{ fleetbase_fleet_vehicles : "foreign key"
   fleetbase_fleets ||--o{ fleetbase_fleets : "foreign key"
   fleetbase_groups ||--o{ fleetbase_group_users : "foreign key"
   fleetbase_integrated_vendors ||--o{ fleetbase_service_quotes : "foreign key"
+  fleetbase_manifests ||--o{ fleetbase_manifest_stops : "foreign key"
   fleetbase_monitored_scheduled_tasks ||--o{ fleetbase_monitored_scheduled_task_log_items : "foreign key"
   fleetbase_order_configs ||--o{ fleetbase_orders : "foreign key"
   fleetbase_order_configs ||--o{ fleetbase_service_rates : "foreign key"
+  fleetbase_order_configs ||--o{ fleetbase_storefront_networks : "foreign key"
+  fleetbase_order_configs ||--o{ fleetbase_storefront_stores : "foreign key"
   fleetbase_orders ||--o{ fleetbase_drivers : "foreign key"
   fleetbase_orders ||--o{ fleetbase_positions : "foreign key"
   fleetbase_orders ||--o{ fleetbase_routes : "foreign key"
@@ -2860,28 +3520,39 @@ erDiagram
   fleetbase_payloads ||--o{ fleetbase_purchase_rates : "foreign key"
   fleetbase_payloads ||--o{ fleetbase_service_quotes : "foreign key"
   fleetbase_payloads ||--o{ fleetbase_waypoints : "foreign key"
+  fleetbase_permissions ||--o{ fleetbase_directives : "foreign key"
   fleetbase_permissions ||--o{ fleetbase_model_has_permissions : "foreign key"
   fleetbase_permissions ||--o{ fleetbase_role_has_permissions : "foreign key"
+  fleetbase_personal_access_tokens ||--o{ fleetbase_api_events : "foreign key"
+  fleetbase_personal_access_tokens ||--o{ fleetbase_api_request_logs : "foreign key"
+  fleetbase_personal_access_tokens ||--o{ fleetbase_webhook_request_logs : "foreign key"
+  fleetbase_places ||--o{ fleetbase_assets : "foreign key"
   fleetbase_places ||--o{ fleetbase_companies : "foreign key"
+  fleetbase_places ||--o{ fleetbase_contacts : "foreign key"
   fleetbase_places ||--o{ fleetbase_entities : "foreign key"
   fleetbase_places ||--o{ fleetbase_payloads : "foreign key"
   fleetbase_places ||--o{ fleetbase_positions : "foreign key"
+  fleetbase_places ||--o{ fleetbase_storefront_store_locations : "foreign key"
   fleetbase_places ||--o{ fleetbase_vendors : "foreign key"
   fleetbase_places ||--o{ fleetbase_waypoints : "foreign key"
-  fleetbase_places ||--o{ fleetbase_storefront_store_locations : "foreign key"
   fleetbase_policies ||--o{ fleetbase_model_has_policies : "foreign key"
   fleetbase_purchase_rates ||--o{ fleetbase_orders : "foreign key"
+  fleetbase_registry_developer_accounts ||--o{ fleetbase_registry_users : "foreign key"
   fleetbase_registry_extension_bundles ||--o{ fleetbase_registry_extensions : "foreign key"
   fleetbase_registry_extensions ||--o{ fleetbase_registry_extension_bundles : "foreign key"
   fleetbase_registry_extensions ||--o{ fleetbase_registry_extension_installs : "foreign key"
   fleetbase_registry_extensions ||--o{ fleetbase_registry_extension_purchases : "foreign key"
   fleetbase_registry_users ||--o{ fleetbase_registry_extensions : "foreign key"
+  fleetbase_reports ||--o{ fleetbase_report_audit_logs : "foreign key"
+  fleetbase_reports ||--o{ fleetbase_report_cache : "foreign key"
+  fleetbase_reports ||--o{ fleetbase_report_executions : "foreign key"
   fleetbase_roles ||--o{ fleetbase_model_has_roles : "foreign key"
   fleetbase_roles ||--o{ fleetbase_role_has_permissions : "foreign key"
   fleetbase_routes ||--o{ fleetbase_orders : "foreign key"
   fleetbase_service_areas ||--o{ fleetbase_fleets : "foreign key"
   fleetbase_service_areas ||--o{ fleetbase_service_areas : "foreign key"
   fleetbase_service_areas ||--o{ fleetbase_service_rates : "foreign key"
+  fleetbase_service_areas ||--o{ fleetbase_storefront_food_trucks : "foreign key"
   fleetbase_service_areas ||--o{ fleetbase_zones : "foreign key"
   fleetbase_service_quotes ||--o{ fleetbase_purchase_rates : "foreign key"
   fleetbase_service_quotes ||--o{ fleetbase_service_quote_items : "foreign key"
@@ -2889,6 +3560,34 @@ erDiagram
   fleetbase_service_rates ||--o{ fleetbase_service_quotes : "foreign key"
   fleetbase_service_rates ||--o{ fleetbase_service_rate_fees : "foreign key"
   fleetbase_service_rates ||--o{ fleetbase_service_rate_parcel_fees : "foreign key"
+  fleetbase_storefront_carts ||--o{ fleetbase_storefront_checkouts : "foreign key"
+  fleetbase_storefront_catalogs ||--o{ fleetbase_storefront_catalog_hours : "foreign key"
+  fleetbase_storefront_catalogs ||--o{ fleetbase_storefront_catalog_subjects : "foreign key"
+  fleetbase_storefront_checkouts ||--o{ fleetbase_storefront_carts : "foreign key"
+  fleetbase_storefront_gateways ||--o{ fleetbase_storefront_checkouts : "foreign key"
+  fleetbase_storefront_gateways ||--o{ fleetbase_storefront_payment_methods : "foreign key"
+  fleetbase_storefront_networks ||--o{ fleetbase_storefront_checkouts : "foreign key"
+  fleetbase_storefront_networks ||--o{ fleetbase_storefront_network_stores : "foreign key"
+  fleetbase_storefront_product_variants ||--o{ fleetbase_storefront_product_variant_options : "foreign key"
+  fleetbase_storefront_products ||--o{ fleetbase_storefront_catalog_category_products : "foreign key"
+  fleetbase_storefront_products ||--o{ fleetbase_storefront_product_addon_categories : "foreign key"
+  fleetbase_storefront_products ||--o{ fleetbase_storefront_product_hours : "foreign key"
+  fleetbase_storefront_products ||--o{ fleetbase_storefront_product_store_locations : "foreign key"
+  fleetbase_storefront_products ||--o{ fleetbase_storefront_product_variants : "foreign key"
+  fleetbase_storefront_store_locations ||--o{ fleetbase_storefront_product_store_locations : "foreign key"
+  fleetbase_storefront_store_locations ||--o{ fleetbase_storefront_store_hours : "foreign key"
+  fleetbase_storefront_stores ||--o{ fleetbase_storefront_catalogs : "foreign key"
+  fleetbase_storefront_stores ||--o{ fleetbase_storefront_checkouts : "foreign key"
+  fleetbase_storefront_stores ||--o{ fleetbase_storefront_food_trucks : "foreign key"
+  fleetbase_storefront_stores ||--o{ fleetbase_storefront_network_stores : "foreign key"
+  fleetbase_storefront_stores ||--o{ fleetbase_storefront_payment_methods : "foreign key"
+  fleetbase_storefront_stores ||--o{ fleetbase_storefront_products : "foreign key"
+  fleetbase_storefront_stores ||--o{ fleetbase_storefront_store_locations : "foreign key"
+  fleetbase_telematics ||--o{ fleetbase_assets : "foreign key"
+  fleetbase_telematics ||--o{ fleetbase_devices : "foreign key"
+  fleetbase_telematics ||--o{ fleetbase_sensors : "foreign key"
+  fleetbase_telematics ||--o{ fleetbase_vehicles : "foreign key"
+  fleetbase_templates ||--o{ fleetbase_template_queries : "foreign key"
   fleetbase_tracking_numbers ||--o{ fleetbase_entities : "foreign key"
   fleetbase_tracking_numbers ||--o{ fleetbase_orders : "foreign key"
   fleetbase_tracking_numbers ||--o{ fleetbase_tracking_statuses : "foreign key"
@@ -2899,26 +3598,43 @@ erDiagram
   fleetbase_transactions ||--o{ fleetbase_transaction_items : "foreign key"
   fleetbase_types ||--o{ fleetbase_extensions : "foreign key"
   fleetbase_types ||--o{ fleetbase_vendors : "foreign key"
+  fleetbase_users ||--o{ fleetbase_ai_admin_access_logs : "foreign key"
+  fleetbase_users ||--o{ fleetbase_ai_sessions : "foreign key"
+  fleetbase_users ||--o{ fleetbase_ai_task_steps : "foreign key"
+  fleetbase_users ||--o{ fleetbase_ai_tasks : "foreign key"
+  fleetbase_users ||--o{ fleetbase_alerts : "foreign key"
   fleetbase_users ||--o{ fleetbase_api_credentials : "foreign key"
+  fleetbase_users ||--o{ fleetbase_assets : "foreign key"
   fleetbase_users ||--o{ fleetbase_chat_channels : "foreign key"
   fleetbase_users ||--o{ fleetbase_chat_participants : "foreign key"
   fleetbase_users ||--o{ fleetbase_comments : "foreign key"
   fleetbase_users ||--o{ fleetbase_companies : "foreign key"
   fleetbase_users ||--o{ fleetbase_company_users : "foreign key"
+  fleetbase_users ||--o{ fleetbase_contacts : "foreign key"
   fleetbase_users ||--o{ fleetbase_drivers : "foreign key"
+  fleetbase_users ||--o{ fleetbase_equipments : "foreign key"
   fleetbase_users ||--o{ fleetbase_fuel_reports : "foreign key"
   fleetbase_users ||--o{ fleetbase_group_users : "foreign key"
   fleetbase_users ||--o{ fleetbase_integrated_vendors : "foreign key"
   fleetbase_users ||--o{ fleetbase_invites : "foreign key"
   fleetbase_users ||--o{ fleetbase_issues : "foreign key"
+  fleetbase_users ||--o{ fleetbase_maintenance_schedules : "foreign key"
+  fleetbase_users ||--o{ fleetbase_maintenances : "foreign key"
   fleetbase_users ||--o{ fleetbase_order_configs : "foreign key"
   fleetbase_users ||--o{ fleetbase_orders : "foreign key"
+  fleetbase_users ||--o{ fleetbase_parts : "foreign key"
   fleetbase_users ||--o{ fleetbase_registry_extension_bundles : "foreign key"
   fleetbase_users ||--o{ fleetbase_registry_extensions : "foreign key"
   fleetbase_users ||--o{ fleetbase_registry_users : "foreign key"
-  fleetbase_users ||--o{ fleetbase_user_devices : "foreign key"
-  fleetbase_users ||--o{ fleetbase_webhook_endpoints : "foreign key"
+  fleetbase_users ||--o{ fleetbase_report_audit_logs : "foreign key"
+  fleetbase_users ||--o{ fleetbase_report_executions : "foreign key"
+  fleetbase_users ||--o{ fleetbase_report_templates : "foreign key"
+  fleetbase_users ||--o{ fleetbase_reports : "foreign key"
+  fleetbase_users ||--o{ fleetbase_sensors : "foreign key"
   fleetbase_users ||--o{ fleetbase_storefront_carts : "foreign key"
+  fleetbase_users ||--o{ fleetbase_storefront_catalog_subjects : "foreign key"
+  fleetbase_users ||--o{ fleetbase_storefront_catalogs : "foreign key"
+  fleetbase_users ||--o{ fleetbase_storefront_food_trucks : "foreign key"
   fleetbase_users ||--o{ fleetbase_storefront_gateways : "foreign key"
   fleetbase_users ||--o{ fleetbase_storefront_networks : "foreign key"
   fleetbase_users ||--o{ fleetbase_storefront_notification_channels : "foreign key"
@@ -2928,35 +3644,38 @@ erDiagram
   fleetbase_users ||--o{ fleetbase_storefront_store_locations : "foreign key"
   fleetbase_users ||--o{ fleetbase_storefront_stores : "foreign key"
   fleetbase_users ||--o{ fleetbase_storefront_votes : "foreign key"
-  fleetbase_vehicle_devices ||--o{ fleetbase_vehicle_device_events : "foreign key"
+  fleetbase_users ||--o{ fleetbase_telematics : "foreign key"
+  fleetbase_users ||--o{ fleetbase_template_queries : "foreign key"
+  fleetbase_users ||--o{ fleetbase_templates : "foreign key"
+  fleetbase_users ||--o{ fleetbase_user_devices : "foreign key"
+  fleetbase_users ||--o{ fleetbase_vendor_personnels : "foreign key"
+  fleetbase_users ||--o{ fleetbase_warranties : "foreign key"
+  fleetbase_users ||--o{ fleetbase_webhook_endpoints : "foreign key"
+  fleetbase_users ||--o{ fleetbase_work_orders : "foreign key"
   fleetbase_vehicles ||--o{ fleetbase_drivers : "foreign key"
   fleetbase_vehicles ||--o{ fleetbase_fleet_vehicles : "foreign key"
   fleetbase_vehicles ||--o{ fleetbase_fuel_reports : "foreign key"
   fleetbase_vehicles ||--o{ fleetbase_issues : "foreign key"
   fleetbase_vehicles ||--o{ fleetbase_orders : "foreign key"
-  fleetbase_vehicles ||--o{ fleetbase_vehicle_devices : "foreign key"
+  fleetbase_vehicles ||--o{ fleetbase_storefront_food_trucks : "foreign key"
+  fleetbase_vehicles ||--o{ fleetbase_vehicle_geofence_states : "foreign key"
+  fleetbase_vendors ||--o{ fleetbase_assets : "foreign key"
   fleetbase_vendors ||--o{ fleetbase_drivers : "foreign key"
   fleetbase_vendors ||--o{ fleetbase_entities : "foreign key"
   fleetbase_vendors ||--o{ fleetbase_fleets : "foreign key"
+  fleetbase_vendors ||--o{ fleetbase_parts : "foreign key"
   fleetbase_vendors ||--o{ fleetbase_vehicles : "foreign key"
+  fleetbase_vendors ||--o{ fleetbase_vendor_personnels : "foreign key"
+  fleetbase_vendors ||--o{ fleetbase_warranties : "foreign key"
+  fleetbase_warranties ||--o{ fleetbase_assets : "foreign key"
+  fleetbase_warranties ||--o{ fleetbase_devices : "foreign key"
+  fleetbase_warranties ||--o{ fleetbase_equipments : "foreign key"
+  fleetbase_warranties ||--o{ fleetbase_parts : "foreign key"
+  fleetbase_warranties ||--o{ fleetbase_sensors : "foreign key"
+  fleetbase_warranties ||--o{ fleetbase_telematics : "foreign key"
+  fleetbase_warranties ||--o{ fleetbase_vehicles : "foreign key"
   fleetbase_webhook_endpoints ||--o{ fleetbase_webhook_request_logs : "foreign key"
+  fleetbase_work_orders ||--o{ fleetbase_maintenances : "foreign key"
   fleetbase_zones ||--o{ fleetbase_fleets : "foreign key"
   fleetbase_zones ||--o{ fleetbase_service_rates : "foreign key"
-  fleetbase_storefront_carts ||--o{ fleetbase_storefront_checkouts : "foreign key"
-  fleetbase_storefront_checkouts ||--o{ fleetbase_storefront_carts : "foreign key"
-  fleetbase_storefront_gateways ||--o{ fleetbase_storefront_checkouts : "foreign key"
-  fleetbase_storefront_gateways ||--o{ fleetbase_storefront_payment_methods : "foreign key"
-  fleetbase_storefront_networks ||--o{ fleetbase_storefront_checkouts : "foreign key"
-  fleetbase_storefront_networks ||--o{ fleetbase_storefront_network_stores : "foreign key"
-  fleetbase_storefront_product_variants ||--o{ fleetbase_storefront_product_variant_options : "foreign key"
-  fleetbase_storefront_products ||--o{ fleetbase_storefront_product_addon_categories : "foreign key"
-  fleetbase_storefront_products ||--o{ fleetbase_storefront_product_hours : "foreign key"
-  fleetbase_storefront_products ||--o{ fleetbase_storefront_product_store_locations : "foreign key"
-  fleetbase_storefront_products ||--o{ fleetbase_storefront_product_variants : "foreign key"
-  fleetbase_storefront_store_locations ||--o{ fleetbase_storefront_product_store_locations : "foreign key"
-  fleetbase_storefront_store_locations ||--o{ fleetbase_storefront_store_hours : "foreign key"
-  fleetbase_storefront_stores ||--o{ fleetbase_storefront_checkouts : "foreign key"
-  fleetbase_storefront_stores ||--o{ fleetbase_storefront_network_stores : "foreign key"
-  fleetbase_storefront_stores ||--o{ fleetbase_storefront_payment_methods : "foreign key"
-  fleetbase_storefront_stores ||--o{ fleetbase_storefront_products : "foreign key"
-  fleetbase_storefront_stores ||--o{ fleetbase_storefront_store_locations : "foreign key"
+  fleetbase_zones ||--o{ fleetbase_storefront_food_trucks : "foreign key"
