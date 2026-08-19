@@ -30,10 +30,14 @@ jobs:
       - name: Validate generator scripts
         run: |
           bash -n create-erd.sh
+          # `shellcheck` is explicit: the -alpine image sets no entrypoint, unlike
+          # koalaman/shellcheck. Passing the script path alone made Docker execute the
+          # script itself, and Alpine has no bash for its `#!/usr/bin/env bash` shebang:
+          #   env: can't execute 'bash': No such file or directory   (exit 127)
           docker run --rm \
             --volume "$GITHUB_WORKSPACE/create-erd.sh:/work/create-erd.sh:ro" \
             koalaman/shellcheck-alpine:v0.10.0 \
-            /work/create-erd.sh
+            shellcheck /work/create-erd.sh
           python3 -m unittest discover -s tests/erd -p 'test_*.py' -v
           docker run --rm \
             --volume "$GITHUB_WORKSPACE/.github/workflows/erd.yml:/work/erd.yml:ro" \
