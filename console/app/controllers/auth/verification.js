@@ -27,13 +27,7 @@ export default class AuthVerificationController extends Controller {
     constructor() {
         super(...arguments);
 
-        this.stillWaitingTimer = later(
-            this,
-            () => {
-                this.stillWaiting = true;
-            },
-            this.waitTimeout
-        );
+        this.stillWaitingTimer = later(this, this.markStillWaiting, this.waitTimeout);
     }
 
     willDestroy() {
@@ -44,6 +38,15 @@ export default class AuthVerificationController extends Controller {
         if (this.stillWaitingTimer) {
             cancel(this.stillWaitingTimer);
         }
+    }
+
+    /**
+     * Shows the "still waiting?" prompt once the code has taken too long to arrive.
+     * Extracted from the constructor's timer so it can be exercised without waiting out
+     * the full timeout.
+     */
+    markStillWaiting() {
+        this.stillWaiting = true;
     }
 
     @action onDidntReceiveCode() {

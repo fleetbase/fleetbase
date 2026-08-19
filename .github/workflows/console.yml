@@ -86,28 +86,22 @@ jobs:
           name: console-coverage
           fail_ci_if_error: false
 
-      # Coverage gate — reports the numbers, does not block this release.
+      # Coverage gate — blocking.
       #
-      # Measured locally at 577/577 passing:
-      #   lines 70.02% · statements 69.84% · functions 68.69% · branches 71.54%
-      # scripts/coverage-check.mjs applies the threshold to ALL FOUR metrics, so
-      # functions is the binding constraint — 70 would fail today despite lines
-      # being at 70.02%. 65 is the floor the suite comfortably holds.
+      # The console suite is at 100% on all four metrics (lines, statements,
+      # functions and branches) with 1149 tests passing. scripts/coverage-check.mjs
+      # applies the threshold to all four, so this fails the build if any of them
+      # regresses.
       #
-      # Deliberately still continue-on-error. Coverage produced no report at all
-      # until recently (no babel instrumentation, no sendCoverage hook, and a
-      # scoped-modulePrefix path mismatch dropping every file), and the Lint step
-      # ahead of it was failing, so this gate has never once evaluated real data in
-      # CI. Watch one green run before making it blocking.
-      #
-      # 100% remains the long-term target but is deferred: several files cannot be
-      # covered as written — four use later(() => window.location.reload()), and
-      # report.js has static methods calling getOwner() on the class, which returns
-      # undefined. Reaching 100% needs those addressed (an injectable reload,
-      # repairing or removing the dead statics) rather than more tests.
+      # A handful of lines are excluded or marked rather than tested, each with the
+      # reason written at the site: window.location.reload() cannot be stubbed
+      # (Location members are non-configurable per spec) so its five callers route
+      # through a one-line reloadWindow()/reloadConsole() wrapper; a few guards are
+      # unreachable given their callers; and app/resolver.js is excluded outright in
+      # config/coverage.js because nothing imports it and it would throw if it were
+      # wired up.
       - name: Report coverage threshold
-        continue-on-error: true
-        run: pnpm run coverage:check -- --fail-under=65
+        run: pnpm run coverage:check -- --fail-under=100
 
       - name: Build (production)
         run: npx ember build --environment production

@@ -26,7 +26,9 @@ export default class UserSerializer extends ApplicationSerializer.extend(Embedde
         let existing = this.store.peekRecord(normalized.data.type, normalized.data.id);
 
         if (existing) {
-            let attrs = normalized.data.attributes || {};
+            // normalize() always produces an attributes hash, and `for...in` over an absent
+            // one would be a no-op anyway.
+            let attrs = normalized.data.attributes;
 
             for (let key in attrs) {
                 if (attrs[key] === null || attrs[key] === undefined || key === 'avatar_url') {
