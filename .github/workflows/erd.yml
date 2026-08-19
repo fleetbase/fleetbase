@@ -17,7 +17,24 @@ permissions:
 jobs:
   refresh:
     name: Generate ERD and open PR
-    if: startsWith(github.ref, 'refs/heads/dev-v')
+    # Do not react to this workflow's own pull request landing. That push is a push to
+    # dev-v*, so without this the job re-runs, regenerates, and opens the next ERD PR —
+    # merging #629 opened #630 for exactly this reason.
+    #
+    # Matches all three merge styles GitHub can produce for the automation branch:
+    #   merge commit  Merge pull request #630 from fleetbase/automation/erd/dev-v0.7.55
+    #   squash        Refresh ERD for dev-v0.7.55 (#630)
+    #   rebase        Refresh ERD for dev-v0.7.55
+    #
+    # workflow_dispatch is allowed through explicitly rather than relying on
+    # head_commit being null and coercing to the empty string — that coercion is not
+    # something this repository can test before merging, and getting it wrong would
+    # silently disable manual runs.
+    if: >-
+      startsWith(github.ref, 'refs/heads/dev-v') &&
+      (github.event_name == 'workflow_dispatch' ||
+       (!contains(github.event.head_commit.message, 'automation/erd/') &&
+        !startsWith(github.event.head_commit.message, 'Refresh ERD for')))
     runs-on: ubuntu-latest
     timeout-minutes: 45
 
@@ -111,8 +128,31 @@ jobs:
         if: always()
         run: docker compose down -v || true
 
-      - name: Create or update ERD pull request
+      # database.mmd is the schema; the two SVGs are a rendering of it. mermaid-cli does
+      # not lay out deterministically — regenerating from an identical database.mmd
+      # produces the same viewBox and dimensions but different Bezier control points on
+      # the edge paths, so `git diff` on erd-dark.svg is never empty. Opening a pull
+      # request on that alone gave an endless chain of them, each one redrawn curves and
+      # no schema difference.
+      #
+      # So the schema is the gate: no change to database.mmd, no pull request. The
+      # generated files are reverted rather than left dirty, so nothing downstream can
+      # pick them up.
+      - name: Decide whether the schema actually changed
         if: success()
+        id: schema
+        run: |
+          if git diff --quiet -- database.mmd; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::database.mmd is unchanged — the ERD is current. Skipping the pull request; the SVG diff is non-deterministic rendering, not a schema change."
+            git checkout -- database.mmd erd.svg erd-dark.svg || true
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "::notice::database.mmd changed; refreshing the ERD pull request."
+          fi
+
+      - name: Create or update ERD pull request
+        if: success() && steps.schema.outputs.changed == 'true'
         id: erd-pr
         uses: peter-evans/create-pull-request@v8
         with:
@@ -137,6 +177,8 @@ jobs:
             - `erd-dark.svg`
 
             This pull request is maintained automatically as `${{ github.ref_name }}` changes.
+            It is opened only when `database.mmd` changes — the SVG render is not
+            byte-reproducible, so an SVG-only diff is not a schema change.
           draft: false
 
       - name: Report pull request
