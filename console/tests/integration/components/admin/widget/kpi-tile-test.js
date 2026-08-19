@@ -137,3 +137,26 @@ module('Integration | Component | admin/widget/kpi-tile', function (hooks) {
         assert.ok(this.tile().innerHTML.includes('rose'), 'errors render in red');
     });
 });
+
+module('Integration | Component | admin/widget/kpi-tile | unformattable values', function (hooks) {
+    setupRenderingTest(hooks);
+
+    test('a value that cannot format itself is shown as it came back', async function (assert) {
+        // A payload value with no prototype has no toLocaleString; the tile must render
+        // what it was given rather than "undefined".
+        const raw = Object.create(null);
+        raw.toString = () => 'RAW';
+
+        class FetchStub extends Service {
+            get() {
+                return Promise.resolve({ value: raw, delta_pct: null, status: 'neutral' });
+            }
+        }
+        this.owner.register('service:fetch', FetchStub);
+        this.set('options', { slug: 'users-total', title: 'Users' });
+
+        await render(hbs`<Admin::Widget::KpiTile @options={{this.options}} />`);
+
+        assert.dom('.admin-kpi-tile').containsText('RAW', 'the raw value is passed straight through');
+    });
+});

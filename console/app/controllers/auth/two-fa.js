@@ -250,7 +250,11 @@ export default class AuthTwoFaController extends Controller {
             const parts = decodedString.split('|');
             const expiresAt = this.convertUtcToClientTime(parts[0]);
 
-            if (expiresAt instanceof Date) {
+            // convertUtcToClientTime always hands back a Date, so an `instanceof Date`
+            // check could never fail: an unparseable stamp produced an Invalid Date that
+            // reached twoFactorSessionExpiresAfter and rendered the countdown as NaN.
+            // Only a usable date is an expiry; anything else falls through to null.
+            if (!Number.isNaN(expiresAt.getTime())) {
                 return expiresAt;
             }
         }

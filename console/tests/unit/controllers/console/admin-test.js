@@ -1,6 +1,7 @@
 import { module, test } from 'qunit';
 import { setupTest } from '@fleetbase/console/tests/helpers';
 import Service from '@ember/service';
+import window from 'ember-window-mock';
 
 const ADMIN_MENU_ITEMS = [
     {
@@ -164,11 +165,15 @@ module('Unit | Controller | console/admin', function (hooks) {
         const navigatorAppItem = controller.navigationItems[7].children[0];
         const mapItem = controller.navigationItems[7].children[1];
 
-        // activeWhen delegates to isMenuItemActive, which reads window.location.pathname and
-        // (via getUrlParam) window.location.search off the real global window. replaceState
-        // rewrites both synchronously without navigating the test iframe.
-        const originalUrl = window.location.href;
-        const visit = (url) => window.history.replaceState(null, '', url);
+        // activeWhen delegates to ember-ui's isMenuItemActive, which reads location.pathname
+        // through ember-window-mock — but its collaborator getUrlParam has no such import and
+        // reads location.search off the real global window. The two therefore disagree unless
+        // both are pointed at the URL under test, so this sets each of them.
+        const originalUrl = globalThis.location.href;
+        const visit = (url) => {
+            window.location.href = url;
+            globalThis.history.replaceState(null, '', url);
+        };
 
         try {
             visit('/admin/fleet-ops?view=navigator-app');
@@ -182,7 +187,7 @@ module('Unit | Controller | console/admin', function (hooks) {
             assert.true(rootRegistryItem.activeWhen(), 'loose registry item is active for /admin/<slug>');
             assert.false(navigatorAppItem.activeWhen(), 'panel child is not active for loose registry URL');
         } finally {
-            window.history.replaceState(null, '', originalUrl);
+            globalThis.history.replaceState(null, '', originalUrl);
         }
     });
 
@@ -229,5 +234,55 @@ module('Unit | Controller | console/admin', function (hooks) {
             ],
             'system config children retain their routes'
         );
+    });
+});
+
+/**
+ * Registry-supplied menus are third-party data: panels and items arrive with whatever keys
+ * the extension chose to set, so every read has a fallback. This drives those fallbacks.
+ */
+module('Unit | Controller | console/admin | registry fallbacks', function (hooks) {
+    setupTest(hooks);
+
+    hooks.beforeEach(function () {
+        this.owner.register('service:intl', IntlStub);
+
+        this.seed = (adminMenuItems, adminMenuPanels) => {
+            const apply = (service) => {
+                Object.defineProperty(service, 'adminMenuItems', { configurable: true, value: adminMenuItems });
+                Object.defineProperty(service, 'adminMenuPanels', { configurable: true, value: adminMenuPanels });
+            };
+            apply(this.owner.lookup('service:universe/menu-service'));
+            apply(this.owner.lookup('service:universe'));
+
+            return this.owner.lookup('controller:console/admin');
+        };
+    });
+
+    test('an extension registry that has registered nothing yields no registry entries', function (assert) {
+        const controller = this.seed(undefined, undefined);
+
+        assert.deepEqual(controller.registryNavigationItems, [], 'no navigation items');
+        assert.deepEqual(controller.registryPanelItems, [], 'no panels');
+    });
+
+    test('a panel with only a title and slug is given a description and an icon', function (assert) {
+        const controller = this.seed([], [{ title: 'Billing Config', slug: 'billing' }]);
+
+        const [panel] = controller.registryPanelItems;
+        assert.strictEqual(panel.id, 'billing');
+        assert.strictEqual(panel.label, 'Billing Config');
+        assert.strictEqual(panel.description, 'Billing Config admin controls.', 'a description is generated from the title');
+        assert.strictEqual(panel.icon, 'folder', 'and a neutral icon stands in');
+        assert.deepEqual(panel.keywords, ['billing', 'Billing Config'], 'the absent description is filtered out of the keywords');
+        assert.deepEqual(panel.children, [], 'a panel with no items has no children');
+    });
+
+    test('a panel item with no slug is identified by its title', function (assert) {
+        const controller = this.seed([], [{ title: 'Billing Config', slug: 'billing', items: [{ title: 'Invoices' }] }]);
+
+        const [child] = controller.registryPanelItems[0].children;
+        assert.strictEqual(child.id, 'billing:Invoices:index', 'the title stands in for the slug, and the view defaults to index');
+        assert.strictEqual(child.label, 'Invoices', 'the title also stands in for the label');
     });
 });

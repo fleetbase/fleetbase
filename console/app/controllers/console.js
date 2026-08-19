@@ -6,6 +6,7 @@ import { action } from '@ember/object';
 import { isArray } from '@ember/array';
 import { dasherize } from '@ember/string';
 import first from '@fleetbase/ember-core/utils/first';
+import window from 'ember-window-mock';
 
 export default class ConsoleController extends Controller {
     @service currentUser;

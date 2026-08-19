@@ -223,3 +223,49 @@ module('Unit | Utility | router-refresh-patch', function () {
         assert.true(microlib._fleetbaseRefreshPatched);
     });
 });
+
+module('Unit | Utility | router-refresh-patch | unhandled rejections', function (hooks) {
+    hooks.beforeEach(function () {
+        // The listener is installed on window and there is no way to remove it afterwards,
+        // so capture it instead of letting it attach to the real window.
+        this.original = window.addEventListener;
+        this.listeners = {};
+        window.addEventListener = (type, listener) => (this.listeners[type] = listener);
+    });
+
+    hooks.afterEach(function () {
+        window.addEventListener = this.original;
+    });
+
+    test('the known refresh rejection is suppressed before it reaches the console', function (assert) {
+        suppressRouterRefreshErrors({});
+
+        let prevented = false;
+        this.listeners.unhandledrejection({
+            reason: new Error("You didn't provide enough string/numeric parameters to satisfy all of the dynamic segments"),
+            preventDefault: () => (prevented = true),
+        });
+
+        assert.true(prevented, 'the rejection is swallowed');
+    });
+
+    test('any other rejection is left alone', function (assert) {
+        suppressRouterRefreshErrors({});
+        const seen = [];
+        const dispatch = (reason) => this.listeners.unhandledrejection({ reason, preventDefault: () => seen.push(reason) });
+
+        dispatch(new Error('a completely unrelated failure'));
+        dispatch({ message: 42 });
+        dispatch(undefined);
+
+        assert.deepEqual(seen, [], 'nothing without the known message is touched, and a non-string or missing message does not throw');
+    });
+
+    test('a window that rejects listener registration does not break boot', function (assert) {
+        window.addEventListener = () => {
+            throw new Error('listeners are unavailable');
+        };
+
+        assert.strictEqual(suppressRouterRefreshErrors({}), undefined, 'the failure is swallowed');
+    });
+});

@@ -34,6 +34,7 @@ export default class TwoFaEnforcementAlertComponent extends Component {
      * @inject
      */
     @service fetch;
+    @service notifications;
 
     /**
      * Constructor method for the ConsoleAccountAuthController.

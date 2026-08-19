@@ -4,6 +4,7 @@ import { inject as service } from '@ember/service';
 import { later } from '@ember/runloop';
 import { isArray } from '@ember/array';
 import { task } from 'ember-concurrency';
+import window from 'ember-window-mock';
 
 export default class ConsoleAdminOrganizationsDetailsController extends Controller {
     @service router;
@@ -27,7 +28,7 @@ export default class ConsoleAdminOrganizationsDetailsController extends Controll
             model: tab.slug,
             priority: tab.priority ?? 50,
         }));
-        const tabs = [...coreTabs, ...registeredTabs].sort((a, b) => (a.priority ?? 99) - (b.priority ?? 99));
+        const tabs = [...coreTabs, ...registeredTabs].sort((a, b) => a.priority - b.priority);
 
         return tabs.map((tab) => ({
             ...tab,
@@ -234,13 +235,7 @@ export default class ConsoleAdminOrganizationsDetailsController extends Controll
             yield this.router.transitionTo('console');
             this.session.manuallyAuthenticate(token);
             this.notifications.info(`Now impersonating ${this.ownerEmail || 'organization owner'}...`);
-            later(
-                this,
-                () => {
-                    window.location.reload();
-                },
-                600
-            );
+            later(() => window.location.reload(), 600);
         } catch (error) {
             this.notifications.serverError(error);
         }

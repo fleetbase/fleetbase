@@ -27,7 +27,7 @@ export const getPermissionResource = function (permissionName) {
     return parserPermissionName(permissionName, 2);
 };
 
-const titleize = function (string = '') {
+const titleize = function (string) {
     if (typeof string !== 'string') {
         return '';
     }
@@ -37,7 +37,7 @@ const titleize = function (string = '') {
         .join(' ');
 };
 
-const smartTitleize = function (string = '') {
+const smartTitleize = function (string) {
     if (typeof string !== 'string') {
         return '';
     }

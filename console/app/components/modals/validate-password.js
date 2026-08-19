@@ -6,6 +6,9 @@ import { task } from 'ember-concurrency';
 export default class ModalsValidatePasswordComponent extends Component {
     @service fetch;
     @service notifications;
+    // The constructor assigns the modal's options straight away, so this initializer
+    // never runs.
+    /* istanbul ignore next -- always assigned before first read */
     @tracked options = {};
     @tracked password;
     @tracked confirmPassword;

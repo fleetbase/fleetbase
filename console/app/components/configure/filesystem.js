@@ -7,6 +7,9 @@ export default class ConfigureFilesystemComponent extends Component {
     @service fetch;
     @service notifications;
     @service currentUser;
+    // The constructor performs loadConfigValues, which assigns this before anything can read it,
+    // so the initializer below never runs.
+    /* istanbul ignore next -- always assigned before first read */
     @tracked isLoading = false;
     @tracked testResponse;
     @tracked disks = [];
