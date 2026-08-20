@@ -1,0 +1,380 @@
+name: Console Screenshots
+
+# Captures the Fleet-Ops console screenshots that fleetbase.io publishes, and opens a pull
+# request on that repo when any of them actually changed.
+#
+# Boots the real stack from this branch (docker-install.sh, same as install-smoke.yml), seeds
+# a demo organization and the Fleet-Ops demo fixtures, drives Chromium through the manifest in
+# screenshots/manifests/fleet-ops.mjs, and compares each capture against the file already
+# published. Only the ones that differ perceptually AND structurally are staged — see
+# screenshots/src/domhash.mjs for why both are required.
+#
+# Unlike erd.yml, this workflow needs no self-retrigger guard: the pull request lands on
+# fleetbase/fleetbase.io, so nothing it does pushes to dev-v*.
+#
+# Setup required:
+#   FLEETBASE_IO_SCREENSHOTS_TOKEN — fine-grained PAT scoped to fleetbase/fleetbase.io ONLY,
+#     with Contents: read/write and Pull requests: read/write (Metadata: read is implied).
+#     Nothing else. Follows the FLEETBASE_IO_DISPATCH_TOKEN precedent in fleetbase/postman
+#     rather than widening _GITHUB_AUTH_TOKEN, which is still needed here for Composer auth.
+#   SCREENSHOT_DEMO_PASSWORD — password for the seeded demo account. Any strong value; it only
+#     ever exists inside a throwaway CI stack.
+
+on:
+  push:
+    branches: ['dev-v*']
+    # A release cycle pushes to dev-v* many times, and a ~45 minute job is not worth running
+    # for a RELEASE.md edit. Only these paths can change what a screenshot looks like.
+    paths:
+      - 'console/**'
+      - 'api/composer.json'
+      - 'api/composer.lock'
+      - 'docker/**'
+      - 'docker-compose.yml'
+      - 'screenshots/**'
+      - 'scripts/ci/seed-demo-org.php'
+      - '.github/workflows/screenshots.yml'
+  workflow_dispatch:
+    inputs:
+      fleetops-ref:
+        description: 'Overlay this fleetbase/fleetops ref over the published fleetops-api package (pre-release testing only).'
+        required: false
+        default: ''
+      dry-run:
+        description: 'Capture and compare, but do not open a pull request.'
+        type: boolean
+        default: false
+
+concurrency:
+  group: screenshots-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  capture:
+    name: Capture Fleet-Ops console screenshots
+    # The escape hatch is for a human mid-release who does not want to spend 45 minutes on a
+    # push they know changes nothing visual.
+    if: >-
+      startsWith(github.ref, 'refs/heads/dev-v') &&
+      (github.event_name == 'workflow_dispatch' ||
+       !contains(github.event.head_commit.message, '[skip screenshots]'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    env:
+      NODE_VERSION: 22.x
+      AREA: fleet-ops
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      # Both are required, and failing here costs seconds instead of failing after a 20 minute
+      # image build. _GITHUB_AUTH_TOKEN resolves the private Fleetbase composer packages during
+      # the API image build; the fleetbase.io token opens the pull request at the very end.
+      - name: Check required secrets
+        id: secrets
+        run: |
+          missing=0
+          if [[ -z "${{ secrets._GITHUB_AUTH_TOKEN }}" ]]; then
+            echo "::error::_GITHUB_AUTH_TOKEN is not set; the API image cannot resolve private Fleetbase packages."
+            missing=1
+          fi
+          if [[ -z "${{ secrets.FLEETBASE_IO_SCREENSHOTS_TOKEN }}" ]]; then
+            echo "::error::FLEETBASE_IO_SCREENSHOTS_TOKEN is not set; the pull request cannot be opened. See the header of this workflow for the required scopes."
+            missing=1
+          fi
+          if [[ -z "${{ secrets.SCREENSHOT_DEMO_PASSWORD }}" ]]; then
+            echo "::error::SCREENSHOT_DEMO_PASSWORD is not set."
+            missing=1
+          fi
+          exit $missing
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # Same reasoning as install-smoke.yml: build the tag docker-compose.yml pins so the run
+      # exercises THIS branch, and use the `app-release` target rather than `app` — the latter
+      # entrypoints through ssm-parent, which fetches config from AWS SSM and crash-loops in CI.
+      - name: Build API image from source
+        run: |
+          docker build \
+            --file docker/Dockerfile \
+            --target app-release \
+            --build-arg GITHUB_AUTH_KEY="${{ secrets._GITHUB_AUTH_TOKEN }}" \
+            --tag fleetbase/fleetbase-api:latest \
+            .
+
+      # The repo commits a live MySQL datadir at docker/database/mysql. Start clean so the
+      # installer's freshly generated credentials initialize a fresh database.
+      - name: Ensure clean database volume
+        run: |
+          sudo rm -rf docker/database/mysql
+          mkdir -p docker/database/mysql
+
+      - name: Run non-interactive installer
+        run: |
+          [ -f api/.env ] || cp api/.env.example api/.env 2>/dev/null || touch api/.env
+          bash scripts/docker-install.sh --non-interactive
+
+      # Development affordance only. The API image installs Fleet-Ops from Composer
+      # (api/composer.json pins fleetbase/fleetops-api), NOT from the packages/fleetops
+      # submodule — so until a fleetops release ships the Demo seeders and composer.lock is
+      # bumped, this is the only way to exercise them. Empty on the push path.
+      - name: Checkout Fleet-Ops for overlay
+        if: inputs.fleetops-ref != ''
+        uses: actions/checkout@v4
+        with:
+          repository: fleetbase/fleetops
+          ref: ${{ inputs.fleetops-ref }}
+          token: ${{ secrets._GITHUB_AUTH_TOKEN }}
+          path: .fleetops
+
+      - name: Overlay Fleet-Ops branch source over the published package
+        if: inputs.fleetops-ref != ''
+        run: |
+          set -uo pipefail
+          DEST=/fleetbase/api/vendor/fleetbase/fleetops-api
+
+          # Replace rather than merge, so files deleted on the branch actually disappear.
+          docker compose exec -T application sh -c "rm -rf ${DEST} && mkdir -p ${DEST}"
+          tar -C .fleetops -cf - . | docker compose exec -T application sh -c "tar -C ${DEST} -xf -"
+          docker compose exec -T application sh -c "chown -R www-data:www-data ${DEST}"
+
+          # The image is built with --optimize-autoloader, which freezes a classmap. Without
+          # dumping it, the Demo\ seeder classes added on the branch are simply not found.
+          docker compose exec -T application su www-data -s /bin/sh -c \
+            "cd /fleetbase/api && composer dump-autoload --optimize --no-scripts" 2>&1 | tail -3
+          docker compose exec -T application su www-data -s /bin/sh -c \
+            "cd /fleetbase/api && php artisan optimize:clear" 2>&1 | tail -5
+          docker compose exec -T application su www-data -s /bin/sh -c \
+            "cd /fleetbase/api && php artisan migrate --force" 2>&1 | tail -10
+
+      - name: Assert migrations ran
+        run: |
+          set -euo pipefail
+          docker compose exec -T application php artisan migrate:status | tee /tmp/migrate-status.txt
+          grep -Eiq "ran|yes" /tmp/migrate-status.txt
+          if grep -Eiq "pending" /tmp/migrate-status.txt; then
+            echo "::error::Pending migrations remain after install"; exit 1
+          fi
+
+      - name: Wait for the stack to serve
+        run: |
+          set -uo pipefail
+
+          wait_for() {
+            local name="$1" url="$2" expect="$3" tries=30
+            echo "Waiting for $name at $url ..."
+            for _ in $(seq 1 $tries); do
+              body="$(curl -fsS --max-time 5 "$url" 2>/dev/null || true)"
+              if echo "$body" | grep -q "$expect"; then
+                echo "✔ $name responded"
+                return 0
+              fi
+              sleep 5
+            done
+            echo "::error::$name did not respond with '$expect' at $url after $((tries*5))s"
+            return 1
+          }
+
+          wait_for "API /health" "http://localhost:8000/health" '"status"'
+          wait_for "Console" "http://localhost:4200" "<!DOCTYPE html>" || \
+            wait_for "Console" "http://localhost:4200" "<html"
+
+      # Creates the Company (which is also what flips shouldOnboard to false), the owner user
+      # the capture logs in as, and the Administrator role that grants the Fleet-Ops policies.
+      - name: Seed the demo organization
+        id: demo
+        env:
+          DEMO_PASSWORD: ${{ secrets.SCREENSHOT_DEMO_PASSWORD }}
+        run: |
+          set -uo pipefail
+          echo "::add-mask::${DEMO_PASSWORD}"
+
+          # base64 + eval for the same two reasons mint-api-key.php documents: a leading <?php
+          # tag is a PsySH parse error, and inlining would let the shell expand the snippet's
+          # $variables.
+          CODE="$(base64 scripts/ci/seed-demo-org.php | tr -d '\n')"
+          OUT="$(docker compose exec -T \
+            -e "CI_DEMO_IDENTITY=demo@fleetbase.io" \
+            -e "CI_DEMO_PASSWORD=${DEMO_PASSWORD}" \
+            application php artisan tinker --execute="eval(base64_decode('${CODE}'));" 2>&1 || true)"
+
+          printf '%s\n' "$OUT" | grep -E '^(DEMO_|.*DEMO_ERROR)' || true
+          if printf '%s\n' "$OUT" | grep -q 'DEMO_ERROR'; then
+            echo "::error::The demo organization seed threw. Nothing after the failure was created:"
+            printf '%s\n' "$OUT" | tail -30
+            exit 1
+          fi
+
+          COMPANY_ID="$(printf '%s\n' "$OUT" | grep -oE 'DEMO_COMPANY_ID=company_[A-Za-z0-9]+' | tail -1 | cut -d= -f2 || true)"
+          if [[ -z "$COMPANY_ID" ]]; then
+            echo "::error::No company was created. Tinker output:"; printf '%s\n' "$OUT"; exit 1
+          fi
+          echo "company_id=$COMPANY_ID" >> "$GITHUB_OUTPUT"
+
+      - name: Seed Fleet-Ops demo fixtures
+        id: fixtures
+        run: |
+          set -uo pipefail
+          # --force because the container's APP_ENV makes db:seed prompt otherwise.
+          OUT="$(docker compose exec -T application php artisan db:seed --force \
+            --class="Fleetbase\FleetOps\Seeders\Demo\DemoSeeder" 2>&1 || true)"
+          printf '%s\n' "$OUT" | tail -30
+
+          if printf '%s\n' "$OUT" | grep -qiE 'class .* does not exist|Target class .* does not exist'; then
+            echo "::error::The Fleet-Ops Demo seeder is not present in the installed fleetops-api. It ships in a fleetops release that api/composer.lock must pin; until then, run this workflow via workflow_dispatch with fleetops-ref set to the branch that adds it."
+            exit 1
+          fi
+
+          # Echoed by DemoSeeder so bin/capture.mjs can cross-check the records it resolved
+          # against the ones the seeder says it created.
+          FIXTURES="$(printf '%s\n' "$OUT" | grep -oE 'SEEDED_FIXTURES=\{.*\}' | tail -1 | cut -d= -f2- || true)"
+          if [[ -n "$FIXTURES" ]]; then
+            echo "seeded_fixtures=$FIXTURES" >> "$GITHUB_OUTPUT"
+          else
+            echo "::warning::DemoSeeder did not echo SEEDED_FIXTURES; detail-page ids will not be cross-checked."
+          fi
+
+      # Without this, an engine that failed to mount answers every Fleet-Ops URL with the same
+      # catch-all page — and the run "succeeds" with 36 identical screenshots.
+      - name: Assert Fleet-Ops is mounted
+        run: |
+          set -euo pipefail
+          curl -fsS http://localhost:4200/extensions.json > /tmp/extensions.json
+          cat /tmp/extensions.json
+          jq -e '.[] | select(.route == "fleet-ops")' /tmp/extensions.json > /dev/null || {
+            echo "::error::Fleet-Ops is not mounted in this console build; every capture would hit the catch-all route."
+            exit 1
+          }
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: screenshots/package-lock.json
+
+      - name: Install capture dependencies
+        working-directory: screenshots
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+
+      - name: Run capture unit tests
+        working-directory: screenshots
+        run: npm test
+
+      # Tiles and OSRM routes are the only remaining network dependency. Caching them keeps a
+      # tile server outage from turning a green run red, and stops OSRM's slowly drifting
+      # geometry from redrawing route polylines between runs.
+      #
+      # Bumping the -v1 suffix deliberately refreshes the cache, and will legitimately change
+      # every screenshot that contains a map.
+      - name: Restore map tile cache
+        uses: actions/cache@v4
+        with:
+          path: screenshots/.cache/tiles
+          key: screenshots-tiles-v1-${{ hashFiles('screenshots/manifests/fleet-ops.mjs') }}
+          restore-keys: |
+            screenshots-tiles-v1-
+
+      # The second opinion that separates a real UI change from a runner-wide raster shift. A
+      # miss degrades the gate to pixel-only, which is never stricter than no gate at all.
+      - name: Restore DOM hash baseline
+        uses: actions/cache@v4
+        with:
+          path: screenshots/.cache/domhash
+          key: screenshots-domhash-${{ github.ref_name }}-${{ github.sha }}
+          restore-keys: |
+            screenshots-domhash-${{ github.ref_name }}-
+            screenshots-domhash-
+
+      - name: Capture screenshots
+        working-directory: screenshots
+        env:
+          BASE_URL: http://localhost:4200
+          API_HOST: http://localhost:8000
+          DEMO_IDENTITY: demo@fleetbase.io
+          DEMO_PASSWORD: ${{ secrets.SCREENSHOT_DEMO_PASSWORD }}
+          SEEDED_FIXTURES: ${{ steps.fixtures.outputs.seeded_fixtures }}
+        run: npm run capture -- --manifest manifests/fleet-ops.mjs --out ./out
+
+      - name: Dump logs on failure
+        if: failure()
+        run: |
+          echo "===== docker compose ps ====="
+          docker compose ps || true
+          echo "===== docker compose logs ====="
+          docker compose logs --no-color --tail=300 || true
+
+      - name: Tear down
+        if: always()
+        run: docker compose down -v || true
+
+      - name: Checkout fleetbase.io
+        uses: actions/checkout@v4
+        with:
+          repository: fleetbase/fleetbase.io
+          token: ${{ secrets.FLEETBASE_IO_SCREENSHOTS_TOKEN }}
+          path: fleetbase-io
+
+      - name: Compare against the published library
+        id: compare
+        working-directory: screenshots
+        run: |
+          node bin/compare.mjs \
+            --new ./out \
+            --current "${GITHUB_WORKSPACE}/fleetbase-io/public/images/screenshots/${AREA}" \
+            --staged "${GITHUB_WORKSPACE}/fleetbase-io/public/images/screenshots/${AREA}" \
+            --report ./out/report.json
+
+      # Uploaded unconditionally: when the gate publishes nothing, this artifact is the only
+      # way to see what was captured and why it was judged unchanged.
+      - name: Upload captures and diffs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: console-screenshots-${{ github.ref_name }}
+          path: screenshots/out
+          retention-days: 14
+
+      - name: Open or update the fleetbase.io pull request
+        if: steps.compare.outputs.changed_count != '0' && !inputs.dry-run
+        uses: peter-evans/create-pull-request@v8
+        with:
+          path: fleetbase-io
+          token: ${{ secrets.FLEETBASE_IO_SCREENSHOTS_TOKEN }}
+          base: main
+          # One branch per release line, not per push: repeated pushes to the same dev-v*
+          # branch update this pull request instead of opening a new one each time.
+          branch: automation/console-screenshots/${{ github.ref_name }}
+          delete-branch: true
+          add-paths: public/images/screenshots/${{ env.AREA }}/**
+          commit-message: 'Refresh Fleet-Ops console screenshots for ${{ github.ref_name }}'
+          title: 'Refresh Fleet-Ops console screenshots for ${{ github.ref_name }}'
+          labels: |
+            automated
+          body: |
+            Automated capture of the Fleet-Ops console from [`${{ github.ref_name }}`](https://github.com/${{ github.repository }}/tree/${{ github.ref_name }}) at `${{ github.sha }}`.
+
+            ${{ steps.compare.outputs.pr_body }}
+
+            ---
+
+            **How to review.** The Vercel preview below renders these files in place — that is
+            the right way to judge them, not the binary diff. Pixel diffs for every changed
+            file are attached to [the run that produced this](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}).
+
+            **Dark and light.** Files without a suffix are dark, matching the existing library.
+            `-light.webp` files are new and nothing on the site consumes them yet; wiring them
+            into a themed image component is a follow-up, and this pull request is additive
+            until that lands.
+
+            Captured by [`.github/workflows/screenshots.yml`](https://github.com/${{ github.repository }}/blob/${{ github.ref_name }}/.github/workflows/screenshots.yml).
