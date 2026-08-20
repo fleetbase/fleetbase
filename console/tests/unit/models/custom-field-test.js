@@ -21,6 +21,7 @@ module('Unit | Model | custom-field | valueType', function (hooks) {
         const field = (type) => store.createRecord('custom-field', { type }).valueType;
 
         assert.strictEqual(field('file-upload'), 'file');
+        assert.strictEqual(field('signature-pad'), 'file', 'a signature is uploaded and stored as a file');
         assert.strictEqual(field('date-time-input'), 'date');
         assert.strictEqual(field('model-select'), 'model');
         assert.strictEqual(field('text-input'), 'text', 'anything else stores plain text');
