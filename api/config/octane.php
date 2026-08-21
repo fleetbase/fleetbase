@@ -105,8 +105,21 @@ return [
         OperationTerminated::class => [
             FlushOnce::class,
             FlushTemporaryContainerInstances::class,
-            DisconnectFromDatabases::class,
-            CollectGarbage::class,    
+            // DisconnectFromDatabases::class,
+            //
+            // Left disabled, as upstream Octane ships it. It was enabled in
+            // a5a5ddb to stop connection-pool exhaustion under load, but it never
+            // did that: the mysql connections are opened with PDO::ATTR_PERSISTENT,
+            // so disconnect() drops the PHP object and leaves the MySQL session
+            // open in PHP's persistent pool. Measured on this stack: 40 concurrent
+            // requests left 17 connections open and still idle minutes later.
+            //
+            // What it did do is churn a fresh PDO handle per request over that one
+            // persistent session, which is how two live handles end up aliasing a
+            // single MySQL transaction. A COMMIT through either handle ends the
+            // transaction for both, and the loser's commit throws "There is no
+            // active transaction" on a write that has already been made durable.
+            CollectGarbage::class,
         ],
 
         WorkerErrorOccurred::class => [
