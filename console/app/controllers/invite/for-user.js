@@ -17,7 +17,9 @@ export default class InviteForUserController extends Controller {
 
         this.isLoading = true;
 
-        this.fetch
+        // Returned so callers can await the whole flow; without this the action resolves
+        // before the invite has actually been accepted.
+        return this.fetch
             .post('users/accept-company-invite', { code })
             .then((response) => {
                 this.session.manuallyAuthenticate(response.token);

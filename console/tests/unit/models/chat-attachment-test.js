@@ -63,3 +63,26 @@ module('Unit | Model | chat-attachment', function (hooks) {
         });
     });
 });
+
+module('Unit | Model | chat-attachment | download', function (hooks) {
+    setupTest(hooks);
+
+    test('downloadFromApi navigates to the API download endpoint for the attached file', function (assert) {
+        const opened = [];
+        const originalOpen = window.open;
+        window.open = (url, target) => opened.push({ url, target });
+
+        try {
+            this.owner
+                .lookup('service:store')
+                .push({ data: { id: 'att_1', type: 'chat-attachment', attributes: { file_uuid: 'file_9' } } })
+                .downloadFromApi();
+        } finally {
+            window.open = originalOpen;
+        }
+
+        assert.strictEqual(opened.length, 1, 'the browser is sent to the download URL');
+        assert.ok(opened[0].url.endsWith('/files/download?file=file_9'), `the attached file uuid is used, not the attachment id (got ${opened[0].url})`);
+        assert.strictEqual(opened[0].target, '_self');
+    });
+});

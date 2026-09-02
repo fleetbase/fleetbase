@@ -3,6 +3,8 @@ import { setupRenderingTest } from '@fleetbase/console/tests/helpers';
 import { render, click } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import Service from '@ember/service';
+import ConfigurePlatformApiTokenComponent from '@fleetbase/console/components/configure/platform-api-token';
+import { captureComponent } from '@fleetbase/console/tests/helpers/capture-component';
 
 class NotificationsStub extends Service {
     successes = [];
@@ -220,5 +222,67 @@ module('Integration | Component | configure/platform-api-token', function (hooks
         } finally {
             Object.defineProperty(navigator, 'clipboard', { configurable: true, value: originalClipboard });
         }
+    });
+});
+
+module('Integration | Component | configure/platform-api-token | edge cases', function (hooks) {
+    setupRenderingTest(hooks);
+
+    hooks.beforeEach(function () {
+        this.owner.lookup('service:intl').setLocale('en-us');
+        this.posted = [];
+        const context = this;
+
+        class FetchStub extends Service {
+            async get() {
+                return { configured: false };
+            }
+            async post(path) {
+                context.posted.push(path);
+                return { configured: true, token: 'pat_generated', rotated_at: '2026-01-01T00:00:00Z', last_used_at: null };
+            }
+        }
+        class NotificationsStub extends Service {
+            successes = [];
+            success(message) {
+                this.successes.push(message);
+            }
+            serverError() {}
+        }
+
+        this.owner.register('service:fetch', FetchStub);
+        this.owner.register('service:notifications', NotificationsStub);
+
+        const captured = captureComponent(this.owner, 'configure/platform-api-token', ConfigurePlatformApiTokenComponent);
+        this.build = async () => {
+            await render(hbs`<Configure::PlatformApiToken />`);
+            return captured.instance;
+        };
+    });
+
+    test('there is nothing to copy before a token has been generated', async function (assert) {
+        const component = await this.build();
+        const written = [];
+        const original = navigator.clipboard;
+        Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText: (text) => written.push(text) } });
+
+        try {
+            component.copyToken();
+
+            assert.deepEqual(written, [], 'the clipboard is left alone');
+            assert.deepEqual(this.owner.lookup('service:notifications').successes, [], 'and nothing is reported as copied');
+        } finally {
+            Object.defineProperty(navigator, 'clipboard', { configurable: true, value: original });
+        }
+    });
+
+    test('generating a token for the first time is not treated as a rotation', async function (assert) {
+        const component = await this.build();
+
+        await component.rotateToken.perform();
+
+        assert.deepEqual(this.posted, ['settings/platform-api-token']);
+        assert.strictEqual(component.token, 'pat_generated', 'the new token is held for the user to copy');
+        assert.true(component.status.configured);
     });
 });

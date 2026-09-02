@@ -1,0 +1,41 @@
+name: Release Tag
+
+# Tags a release when a `dev-v*` branch is merged to main, and pushes the tag. Delegates
+# to the reusable workflow in this same repository. Requires org secret
+# _GITHUB_AUTH_TOKEN (inherited); no-ops with a warning until it is set.
+#
+# It pushes the tag and nothing else — create-release.yml, publish-docker-images.yml,
+# build-binaries.yml and discord-announcement.yml all already chain off `push: tags: v*`.
+#
+# The version is NOT retyped anywhere: it comes from the branch name, and the workflow
+# refuses to tag unless console/package.json and RELEASE.md both agree with it.
+#
+# workflow_dispatch is the recovery path. Use it when a release failed validation and the
+# fix landed on main after the merge — a re-run of the merge event would check out the
+# merge commit and never see that fix.
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to tag, e.g. 0.7.54. Recovery only — a normal release reads it from the branch."
+        required: true
+permissions:
+  contents: read
+
+jobs:
+  tag:
+    if: github.event_name == 'workflow_dispatch' ||
+        (github.event.pull_request.merged == true &&
+         startsWith(github.event.pull_request.head.ref, 'dev-v'))
+    uses: ./.github/workflows/release-tag.yml
+    with:
+      # The root repo has no manifest of its own. The version lives in two places that
+      # drift independently — as of this writing docker/Dockerfile still says 0.7.53
+      # while console/package.json says 0.7.54, and nothing catches that today.
+      version-files: console/package.json,docker/Dockerfile=FLEETBASE_VERSION
+      version: ${{ github.event.inputs.version || '' }}
+    secrets: inherit

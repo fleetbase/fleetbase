@@ -2,23 +2,37 @@ import Service, { inject as service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { later } from '@ember/runloop';
-import { task } from 'ember-concurrency';
 
-export default class UserVerificationService extends Service {
+/**
+ * Drives the verify-email step of the onboarding flow: tracks whether the entered code
+ * looks complete, prompts after the code has taken too long to arrive, and resends it by
+ * email or SMS. Submitting the code is the step component's own job — this service does not
+ * do it.
+ */
+export default class OnboardingVerificationService extends Service {
     @service fetch;
     @service notifications;
     @service modalsManager;
     @service currentUser;
-    @service router;
-    @service session;
-    @service intl;
-    @tracked token;
-    @tracked code;
     @tracked ready;
     @tracked waiting = false;
 
+    /**
+     * The onboarding session the verification code was issued against. The resend endpoints
+     * need it to tie a new code to the session already in progress. The verification screens
+     * carry it in a `hello` query param, but that name only ever existed to dodge a clash
+     * with the session service, which this no longer injects.
+     */
+    @tracked session;
+
     @action start(options = {}) {
-        this.#wait(options?.timeout ?? 75000);
+        if (options?.session !== undefined) {
+            this.setSession(options.session);
+        }
+
+        // Hand the timer back so callers can cancel it. Without this the 75s wait is
+        // unreachable once scheduled and will still fire after its caller has gone away.
+        return this.#wait(options?.timeout ?? 75000);
     }
 
     @action didntReceiveCode() {
@@ -40,10 +54,11 @@ export default class UserVerificationService extends Service {
                 const phone = modal.getOption('phone');
                 if (!phone) {
                     this.notifications.error('No phone number provided.');
+                    return modal.stopLoading();
                 }
 
                 try {
-                    await this.fetch.post('onboard/send-verification-sms', { phone, session: this.hello });
+                    await this.fetch.post('onboard/send-verification-sms', { phone, session: this.session });
                     this.notifications.success('Verification code SMS sent!');
                     modal.done();
                 } catch (error) {
@@ -63,11 +78,12 @@ export default class UserVerificationService extends Service {
                 modal.startLoading();
                 const email = modal.getOption('email');
                 if (!email) {
-                    this.notifications.error('No email number provided.');
+                    this.notifications.error('No email address provided.');
+                    return modal.stopLoading();
                 }
 
                 try {
-                    await this.fetch.post('onboard/send-verification-email', { email, session: this.hello });
+                    await this.fetch.post('onboard/send-verification-email', { email, session: this.session });
                     this.notifications.success('Verification code email sent!');
                     modal.done();
                 } catch (error) {
@@ -78,35 +94,13 @@ export default class UserVerificationService extends Service {
         });
     }
 
-    @task *verifyCode() {
-        try {
-            const { status, token } = yield this.fetch.post('auth/verify-email', { token: this.token, code: this.code, email: this.email, authenticate: true });
-            if (status === 'ok') {
-                this.notifications.success('Email successfully verified!');
-
-                if (token) {
-                    this.notifications.info(`Welcome to ${this.intl.t('app.name')}`);
-                    this.session.manuallyAuthenticate(token);
-
-                    return this.router.transitionTo('console');
-                }
-
-                return this.router.transitionTo('auth.login');
-            }
-        } catch (error) {
-            this.notifications.serverError(error);
-        }
+    setSession(session) {
+        this.session = session;
     }
 
-    setToken(token) {
-        this.token = token;
-    }
-
-    setCode(code) {
-        this.code = code;
-    }
-
-    #wait(timeout = 75000) {
+    // start() is the only caller and always resolves the timeout itself, so this takes no
+    // default of its own.
+    #wait(timeout) {
         return later(
             this,
             () => {

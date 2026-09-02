@@ -28,7 +28,10 @@ const MODULE_PREFIX = '@fleetbase/console/';
 
 module.exports = {
     coverageEnvVar: 'COVERAGE',
-    reporters: ['lcov', 'json-summary', 'text-summary'],
+    // `json` emits coverage/coverage-final.json, which carries the statement, branch and
+    // function maps. That detail is what makes it possible to tell a genuinely untested
+    // line from an instrumentation artifact when chasing the last few percent.
+    reporters: ['lcov', 'json', 'json-summary', 'text-summary'],
     // Exclude generated/vendor and test files from the coverage denominator.
     // app/extensions/** are auto-generated extension manifests (declarative config
     // written by the extensions generator) — not hand-written, testable logic.

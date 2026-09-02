@@ -19,11 +19,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Build Linux binary
         run: |
+          set -o pipefail
           chmod +x ./builds/linux/build-linux.sh
-          ./builds/linux/build-linux.sh
+          ./builds/linux/build-linux.sh 2>&1 | tee build-linux.log
+      - name: Upload Linux build log
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fleetbase-linux-build-log
+          path: build-linux.log
+          if-no-files-found: ignore
       - name: Upload Linux binary
         if: github.event_name == 'workflow_run'  
         uses: softprops/action-gh-release@v2
@@ -41,7 +49,7 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install build dependencies
         run: |
           brew update

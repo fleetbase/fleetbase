@@ -164,7 +164,17 @@ section "Mail Configuration"
 
 MAIL_MAILER="log"
 MAIL_HOST=""; MAIL_PORT=""; MAIL_USERNAME=""; MAIL_PASSWORD=""
-MAIL_FROM_ADDRESS=""; MAIL_FROM_NAME="$APP_NAME"
+# Non-empty on purpose. env_line() skips empty values, so an empty default means the
+# key never reaches docker-compose.override.yml — and api/.env.example ships the literal
+# string MAIL_FROM_ADDRESS=null, which then OVERRIDES config/mail.php's default rather
+# than falling back to it. Every non-interactive install ended up unable to send mail:
+#
+#   Email "null" does not comply with addr-spec of RFC 2822.
+#
+# which surfaces as a 400 on the verification-code endpoints and a 500 on any notification
+# send. This value matches config/mail.php's own default, so the result is the same as if
+# the key were genuinely unset.
+MAIL_FROM_ADDRESS="hello@fleetbase.io"; MAIL_FROM_NAME="$APP_NAME"
 MAILGUN_DOMAIN=""; MAILGUN_SECRET=""
 POSTMARK_TOKEN=""; SENDGRID_API_KEY=""; RESEND_KEY=""
 

@@ -3,6 +3,7 @@ import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
 import { action } from '@ember/object';
 import { later } from '@ember/runloop';
+import window from 'ember-window-mock';
 
 export default class ConsoleAdminOrganizationsIndexUsersController extends Controller {
     @service filters;
@@ -130,13 +131,10 @@ export default class ConsoleAdminOrganizationsIndexUsersController extends Contr
             await this.router.transitionTo('console');
             this.session.manuallyAuthenticate(token);
             this.notifications.info(`Now impersonating ${user.email}...`);
-            later(
-                this,
-                () => {
-                    window.location.reload();
-                },
-                600
-            );
+
+            // Handed back so the caller can cancel the pending reload; the same timer on
+            // ImpersonatorTray was unreachable once scheduled.
+            return later(() => window.location.reload(), 600);
         } catch (error) {
             this.notifications.serverError(error);
         }

@@ -77,3 +77,33 @@ module('Unit | Model | permission', function (hooks) {
         assert.strictEqual(typeof permission.updatedAgo, 'string');
     });
 });
+
+module('Unit | Model | permission | incomplete names', function (hooks) {
+    setupTest(hooks);
+
+    hooks.beforeEach(function () {
+        this.permission = (attrs = {}) => this.owner.lookup('service:store').createRecord('permission', attrs);
+    });
+
+    test('actionName is empty when the name carries no action segment', function (assert) {
+        // getPermissionAction returns null here, and titleize has to survive that rather
+        // than blowing up while a permission list renders.
+        assert.strictEqual(this.permission({ name: 'fleet-ops' }).actionName, '');
+    });
+
+    test('description drops the resource when the name has only two segments', function (assert) {
+        const description = this.permission({ name: 'fleet-ops view' }).description;
+
+        assert.ok(description.startsWith('Permission to View'), description);
+        assert.ok(/on Fleet.?Ops$/i.test(description), 'the extension still closes the sentence');
+        assert.ok(description.includes('View   on'), 'the resource and its preposition are both blank');
+    });
+
+    test('a wildcard action with no resource does not take the "with" preposition', function (assert) {
+        const description = this.permission({ name: 'iam *' }).description;
+
+        assert.notOk(description.includes('with'), `there is nothing to be "with": ${description}`);
+        assert.ok(description.includes('do anything'));
+        assert.ok(description.includes('IAM'));
+    });
+});

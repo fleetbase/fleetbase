@@ -32,7 +32,7 @@ export default class CustomFieldModel extends Model {
 
     /** @computed */
     @computed('type') get valueType() {
-        if (this.type === 'file-upload') return 'file';
+        if (this.type === 'file-upload' || this.type === 'signature-pad') return 'file';
         if (this.type === 'date-time-input') return 'date';
         if (this.type === 'model-select') return 'model';
 

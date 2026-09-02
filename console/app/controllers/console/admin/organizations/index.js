@@ -2,6 +2,7 @@ import Controller from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
 import { action } from '@ember/object';
+import window from 'ember-window-mock';
 
 /**
  * Controller for managing organizations in the admin console.

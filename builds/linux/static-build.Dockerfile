@@ -70,6 +70,9 @@ ENV SPC_LOG_LEVEL=debug
 # Skip compression
 ENV NO_COMPRESS=1
 
+# GitHub-hosted Linux runners are memory constrained for this full source build.
+ENV SPC_CONCURRENCY=2
+
 # set PHP version
 ENV PHP_VERSION=8.2
 

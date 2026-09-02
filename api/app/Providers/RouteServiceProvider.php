@@ -9,6 +9,18 @@ use Illuminate\Support\Facades\Route;
 class RouteServiceProvider extends ServiceProvider
 {
     /**
+     * Where to send an already-authenticated request that hits a guest-only route.
+     *
+     * App\Http\Middleware\RedirectIfAuthenticated (the `guest` alias in
+     * App\Http\Kernel) redirects to this constant. It was dropped when the stock
+     * Laravel provider was replaced, so the alias would fatal with "Undefined
+     * constant" the moment any route actually used it. No route does today,
+     * which is why nothing caught it — the console is served separately, so the
+     * only sensible in-app target is the API root.
+     */
+    public const HOME = '/';
+
+    /**
      * Define your route model bindings, pattern filters, etc.
      *
      * @return void

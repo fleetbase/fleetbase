@@ -108,11 +108,16 @@ jobs:
           name: api-coverage
           fail_ci_if_error: false
 
-      # Coverage gate. Target is 100% (composer coverage:check --fail-under=100).
-      # continue-on-error is TEMPORARY: the host-app suite is a starter suite and
-      # not yet at 100%. Remove `continue-on-error` (making this a required,
-      # blocking check) once api/app is fully covered — the "flip to required"
-      # step described in the plan.
+      # Coverage gate — blocking.
+      #
+      # api/app is at 100% line coverage (composer coverage:check --fail-under=100),
+      # so this is now a required check rather than the advisory step it started
+      # as. This is the "flip to required" step described in the plan; the console
+      # gate in console.yml has been blocking since it reached 100%.
+      #
+      # One file is excluded rather than tested, with the reason written at the
+      # site in api/phpunit.xml: App\Providers\BroadcastServiceProvider is
+      # commented out of config/app.php and its boot() requires a routes/channels.php
+      # this app does not have, so it would fatal if it were ever wired up.
       - name: Enforce coverage threshold (100%)
-        continue-on-error: true
         run: composer coverage:check

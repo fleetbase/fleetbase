@@ -40,3 +40,29 @@ module('Unit | Route | console/notifications', function (hooks) {
         assert.deepEqual(calls, ['disable', 'enable']);
     });
 });
+
+module('Unit | Route | console/notifications | model', function (hooks) {
+    setupTest(hooks);
+
+    test('the notification list is queried with whatever params the route was given', function (assert) {
+        const route = this.owner.lookup('route:console/notifications');
+        const queries = [];
+        Object.defineProperty(route, 'store', {
+            configurable: true,
+            value: {
+                query: (type, params) => {
+                    queries.push({ type, params });
+                    return Promise.resolve([]);
+                },
+            },
+        });
+
+        route.model({ page: 2, limit: 10 });
+        route.model();
+
+        assert.deepEqual(queries, [
+            { type: 'notification', params: { page: 2, limit: 10 } },
+            { type: 'notification', params: {} },
+        ]);
+    });
+});
