@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a6c04ff376ee6a5f19f3a9ee50a4f749",
+    "content-hash": "1435c523a53d99bb2a7961a5264d6e4f",
     "packages": [
         {
             "name": "appstract/laravel-opcache",
@@ -2385,16 +2385,16 @@
         },
         {
             "name": "fleetbase/billing-api",
-            "version": "0.1.26",
+            "version": "0.1.27",
             "source": {
                 "type": "git",
                 "url": "git@github.com:fleetbase/billing.git",
-                "reference": "91a6b9479ff0ed80ffbd9314c3b7f70a2734bea0"
+                "reference": "319a881278d67884409476d0a1c602a6d14603b8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/billing/zipball/91a6b9479ff0ed80ffbd9314c3b7f70a2734bea0",
-                "reference": "91a6b9479ff0ed80ffbd9314c3b7f70a2734bea0",
+                "url": "https://api.github.com/repos/fleetbase/billing/zipball/319a881278d67884409476d0a1c602a6d14603b8",
+                "reference": "319a881278d67884409476d0a1c602a6d14603b8",
                 "shasum": ""
             },
             "require": {
@@ -2406,7 +2406,7 @@
                 "stripe/stripe-php": "^17.0"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^3.34.1",
+                "friendsofphp/php-cs-fixer": "3.95.24",
                 "nunomaduro/collision": "^7.0",
                 "pestphp/pest": "^2.33.2",
                 "phpstan/phpstan": "^1.10.38",
@@ -2508,10 +2508,10 @@
                 "stripe api"
             ],
             "support": {
-                "source": "https://github.com/fleetbase/billing/tree/v0.1.26",
+                "source": "https://github.com/fleetbase/billing/tree/v0.1.27",
                 "issues": "https://github.com/fleetbase/billing/issues"
             },
-            "time": "2026-08-12T10:36:19+00:00"
+            "time": "2026-09-02T10:19:13+00:00"
         },
         {
             "name": "fleetbase/core-api",

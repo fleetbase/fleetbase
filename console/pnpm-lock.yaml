@@ -20,8 +20,8 @@ importers:
         specifier: ^0.0.4
         version: 0.0.4(47001768392269870195224ea32348e1)
       '@fleetbase/billing-engine':
-        specifier: ^0.1.26
-        version: 0.1.26(abaf0c2a8c51c5147c2d07c08c7af87d)
+        specifier: ^0.1.27
+        version: 0.1.27(abaf0c2a8c51c5147c2d07c08c7af87d)
       '@fleetbase/customer-portal-engine':
         specifier: ^0.0.13
         version: 0.0.13(abaf0c2a8c51c5147c2d07c08c7af87d)
@@ -1575,8 +1575,8 @@ packages:
     peerDependencies:
       ember-engines: ^0.9.0
 
-  '@fleetbase/billing-engine@0.1.26':
-    resolution: {integrity: sha512-sKuStKB4lnDME+HZmlcvqNpHLzoNZKvlKE9mY017nONpukrc1QbXPnu8gr4TU/6bzoiF3qYXPQ1Kzol5yZPQOA==, tarball: https://npm.pkg.github.com/download/@fleetbase/billing-engine/0.1.26/0f76fcd585c0a810da82f0e691ae0021ba790435}
+  '@fleetbase/billing-engine@0.1.27':
+    resolution: {integrity: sha512-0gXh/VHaveiChpopcSWzu5MtFVygadsRmcOFKXx4w2o/i7EDIz6O/hY734/S7FksuwpQbOcVFefX9AQLWdT5WQ==, tarball: https://npm.pkg.github.com/download/@fleetbase/billing-engine/0.1.27/9739ba61fae1eaa3385be5d0be67817c1acdc174}
     engines: {node: '>= 18'}
     peerDependencies:
       ember-engines: ^0.9.0
@@ -11173,7 +11173,7 @@ snapshots:
       - webpack-command
       - yaml
 
-  '@fleetbase/billing-engine@0.1.26(abaf0c2a8c51c5147c2d07c08c7af87d)':
+  '@fleetbase/billing-engine@0.1.27(abaf0c2a8c51c5147c2d07c08c7af87d)':
     dependencies:
       '@adopted-ember-addons/ember-stripe-elements': 2.0.5
       '@babel/core': 7.29.7
