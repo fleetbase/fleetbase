@@ -3,6 +3,7 @@ name: Refresh ERD
 on:
   push:
     branches:
+      - 'release/v*'
       - 'dev-v*'
   workflow_dispatch:
 
@@ -31,7 +32,8 @@ jobs:
     # something this repository can test before merging, and getting it wrong would
     # silently disable manual runs.
     if: >-
-      startsWith(github.ref, 'refs/heads/dev-v') &&
+      (startsWith(github.ref, 'refs/heads/release/v') ||
+       startsWith(github.ref, 'refs/heads/dev-v')) &&
       (github.event_name == 'workflow_dispatch' ||
        (!contains(github.event.head_commit.message, 'automation/erd/') &&
         !startsWith(github.event.head_commit.message, 'Refresh ERD for')))

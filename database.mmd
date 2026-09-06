@@ -832,8 +832,8 @@ erDiagram
     INTUNSIGNED id PK, UK
     VARCHAR _key
     CHAR uuid UK
-    CHAR fleet_uuid FK
-    CHAR driver_uuid FK
+    CHAR fleet_uuid FK, UK
+    CHAR driver_uuid FK, UK
     TIMESTAMP deleted_at
     TIMESTAMP created_at
     TIMESTAMP updated_at
@@ -843,8 +843,8 @@ erDiagram
     INTUNSIGNED id PK, UK
     VARCHAR _key
     CHAR uuid UK
-    CHAR fleet_uuid FK
-    CHAR vehicle_uuid FK
+    CHAR fleet_uuid FK, UK
+    CHAR vehicle_uuid FK, UK
     TIMESTAMP deleted_at
     TIMESTAMP created_at
     TIMESTAMP updated_at

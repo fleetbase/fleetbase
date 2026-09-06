@@ -1,99 +1,58 @@
-> v0.7.56 ~ "Credential revocation, Fleet-Ops driver workflows, and Storefront checkout hardening"
+> v0.7.57 ~ "Fleet-Ops public API expansion and Storefront QPay checkout fixes"
 
 ---
 ## Highlights
-Fleetbase `0.7.56` focuses on security, API reliability, and release-branch fixes across Core API, Dev Engine, Fleet-Ops, Storefront, and the root Fleetbase app. It fixes API credential revocation, persistent database transaction behavior, lifecycle webhook signing, driver and order configuration workflows, signature custom-field handling, Octane transaction diagnostics, and several Storefront checkout/payment edge cases.
+Fleetbase `0.7.57` updates the release stack for Fleet-Ops `0.6.63` and Storefront `0.4.21`. This release expands public Fleet-Ops API contracts for fleets, vehicles, and drivers, restores QPay checkout reliability in Storefront, and aligns the root release branch with the newer `release/v*` publishing flow.
 
 ---
 ## Component Versions
-- `fleetbase`: `0.7.56`
-- `core-api`: `1.6.60`
-- `dev-engine`: `0.2.15`
-- `fleetops`: `0.6.61`
-- `storefront`: `0.4.20`
-
----
-## Core API
-- Fixed API credential revocation so deleted credentials and immediately expired keys stop authenticating.
-- Keys created by removed users now fail closed instead of continuing to authorize requests.
-- Disabled persistent PDO connections by default to prevent shared MySQL transaction state from leaking between requests.
-- Fixed lifecycle webhooks signed by queue workers so each event uses the correct company, credential, environment, and secret.
-- Fixed URL building with query parameters and added report execution statistics columns.
-
----
-## Dev Engine
-- Fixed API key expiration editing so relative expiration values persist instead of being nulled by the date transform.
-- Added regression coverage for the API key expiration dropdown flow.
-- Added release-tag automation support for Dev Engine release branches.
+- `console`: `0.7.57`
+- `fleetops`: `0.6.63`
+- `storefront`: `0.4.21`
 
 ---
 ## Fleet-Ops
-- Added driver-facing route manifests so drivers can read, run, and re-sequence route stops.
-- Added a driver card view with a persisted card/table layout preference.
-- Published the order configuration flow graph so API consumers can sequence order setup steps.
-- Added configurable Leaflet tile providers with keyless OpenStreetMap defaults, and served Leaflet's
-  marker icons from the Leaflet package instead of a remote CDN.
-- Sped up order stop sequencing by ordering on geometry instead of issuing a routing call per stop pair.
-- Fixed a driver's password being settable through a general driver update.
-- Fixed vehicle updates dropping odometer values.
-- Fixed issue and fuel-report list filters so driver-scoped aliases apply correctly.
-- Fixed driver password updates, driver creation password persistence, unsaved geocoded place editing, sensor creation defaults, register-device routes, fuel report creation, geofence driver history, QR debug output, and maintenance vehicle schedule workflows.
-- Reduced duplicate release-branch CI runs.
+- Expanded public Fleet, Vehicle, and Driver API contracts with clearer relationship handling and resource expansion support.
+- Added public relationship helpers for resolving relation UUIDs, public identifiers, request validation, and resource fields.
+- Added membership uniqueness protection for fleet relationship pivots.
+- Fixed null and empty relationship inputs so absent relationships are treated safely instead of raising errors.
+- Fixed retrieve-time expansion mapping where the request object is not injected.
+- Fixed live fleet map settings behavior so tracked settings requests are not mutated unexpectedly.
+- Updated Fleet-Ops release workflows so server, Ember, and Postman checks run correctly on `release/v*` branches.
+- Restored driver vendor names in the drivers list by using the `vendor_name` value already returned by the API.
+- Fixed internal fleet index, edit, and details route expansion by using Fleet model relationship names for fleet relations.
 
 ---
 ## Storefront
-- Fixed QPay callback URL handling and QPay auth token caching across service instances.
-- Serialized checkout capture to avoid double-capture and race-condition failures.
-- Allowed cash pickup checkout flows without requiring a delivery quote.
-- Fixed customer profile update authorization.
-- Verified Stripe payments before capture.
-- Added coverage for checkout capture and Stripe verification edge cases.
+- Restored QPay checkout by fixing callback URL handling and preventing QPay access tokens from being cached past their real expiry.
+- Refactored testing seeders into reusable complete store and network fixtures.
+- Fixed network category relation and owner type behavior for Storefront network models.
+- Updated Storefront release metadata and notes for `0.4.21`.
 
 ---
-## Release and CI
-- Continued release-branch contract workflow improvements so module PRs test the branch API code.
-- Kept release notes and package version bumps aligned for Core API, Dev Engine, Fleet-Ops, and Storefront.
-- Added root API transaction tripwire diagnostics for detecting server/client transaction-state divergence when explicitly enabled.
-- Restored the upstream Octane listener set and pinned the dev compose command so Octane `--watch` is passed consistently.
-- Updated Console custom-field value typing so signature-pad fields are treated like file uploads.
-- Made the static binary build reproducible on GitHub-hosted runners: capped `static-php-cli`
-  concurrency to fit the runner's memory, switched to plain Docker build progress, and uploaded the
-  build log as an artifact when the job fails.
-- Bumped `FLEETBASE_VERSION` in the API image to `0.7.56`.
-- Brought the host API app to 100% line coverage and made its coverage gate blocking, matching the
-  Console gate. The transaction tripwire, outbound HTTP request logging, and the `auth`/`guest`
-  middleware now have tests.
+## Console and API Packages
+- Bumped the root Docker image version to `0.7.57`.
+- Bumped Console to `0.7.57`.
+- Updated Console package dependencies for `@fleetbase/fleetops-engine` `^0.6.63` and `@fleetbase/storefront-engine` `^0.4.21`.
+- Updated API package dependencies for `fleetbase/fleetops-api` `^0.6.63` and `fleetbase/storefront-api` `^0.4.21`.
+- Updated the Fleet-Ops and Storefront submodules to their latest release tags.
 
 ---
 ## Bug Fixes
-- Fixed API credentials remaining usable after deletion or creator removal.
-- Fixed database transaction errors caused by persistent PDO connection aliasing.
-- Fixed lifecycle webhook secret/session bleed in queue workers.
-- Fixed root API/Octane behavior that could let a committed write surface as `422 There is no active transaction`.
-- Fixed dev compose behavior where Octane file watching could be silently dropped.
-- Fixed signature-pad custom fields falling through to text value handling instead of file value handling.
-- Fixed the `guest` middleware referencing an undefined `RouteServiceProvider::HOME`, which would have
-  raised a fatal error had any route used the alias.
-- Fixed Dev Engine API key expiration values not saving.
-- Fixed Fleet-Ops odometer, driver filter, password, route manifest, map tile, place editing, device, fuel report, geofence, QR, and maintenance issues.
-- Fixed Storefront QPay, Stripe, checkout capture, cash pickup, and customer ownership edge cases.
+- Fixed Fleet-Ops public API relationship expansion and null relationship handling.
+- Fixed Fleet-Ops fleet membership duplication safeguards.
+- Fixed Fleet-Ops live fleet map settings mutation behavior.
+- Fixed Fleet-Ops driver vendor names and internal fleet relation expansion requests.
+- Fixed Storefront QPay callback URL and token expiry behavior.
+- Fixed Storefront testing fixture structure for complete store and network scenarios.
 
 ---
 ## API Changes
-- Core API credential deletion and immediate expiration now revoke access reliably.
-- Core API requests from credentials whose creator has been removed now return unauthorized.
-- Core API disables persistent PDO by default; set `DB_PERSISTENT=true` only if your deployment needs the previous behavior.
-- Core API lifecycle webhooks now resolve signing context per event instead of reusing stale worker state.
-- Core API URL generation now preserves query parameters explicitly.
-- Core API report execution statistics columns are available for reporting workflows.
-- Root API config restores the upstream Octane listener set and adds opt-in transaction tripwire logging through `DB_TXN_TRIPWIRE_ENABLED`.
-- Signature-pad custom fields now report a `file` value type, matching their stored `file:<uuid>` value format.
-- Fleet-Ops exposes the order configuration flow graph for API consumers.
-- Fleet-Ops adds driver route manifest read/run/re-sequencing support.
-- Fleet-Ops driver-scoped issue and fuel-report filters now respect `driver_uuid` aliases.
-- Fleet-Ops no longer accepts a driver password through a general driver update; use the dedicated
-  password endpoint.
-- Storefront checkout capture is serialized and Stripe payments are verified before capture.
+- Fleet-Ops public Fleet, Vehicle, and Driver APIs now expose expanded contract support for relationship fields and public identifiers.
+- Fleet-Ops adds fleet membership uniqueness constraints through a release migration.
+- Fleet-Ops internal fleet views now request relation expansions using Fleet model relationship names.
+- Storefront QPay checkout now refreshes access tokens according to their real expiry and uses corrected callback URL wiring.
+- The root release branch now tracks Fleet-Ops `0.6.63` and Storefront `0.4.21` in both Console and API package dependencies.
 
 ---
 ## Upgrade Steps

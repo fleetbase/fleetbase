@@ -1,13 +1,17 @@
 name: Release Tag
 
-# Reusable workflow: turn a merged `dev-v*` release branch into a pushed git tag.
+# Reusable workflow: turn a merged release branch into a pushed git tag.
+#
+# Accepts `release/v<semver>` (current convention) and `dev-v<semver>` (legacy, still
+# honoured so branches opened before the rename still release).
 # Called by fleetbase/fleetbase and every module repo:
 #
 #   jobs:
 #     tag:
 #       if: github.event_name == 'workflow_dispatch' ||
 #           (github.event.pull_request.merged == true &&
-#            startsWith(github.event.pull_request.head.ref, 'dev-v'))
+#            (startsWith(github.event.pull_request.head.ref, 'release/v') ||
+#             startsWith(github.event.pull_request.head.ref, 'dev-v')))
 #       uses: fleetbase/fleetbase/.github/workflows/release-tag.yml@main
 #       with:
 #         version-files: composer.json,package.json,extension.json
@@ -143,13 +147,20 @@ jobs:
               exit 1
             fi
 
+            # Two accepted prefixes while the convention moves from dev-v0.0.0 to
+            # release/v0.0.0. Both are honoured deliberately: switching every caller on a
+            # flag day would leave any release branch already open unrecognised, and a
+            # merge that produces no tag and no publish looks exactly like a successful
+            # one. Drop the dev-v arm once no dev-v* branch remains open.
             HEAD_REF="${{ github.event.pull_request.head.ref }}"
-            if [[ "$HEAD_REF" != dev-v* ]]; then
-              echo "::error::Head branch '${HEAD_REF}' is not a dev-v* release branch."
-              exit 1
-            fi
-
-            VERSION="${HEAD_REF#dev-v}"
+            case "$HEAD_REF" in
+              release/v*) VERSION="${HEAD_REF#release/v}" ;;
+              dev-v*)     VERSION="${HEAD_REF#dev-v}" ;;
+              *)
+                echo "::error::Head branch '${HEAD_REF}' is not a release branch (expected release/v<semver> or dev-v<semver>)."
+                exit 1
+                ;;
+            esac
             SHA="${{ github.event.pull_request.merge_commit_sha }}"
             SOURCE="merged PR #${{ github.event.pull_request.number }} (${HEAD_REF})"
           fi

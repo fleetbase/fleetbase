@@ -268,9 +268,55 @@ runs:
     - name: Install Postman CLI
       if: steps.pmauth.outputs.available == 'true'
       shell: bash
+      env:
+        # Pinned deliberately. The vendor installer always fetches
+        # download/latest/linux64 and takes no version argument, so every run silently
+        # adopted whatever the newest CLI was — and 1.54.1 broke every contract run in
+        # every module repo at once on 2026-09-04. It reports v3 git-native collections
+        # "through the v2 run path (--report-events)", and on that path the
+        # `-i <Folder>/<Request>` selectors this action passes match nothing: the CLI
+        # exits with "Unable to find request or folder" and 0 requests executed.
+        #
+        # 1.53.0 is the last version verified good (fleetbase/storefront run
+        # 33721837866, 2026-09-03; the same collection and the same selectors).
+        #
+        # Before raising this pin, run a contract job end to end and check the summary
+        # reports a NON-ZERO request count. A selector the CLI cannot resolve does not
+        # fail loudly on its own — it runs nothing, which is why this regression looked
+        # like a repository problem in four separate pull requests before it was traced
+        # to the CLI.
+        POSTMAN_CLI_VERSION: '1.53.0'
       run: |
-        curl -fsSL -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
-        postman --version
+        set -euo pipefail
+
+        # Replicates what install/linux64.sh does with the archive — verified against
+        # the 1.53.0 tarball, which carries `postman-cli`, `postman.1` and `lib/` at its
+        # root. lib/ is not optional: the binary does not start without it.
+        tmp="$(mktemp -d)"
+        curl -fsSL --retry 3 --retry-delay 5 --max-time 600 \
+          "https://dl-cli.pstmn.io/download/version/${POSTMAN_CLI_VERSION}/linux64" \
+          -o "$tmp/postman-cli.tar.gz"
+        tar -xf "$tmp/postman-cli.tar.gz" -C "$tmp"
+
+        sudo cp "$tmp/postman-cli" /usr/local/bin/postman
+        sudo chmod 755 /usr/local/bin/postman
+        if [ -d "$tmp/lib" ]; then
+          sudo rm -rf /usr/local/bin/lib
+          sudo cp -R "$tmp/lib" /usr/local/bin/lib
+        fi
+        rm -rf "$tmp"
+
+        # A pin that silently installs something else is worse than no pin, since the
+        # failure it guards against is invisible in the run's own output.
+        installed="$(postman --version 2>&1 | tr -d '\r')"
+        echo "Postman CLI: ${installed} (pinned ${POSTMAN_CLI_VERSION})"
+        case "$installed" in
+          *"${POSTMAN_CLI_VERSION}"*) ;;
+          *)
+            echo "::error::Expected Postman CLI ${POSTMAN_CLI_VERSION}, got '${installed}'."
+            exit 1
+            ;;
+        esac
 
     - name: Postman CLI login
       if: steps.pmauth.outputs.available == 'true'

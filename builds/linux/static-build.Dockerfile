@@ -76,6 +76,11 @@ ENV SPC_CONCURRENCY=2
 # set PHP version
 ENV PHP_VERSION=8.2
 
+# Pin Caddy to the newest release compatible with the pinned FrankenPHP static
+# builder image's Go 1.24.1 toolchain. Unpinned xcaddy resolves latest, and
+# Caddy >= 2.10.2 now requires Go 1.25+.
+ENV CADDY_VERSION=v2.10.0
+
 # Move to the app directory
 WORKDIR /go/src/app
 
@@ -93,6 +98,10 @@ RUN apk add --no-cache build-base && \
 # Do not run git pull
 RUN sed -i 's/^[ \t]*git pull/# git pull/' ./build-static.sh
 RUN sed -i 's/[[:space:]]--prefer-pre-built//g' ./build-static.sh
+RUN grep -Fq '${XCADDY_COMMAND} build \' ./build-static.sh && \
+    awk 'index($0, "${XCADDY_COMMAND} build \\") { print "\t${XCADDY_COMMAND} build \"${CADDY_VERSION}\" \\"; patched=1; next } { print } END { exit patched ? 0 : 1 }' ./build-static.sh > ./build-static.sh.tmp && \
+    mv ./build-static.sh.tmp ./build-static.sh && \
+    grep -Fq '${XCADDY_COMMAND} build "${CADDY_VERSION}" \' ./build-static.sh
 
 # Stabilize SPC/curl downloads on networks where HTTP/2 streams are reset.
 RUN printf '%s\n' \
