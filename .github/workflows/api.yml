@@ -82,7 +82,25 @@ jobs:
           sudo apt-get install -y libzip-dev libgd-dev libgeos-dev libgmp-dev default-mysql-client libicu-dev
 
       - name: Configure Composer auth for GitHub
-        run: composer config --global github-oauth.github.com "${{ secrets._GITHUB_AUTH_TOKEN }}"
+        env:
+          # Falls back to the run's built-in token when _GITHUB_AUTH_TOKEN is not
+          # set (forks, client repos). api/composer.json resolves only public
+          # dists plus registry.fleetbase.io, which does not use github-oauth, so
+          # GITHUB_TOKEN is enough here and lifts the anonymous 60/hr API limit.
+          #
+          # The guard matters: writing an empty value still produces a
+          # `"github.com": ""` entry in auth.json, and Composer then sends an
+          # empty Bearer token and 401s on every dist download
+          # ("Could not authenticate against github.com"). With --no-interaction
+          # it cannot prompt and --prefer-dist disables the source fallback, so
+          # the install dies outright — strictly worse than no entry at all.
+          TOKEN: ${{ secrets._GITHUB_AUTH_TOKEN || secrets.GITHUB_TOKEN }}
+        run: |
+          if [[ -n "$TOKEN" ]]; then
+            composer config --global github-oauth.github.com "$TOKEN"
+          else
+            echo "::warning::No GitHub token available; Composer will download dists anonymously."
+          fi
 
       - name: Prepare environment file
         run: |

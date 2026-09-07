@@ -1,58 +1,38 @@
-> v0.7.57 ~ "Fleet-Ops public API expansion and Storefront QPay checkout fixes"
+> v0.7.58 ~ "Fleet-Ops nested resource expansion hardening"
 
 ---
 ## Highlights
-Fleetbase `0.7.57` updates the release stack for Fleet-Ops `0.6.63` and Storefront `0.4.21`. This release expands public Fleet-Ops API contracts for fleets, vehicles, and drivers, restores QPay checkout reliability in Storefront, and aligns the root release branch with the newer `release/v*` publishing flow.
+Fleetbase `0.7.58` updates Fleet-Ops to `0.6.64` with nested resource expansion hardening. This release keeps Order, Driver, Vehicle, and Fleet API responses safer when parent requests include expanded relations that do not belong to nested Fleet-Ops resources.
 
 ---
 ## Component Versions
-- `console`: `0.7.57`
-- `fleetops`: `0.6.63`
-- `storefront`: `0.4.21`
+- `console`: `0.7.58`
+- `fleetops`: `0.6.64`
 
 ---
 ## Fleet-Ops
-- Expanded public Fleet, Vehicle, and Driver API contracts with clearer relationship handling and resource expansion support.
-- Added public relationship helpers for resolving relation UUIDs, public identifiers, request validation, and resource fields.
-- Added membership uniqueness protection for fleet relationship pivots.
-- Fixed null and empty relationship inputs so absent relationships are treated safely instead of raising errors.
-- Fixed retrieve-time expansion mapping where the request object is not injected.
-- Fixed live fleet map settings behavior so tracked settings requests are not mutated unexpectedly.
-- Updated Fleet-Ops release workflows so server, Ember, and Postman checks run correctly on `release/v*` branches.
-- Restored driver vendor names in the drivers list by using the `vendor_name` value already returned by the API.
-- Fixed internal fleet index, edit, and details route expansion by using Fleet model relationship names for fleet relations.
-
----
-## Storefront
-- Restored QPay checkout by fixing callback URL handling and preventing QPay access tokens from being cached past their real expiry.
-- Refactored testing seeders into reusable complete store and network fixtures.
-- Fixed network category relation and owner type behavior for Storefront network models.
-- Updated Storefront release metadata and notes for `0.4.21`.
+- Hardened public Vehicle and Fleet resource expansion so nested resources ignore parent-only relation requests.
+- Fixed Order and Driver responses that include nested vehicles or fleets while the parent request expands fields such as `payload` or `driverAssigned.vehicle`.
+- Preserved direct Fleet, Vehicle, and Driver endpoint expansion behavior while filtering invalid nested relation roots.
+- Added regression coverage for nested Vehicle and Fleet resource serialization.
 
 ---
 ## Console and API Packages
-- Bumped the root Docker image version to `0.7.57`.
-- Bumped Console to `0.7.57`.
-- Updated Console package dependencies for `@fleetbase/fleetops-engine` `^0.6.63` and `@fleetbase/storefront-engine` `^0.4.21`.
-- Updated API package dependencies for `fleetbase/fleetops-api` `^0.6.63` and `fleetbase/storefront-api` `^0.4.21`.
-- Updated the Fleet-Ops and Storefront submodules to their latest release tags.
+- Bumped the root Docker image version to `0.7.58`.
+- Bumped Console to `0.7.58`.
+- Updated Console package dependency for `@fleetbase/fleetops-engine` `^0.6.64`.
+- Updated API package dependency for `fleetbase/fleetops-api` `^0.6.64`.
+- Updated the Fleet-Ops submodule to `v0.6.64`.
 
 ---
 ## Bug Fixes
-- Fixed Fleet-Ops public API relationship expansion and null relationship handling.
-- Fixed Fleet-Ops fleet membership duplication safeguards.
-- Fixed Fleet-Ops live fleet map settings mutation behavior.
-- Fixed Fleet-Ops driver vendor names and internal fleet relation expansion requests.
-- Fixed Storefront QPay callback URL and token expiry behavior.
-- Fixed Storefront testing fixture structure for complete store and network scenarios.
+- Fixed nested Fleet-Ops resources reading parent `with` parameters and trying to load unrelated relationships.
+- Fixed serialization failures caused by parent relation names being applied to nested Vehicle and Fleet resources.
 
 ---
 ## API Changes
-- Fleet-Ops public Fleet, Vehicle, and Driver APIs now expose expanded contract support for relationship fields and public identifiers.
-- Fleet-Ops adds fleet membership uniqueness constraints through a release migration.
-- Fleet-Ops internal fleet views now request relation expansions using Fleet model relationship names.
-- Storefront QPay checkout now refreshes access tokens according to their real expiry and uses corrected callback URL wiring.
-- The root release branch now tracks Fleet-Ops `0.6.63` and Storefront `0.4.21` in both Console and API package dependencies.
+- Fleet-Ops public resources now validate requested relation roots against the wrapped model before loading nested expansions.
+- Nested Fleet and Vehicle resources no longer attempt to load parent-only relations from Order or Driver API requests.
 
 ---
 ## Upgrade Steps
