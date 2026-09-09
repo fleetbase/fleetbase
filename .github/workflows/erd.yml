@@ -1,0 +1,191 @@
+name: Refresh ERD
+
+on:
+  push:
+    branches:
+      - 'release/v*'
+      - 'dev-v*'
+  workflow_dispatch:
+
+concurrency:
+  group: erd-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  refresh:
+    name: Generate ERD and open PR
+    # Do not react to this workflow's own pull request landing. That push is a push to
+    # dev-v*, so without this the job re-runs, regenerates, and opens the next ERD PR —
+    # merging #629 opened #630 for exactly this reason.
+    #
+    # Matches all three merge styles GitHub can produce for the automation branch:
+    #   merge commit  Merge pull request #630 from fleetbase/automation/erd/dev-v0.7.55
+    #   squash        Refresh ERD for dev-v0.7.55 (#630)
+    #   rebase        Refresh ERD for dev-v0.7.55
+    #
+    # workflow_dispatch is allowed through explicitly rather than relying on
+    # head_commit being null and coercing to the empty string — that coercion is not
+    # something this repository can test before merging, and getting it wrong would
+    # silently disable manual runs.
+    if: >-
+      (startsWith(github.ref, 'refs/heads/release/v') ||
+       startsWith(github.ref, 'refs/heads/dev-v')) &&
+      (github.event_name == 'workflow_dispatch' ||
+       (!contains(github.event.head_commit.message, 'automation/erd/') &&
+        !startsWith(github.event.head_commit.message, 'Refresh ERD for')))
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout release branch
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Validate generator scripts
+        run: |
+          bash -n create-erd.sh
+          # `shellcheck` is explicit: the -alpine image sets no entrypoint, unlike
+          # koalaman/shellcheck. Passing the script path alone made Docker execute the
+          # script itself, and Alpine has no bash for its `#!/usr/bin/env bash` shebang:
+          #   env: can't execute 'bash': No such file or directory   (exit 127)
+          docker run --rm \
+            --volume "$GITHUB_WORKSPACE/create-erd.sh:/work/create-erd.sh:ro" \
+            koalaman/shellcheck-alpine:v0.10.0 \
+            shellcheck /work/create-erd.sh
+          python3 -m unittest discover -s tests/erd -p 'test_*.py' -v
+          docker run --rm \
+            --volume "$GITHUB_WORKSPACE/.github/workflows/erd.yml:/work/erd.yml:ro" \
+            rhysd/actionlint:1.7.7 \
+            -color /work/erd.yml
+
+      - name: Require Composer authentication
+        env:
+          COMPOSER_AUTH_TOKEN: ${{ secrets._GITHUB_AUTH_TOKEN }}
+        run: |
+          if [[ -z "$COMPOSER_AUTH_TOKEN" ]]; then
+            echo "_GITHUB_AUTH_TOKEN is required to resolve Fleetbase Composer dependencies" >&2
+            exit 1
+          fi
+
+      - name: Prepare clean database and environment
+        run: |
+          sudo rm -rf docker/database/mysql
+          mkdir -p docker/database/mysql
+          if [[ ! -f api/.env ]]; then
+            cp api/.env.example api/.env 2>/dev/null || touch api/.env
+          fi
+
+      - name: Build release API image
+        env:
+          COMPOSER_AUTH_TOKEN: ${{ secrets._GITHUB_AUTH_TOKEN }}
+        run: |
+          docker build \
+            --file docker/Dockerfile \
+            --target app-release \
+            --build-arg GITHUB_AUTH_KEY="$COMPOSER_AUTH_TOKEN" \
+            --tag fleetbase/fleetbase-api:erd \
+            .
+          docker tag fleetbase/fleetbase-api:erd fleetbase/fleetbase-api:latest
+
+      - name: Start MySQL and Redis
+        run: docker compose up -d --wait database cache
+
+      - name: Create databases and run migrations
+        run: |
+          docker compose run --rm --no-deps application sh -c \
+            'php artisan mysql:createdb && php artisan migrate --force'
+          docker compose run --rm --no-deps application \
+            php artisan migrate:status --no-ansi
+
+      - name: Resolve Docker network
+        run: |
+          database_container="$(docker compose ps -q database)"
+          network="$(docker inspect "$database_container" --format '{{range $name, $_ := .NetworkSettings.Networks}}{{$name}}{{end}}')"
+          if [[ -z "$network" ]]; then
+            echo "Unable to resolve the database container network" >&2
+            exit 1
+          fi
+          echo "ERD_DOCKER_NETWORK=$network" >> "$GITHUB_ENV"
+
+      - name: Generate and validate ERD outputs
+        env:
+          ERD_USE_DOCKER: 'true'
+          ERD_DB_HOST: database
+          ERD_DB_PORT: '3306'
+          ERD_DB_NAME: fleetbase
+          ERD_DB_USER: root
+          ERD_DB_PASSWORD: ''
+        run: ./create-erd.sh
+
+      - name: Show service logs on failure
+        if: failure()
+        run: docker compose logs --no-color --tail=300 || true
+
+      - name: Tear down services
+        if: always()
+        run: docker compose down -v || true
+
+      # database.mmd is the schema; the two SVGs are a rendering of it. mermaid-cli does
+      # not lay out deterministically — regenerating from an identical database.mmd
+      # produces the same viewBox and dimensions but different Bezier control points on
+      # the edge paths, so `git diff` on erd-dark.svg is never empty. Opening a pull
+      # request on that alone gave an endless chain of them, each one redrawn curves and
+      # no schema difference.
+      #
+      # So the schema is the gate: no change to database.mmd, no pull request. The
+      # generated files are reverted rather than left dirty, so nothing downstream can
+      # pick them up.
+      - name: Decide whether the schema actually changed
+        if: success()
+        id: schema
+        run: |
+          if git diff --quiet -- database.mmd; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::database.mmd is unchanged — the ERD is current. Skipping the pull request; the SVG diff is non-deterministic rendering, not a schema change."
+            git checkout -- database.mmd erd.svg erd-dark.svg || true
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "::notice::database.mmd changed; refreshing the ERD pull request."
+          fi
+
+      - name: Create or update ERD pull request
+        if: success() && steps.schema.outputs.changed == 'true'
+        id: erd-pr
+        uses: peter-evans/create-pull-request@v8
+        with:
+          token: ${{ github.token }}
+          base: ${{ github.ref_name }}
+          branch: automation/erd/${{ github.ref_name }}
+          delete-branch: true
+          add-paths: |
+            database.mmd
+            erd.svg
+            erd-dark.svg
+          commit-message: Refresh ERD for ${{ github.ref_name }}
+          committer: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+          author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+          title: Refresh ERD for ${{ github.ref_name }}
+          body: |
+            Regenerates the database ERD from the release schema at `${{ github.sha }}`.
+
+            Generated artifacts:
+            - `database.mmd`
+            - `erd.svg`
+            - `erd-dark.svg`
+
+            This pull request is maintained automatically as `${{ github.ref_name }}` changes.
+            It is opened only when `database.mmd` changes — the SVG render is not
+            byte-reproducible, so an SVG-only diff is not a schema change.
+          draft: false
+
+      - name: Report pull request
+        if: steps.erd-pr.outputs.pull-request-url
+        env:
+          PR_URL: ${{ steps.erd-pr.outputs.pull-request-url }}
+          PR_OPERATION: ${{ steps.erd-pr.outputs.pull-request-operation }}
+        run: echo "::notice::$PR_URL was $PR_OPERATION"

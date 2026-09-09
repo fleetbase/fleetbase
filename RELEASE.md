@@ -1,76 +1,65 @@
-> v0.7.53 ~ "CI hardening, full coverage foundations, Fleet-Ops reliability, and Taler refunds"
+> v0.7.59 ~ "Trailer operations, safer authorization, and shared UI foundations"
 
 ---
 ## Highlights
-Fleetbase `0.7.53` is a quality and reliability release. It adds root install-smoke, API, Console, and Postman contract CI, expands backend coverage across the core modules, and ships targeted fixes for Fleet-Ops operations, Storefront checkout behavior, Ledger Taler refunds, and shared platform runtime paths.
+Fleetbase `0.7.59` introduces first-class Trailer operations in Fleet-Ops, refreshes Fleet-Ops Data for trailer and inspection workflows, improves shared Ember UI tab behavior, and tightens Core API user authorization loading.
 
 ---
 ## Component Versions
-- `console`: `0.7.53`
-- `core-api`: `1.6.55`
-- `ai`: `0.0.4`
-- `fleetops`: `0.6.59`
-- `ledger`: `0.0.9`
-- `storefront`: `0.4.18`
-
----
-## Platform CI and Coverage
-- Added root-level CI for install-smoke, API tests, Console tests, and coverage reporting.
-- Added a live-stack Postman contract workflow that can mint an API key and run the official Fleetbase collections.
-- Replaced API stub tests with real host-app coverage for health checks, outbound HTTP logging, users, and event-provider behavior.
-- Expanded Console QUnit coverage, fixed lint blockers, and added coverage reporting for the root Console workflow.
-- Fixed Docker install smoke issues around release image targets, bundled database privileges, API key minting, Codecov uploads, and package registry resolution.
-
----
-## Core API
-- Expanded Core API backend coverage to a full baseline across controllers, requests, resources, reports, templates, files, notifications, auth, metrics/search, settings, middleware, webhooks, services, models, traits, and console commands.
-- Improved coverage reporting when Clover omits aggregate class metrics.
-- Added broader contract coverage for SMS providers, two-factor auth, scheduling, API credential tracking, resource expansion, report execution, policy behavior, and tenant-scoped helper paths.
-- Updated the host API dependency to `fleetbase/core-api` `1.6.55`.
+- `console`: `0.7.59`
+- `core-api`: `1.6.61`
+- `fleetops`: `0.6.65`
+- `fleetops-data`: `0.2.0`
+- `ember-ui`: `0.4.0`
 
 ---
 ## Fleet-Ops
-- Expanded Fleet-Ops backend coverage from the high-70% range to a near-complete baseline while cleaning up dead or unreachable branches.
-- Fixed production defects found during coverage work, including plain-address place insertion, reverse-geocode validation, empty reverse-geocode results, Lalamove market quotations, missing order config defaults, and service-rate sorting.
-- Added a View Label action for individual entities and scoped order, waypoint, and entity label lookup by company.
-- Fixed GeoJSON fallback coordinate handling so bare coordinate pairs are read in GeoJSON longitude/latitude order.
-- Fixed vehicle vendor filtering, driver device registration without an explicit driver id, and default device `last_position` creation.
-- Added coverage for AFAQY transport, Lalamove quotes, service quotes, geofencing, maintenance/work-order imports, order imports, waypoint activity, vendor bridges, tracking, fuel reports, and driver assignment flows.
+- Added first-class Trailer management and operational detail surfaces.
+- Added Trailer attachment workflows across vehicles, devices, equipment, maintenance, orders, and live maps.
+- Added internal and public Trailer API coverage with coordinated Postman contract coverage.
+- Improved driver, vehicle, trailer, vendor, contact, and customer cards, grid views, filters, and placeholders.
+- Hardened device installation behavior so installed devices cannot be moved without detaching first.
+- Fixed Trailer navigation, payload integration, spatial tracking, and API contract guards.
 
 ---
-## Ledger and Taler
-- Completed the customer-facing GNU Taler refund lifecycle with persistent refund URIs, refund history, public wallet handoff, QR/copy fallback, and refund email delivery.
-- Added scheduled and manual Taler refund verification so invoices remain pending until wallet acceptance is confirmed.
-- Improved Taler driver support for refund status polling, order-status checks, gateway diagnostics, and credential validation.
-- Expanded Ledger backend coverage to a full baseline across gateways, invoices, wallet, payments, refunds, revenue lifecycle, webhooks, listeners, resources, filters, notifications, commands, and routes.
-- Added Ledger API contract workflow support and coverage reporting.
+## Fleet-Ops Data
+- Added Trailer, asset connection, attachable trailer, and maintenance subject trailer models and serializers.
+- Added inspection form, inspection submission, and inspection item result models and serializers.
+- Added waypoint and relation-loading utilities for shared Fleet-Ops consumers.
+- Fixed serializer behavior for drivers, entities, service rates, payloads, orders, and vehicles.
+- Added coverage infrastructure and a reachable-addon coverage gate.
 
 ---
-## AI and Storefront
-- Expanded Fleetbase AI backend coverage to a full baseline, including sessions, tasks, attachments, providers, admin endpoints, query execution, capability helpers, and coverage-summary reporting.
-- Organized AI backend tests into explicit unit and feature suites and added CI coverage reporting.
-- Expanded Storefront backend coverage to a full baseline across checkout, payment initialization, Stripe/QPay flows, customer auth, integrated vendors, food trucks, commerce resources, commands, middleware, requests, and provider integrations.
-- Fixed Storefront issues found by coverage around pickup-store resolution, order configuration projection, Twilio-specific errors, dashboard behavior, and Stripe checkout errors.
+## Core API
+- Improved batched user authorization loading so accessors respect eager-loaded company membership data.
+- Fixed company-scoped authorization behavior for users with cached or missing company memberships.
+- Enabled Core API CI and Postman checks for `release/v*` branches.
+
+---
+## Ember UI
+- Fixed TabNavigation overflow behavior for route-backed tabs that do not define explicit IDs.
+- Route tabs now fall back from `id` to `route` to `key`, keeping More-menu tabs, active state, and keyboard navigation consistent.
+- Completed Ember UI release-branch CI, release creation, npm publishing permissions, and action upgrades for `release/v*` branches.
+
+---
+## Console and API Packages
+- Bumped the root Docker image version to `0.7.59`.
+- Bumped Console to `0.7.59`.
+- Updated API dependencies for `fleetbase/core-api` `^1.6.61` and `fleetbase/fleetops-api` `^0.6.65`.
+- Updated Console dependencies for `@fleetbase/ember-ui` `^0.4.0`, `@fleetbase/fleetops-data` `^0.2.0`, and `@fleetbase/fleetops-engine` `^0.6.65`.
+- Updated package submodules to their released tags.
 
 ---
 ## Bug Fixes
-- Fixed Console lint failures that blocked the release workflow before tests and coverage could run.
-- Fixed missing Console translation keys used by set-password and common action flows.
-- Fixed Fleet-Ops label lookup cross-company leakage.
-- Fixed Fleet-Ops vehicle vendor filtering returning no public API results.
-- Fixed Fleet-Ops driver device registration and device default position creation returning `500`s.
-- Fixed Storefront checkout and Stripe error paths surfaced by backend coverage.
-- Fixed Ledger refund reversal and wallet refund state handling for Taler refunds.
+- Fixed nested and related Trailer operations across Fleet-Ops navigation, payload display, spatial tracking, and device and equipment attachments.
+- Fixed Core API authorization accessors using stale or incorrectly scoped company membership data.
+- Fixed Ember UI overflow tab identity for route-only tabs.
 
 ---
 ## API Changes
-- Added root API contract workflow support for live-stack Postman collection runs.
-- Updated Core API to `1.6.55` and widened backend contract coverage across public, internal, admin, reporting, auth, webhook, search, settings, and file routes.
-- Fleet-Ops entity labels now use the existing order label endpoint and enforce company-scoped subject resolution.
-- Fleet-Ops GeoJSON fallback coordinate parsing now preserves GeoJSON longitude/latitude order for affected bare-pair inputs.
-- Fleet-Ops public vehicle vendor filtering now accepts public/internal vendor identifiers, while internal routes can still resolve vendor UUIDs.
-- Fleet-Ops driver device registration can resolve the current driver when no id is supplied, and devices default missing `last_position` to `POINT(0,0)`.
-- Ledger adds public Taler refund handoff, refund-history access, refund verification command support, and pending refund state transitions.
+- Fleet-Ops adds first-class Trailer API and resource support with related public and internal contract coverage.
+- Fleet-Ops Data adds Trailer and inspection model contracts for shared Console consumers.
+- Core API user authorization resources and controllers now batch and scope company membership access more safely.
 
 ---
 ## Upgrade Steps

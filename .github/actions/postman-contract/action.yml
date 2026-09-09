@@ -20,6 +20,71 @@ inputs:
     description: API version namespace.
     required: false
     default: v1
+  customer-identity:
+    description: >-
+      Email used as the customer identity throughout the "Customers" folder. Must be a
+      real-looking email — CustomerController::requestCreationCode rejects a non-email
+      when mode=email. Deliberately stable across runs: the contract job wipes the
+      database each run, and the signup flow is idempotent regardless.
+    required: false
+    default: ci-customer@fleetbase.local
+  customer-password:
+    description: Password for the seeded CI customer. Minimum 8 characters.
+    required: false
+    default: CiCustomerPassw0rd!
+  customer-phone:
+    description: >-
+      Phone for the seeded CI customer, E.164. Request Customer Login SMS resolves a
+      user by this number, and 400s if it does not match one.
+    required: false
+    default: '+15555550123'
+  customer-verification-code:
+    description: >-
+      Verification code seeded into the database and injected as {{verification_code}}.
+      Both sides read this one input, so the seeded rows and the collection can never
+      drift apart. Quoted because unquoted 000000 is YAML for the integer 0.
+    required: false
+    default: '000000'
+  driver-identity:
+    description: >-
+      Email of the seeded CI driver. Login Driver resolves a User by phone OR email that
+      has a related Driver record, so this must match a seeded driver, not the credential
+      owner.
+    required: false
+    default: ci-driver@fleetbase.local
+  driver-password:
+    description: Password for the seeded CI driver. Minimum 8 characters.
+    required: false
+    default: CiDriverPassw0rd!
+  driver-phone:
+    description: >-
+      Phone for the seeded CI driver, E.164. Request Driver Login SMS resolves a user by
+      this number and 400s with "No driver with this phone # found." if it matches none.
+      Must differ from customer-phone — the lookup is by number alone.
+    required: false
+    default: '+15555550124'
+  verbose:
+    description: >-
+      Run the CLI with --verbose so request and response bodies are captured. Without
+      it a failing request records only a status code and a byte count, which is not
+      enough to tell a bad request body from a broken endpoint. Bodies are kept in the
+      uploaded artifact with Authorization headers scrubbed; the job log relies on
+      ::add-mask:: for the same secrets.
+    required: false
+    default: 'true'
+  stripe-publishable-key:
+    description: >-
+      Stripe TEST publishable key (pk_test_). Seeded into the storefront and ledger
+      gateway rows so the checkout and top-up paths are reachable.
+    required: false
+    default: ''
+  stripe-secret-key:
+    description: >-
+      Stripe TEST secret key (sk_test_). When empty no gateway is seeded and the
+      gateway-backed requests report the gateway as unconfigured, which is the
+      correct result for a fork without the org secrets.
+    required: false
+    default: ''
   postman-ref:
     description: Ref of the fleetbase/postman repo to check out.
     required: false
@@ -51,15 +116,66 @@ runs:
       id: key
       if: steps.pmauth.outputs.available == 'true'
       shell: bash
+      env:
+        CUSTOMER_IDENTITY: ${{ inputs.customer-identity }}
+        CUSTOMER_PASSWORD: ${{ inputs.customer-password }}
+        CUSTOMER_PHONE: ${{ inputs.customer-phone }}
+        VERIFICATION_CODE: ${{ inputs.customer-verification-code }}
+        DRIVER_IDENTITY: ${{ inputs.driver-identity }}
+        DRIVER_PASSWORD: ${{ inputs.driver-password }}
+        DRIVER_PHONE: ${{ inputs.driver-phone }}
+        STRIPE_PUBLISHABLE_KEY: ${{ inputs.stripe-publishable-key }}
+        STRIPE_SECRET_KEY: ${{ inputs.stripe-secret-key }}
       run: |
         set -uo pipefail
+        # Masked before it is ever passed on: the seed echoes gateway ids, and --verbose
+        # captures request and response bodies into the uploaded artifact.
+        if [[ -n "${STRIPE_SECRET_KEY:-}" ]]; then
+          echo "::add-mask::${STRIPE_SECRET_KEY}"
+        fi
         # Run the mint snippet via `tinker --execute="eval(base64_decode(...))"`.
         # Piping a file with a <?php tag to tinker triggers a PsySH parse error, and
         # inlining the code would let the shell expand its $variables — base64+eval
         # sidesteps both. Capture stdout+stderr so failures are diagnosable.
+        # The customer fixture values are passed as container env vars rather than
+        # interpolated into the snippet: the snippet is base64'd precisely so the shell
+        # cannot touch it, and `-e` keeps these inputs the single source of truth shared
+        # with the --env-var injection below.
         CODE="$(base64 scripts/ci/mint-api-key.php | tr -d '\n')"
-        OUT="$(docker compose exec -T application php artisan tinker --execute="eval(base64_decode('${CODE}'));" 2>&1 || true)"
+        OUT="$(docker compose exec -T \
+          -e "CI_CUSTOMER_IDENTITY=${CUSTOMER_IDENTITY}" \
+          -e "CI_CUSTOMER_PHONE=${CUSTOMER_PHONE}" \
+          -e "CI_CUSTOMER_PASSWORD=${CUSTOMER_PASSWORD}" \
+          -e "CI_CUSTOMER_VERIFICATION_CODE=${VERIFICATION_CODE}" \
+          -e "CI_DRIVER_IDENTITY=${DRIVER_IDENTITY}" \
+          -e "CI_DRIVER_PHONE=${DRIVER_PHONE}" \
+          -e "CI_DRIVER_PASSWORD=${DRIVER_PASSWORD}" \
+          -e "CI_STRIPE_PUBLISHABLE_KEY=${STRIPE_PUBLISHABLE_KEY}" \
+          -e "CI_STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}" \
+          application php artisan tinker --execute="eval(base64_decode('${CODE}'));" 2>&1 || true)"
+        # Always surface what the seed produced, not only when a step later fails.
+        #
+        # The mint runs one PHP snippet inside a single try, so the FIRST fixture that
+        # throws aborts every fixture after it — and the step still exits 0 as long as the
+        # API key came out. A vehicle column with no default did exactly that: the network,
+        # store location, service rate, gateway and invoice fixtures were all silently
+        # absent, and the requests needing them failed much later for reasons that looked
+        # unrelated. MINT_ERROR is echoed by the snippet's catch; make it loud.
+        printf '%s\n' "$OUT" | grep -E '^(MINTED_|SEEDED_|MINT_ERROR)' || true
+        if printf '%s\n' "$OUT" | grep -q 'MINT_ERROR'; then
+          echo "::error::The seed aborted partway. Fixtures after the failure were NOT created:"
+          printf '%s\n' "$OUT" | grep -A 2 'MINT_ERROR'
+          exit 1
+        fi
         KEY="$(printf '%s\n' "$OUT" | grep -oE 'flb_(live|test)_[A-Za-z0-9_-]+' | tail -1 || true)"
+        PLATFORM_TOKEN="$(printf '%s\n' "$OUT" | grep -oE 'flb_platform_[A-Za-z0-9]+' | tail -1 || true)"
+        ORGANIZATION_ID="$(printf '%s\n' "$OUT" | grep -oE 'MINTED_COMPANY_ID=company_[A-Za-z0-9]+' | tail -1 | cut -d= -f2 || true)"
+        STOREFRONT_KEY="$(printf '%s\n' "$OUT" | grep -oE 'MINTED_STOREFRONT_KEY=store_[A-Za-z0-9]+' | tail -1 | cut -d= -f2 || true)"
+        INVOICE_ID="$(printf '%s\n' "$OUT" | grep -oE 'SEEDED_INVOICE_ID=[A-Za-z0-9_]+' | tail -1 | cut -d= -f2 || true)"
+        GATEWAY_ID="$(printf '%s\n' "$OUT" | grep -oE 'SEEDED_LEDGER_GATEWAY=[A-Za-z0-9_]+' | tail -1 | cut -d= -f2 || true)"
+        NETWORK_KEY="$(printf '%s\n' "$OUT" | grep -oE 'MINTED_NETWORK_KEY=network_[A-Za-z0-9]+' | tail -1 | cut -d= -f2 || true)"
+        SECONDARY_ORG_ID="$(printf '%s\n' "$OUT" | grep -oE 'SEEDED_SECONDARY_ORGANIZATION_ID=company_[A-Za-z0-9]+' | tail -1 | cut -d= -f2 || true)"
+        MULTI_ORG_DRIVER_ID="$(printf '%s\n' "$OUT" | grep -oE 'SEEDED_DRIVER_ID=driver_[A-Za-z0-9]+' | tail -1 | cut -d= -f2 || true)"
         if [[ -z "$KEY" ]]; then
           echo "::error::Could not mint an API key from the running stack. Tinker output:"
           printf '%s\n' "$OUT"
@@ -67,6 +183,79 @@ runs:
         fi
         echo "::add-mask::$KEY"
         echo "api_key=$KEY" >> "$GITHUB_OUTPUT"
+        # The Customers folder is entirely dependent on the seeded verification codes, so
+        # fail loudly here rather than leaving 16 requests to fail with an opaque
+        # "Invalid verification code provided." The snippet echoes this line last, so its
+        # presence also proves the whole snippet ran without throwing.
+        SEEDED_CODE="$(printf '%s\n' "$OUT" | grep -oE 'SEEDED_VERIFICATION_CODE=[A-Za-z0-9]+' | tail -1 | cut -d= -f2 || true)"
+        if [[ "$SEEDED_CODE" != "$VERIFICATION_CODE" ]]; then
+          echo "::error::Customer fixtures were not seeded (expected code '${VERIFICATION_CODE}', got '${SEEDED_CODE}'). Tinker output:"
+          printf '%s\n' "$OUT"
+          exit 1
+        fi
+        # The Drivers folder's auth flows depend on the seeded driver in the same way.
+        # The snippet only reaches this echo if the Driver record was created, so a missing
+        # line means driver auth would fail with an opaque 401/400 across four requests.
+        SEEDED_DRIVER="$(printf '%s\n' "$OUT" | grep -oE 'SEEDED_DRIVER_IDENTITY=\S+' | tail -1 | cut -d= -f2 || true)"
+        if [[ "$SEEDED_DRIVER" != "$DRIVER_IDENTITY" ]]; then
+          echo "::error::Driver fixtures were not seeded (expected '${DRIVER_IDENTITY}', got '${SEEDED_DRIVER}'). Tinker output:"
+          printf '%s\n' "$OUT"
+          exit 1
+        fi
+        # Requests that address an organization by path id resolve {{organization_id}}.
+        # Absent is not fatal — the collection also chains it from Get Current
+        # Organization, so this is belt-and-braces for a partial run.
+        if [[ -n "$ORGANIZATION_ID" ]]; then
+          echo "organization_id=$ORGANIZATION_ID" >> "$GITHUB_OUTPUT"
+        else
+          echo "::warning::No organization public_id minted; {{organization_id}} falls back to the collection's chained value."
+        fi
+        # The organizations listing sits behind the platform API token rather than an
+        # org credential and answers 401 to an flb_live_ key. Absent is not fatal —
+        # only those requests will 401.
+        # The Storefront API rejects any bearer token that is not a store/network key,
+        # so its collection cannot use the organization credential at all.
+        if [[ -n "$STOREFRONT_KEY" ]]; then
+          echo "::add-mask::$STOREFRONT_KEY"
+          echo "storefront_key=$STOREFRONT_KEY" >> "$GITHUB_OUTPUT"
+        else
+          echo "::warning::No storefront key minted; the Storefront collection will 401."
+        fi
+        # The three public-invoice requests are addressed by an invoice public_id and
+        # nothing in the collection can create one — the public API has no invoice
+        # creation endpoint. Absent only means the ledger extension is not installed.
+        if [[ -n "$INVOICE_ID" ]]; then
+          echo "invoice_public_id=$INVOICE_ID" >> "$GITHUB_OUTPUT"
+        else
+          echo "::warning::No invoice seeded; the Ledger public-invoice requests will 404."
+        fi
+        # Pay Public Invoice and Top Up Wallet both address a gateway by public_id, and
+        # {{gateway_id}} was set by nothing — both answered "Payment gateway not found or
+        # unavailable." Empty only means no Stripe test secret was provided, in which case
+        # the seed creates no gateway.
+        if [[ -n "$GATEWAY_ID" ]]; then
+          echo "gateway_id=$GATEWAY_ID" >> "$GITHUB_OUTPUT"
+        else
+          echo "::warning::No payment gateway seeded; the gateway-backed requests will report it as unavailable."
+        fi
+        # Network-scoped endpoints need a network session, which a store key cannot give.
+        if [[ -n "$NETWORK_KEY" ]]; then
+          echo "::add-mask::$NETWORK_KEY"
+          echo "network_key=$NETWORK_KEY" >> "$GITHUB_OUTPUT"
+        fi
+        # Switch Driver Organization needs a driver that belongs to TWO organizations.
+        if [[ -n "$SECONDARY_ORG_ID" ]]; then
+          echo "secondary_organization_id=$SECONDARY_ORG_ID" >> "$GITHUB_OUTPUT"
+        fi
+        if [[ -n "$MULTI_ORG_DRIVER_ID" ]]; then
+          echo "multi_org_driver_id=$MULTI_ORG_DRIVER_ID" >> "$GITHUB_OUTPUT"
+        fi
+        if [[ -n "$PLATFORM_TOKEN" ]]; then
+          echo "::add-mask::$PLATFORM_TOKEN"
+          echo "platform_token=$PLATFORM_TOKEN" >> "$GITHUB_OUTPUT"
+        else
+          echo "::warning::No platform token minted; platform-scoped requests will 401."
+        fi
         echo "Verifying key against ${{ inputs.base-url }}/${{ inputs.namespace }}/organizations/current ..."
         HTTP_CODE="$(curl -s -o /dev/null -w '%{http_code}' -H "Authorization: Bearer ${KEY}" \
           "${{ inputs.base-url }}/${{ inputs.namespace }}/organizations/current" || true)"
@@ -79,9 +268,55 @@ runs:
     - name: Install Postman CLI
       if: steps.pmauth.outputs.available == 'true'
       shell: bash
+      env:
+        # Pinned deliberately. The vendor installer always fetches
+        # download/latest/linux64 and takes no version argument, so every run silently
+        # adopted whatever the newest CLI was — and 1.54.1 broke every contract run in
+        # every module repo at once on 2026-09-04. It reports v3 git-native collections
+        # "through the v2 run path (--report-events)", and on that path the
+        # `-i <Folder>/<Request>` selectors this action passes match nothing: the CLI
+        # exits with "Unable to find request or folder" and 0 requests executed.
+        #
+        # 1.53.0 is the last version verified good (fleetbase/storefront run
+        # 33721837866, 2026-09-03; the same collection and the same selectors).
+        #
+        # Before raising this pin, run a contract job end to end and check the summary
+        # reports a NON-ZERO request count. A selector the CLI cannot resolve does not
+        # fail loudly on its own — it runs nothing, which is why this regression looked
+        # like a repository problem in four separate pull requests before it was traced
+        # to the CLI.
+        POSTMAN_CLI_VERSION: '1.53.0'
       run: |
-        curl -fsSL -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
-        postman --version
+        set -euo pipefail
+
+        # Replicates what install/linux64.sh does with the archive — verified against
+        # the 1.53.0 tarball, which carries `postman-cli`, `postman.1` and `lib/` at its
+        # root. lib/ is not optional: the binary does not start without it.
+        tmp="$(mktemp -d)"
+        curl -fsSL --retry 3 --retry-delay 5 --max-time 600 \
+          "https://dl-cli.pstmn.io/download/version/${POSTMAN_CLI_VERSION}/linux64" \
+          -o "$tmp/postman-cli.tar.gz"
+        tar -xf "$tmp/postman-cli.tar.gz" -C "$tmp"
+
+        sudo cp "$tmp/postman-cli" /usr/local/bin/postman
+        sudo chmod 755 /usr/local/bin/postman
+        if [ -d "$tmp/lib" ]; then
+          sudo rm -rf /usr/local/bin/lib
+          sudo cp -R "$tmp/lib" /usr/local/bin/lib
+        fi
+        rm -rf "$tmp"
+
+        # A pin that silently installs something else is worse than no pin, since the
+        # failure it guards against is invisible in the run's own output.
+        installed="$(postman --version 2>&1 | tr -d '\r')"
+        echo "Postman CLI: ${installed} (pinned ${POSTMAN_CLI_VERSION})"
+        case "$installed" in
+          *"${POSTMAN_CLI_VERSION}"*) ;;
+          *)
+            echo "::error::Expected Postman CLI ${POSTMAN_CLI_VERSION}, got '${installed}'."
+            exit 1
+            ;;
+        esac
 
     - name: Postman CLI login
       if: steps.pmauth.outputs.available == 'true'
@@ -102,90 +337,302 @@ runs:
       shell: bash
       env:
         API_KEY: ${{ steps.key.outputs.api_key }}
+        PLATFORM_TOKEN: ${{ steps.key.outputs.platform_token }}
+        STOREFRONT_KEY: ${{ steps.key.outputs.storefront_key }}
+        ORGANIZATION_ID: ${{ steps.key.outputs.organization_id }}
+        INVOICE_PUBLIC_ID: ${{ steps.key.outputs.invoice_public_id }}
+        GATEWAY_ID: ${{ steps.key.outputs.gateway_id }}
+        NETWORK_KEY: ${{ steps.key.outputs.network_key }}
+        SECONDARY_ORG_ID: ${{ steps.key.outputs.secondary_organization_id }}
+        MULTI_ORG_DRIVER_ID: ${{ steps.key.outputs.multi_org_driver_id }}
         COLLECTIONS: ${{ inputs.collections }}
         BASE_URL: ${{ inputs.base-url }}
         NAMESPACE: ${{ inputs.namespace }}
+        CUSTOMER_IDENTITY: ${{ inputs.customer-identity }}
+        CUSTOMER_PASSWORD: ${{ inputs.customer-password }}
+        CUSTOMER_PHONE: ${{ inputs.customer-phone }}
+        VERIFICATION_CODE: ${{ inputs.customer-verification-code }}
+        DRIVER_IDENTITY: ${{ inputs.driver-identity }}
+        DRIVER_PASSWORD: ${{ inputs.driver-password }}
+        DRIVER_PHONE: ${{ inputs.driver-phone }}
       run: |
         set -uo pipefail
         overall=0
+        ran=0
         mkdir -p postman-results
+
+        # The Postman CLI has no --color flag and drops colour when stdout is not a
+        # terminal — which it never is here, both because Actions has no TTY and because
+        # we pipe into tee. Three conditions are each necessary; measured against the
+        # real CLI, any one of them missing gives zero escape codes:
+        #   PTY (via `script`) + TERM set to a real terminal + CI unset.
+        # Actions sets CI=true, which is why the first run had carriage returns (proof
+        # the PTY worked) but no colour at all. Actions renders ANSI in the job log.
+        #
+        # The command lives in a file rather than inline in `script -c` so the API key is
+        # inherited from the environment instead of being embedded in a shell string.
+        # Written with printf, not a heredoc: an unindented heredoc terminator would end
+        # this YAML block scalar.
+        RUNNER="${RUNNER_TEMP:-/tmp}/postman-run.sh"
+        # Absolute, because the runner cds into it and the loop below stays in the
+        # workspace to read the collection's own files.
+        export POSTMAN_DIR="${GITHUB_WORKSPACE:-$PWD}/.postman"
+        # The customer_* / verification_code / push_token vars below are referenced by the
+        # Customers folder but declared with no value, and the CLI substitutes only
+        # --env-var (see the note further down). Two couplings are deliberate and must not
+        # be "tidied up":
+        #   * customer_email is the SAME value as customer_identity. Update Authenticated
+        #     Customer mirrors email onto the linked User row
+        #     (CustomerController::updateMe), so a different value renames the login
+        #     identity and breaks the Login Customer that the run order defers to the tail.
+        #   * customer_name matches the literal name in Create a Customer's body, so
+        #     Update Authenticated Customer is a no-op rename rather than a surprise.
+        # verification_code must equal what mint-api-key.php seeded — both read the same
+        # action input, so they cannot drift.
+        # driver_password_reset_code is the same seeded value, but it is a SEPARATE
+        # variable because it stands for a different row: DriverController::resetPassword
+        # matches `for=driver_password_reset`, which a driver login code does not satisfy.
+        # Collapsing it into verification_code would work only for as long as both rows
+        # are seeded with the same code.
+        # base64_file_data / from_datetime / to_datetime were referenced by requests but
+        # set by nothing — see scripts/ci/find-unsourced-variables.py. An unresolved
+        # variable is sent literally, so those requests were exercising the API with the
+        # string "{{base64_file_data}}" rather than a payload.
+        # proof_photo_base64 / proof_signature_base64 are an 8x8 PNG. Capture Photo
+        # validates with base64_decode($value, true), so a data: URI prefix would fail
+        # the strict decode — this is bare base64 — and the bytes are a real image
+        # because the same rule also accepts an uploaded file and checks its dimensions.
+        printf '%s\n' \
+          '#!/usr/bin/env bash' \
+          '# The CLI resolves a formdata `src` against its own process working directory,' \
+          '# and --working-dir does NOT change that. Files/Upload File carries a path' \
+          '# relative to the postman repo root, which is correct for anyone running the' \
+          '# published collection — so the CLI has to run from there, not from the' \
+          '# fleetbase workspace. Collection and --iteration-data paths are passed' \
+          '# relative to $POSTMAN_DIR to match.' \
+          'cd "$POSTMAN_DIR" || exit 1' \
+          'postman collection run "$1" \' \
+          '  --env-var "base_url=${BASE_URL}" \' \
+          '  --env-var "namespace=${NAMESPACE}" \' \
+          '  --env-var "api_key=${API_KEY}" \' \
+          '  --env-var "platform_token=${PLATFORM_TOKEN}" \' \
+          '  --env-var "storefront_key=${STOREFRONT_KEY}" \' \
+          '  --env-var "organization_id=${ORGANIZATION_ID}" \' \
+          '  --env-var "customer_identity=${CUSTOMER_IDENTITY}" \' \
+          '  --env-var "customer_email=${CUSTOMER_IDENTITY}" \' \
+          '  --env-var "customer_name=Jane Customer" \' \
+          '  --env-var "customer_password=${CUSTOMER_PASSWORD}" \' \
+          '  --env-var "customer_phone=${CUSTOMER_PHONE}" \' \
+          '  --env-var "new_customer_identity=ci-new-customer@fleetbase.local" \' \
+          '  --env-var "verification_code=${VERIFICATION_CODE}" \' \
+          '  --env-var "driver_identity=${DRIVER_IDENTITY}" \' \
+          '  --env-var "driver_password=${DRIVER_PASSWORD}" \' \
+          '  --env-var "driver_phone=${DRIVER_PHONE}" \' \
+          '  --env-var "driver_password_reset_code=${VERIFICATION_CODE}" \' \
+          '  --env-var "device_token=ci-contract-device-token" \' \
+          '  --env-var "base64_file_data=iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAIAAABLbSncAAAAbElEQVR42hXNQRUAUQhCUaMYhShGeVGIQhSizB+XXA7ODDtouIHBQ4YOM8suWm5h8ZKl+0CskDiBsIioHhx76LiDw0eO3oN/4FVf+J8h0PduzBqZ8x/bxNQPwgaFy192SGgelC0q13/CJaXlA8Z7WAFXOTbyAAAAAElFTkSuQmCC" \' \
+          '  --env-var "from_datetime=2026-01-01T00:00:00Z" \' \
+          '  --env-var "to_datetime=2027-01-01T00:00:00Z" \' \
+          '  --env-var "proof_photo_base64=iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAIAAABLbSncAAAAbElEQVR42hXNQRUAUQhCUaMYhShGeVGIQhSizB+XXA7ODDtouIHBQ4YOM8suWm5h8ZKl+0CskDiBsIioHhx76LiDw0eO3oN/4FVf+J8h0PduzBqZ8x/bxNQPwgaFy192SGgelC0q13/CJaXlA8Z7WAFXOTbyAAAAAElFTkSuQmCC" \' \
+          '  --env-var "proof_signature_base64=iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAIAAABLbSncAAAAbElEQVR42hXNQRUAUQhCUaMYhShGeVGIQhSizB+XXA7ODDtouIHBQ4YOM8suWm5h8ZKl+0CskDiBsIioHhx76LiDw0eO3oN/4FVf+J8h0PduzBqZ8x/bxNQPwgaFy192SGgelC0q13/CJaXlA8Z7WAFXOTbyAAAAAElFTkSuQmCC" \' \
+          '  --env-var "invoice_public_id=${INVOICE_PUBLIC_ID}" \' \
+          '  --env-var "gateway_id=${GATEWAY_ID}" \' \
+          '  --env-var "network_key=${NETWORK_KEY}" \' \
+          '  --env-var "secondary_organization_id=${SECONDARY_ORG_ID}" \' \
+          '  --env-var "multi_org_driver_id=${MULTI_ORG_DRIVER_ID}" \' \
+          '  --env-var "payment_reference=ci-contract-payment-reference" \' \
+          '  --env-var "push_token=ci-contract-push-token" \' \
+          '  "${@:2}"' > "$RUNNER"
+        chmod +x "$RUNNER"
 
         {
           echo "## Postman API contract"
           echo
           echo "\`${BASE_URL}/${NAMESPACE}\` · collections from fleetbase/postman@${{ inputs.postman-ref }}"
           echo
-          echo "| Collection | Result | Requests | Assertions | Failed |"
-          echo "| --- | --- | ---: | ---: | ---: |"
+          echo "| Collection | Result | Requests | Req failed | Assertions | Assert failed |"
+          echo "| --- | --- | ---: | ---: | ---: | ---: |"
         } >> "$GITHUB_STEP_SUMMARY"
 
         while IFS= read -r raw; do
           name="$(echo "$raw" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
           [[ -z "$name" ]] && continue
           dir=".postman/postman/collections/$name"
+          # Same directory, expressed relative to $POSTMAN_DIR — that is what the CLI is
+          # given, since the runner cds there first.
+          rel="postman/collections/$name"
           if [[ ! -d "$dir" ]]; then
             # A caller asking for a collection that does not exist is a misconfiguration,
             # not something to pass silently.
             echo "::error::Collection directory not found: $dir"
-            echo "| $name | ⚠️ not found | – | – | – |" >> "$GITHUB_STEP_SUMMARY"
+            echo "| $name | ⚠️ not found | – | – | – | – |" >> "$GITHUB_STEP_SUMMARY"
             overall=1
             continue
           fi
 
-          extra=()
-          if [[ "$name" == "Fleetbase Integrated Vendor Flow" ]]; then
-            extra+=(--iteration-data ".postman/collections/workflows/integrated-vendor/data/happy-path.example.json")
+          ran=$((ran + 1))
+          slug="$(echo "$name" | tr ' /' '__')"
+          ansi="postman-results/${slug}.ansi"  # colour preserved, for eyeballing
+          log="postman-results/${slug}.log"    # plain text, for reading
+
+          # Only the cli reporter is usable here. These collections are
+          # postman-v3-yaml-native-git ("multi-protocol"), and the CLI rejects -r json
+          # for them outright:
+          #   Error: Reporter "json" is not supported for multi-protocol collections.
+          # So the summary below is parsed from the cli reporter's ASCII table.
+          # Run every request explicitly, in the collection's own order but with each
+          # DELETE — and each explicitly pinned request — moved to the end. The collection
+          # is published as API reference documentation, so its structure and ordering
+          # cannot be changed to suit the test run — but a delete that fires mid-run
+          # destroys a record the remaining requests still need, which is what produced
+          # most of the 404s. The same applies to the Customers folder's logout/reset
+          # requests, which revoke the Customer-Token the rest of the folder needs; see
+          # RUN_LAST in order-collection-requests.py. The CLI honours the order of
+          # repeated -i flags, so deferring costs nothing and keeps coverage intact.
+          args=("$rel" -r cli)
+          if [[ "${{ inputs.verbose }}" == "true" ]]; then
+            args+=(--verbose)
+          fi
+          if [[ -f scripts/ci/order-collection-requests.py ]]; then
+            while IFS= read -r req; do
+              [[ -n "$req" ]] && args+=(-i "$req")
+            done < <(python3 scripts/ci/order-collection-requests.py "$dir")
+            echo "  running $(( (${#args[@]} - 2) / 2 )) requests, deletes deferred to the end"
+          else
+            echo "::warning::order-collection-requests.py not found; running in natural order (deletes may strand later requests)."
           fi
 
-          log="postman-results/$(echo "$name" | tr ' /' '__').log"
-          echo "───────────────────────────────────────────────────────────────"
-          echo "▶ Running collection: $name"
-          echo "───────────────────────────────────────────────────────────────"
+          # The CLI does NOT resolve the collection variables declared in
+          # .resources/definition.yaml — verified: with no --env-var at all, even
+          # {{base_url}} stays literal. Only --env-var values are substituted. This is why
+          # the customer_* variables are injected above even though the collection now
+          # declares them: the declarations exist for humans importing the collection in
+          # the Postman app, and are inert here. Ledger and
+          # Storefront declare api_prefix there, so without this every one of their
+          # requests would go to /%7B%7Bapi_prefix%7D%7D/... and 404. Read it from the
+          # collection rather than hardcoding, so a new prefixed collection just works.
+          # One awk, no pipeline — same SIGPIPE reasoning as row() above.
+          prefix="$(awk -F: '/^[[:space:]]*api_prefix:/ {
+                      sub(/^[^:]*:[[:space:]]*/, "", $0); gsub(/["'"'"']|[[:space:]]*$/, "", $0)
+                      print; exit }' "$dir/.resources/definition.yaml" 2>/dev/null)"
+          if [[ -n "$prefix" ]]; then
+            args+=(--env-var "api_prefix=$prefix")
+            echo "  api_prefix=$prefix"
+          fi
 
-          # tee so the full run is visible in the job log AND kept for the summary and
-          # the uploaded artifact. Not wrapped in ::group:: — these results are the
-          # point of the job, so they should be readable without expanding anything.
-          if postman collection run "$dir" \
-              --env-var "base_url=${BASE_URL}" \
-              --env-var "namespace=${NAMESPACE}" \
-              --env-var "api_key=${API_KEY}" \
-              "${extra[@]}" 2>&1 | tee "$log"; then
+          if [[ "$name" == "Fleetbase Integrated Vendor Flow" ]]; then
+            args+=(--iteration-data "collections/workflows/integrated-vendor/data/happy-path.example.json")
+          fi
+
+          printf '\n\033[1;36m┏━━ ▶ %s\033[0m\n' "$name"
+
+          # tee so the run is visible in the job log AND kept for the summary and the
+          # artifact. Not wrapped in ::group:: — these results are the point of the job,
+          # so they should be readable without expanding anything.
+          #
+          # </dev/null is load-bearing: this loop is fed by `read` from a pipe, and a PTY
+          # child inherits and drains that stdin. Without it only the first collection
+          # ever runs — verified: 3 items in, 1 iteration out.
+          # env -u CI: the Postman CLI suppresses colour whenever CI is set, even with a
+          # PTY and a real TERM — which is why the last run had carriage returns (proof
+          # of the PTY) but no escape codes. Measured against the real CLI: PTY with
+          # TERM=xterm-256color and CI unset gives colour; setting CI=true, unsetting
+          # TERM, or TERM=dumb each independently drop it to none.
+          if env -u CI TERM=xterm-256color script -qec \
+                "$(printf '%q ' "$RUNNER" "${args[@]}")" \
+                /dev/null </dev/null 2>&1 | tee "$ansi"; then
             status="✅ passed"
           else
             status="❌ failed"
             overall=1
           fi
 
-          # Pull executed/failed out of the CLI reporter's summary table. The table is
-          # drawn with box characters, not ASCII pipes, so match on the label plus two
-          # numbers rather than on the border. Tolerant on purpose: if the format shifts
-          # the row renders with dashes and the artifact stays authoritative.
-          row() { grep -aiE "(^|[^a-z])$1([^a-z]|$)" "$log" | grep -aE '[0-9]+[^0-9]+[0-9]+' \
-                    | head -1 | grep -oE '[0-9]+' | head -2 | paste -sd/ - ; }
-          requests="$(row requests || true)"
-          assertions="$(row assertions || true)"
-          failed="$(grep -acE '^[[:space:]]*[0-9]+\.[[:space:]]+.*(AssertionError|expected)' "$log" || true)"
-          echo "| $name | $status | ${requests:-–} | ${assertions:-–} | ${failed:-0} |" >> "$GITHUB_STEP_SUMMARY"
+          # Strip the colour codes and the PTY's carriage returns for the plain copy, so
+          # the artifact is readable in an editor rather than full of escape sequences.
+          sed -E $'s/\x1b\\[[0-9;]*[a-zA-Z]//g; s/\r$//' "$ansi" > "$log"
 
-          # Collect failing assertions so the summary says what broke, not just that
-          # something did. Written to a file rather than accumulated in a shell string,
-          # so nothing here can sit at column 0 and terminate this YAML block scalar.
+          # --verbose echoes request headers, so the minted bearer token would otherwise
+          # be written verbatim into an uploaded artifact. ::add-mask:: covers the job
+          # log but does NOT apply to artifacts, so scrub both copies explicitly.
+          # Two -e expressions rather than one wrapped with a backslash: inside single
+          # quotes a trailing \ is NOT a line continuation, so sed received a literal
+          # backslash-newline and died with "unterminated address regex" — meaning the
+          # scrub silently did not run and the artifact kept the bearer token.
+          for f in "$ansi" "$log"; do
+            sed -i -E \
+              -e 's/(Authorization:[[:space:]]*Bearer[[:space:]]*)[A-Za-z0-9._-]+/\1<redacted>/gi' \
+              -e 's/(flb_(live|test|platform)_)[A-Za-z0-9_-]+/\1<redacted>/g' \
+            -e 's/((sk|rk|pk)_(live|test)_)[A-Za-z0-9]+/\1<redacted>/g' \
+              "$f"
+          done
+
+          # Read executed/failed out of the reporter's summary table. Each row is
+          # "| <label> | <executed> | <failed> |", so match the label plus two numbers
+          # rather than the border, which differs between reporter versions. Verified
+          # against a real collection run: requests 8/8, assertions 0/0.
+          # Single awk, no `head` in a pipeline. GitHub runs composite steps under
+          # `bash -e -o pipefail`, so a `head` that closes the pipe early kills its
+          # producer with SIGPIPE, the pipeline reports 141 and -e aborts the whole
+          # step. That is what limited the last run to one of four collections.
+          row() { awk -v lbl="$1" '
+                    tolower($0) ~ "(^|[^a-z])" lbl "([^a-z]|$)" {
+                      n=0; for (i=1;i<=NF;i++) if ($i ~ /^[0-9]+$/) v[++n]=$i
+                      if (n>=2) { print v[1], v[2]; exit }
+                    }' "$log"; }
+          read -r r_exec r_fail <<<"$(row requests)"
+          read -r a_exec a_fail <<<"$(row assertions)"
+          echo "| $name | $status | ${r_exec:-–} | ${r_fail:-–} | ${a_exec:-–} | ${a_fail:-–} |" \
+            >> "$GITHUB_STEP_SUMMARY"
+
+          # A collection with no assertions cannot fail on a bad response — it only
+          # catches transport errors, so a 500 from every endpoint still reads as green.
+          # Say so rather than letting the row imply the API was verified.
+          # A collection that executed nothing is a failure, not a pass. The CLI
+          # aborts the whole run when one -i name does not match a collection item
+          # and reports 0 requests executed, which otherwise reads as a clean run.
+          if [[ "${r_exec:-0}" == "0" ]]; then
+            echo "::error::'$name' executed 0 requests. Usually a -i name that matches no collection item; look for 'items were not found' in the log."
+            overall=1
+          fi
+
+          if [[ "${a_exec:-0}" == "0" ]]; then
+            echo "::warning::'$name' ran ${r_exec:-0} requests but executed no assertions; it cannot detect a bad response."
+            printf '\n> ⚠️ **%s** executed no assertions — it only catches transport errors.\n' \
+              "$name" >> postman-results/details.md
+          fi
+
+          # The reporter prints a "#  failure  detail" block listing each failure with
+          # its message and the request it came from. Take the block wholesale instead of
+          # grepping for assertion lines: failures can be transport errors ("1.  Error")
+          # with no assertion text, which a line-match misses entirely.
           if [[ "$status" == *failed* ]]; then
             {
               printf '\n<details><summary>Failures — %s</summary>\n\n' "$name"
               printf '```\n'
-              grep -aE '^[[:space:]]*[0-9]+\.[[:space:]]+.*(AssertionError|expected)' "$log" | head -60 || true
+              awk '/^[[:space:]]*#[[:space:]]+failure/{f=1} f { if (++n<=80) print }' "$log"
               printf '```\n</details>\n'
             } >> postman-results/details.md
           fi
-        done < <(printf '%s' "$COLLECTIONS" | tr ',' '\n')
+        # printf '%s\n', NOT '%s': without a trailing newline `read` hits EOF and
+        # returns non-zero before the body runs, so a single-line COLLECTIONS (what
+        # every module caller passes) silently iterated zero times and exited green.
+        done < <(printf '%s\n' "$COLLECTIONS" | tr ',' '\n')
 
         if [[ -s postman-results/details.md ]]; then
           cat postman-results/details.md >> "$GITHUB_STEP_SUMMARY"
         fi
 
+        # A run that executed nothing is a failure, not a pass. This is exactly how the
+        # trailing-newline bug above stayed invisible: green check, zero collections run.
+        if [[ "$ran" == "0" ]]; then
+          echo "::error::No collections were run. COLLECTIONS was: '${COLLECTIONS}'"
+          echo "**No collections were run.** Check the \`collections\` input." >> "$GITHUB_STEP_SUMMARY"
+          exit 1
+        fi
+
         {
           echo
+          echo "Ran ${ran} collection(s)."
           if [[ "$overall" == "0" ]]; then
             echo "All collections passed."
           else

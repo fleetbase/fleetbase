@@ -4,6 +4,19 @@
 version: "3.8"
 services:
   application:
+    # Pinned so the watcher survives whichever stage built the image.
+    #
+    # docker-compose.yml points `application` at `fleetbase/fleetbase-api:latest`
+    # - the same tag `docker buildx bake release` produces from the app-release
+    # stage (docker-bake.hcl "fleetbase-api"). Whenever that tag already exists
+    # locally, compose runs it instead of building the app-dev stage, and the
+    # app-dev CMD - the only place `--watch` appears - is silently dropped. The
+    # two stages are otherwise byte-identical, so restating the command here is
+    # enough; no dev-specific image is needed.
+    #
+    # Without this the workers never pick up edits under api/, and a change you
+    # made can look like it did not help when it was simply never loaded.
+    command: ["sh", "-c", "php artisan octane:frankenphp --max-requests=1000 --port=8000 --host=0.0.0.0 --watch"]
     environment:
       CONSOLE_HOST: http://localhost:4200
       # Add your environment-specific variables here

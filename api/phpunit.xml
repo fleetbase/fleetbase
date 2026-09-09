@@ -23,5 +23,18 @@
     <include>
       <directory suffix=".php">./app</directory>
     </include>
+    <exclude>
+      <!--
+        Dead Laravel skeleton file. App\Providers\BroadcastServiceProvider is
+        commented out of config/app.php's provider list, and its boot() requires
+        routes/channels.php, which this app does not have — booting it would
+        fatal. Broadcasting is registered by Illuminate's own provider instead.
+        Excluded rather than tested for the same reason console/app/resolver.js
+        is excluded in console/config/coverage.js: nothing imports it, and it
+        would throw if it were wired up. Delete the file (and this exclude) or
+        wire it up properly — do not add a contrived test for it.
+      -->
+      <file>./app/Providers/BroadcastServiceProvider.php</file>
+    </exclude>
   </source>
 </phpunit>

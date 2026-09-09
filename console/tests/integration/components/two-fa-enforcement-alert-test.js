@@ -66,3 +66,31 @@ module('Integration | Component | two-fa-enforcement-alert', function (hooks) {
         assert.strictEqual(transitionedTo, 'console.account.auth');
     });
 });
+
+module('Integration | Component | two-fa-enforcement-alert | failure', function (hooks) {
+    setupRenderingTest(hooks);
+
+    test('an enforcement check that fails is reported and the alert stays hidden', async function (assert) {
+        const failure = new Error('enforcement endpoint unavailable');
+        const serverErrors = [];
+
+        class FetchStub extends Service {
+            get() {
+                return Promise.reject(failure);
+            }
+        }
+        class NotificationsStub extends Service {
+            serverError(error) {
+                serverErrors.push(error);
+            }
+        }
+
+        this.owner.register('service:fetch', FetchStub);
+        this.owner.register('service:notifications', NotificationsStub);
+
+        await render(hbs`<TwoFaEnforcementAlert />`);
+
+        assert.deepEqual(serverErrors, [failure]);
+        assert.dom('.two-fa-enforcement-alert').doesNotExist('nothing is demanded of the user when the check could not run');
+    });
+});

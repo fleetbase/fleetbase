@@ -3,6 +3,7 @@ import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
 import { action } from '@ember/object';
 import { later } from '@ember/runloop';
+import window from 'ember-window-mock';
 
 export default class ConsoleAdminOrganizationsDetailsUsersController extends Controller {
     @service intl;
@@ -134,13 +135,7 @@ export default class ConsoleAdminOrganizationsDetailsUsersController extends Con
             await this.router.transitionTo('console');
             this.session.manuallyAuthenticate(token);
             this.notifications.info(`Now impersonating ${user.email}...`);
-            later(
-                this,
-                () => {
-                    window.location.reload();
-                },
-                600
-            );
+            later(() => window.location.reload(), 600);
         } catch (error) {
             this.notifications.serverError(error);
         }

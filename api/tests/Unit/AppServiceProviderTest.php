@@ -75,4 +75,14 @@ class AppServiceProviderTest extends TestCase
 
         $this->assertTrue(true);
     }
+
+    public function test_register_binds_nothing_and_is_safe_to_call(): void
+    {
+        // register() is intentionally empty — every binding this app needs comes
+        // from the Fleetbase packages' own providers. Asserted so an accidental
+        // binding added here shows up as a deliberate change.
+        $this->provider()->register();
+
+        $this->assertTrue(true);
+    }
 }

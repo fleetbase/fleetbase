@@ -63,7 +63,7 @@ target "app-httpd" {
 target "fleetbase-console" {
   context    = "./console"
   dockerfile = "Dockerfile"
-  platforms  = ["linux/amd64", "linux/arm64"]
+  platforms  = ["linux/amd64"]
 
   tags = notequal("", REGISTRY) ? formatlist(
     "${REGISTRY}/fleetbase-console:%s",

@@ -184,7 +184,7 @@ module('Unit | Controller | auth/login', function (hooks) {
         await this.submit();
 
         assert.deepEqual(this.transitions.at(-1), ['auth.forgot-password', { queryParams: { email: 'ron@fleetbase.io' } }]);
-        assert.strictEqual(this.notifications.warnings.at(-1), 'auth.login.password-reset-required');
+        assert.strictEqual(this.notifications.warnings.at(-1), this.controller.intl.t('auth.login.password-reset-required'));
     });
 
     test('any other authentication error is surfaced and clears the password', async function (assert) {
@@ -227,7 +227,7 @@ module('Unit | Controller | auth/login', function (hooks) {
     test('slowConnection reports the slow connection message', function (assert) {
         this.controller.slowConnection();
 
-        assert.deepEqual(this.notifications.errors, ['auth.login.slow-connection-message']);
+        assert.deepEqual(this.notifications.errors, [this.controller.intl.t('auth.login.slow-connection-message')]);
     });
 
     test('reset clears loading always, and the form according to the outcome', function (assert) {

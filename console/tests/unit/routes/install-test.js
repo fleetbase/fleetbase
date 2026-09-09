@@ -50,3 +50,28 @@ module('Unit | Route | install', function (hooks) {
         assert.strictEqual(route.beforeModel(), 'install-status-transition');
     });
 });
+
+module('Unit | Route | install | teardown', function (hooks) {
+    setupTest(hooks);
+
+    hooks.beforeEach(function () {
+        this.route = this.owner.lookup('route:install');
+        this.stopped = 0;
+        Object.defineProperty(this.route.installation, 'stopListeningForInstallComplete', {
+            configurable: true,
+            value: () => this.stopped++,
+        });
+    });
+
+    test('leaving the install screen stops listening for the completion event', function (assert) {
+        this.route.resetController(this.owner.lookup('controller:install'), true);
+
+        assert.strictEqual(this.stopped, 1);
+    });
+
+    test('a query-param change within the install screen keeps the listener alive', function (assert) {
+        this.route.resetController(this.owner.lookup('controller:install'), false);
+
+        assert.strictEqual(this.stopped, 0, 'the socket subscription survives an in-route transition');
+    });
+});

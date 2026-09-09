@@ -8,7 +8,12 @@ name: API Contract (Postman)
 #   jobs:
 #     contract:
 #       uses: fleetbase/fleetbase/.github/workflows/api-contract.yml@main
-#       with: { collections: "Fleetbase Storefront API", build-from-source: false }
+#       with:
+#         collections: "Fleetbase Storefront API"
+#         build-from-source: false
+#         # Without overlay-package the run tests the version of this module baked into
+#         # the published image, NOT the branch under review.
+#         overlay-package: fleetbase/storefront-api
 #       secrets: inherit
 #
 # Requires org-level secrets POSTMAN_API_KEY and _GITHUB_AUTH_TOKEN (inherited).
@@ -47,6 +52,23 @@ on:
         type: string
         required: false
         default: fleetbase/fleetbase-api:latest
+      overlay-package:
+        description: >-
+          Composer package inside the API image to replace with the CALLING repository's
+          checked-out source, e.g. fleetbase/fleetops-api. Without this a module's
+          contract run exercises whatever version of that module is baked into the
+          published image, not the branch under review — so a PR's own API changes are
+          never actually tested. Leave empty to test the image as published.
+        type: string
+        required: false
+        default: ''
+      overlay-path:
+        description: >-
+          Directory within the calling repository that is the package root (the folder
+          containing its composer.json). Defaults to the repository root.
+        type: string
+        required: false
+        default: .
       postman-ref:
         description: Ref of fleetbase/postman to run.
         type: string
@@ -129,9 +151,84 @@ jobs:
           mkdir -p docker/database/mysql
 
       - name: Run non-interactive installer
+        env:
+          GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
         run: |
           [ -f api/.env ] || cp api/.env.example api/.env 2>/dev/null || touch api/.env
+
+          # The public API throttles 120 requests/minute, and ThrottleRequests sits
+          # FIRST in the fleetbase.api middleware group — before authentication — so
+          # $request->user() is null and the bucket is keyed per IP rather than per API
+          # key. A contract run is ~180 requests in about a minute from one runner, so
+          # it throttles itself: measured, 61 requests came back
+          # {"errors":["Too many requests."]}, every one of them a false failure.
+          #
+          # Must be the literal string false. ThrottleRequests checks
+          # `config('api.throttle.enabled', true) === false`, and env() casts "false" to
+          # a boolean but leaves "0" as the string "0", which is !== false and would
+          # silently leave throttling on.
+          if grep -q '^THROTTLE_ENABLED=' api/.env; then
+            sed -i 's/^THROTTLE_ENABLED=.*/THROTTLE_ENABLED=false/' api/.env
+          else
+            echo 'THROTTLE_ENABLED=false' >> api/.env
+          fi
+          echo "Throttling disabled for the contract run: $(grep '^THROTTLE_ENABLED=' api/.env)"
+
+          # Place::createFromMixed resolves a place string by matching an existing
+          # street1/name first, then falls through to createFromGeocodingLookup. The
+          # order shapes that send a real street address ("Singapore 018971") have no
+          # seeded match, so without a key they cannot resolve and those requests fail
+          # for a reason that has nothing to do with the API under test.
+          #
+          # Optional on purpose: absent, the run still covers createFromMixed through
+          # the coordinate and GeoJSON shapes, which need no external service.
+          if [[ -n "${GOOGLE_MAPS_API_KEY:-}" ]]; then
+            if grep -q '^GOOGLE_MAPS_API_KEY=' api/.env; then
+              sed -i "s|^GOOGLE_MAPS_API_KEY=.*|GOOGLE_MAPS_API_KEY=${GOOGLE_MAPS_API_KEY}|" api/.env
+            else
+              echo "GOOGLE_MAPS_API_KEY=${GOOGLE_MAPS_API_KEY}" >> api/.env
+            fi
+            echo "Geocoding enabled: address-string place resolution will use Google Maps."
+          else
+            echo "::notice::GOOGLE_MAPS_API_KEY not set; order shapes that send a street address cannot geocode. Coordinate and GeoJSON shapes are unaffected."
+          fi
+
+          # The verification-code endpoints deliver by SMS and fall back to email. With
+          # no usable from-address the fallback dies inside Symfony —
+          #   Email "null" does not comply with addr-spec of RFC 2822
+          # — which surfaced as 400s on three requests and a 500 on Send Work Order.
+          #
+          # api/.env.example ships the literal string MAIL_FROM_ADDRESS=null, which
+          # OVERRIDES config/mail.php's default rather than falling back to it.
+          #
+          # This must run BEFORE the installer brings the stack up. Laravel parses .env
+          # once at boot, and an earlier attempt to set it afterwards did not take:
+          # config:clear and octane:reload both ran and the endpoints still answered
+          # Email "null", because the workers were already holding the parsed values.
+          #
+          # The log mailer delivers nothing, so no mail leaves the runner; the endpoints
+          # simply become exercisable. MAIL_MAILER is already log via the installer's
+          # generated compose override.
+          set_env() {
+            if grep -q "^$1=" api/.env; then
+              sed -i "s|^$1=.*|$1=$2|" api/.env
+            else
+              echo "$1=$2" >> api/.env
+            fi
+          }
+          # The storefront review-account bypass, pointed at the seeded customer's phone.
+          # This is the same mechanism App Store review uses, and it is inert without BOTH
+          # values — the code alone is not accepted for an identity that is not listed.
+          # It lets phone verification be exercised without a live SMS provider.
+          set_env STOREFRONT_BYPASS_VERIFICATION_CODE 000000
+          set_env STOREFRONT_REVIEW_ACCOUNTS '+15555550123'
+          set_env MAIL_MAILER log
+          set_env MAIL_FROM_ADDRESS ci-contract@fleetbase.local
+          echo "Mail transport: log (from ci-contract@fleetbase.local)"
+
           bash scripts/docker-install.sh --non-interactive
+
+
 
       - name: Wait for API health
         run: |
@@ -144,6 +241,111 @@ jobs:
           done
           echo "::error::API did not become healthy"; exit 1
 
+      # In a reusable workflow github.repository/github.sha refer to the CALLER, so this
+      # checks out the module branch under review rather than fleetbase/fleetbase.
+      - name: Checkout calling repository for overlay
+        if: ${{ inputs.overlay-package != '' }}
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository }}
+          ref: ${{ github.sha }}
+          token: ${{ secrets._GITHUB_AUTH_TOKEN }}
+          path: .overlay
+
+      - name: Overlay branch source over the published package
+        if: ${{ inputs.overlay-package != '' }}
+        run: |
+          set -uo pipefail
+          PKG="${{ inputs.overlay-package }}"
+          SRC=".overlay/${{ inputs.overlay-path }}"
+          DEST="/fleetbase/api/vendor/${PKG}"
+
+          if [[ ! -f "$SRC/composer.json" ]]; then
+            echo "::error::No composer.json at ${SRC}; set overlay-path to the package root."
+            exit 1
+          fi
+
+          WAS="$(docker compose exec -T application sh -c "cat ${DEST}/composer.json 2>/dev/null" \
+                  | python3 -c 'import json,sys; print(json.load(sys.stdin).get("version","unknown"))' 2>/dev/null || echo unknown)"
+
+          # Replace rather than merge, so files deleted on the branch actually disappear.
+          # The branch has no vendor/ of its own (never installed), so nothing to exclude.
+          docker compose exec -T application sh -c "rm -rf ${DEST} && mkdir -p ${DEST}"
+          tar -C "$SRC" -cf - . | docker compose exec -T application sh -c "tar -C ${DEST} -xf -"
+          docker compose exec -T application sh -c "chown -R www-data:www-data ${DEST}"
+
+          # The image is built with --optimize-autoloader, which freezes a classmap.
+          # Without dumping it, classes added on the branch are simply not found.
+          docker compose exec -T application su www-data -s /bin/sh -c \
+            "cd /fleetbase/api && composer dump-autoload --optimize --no-scripts" 2>&1 | tail -3
+
+          # A branch may ship new migrations, and stale caches would mask new routes/config.
+          docker compose exec -T application su www-data -s /bin/sh -c \
+            "cd /fleetbase/api && php artisan optimize:clear" 2>&1 | tail -5
+          docker compose exec -T application su www-data -s /bin/sh -c \
+            "cd /fleetbase/api && php artisan migrate --force" 2>&1 | tail -10
+
+          # Octane (frankenphp) boots the framework ONCE, when the container starts — which
+          # is before this overlay. Classes are autoloaded lazily, so the branch's
+          # controllers do take effect on the first request that needs them; anything
+          # resolved during BOOT does not. Service providers have already run, and
+          # mergeConfigFrom() merged the PUBLISHED package's config, so a config key the
+          # branch adds simply does not exist at runtime.
+          #
+          # That is exactly what hid storefront's review-account bypass. The published
+          # config/storefront.php has only bypass_verification_code; the branch adds
+          # review_accounts, and isReviewAccountBypass() requires the identity to appear in
+          # that allowlist — which resolved to [] via config()'s default. Request Phone
+          # Verification and Verify Phone Number failed for two releases against values this
+          # workflow had correctly written to .env before boot.
+          #
+          # Reloading the workers re-runs the providers against the overlaid files. This is
+          # NOT the same as the .env case documented above: those values are parsed by the
+          # master process, which a worker reload does not restart — which is why they are
+          # still written before the stack comes up.
+          docker compose exec -T application su www-data -s /bin/sh -c \
+            "cd /fleetbase/api && php artisan octane:reload" 2>&1 | tail -3
+
+          # The reload is asynchronous, so give the workers a moment to come back rather
+          # than racing the first collection request against a restarting pool.
+          for i in $(seq 1 20); do
+            if curl -fsS --max-time 5 http://localhost:8000/health | grep -q '"status"'; then
+              echo "API healthy after octane:reload"; break
+            fi
+            if [[ $i -eq 20 ]]; then
+              echo "::error::API did not come back after octane:reload"; exit 1
+            fi
+            sleep 3
+          done
+
+          # New composer requirements on the branch are NOT installed by this overlay.
+          # Surface that rather than letting it fail later as a confusing class-not-found.
+          if ! diff -q <(python3 -c "import json;print(json.dumps(json.load(open('$SRC/composer.json')).get('require',{}),sort_keys=True))") \
+                       <(docker compose exec -T application sh -c "cat ${DEST}/composer.json" \
+                         | python3 -c "import json,sys;print(json.dumps(json.load(sys.stdin).get('require',{}),sort_keys=True))") >/dev/null 2>&1; then
+            echo "::warning::${PKG} changed its composer requires on this branch; the overlay does not install new dependencies."
+          fi
+
+          {
+            echo "### Package under test"
+            echo
+            echo "\`${PKG}\` replaced with **${{ github.repository }}@${{ github.sha }}**"
+            echo "(image shipped version \`${WAS}\`)."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Re-check API health after overlay
+        if: ${{ inputs.overlay-package != '' }}
+        run: |
+          for i in $(seq 1 20); do
+            if curl -fsS --max-time 5 http://localhost:8000/health | grep -q '"status"'; then
+              echo "API healthy after overlay"; exit 0
+            fi
+            sleep 3
+          done
+          echo "::error::API did not recover after overlaying ${{ inputs.overlay-package }}"
+          docker compose logs --no-color --tail=100 application || true
+          exit 1
+
       - name: Run Postman contract
         uses: ./.github/actions/postman-contract
         with:
@@ -151,6 +353,10 @@ jobs:
           postman-ref: ${{ inputs.postman-ref }}
           postman-api-key: ${{ secrets.POSTMAN_API_KEY }}
           github-token: ${{ secrets._GITHUB_AUTH_TOKEN }}
+          # TEST-mode keys only. The live pair also exists in the org secrets and must
+          # never be referenced here — a contract run creates payment intents.
+          stripe-publishable-key: ${{ secrets.STRIPE_TEST_KEY }}
+          stripe-secret-key: ${{ secrets.STRIPE_TEST_SECRET }}
 
       - name: Dump logs on failure
         if: failure()

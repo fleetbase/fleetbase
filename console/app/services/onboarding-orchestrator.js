@@ -59,7 +59,7 @@ export default class OnboardingOrchestratorService extends Service {
 
         // Guard function - skip step if guard returns false
         if (typeof step.guard === 'function' && !step.guard(this.onboardingContext)) {
-            return this.next();
+            return this._skip(step);
         }
 
         // beforeEnter lifecycle hook
@@ -100,25 +100,55 @@ export default class OnboardingOrchestratorService extends Service {
 
         // If no next step, flow is complete
         if (!nextId) {
-            // Execute onFlowWillEnd hook if defined
-            if (typeof this.flow.onFlowWillEnd === 'function') {
-                await this.flow.onFlowWillEnd(leaving, this);
-            }
-
-            this.current = null; // finished
-
-            // Execute onFlowDidEnd hook if defined
-            if (typeof this.flow.onFlowDidEnd === 'function') {
-                await this.flow.onFlowDidEnd(leaving, this);
-            }
-
-            // Clear history from localStorage when flow completes
-            this._clearHistory();
-
-            return;
+            return this._completeFlow(leaving);
         }
 
         return this.goto(nextId);
+    }
+
+    /**
+     * Advance past a step whose guard rejected it.
+     *
+     * Resolves the skipped step's own `next` rather than delegating to next(). next() reads
+     * `this.current`, which is still the step *before* this one — a guarded step is never
+     * entered — so it would resolve the same rejected step again and recurse until the call
+     * stack overflowed. A skipped step was never entered, so it also gets no afterLeave hook
+     * and is kept out of the history.
+     *
+     * @param {Object} step The step whose guard returned false
+     * @private
+     */
+    async _skip(step) {
+        const nextId = typeof step.next === 'function' ? step.next(this.onboardingContext) : step.next;
+
+        if (!nextId) {
+            return this._completeFlow(step);
+        }
+
+        return this.goto(nextId);
+    }
+
+    /**
+     * Run the flow's end hooks, clear the current step and drop persisted history.
+     *
+     * @param {Object} leaving The last step of the flow
+     * @private
+     */
+    async _completeFlow(leaving) {
+        // Execute onFlowWillEnd hook if defined
+        if (typeof this.flow.onFlowWillEnd === 'function') {
+            await this.flow.onFlowWillEnd(leaving, this);
+        }
+
+        this.current = null; // finished
+
+        // Execute onFlowDidEnd hook if defined
+        if (typeof this.flow.onFlowDidEnd === 'function') {
+            await this.flow.onFlowDidEnd(leaving, this);
+        }
+
+        // Clear history from localStorage when flow completes
+        this._clearHistory();
     }
 
     async back() {

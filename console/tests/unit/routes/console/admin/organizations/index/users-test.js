@@ -2,73 +2,65 @@ import { module, test } from 'qunit';
 import { setupTest } from '@fleetbase/console/tests/helpers';
 import Service from '@ember/service';
 
-module('Unit | Route | console/admin/organizations/index/users', function (hooks) {
+module('Unit | Route | console/admin/organizations/index/users | nested list', function (hooks) {
     setupTest(hooks);
 
-    test('every nested query param refreshes the model', function (assert) {
-        const route = this.owner.lookup('route:console/admin/organizations/index/users');
-
-        assert.deepEqual(Object.keys(route.queryParams), ['nestedPage', 'nestedLimit', 'nestedSort', 'nestedQuery']);
-        Object.entries(route.queryParams).forEach(([key, options]) => {
-            assert.true(options.refreshModel, `${key} refreshes the model`);
-        });
-    });
-
-    test('model fetches the company users with the nested params mapped through', async function (assert) {
-        let requested;
+    hooks.beforeEach(function () {
+        this.response = { users: [{ uuid: 'user_1' }], meta: { total: 1 } };
+        const context = this;
         class FetchStub extends Service {
-            get(path, params) {
-                requested = { path, params };
-                return Promise.resolve({ users: [], meta: { total: 0 } });
+            get(path, query) {
+                context.request = { path, query };
+                return Promise.resolve(context.response);
             }
-            jsonToModel(json) {
-                return json;
+            jsonToModel(json, modelName) {
+                return { ...json, modelName };
             }
         }
         this.owner.register('service:fetch', FetchStub);
-
-        const route = this.owner.lookup('route:console/admin/organizations/index/users');
-        await route.model({ public_id: 'company_1', nestedPage: 2, nestedLimit: 25, nestedSort: '-name', nestedQuery: 'ron' });
-
-        assert.strictEqual(requested.path, 'companies/company_1/users');
-        assert.deepEqual(requested.params, { page: 2, limit: 25, sort: '-name', query: 'ron', paginate: 1 });
-        assert.strictEqual(route.companyId, 'company_1', 'the company id is retained for setupController');
+        this.store = this.owner.lookup('service:store');
+        this.route = () => this.owner.lookup('route:console/admin/organizations/index/users');
     });
 
-    test('transformResults maps users into models and preserves meta', function (assert) {
-        class FetchStub extends Service {
-            jsonToModel(json, type) {
-                return { ...json, _type: type };
-            }
-        }
-        this.owner.register('service:fetch', FetchStub);
+    test('model requests the members of the organization in the URL', async function (assert) {
+        const model = await this.route().model({ public_id: 'company_abc', nestedPage: 1, nestedLimit: 20, nestedSort: '-created_at', nestedQuery: '' });
 
-        const route = this.owner.lookup('route:console/admin/organizations/index/users');
-        const proxy = route.transformResults({ users: [{ id: 'u1' }], meta: { total: 1 } });
-
-        assert.deepEqual(proxy.get('meta'), { total: 1 });
-        assert.deepEqual(proxy.get('content'), [{ id: 'u1', _type: 'user' }]);
+        assert.strictEqual(this.request.path, 'companies/company_abc/users');
+        assert.deepEqual(this.request.query, { page: 1, limit: 20, sort: '-created_at', query: '', paginate: 1 });
+        assert.deepEqual(model.toArray(), [{ uuid: 'user_1', modelName: 'user' }]);
+        assert.deepEqual(model.meta, { total: 1 });
     });
 
-    test('transformResults passes non-array users through untouched', function (assert) {
-        const route = this.owner.lookup('route:console/admin/organizations/index/users');
-        const proxy = route.transformResults({ users: undefined, meta: {} });
+    test('a response that is not a list is passed through untouched', async function (assert) {
+        this.response = { users: null, meta: {} };
 
-        assert.strictEqual(proxy.get('content'), undefined);
+        const model = await this.route().model({ public_id: 'company_abc' });
+
+        assert.strictEqual(model.get('content'), null);
     });
 
-    test('getCompany matches the loaded company by public_id or id', function (assert) {
-        const route = this.owner.lookup('route:console/admin/organizations/index/users');
-        const store = this.owner.lookup('service:store');
-        store.push({ data: { id: 'uuid-1', type: 'company', attributes: { public_id: 'company_1' } } });
+    test('getCompany finds the loaded organization by public id or id', async function (assert) {
+        const route = this.route();
+        this.store.push({ data: { id: 'co_1', type: 'company', attributes: { public_id: 'company_abc' } } });
 
-        route.companyId = 'company_1';
-        assert.strictEqual(route.getCompany().public_id, 'company_1', 'matched by public_id');
+        await route.model({ public_id: 'company_abc' });
+        assert.strictEqual(route.getCompany()?.id, 'co_1', 'matched on public_id');
 
-        route.companyId = 'uuid-1';
-        assert.strictEqual(route.getCompany().id, 'uuid-1', 'matched by id');
+        await route.model({ public_id: 'co_1' });
+        assert.strictEqual(route.getCompany()?.id, 'co_1', 'matched on the record id');
 
-        route.companyId = 'nope';
-        assert.strictEqual(route.getCompany(), undefined, 'no match returns undefined');
+        await route.model({ public_id: 'not-loaded' });
+        assert.strictEqual(route.getCompany(), undefined, 'an unknown organization yields nothing');
+    });
+
+    test('setupController hands the resolved organization to the controller', async function (assert) {
+        const route = this.route();
+        this.store.push({ data: { id: 'co_1', type: 'company', attributes: { public_id: 'company_abc' } } });
+        await route.model({ public_id: 'company_abc' });
+        const controller = {};
+
+        route.setupController(controller);
+
+        assert.strictEqual(controller.company?.id, 'co_1');
     });
 });

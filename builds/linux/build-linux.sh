@@ -60,7 +60,7 @@ fi
 
 # Build the image
 echo "📦 Building static Linux binary for ${APP_NAME}..."
-docker build -f "$DOCKERFILE" -t "$IMAGE_NAME" "$ROOT_DIR"
+docker build --progress=plain -f "$DOCKERFILE" -t "$IMAGE_NAME" "$ROOT_DIR"
 
 # Create a container from the built image
 echo "📦 Creating container to extract binary..."
