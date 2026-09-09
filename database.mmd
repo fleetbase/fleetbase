@@ -204,9 +204,36 @@ erDiagram
     TIMESTAMP deleted_at
   }
 
+  fleetbase_asset_connections {
+    BIGINTUNSIGNED id PK, UK
+    CHAR uuid UK
+    VARCHAR public_id UK
+    CHAR company_uuid FK
+    VARCHAR connector_type
+    CHAR connector_uuid
+    VARCHAR connected_type
+    CHAR connected_uuid
+    CHAR active_connected_uuid UK
+    VARCHAR active_connector_position UK
+    VARCHAR relationship_type
+    SMALLINTUNSIGNED position
+    TIMESTAMP connected_at
+    TIMESTAMP disconnected_at
+    VARCHAR source
+    VARCHAR confidence
+    TEXT notes
+    JSON meta
+    CHAR created_by_uuid FK
+    CHAR updated_by_uuid FK
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
   fleetbase_assets {
     INTUNSIGNED id PK, UK
     CHAR uuid
+    VARCHAR public_id UK
     VARCHAR _key
     CHAR company_uuid FK, UK
     CHAR category_uuid FK
@@ -220,12 +247,15 @@ erDiagram
     VARCHAR measurement_system
     VARCHAR usage_type
     VARCHAR type
+    VARCHAR asset_class
     VARCHAR ownership_type
     VARCHAR status
     GEOMETRY location
     VARCHAR speed
     VARCHAR heading
     VARCHAR altitude
+    BIT online
+    TIMESTAMP last_online_at
     INT acquisition_cost
     INT current_value
     INT depreciation_rate
@@ -233,6 +263,7 @@ erDiagram
     VARCHAR currency
     VARCHAR financing_status
     DATE lease_expires_at
+    DATE purchased_at
     VARCHAR vin
     VARCHAR plate_number
     VARCHAR make
@@ -244,6 +275,7 @@ erDiagram
     VARCHAR slug
     CHAR vendor_uuid FK
     CHAR current_place_uuid FK
+    CHAR photo_uuid FK
     CHAR telematic_uuid FK
     BIGINTUNSIGNED odometer
     VARCHAR odometer_unit
@@ -255,6 +287,7 @@ erDiagram
     JSON capacity
     JSON specs
     JSON attributes
+    JSON telematics
     MEDIUMTEXT notes
     CHAR created_by_uuid FK
     CHAR updated_by_uuid FK
@@ -262,6 +295,25 @@ erDiagram
     TIMESTAMP deleted_at
     TIMESTAMP created_at
     TIMESTAMP updated_at
+    DECIMAL length
+    DECIMAL width
+    DECIMAL height
+    DECIMAL tare_weight
+    DECIMAL gvwr
+    DECIMAL payload_capacity
+    DECIMAL cargo_volume
+    SMALLINTUNSIGNED axle_count
+    SMALLINTUNSIGNED tire_count
+    SMALLINTUNSIGNED door_count
+    VARCHAR body_type
+    VARCHAR coupling_type
+    VARCHAR brake_type
+    BIT abs_equipped
+    BIT ebs_equipped
+    BIT refrigerated
+    DECIMAL temperature_min
+    DECIMAL temperature_max
+    DECIMAL reefer_engine_hours
   }
 
   fleetbase_categories {
@@ -555,6 +607,23 @@ erDiagram
     VARCHAR reason
     MEDIUMTEXT comment
     TIMESTAMP resolved_at
+    TIMESTAMP deleted_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  fleetbase_device_installations {
+    BIGINTUNSIGNED id PK, UK
+    CHAR uuid UK
+    CHAR company_uuid FK
+    CHAR device_uuid FK
+    VARCHAR attachable_type
+    CHAR attachable_uuid
+    CHAR active_device_uuid UK
+    TIMESTAMP installed_at
+    TIMESTAMP removed_at
+    VARCHAR source
+    JSON metadata
     TIMESTAMP deleted_at
     TIMESTAMP created_at
     TIMESTAMP updated_at
@@ -3390,6 +3459,7 @@ erDiagram
   fleetbase_companies ||--o{ fleetbase_alerts : "foreign key"
   fleetbase_companies ||--o{ fleetbase_api_credentials : "foreign key"
   fleetbase_companies ||--o{ fleetbase_api_request_logs : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_asset_connections : "foreign key"
   fleetbase_companies ||--o{ fleetbase_assets : "foreign key"
   fleetbase_companies ||--o{ fleetbase_chat_attachments : "foreign key"
   fleetbase_companies ||--o{ fleetbase_chat_channels : "foreign key"
@@ -3403,6 +3473,7 @@ erDiagram
   fleetbase_companies ||--o{ fleetbase_custom_field_values : "foreign key"
   fleetbase_companies ||--o{ fleetbase_custom_fields : "foreign key"
   fleetbase_companies ||--o{ fleetbase_device_events : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_device_installations : "foreign key"
   fleetbase_companies ||--o{ fleetbase_devices : "foreign key"
   fleetbase_companies ||--o{ fleetbase_directives : "foreign key"
   fleetbase_companies ||--o{ fleetbase_drivers : "foreign key"
@@ -3475,6 +3546,7 @@ erDiagram
   fleetbase_custom_fields ||--o{ fleetbase_custom_field_values : "foreign key"
   fleetbase_dashboards ||--o{ fleetbase_dashboard_widgets : "foreign key"
   fleetbase_devices ||--o{ fleetbase_device_events : "foreign key"
+  fleetbase_devices ||--o{ fleetbase_device_installations : "foreign key"
   fleetbase_devices ||--o{ fleetbase_sensors : "foreign key"
   fleetbase_drivers ||--o{ fleetbase_driver_geofence_states : "foreign key"
   fleetbase_drivers ||--o{ fleetbase_entities : "foreign key"
@@ -3483,6 +3555,7 @@ erDiagram
   fleetbase_drivers ||--o{ fleetbase_issues : "foreign key"
   fleetbase_drivers ||--o{ fleetbase_orders : "foreign key"
   fleetbase_extensions ||--o{ fleetbase_extension_installs : "foreign key"
+  fleetbase_files ||--o{ fleetbase_assets : "foreign key"
   fleetbase_files ||--o{ fleetbase_categories : "foreign key"
   fleetbase_files ||--o{ fleetbase_chat_attachments : "foreign key"
   fleetbase_files ||--o{ fleetbase_companies : "foreign key"
@@ -3608,6 +3681,7 @@ erDiagram
   fleetbase_users ||--o{ fleetbase_ai_tasks : "foreign key"
   fleetbase_users ||--o{ fleetbase_alerts : "foreign key"
   fleetbase_users ||--o{ fleetbase_api_credentials : "foreign key"
+  fleetbase_users ||--o{ fleetbase_asset_connections : "foreign key"
   fleetbase_users ||--o{ fleetbase_assets : "foreign key"
   fleetbase_users ||--o{ fleetbase_chat_channels : "foreign key"
   fleetbase_users ||--o{ fleetbase_chat_participants : "foreign key"

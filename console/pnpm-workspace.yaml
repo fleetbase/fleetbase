@@ -5,9 +5,9 @@ publicHoistPattern:
   - "*ember-ui*"
   - "*fleetops-data*"
 overrides:
-  "@fleetbase/fleetops-data": "^0.1.40"
+  "@fleetbase/fleetops-data": "^0.2.0"
   "@fleetbase/ember-core": "^0.3.24"
-  "@fleetbase/ember-ui": "^0.3.41"
+  "@fleetbase/ember-ui": "^0.4.0"
 allowBuilds:
   "@fortawesome/fontawesome-common-types": false
   "@fortawesome/fontawesome-svg-core": false
@@ -17,4 +17,6 @@ allowBuilds:
   fsevents: false
   protobufjs: false
 minimumReleaseAgeExclude:
-  - '@fleetbase/fleetops-engine@0.6.64'
+  - '@fleetbase/ember-ui@0.4.0'
+  - '@fleetbase/fleetops-data@0.2.0'
+  - '@fleetbase/fleetops-engine@0.6.65'

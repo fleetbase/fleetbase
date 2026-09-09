@@ -70,7 +70,7 @@ module('Unit | Controller | auth/confirm-email-change', function (hooks) {
         await controller.confirmEmailChange.perform();
 
         assert.deepEqual(this.posted, [{ path: 'auth/confirm-email-change', payload: { link: 'link_1', code: '123456' } }]);
-        assert.deepEqual(this.notifications().successes, ['auth.confirm-email-change.success-message']);
+        assert.deepEqual(this.notifications().successes, [controller.intl.t('auth.confirm-email-change.success-message')]);
         assert.deepEqual(this.transitions, ['console']);
     });
 
