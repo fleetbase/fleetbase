@@ -323,6 +323,53 @@ try {
     echo 'SEEDED_DRIVER_PHONE=' . $driverPhone . PHP_EOL;
 
     /* ============================================================
+     | INSPECTION FORM (Fleetbase API / Inspections)
+     * ============================================================ */
+
+    // The driver inspection endpoints (fleetops#319, postman#60) list published forms
+    // and submit against one. Forms are authored and published from the console — no
+    // consumable route creates one — so a contract run has to seed it. Organisation-wide
+    // (`subject_uuid` null) so it applies to whatever vehicle the collection creates.
+    // Guarded: the model exists only once the FleetOps release that carries inspections
+    // is installed; earlier stacks skip it and the six requests are the postman run's
+    // problem, not this script's.
+    if (class_exists(\Fleetbase\FleetOps\Models\InspectionForm::class)) {
+        $inspectionForm = \Fleetbase\FleetOps\Models\InspectionForm::withoutGlobalScopes()
+            ->where(['company_uuid' => $company->uuid, 'name' => 'CI Contract Pre-trip'])
+            ->first();
+
+        if (!$inspectionForm) {
+            $inspectionForm = new \Fleetbase\FleetOps\Models\InspectionForm();
+            $inspectionForm->company_uuid    = $company->uuid;
+            $inspectionForm->created_by_uuid = $user->uuid;
+            $inspectionForm->name            = 'CI Contract Pre-trip';
+        }
+
+        // Reasserted on every run: the listing filters on `status=published` AND a
+        // `published_at`, and the submit path counts failures from these two items.
+        $inspectionForm->description  = 'Seeded by the API contract run.';
+        $inspectionForm->type         = 'pre_trip';
+        $inspectionForm->frequency    = 'pre_trip';
+        $inspectionForm->status       = 'published';
+        $inspectionForm->published_at = $inspectionForm->published_at ?? \Illuminate\Support\Carbon::now();
+        $inspectionForm->subject_type = null;
+        $inspectionForm->subject_uuid = null;
+        $inspectionForm->items        = [
+            ['key' => 'brakes', 'label' => 'Brakes', 'category' => 'Brakes', 'required' => true, 'severity' => 'critical'],
+            ['key' => 'lights', 'label' => 'Lights and indicators', 'category' => 'Lights', 'required' => true, 'severity' => 'medium'],
+        ];
+        $inspectionForm->settings     = [
+            'create_issue_on_failure'      => true,
+            'create_work_order_on_failure' => true,
+        ];
+        $inspectionForm->save();
+
+        echo 'SEEDED_INSPECTION_FORM_ID=' . $inspectionForm->fresh()->public_id . PHP_EOL;
+    } else {
+        echo 'SEEDED_INSPECTION_FORM_ID=' . PHP_EOL;
+    }
+
+    /* ============================================================
      | FOOD TRUCK (Storefront)
      * ============================================================ */
 
