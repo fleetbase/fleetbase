@@ -153,6 +153,13 @@ runs:
           -e "CI_STRIPE_PUBLISHABLE_KEY=${STRIPE_PUBLISHABLE_KEY}" \
           -e "CI_STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}" \
           application php artisan tinker --execute="eval(base64_decode('${CODE}'));" 2>&1 || true)"
+        # The inspection link token is the whole credential for the public inspection
+        # routes, and the line below prints every SEEDED_ value to the job log. A mask
+        # only hides what is written after it, so this one is registered first.
+        INSPECTION_LINK_TOKEN="$(printf '%s\n' "$OUT" | grep -oE 'SEEDED_INSPECTION_LINK_TOKEN=[A-Za-z0-9]+' | tail -1 | cut -d= -f2 || true)"
+        if [[ -n "$INSPECTION_LINK_TOKEN" ]]; then
+          echo "::add-mask::$INSPECTION_LINK_TOKEN"
+        fi
         # Always surface what the seed produced, not only when a step later fails.
         #
         # The mint runs one PHP snippet inside a single try, so the FIRST fixture that
@@ -176,6 +183,7 @@ runs:
         NETWORK_KEY="$(printf '%s\n' "$OUT" | grep -oE 'MINTED_NETWORK_KEY=network_[A-Za-z0-9]+' | tail -1 | cut -d= -f2 || true)"
         SECONDARY_ORG_ID="$(printf '%s\n' "$OUT" | grep -oE 'SEEDED_SECONDARY_ORGANIZATION_ID=company_[A-Za-z0-9]+' | tail -1 | cut -d= -f2 || true)"
         MULTI_ORG_DRIVER_ID="$(printf '%s\n' "$OUT" | grep -oE 'SEEDED_DRIVER_ID=driver_[A-Za-z0-9]+' | tail -1 | cut -d= -f2 || true)"
+        INSPECTION_LINK_FORM_ID="$(printf '%s\n' "$OUT" | grep -oE 'SEEDED_INSPECTION_LINK_FORM_ID=[A-Za-z0-9_]+' | tail -1 | cut -d= -f2 || true)"
         if [[ -z "$KEY" ]]; then
           echo "::error::Could not mint an API key from the running stack. Tinker output:"
           printf '%s\n' "$OUT"
@@ -249,6 +257,15 @@ runs:
         fi
         if [[ -n "$MULTI_ORG_DRIVER_ID" ]]; then
           echo "multi_org_driver_id=$MULTI_ORG_DRIVER_ID" >> "$GITHUB_OUTPUT"
+        fi
+        # The public inspection requests authenticate with a link token alone, and a link
+        # can only be minted from the console. Absent only means the FleetOps release on
+        # this stack predates inspection links. The token was masked above.
+        if [[ -n "$INSPECTION_LINK_TOKEN" && -n "$INSPECTION_LINK_FORM_ID" ]]; then
+          echo "inspection_link_token=$INSPECTION_LINK_TOKEN" >> "$GITHUB_OUTPUT"
+          echo "inspection_link_form_id=$INSPECTION_LINK_FORM_ID" >> "$GITHUB_OUTPUT"
+        else
+          echo "::warning::No inspection link seeded; the public inspection requests will 403."
         fi
         if [[ -n "$PLATFORM_TOKEN" ]]; then
           echo "::add-mask::$PLATFORM_TOKEN"
@@ -345,6 +362,8 @@ runs:
         NETWORK_KEY: ${{ steps.key.outputs.network_key }}
         SECONDARY_ORG_ID: ${{ steps.key.outputs.secondary_organization_id }}
         MULTI_ORG_DRIVER_ID: ${{ steps.key.outputs.multi_org_driver_id }}
+        INSPECTION_LINK_TOKEN: ${{ steps.key.outputs.inspection_link_token }}
+        INSPECTION_LINK_FORM_ID: ${{ steps.key.outputs.inspection_link_form_id }}
         COLLECTIONS: ${{ inputs.collections }}
         BASE_URL: ${{ inputs.base-url }}
         NAMESPACE: ${{ inputs.namespace }}
@@ -440,6 +459,8 @@ runs:
           '  --env-var "network_key=${NETWORK_KEY}" \' \
           '  --env-var "secondary_organization_id=${SECONDARY_ORG_ID}" \' \
           '  --env-var "multi_org_driver_id=${MULTI_ORG_DRIVER_ID}" \' \
+          '  --env-var "inspection_link_token=${INSPECTION_LINK_TOKEN}" \' \
+          '  --env-var "inspection_link_form_id=${INSPECTION_LINK_FORM_ID}" \' \
           '  --env-var "payment_reference=ci-contract-payment-reference" \' \
           '  --env-var "push_token=ci-contract-push-token" \' \
           '  "${@:2}"' > "$RUNNER"
@@ -565,6 +586,12 @@ runs:
             -e 's/((sk|rk|pk)_(live|test)_)[A-Za-z0-9]+/\1<redacted>/g' \
               "$f"
           done
+          # The inspection link token travels in a query string and a form field, not an
+          # Authorization header, so the scrub above misses it. It is alphanumeric, so it
+          # is safe to use as a pattern as it stands.
+          if [[ -n "${INSPECTION_LINK_TOKEN:-}" ]]; then
+            sed -i "s/${INSPECTION_LINK_TOKEN}/<redacted>/g" "$ansi" "$log"
+          fi
 
           # Read executed/failed out of the reporter's summary table. Each row is
           # "| <label> | <executed> | <failed> |", so match the label plus two numbers
