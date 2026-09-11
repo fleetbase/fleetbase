@@ -416,13 +416,27 @@ try {
             $inspectionLink->single_use   = false;
             $inspectionLink->expires_at   = \Illuminate\Support\Carbon::now()->addDay();
             $inspectionLink->used_at      = null;
+
+            // Links carry a PIN, which the public routes ask for in the X-Inspection-Pin
+            // header. A fresh one every run, which also clears any wrong-PIN count and
+            // lifts a lock left by an earlier run. Guarded like the token: a stack from
+            // before PINs has neither the columns nor setPin(), and its links ask for none.
+            $inspectionLinkPin = '';
+            if (method_exists($inspectionLink, 'setPin')
+                && \Illuminate\Support\Facades\Schema::hasColumn('inspection_links', 'pin_hash')) {
+                $inspectionLinkPin = \Fleetbase\FleetOps\Models\InspectionLink::generatePin();
+                $inspectionLink->setPin($inspectionLinkPin);
+            }
+
             $inspectionLink->save();
 
             echo 'SEEDED_INSPECTION_LINK_TOKEN=' . $inspectionLinkToken . PHP_EOL;
+            echo 'SEEDED_INSPECTION_LINK_PIN=' . $inspectionLinkPin . PHP_EOL;
             echo 'SEEDED_INSPECTION_LINK_FORM_ID=' . $inspectionForm->fresh()->public_id . PHP_EOL;
         } else {
             echo '::warning::Inspection links unavailable; the public inspection requests will 403.' . PHP_EOL;
             echo 'SEEDED_INSPECTION_LINK_TOKEN=' . PHP_EOL;
+            echo 'SEEDED_INSPECTION_LINK_PIN=' . PHP_EOL;
             echo 'SEEDED_INSPECTION_LINK_FORM_ID=' . PHP_EOL;
         }
 
@@ -613,6 +627,7 @@ try {
     } else {
         echo 'SEEDED_INSPECTION_FORM_ID=' . PHP_EOL;
         echo 'SEEDED_INSPECTION_LINK_TOKEN=' . PHP_EOL;
+        echo 'SEEDED_INSPECTION_LINK_PIN=' . PHP_EOL;
         echo 'SEEDED_INSPECTION_LINK_FORM_ID=' . PHP_EOL;
         echo 'SEEDED_INSPECTION_FORM_GROUP_IDS=' . PHP_EOL;
     }

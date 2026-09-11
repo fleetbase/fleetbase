@@ -160,6 +160,11 @@ runs:
         if [[ -n "$INSPECTION_LINK_TOKEN" ]]; then
           echo "::add-mask::$INSPECTION_LINK_TOKEN"
         fi
+        # The link's PIN is the second half of that credential, so it is masked first too.
+        INSPECTION_LINK_PIN="$(printf '%s\n' "$OUT" | grep -oE 'SEEDED_INSPECTION_LINK_PIN=[0-9]+' | tail -1 | cut -d= -f2 || true)"
+        if [[ -n "$INSPECTION_LINK_PIN" ]]; then
+          echo "::add-mask::$INSPECTION_LINK_PIN"
+        fi
         # Always surface what the seed produced, not only when a step later fails.
         #
         # The mint runs one PHP snippet inside a single try, so the FIRST fixture that
@@ -263,6 +268,8 @@ runs:
         # this stack predates inspection links. The token was masked above.
         if [[ -n "$INSPECTION_LINK_TOKEN" && -n "$INSPECTION_LINK_FORM_ID" ]]; then
           echo "inspection_link_token=$INSPECTION_LINK_TOKEN" >> "$GITHUB_OUTPUT"
+          # Empty on a stack from before PINs, whose links ask for none.
+          echo "inspection_link_pin=$INSPECTION_LINK_PIN" >> "$GITHUB_OUTPUT"
           echo "inspection_link_form_id=$INSPECTION_LINK_FORM_ID" >> "$GITHUB_OUTPUT"
         else
           echo "::warning::No inspection link seeded; the public inspection requests will 403."
@@ -363,6 +370,7 @@ runs:
         SECONDARY_ORG_ID: ${{ steps.key.outputs.secondary_organization_id }}
         MULTI_ORG_DRIVER_ID: ${{ steps.key.outputs.multi_org_driver_id }}
         INSPECTION_LINK_TOKEN: ${{ steps.key.outputs.inspection_link_token }}
+        INSPECTION_LINK_PIN: ${{ steps.key.outputs.inspection_link_pin }}
         INSPECTION_LINK_FORM_ID: ${{ steps.key.outputs.inspection_link_form_id }}
         COLLECTIONS: ${{ inputs.collections }}
         BASE_URL: ${{ inputs.base-url }}
@@ -460,6 +468,7 @@ runs:
           '  --env-var "secondary_organization_id=${SECONDARY_ORG_ID}" \' \
           '  --env-var "multi_org_driver_id=${MULTI_ORG_DRIVER_ID}" \' \
           '  --env-var "inspection_link_token=${INSPECTION_LINK_TOKEN}" \' \
+          '  --env-var "inspection_link_pin=${INSPECTION_LINK_PIN}" \' \
           '  --env-var "inspection_link_form_id=${INSPECTION_LINK_FORM_ID}" \' \
           '  --env-var "payment_reference=ci-contract-payment-reference" \' \
           '  --env-var "push_token=ci-contract-push-token" \' \
@@ -591,6 +600,12 @@ runs:
           # is safe to use as a pattern as it stands.
           if [[ -n "${INSPECTION_LINK_TOKEN:-}" ]]; then
             sed -i "s/${INSPECTION_LINK_TOKEN}/<redacted>/g" "$ansi" "$log"
+          fi
+          # Its PIN travels in an X-Inspection-Pin header, which that scrub does not
+          # cover either. Six digits can recur elsewhere in a log; redacting those too
+          # costs a little legibility and nothing else.
+          if [[ -n "${INSPECTION_LINK_PIN:-}" ]]; then
+            sed -i "s/${INSPECTION_LINK_PIN}/<redacted>/g" "$ansi" "$log"
           fi
 
           # Read executed/failed out of the reporter's summary table. Each row is
