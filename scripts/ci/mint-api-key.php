@@ -367,80 +367,6 @@ try {
         echo 'SEEDED_INSPECTION_FORM_ID=' . $inspectionForm->fresh()->public_id . PHP_EOL;
 
         /* --------------------------------------------------------
-         | Inspection link (public, tokenised form)
-         * -------------------------------------------------------- */
-
-        // The public inspection requests (Retrieve a Public Inspection Form, Upload a
-        // Public Inspection Photo, Submit a Public Inspection) authenticate with nothing
-        // but a link token. Links are minted from the console, and a public request is
-        // resolved through the token's hash, so the plaintext can only come from here.
-        //
-        // Multi-use and a day long, so the retrieve, the upload and the submit can all
-        // use it in one run. One link per form for the CI user, reused on reruns; the
-        // token is rotated every run, like the platform token above, and used_at cleared
-        // so a reused link never reads as spent.
-        //
-        // Guarded on the `token` column rather than the class alone: the column arrived
-        // after the table, and a stack between the two would throw on insert — which,
-        // inside this single try, would abort every fixture after it.
-        if (class_exists(\Fleetbase\FleetOps\Models\InspectionLink::class)
-            && \Illuminate\Support\Facades\Schema::hasColumn('inspection_links', 'token')) {
-            $inspectionLink = \Fleetbase\FleetOps\Models\InspectionLink::withoutGlobalScopes()
-                ->where([
-                    'company_uuid'         => $company->uuid,
-                    'inspection_form_uuid' => $inspectionForm->uuid,
-                    'created_by_uuid'      => $user->uuid,
-                ])
-                // withoutGlobalScopes() drops the soft-delete scope too, and the public
-                // lookup would never find a trashed link.
-                ->whereNull('deleted_at')
-                ->first();
-
-            if (!$inspectionLink) {
-                $inspectionLink = new \Fleetbase\FleetOps\Models\InspectionLink();
-                $inspectionLink->company_uuid         = $company->uuid;
-                $inspectionLink->inspection_form_uuid = $inspectionForm->uuid;
-                $inspectionLink->created_by_uuid      = $user->uuid;
-            }
-
-            $inspectionLinkToken = \Fleetbase\FleetOps\Models\InspectionLink::generateToken();
-
-            // The seeded driver, so the public read's identity carries a driver and its
-            // "no phone number" assertion has something to check. No vehicle: none has
-            // been seeded yet at this point in the script.
-            $inspectionLink->driver_uuid  = isset($driverRecord) ? $driverRecord->uuid : null;
-            $inspectionLink->vehicle_uuid = null;
-            $inspectionLink->token_hash   = \Fleetbase\FleetOps\Models\InspectionLink::hashToken($inspectionLinkToken);
-            $inspectionLink->token        = $inspectionLinkToken;
-            $inspectionLink->status       = 'active';
-            $inspectionLink->single_use   = false;
-            $inspectionLink->expires_at   = \Illuminate\Support\Carbon::now()->addDay();
-            $inspectionLink->used_at      = null;
-
-            // Links carry a PIN, which the public routes ask for in the X-Inspection-Pin
-            // header. A fresh one every run, which also clears any wrong-PIN count and
-            // lifts a lock left by an earlier run. Guarded like the token: a stack from
-            // before PINs has neither the columns nor setPin(), and its links ask for none.
-            $inspectionLinkPin = '';
-            if (method_exists($inspectionLink, 'setPin')
-                && \Illuminate\Support\Facades\Schema::hasColumn('inspection_links', 'pin_hash')) {
-                $inspectionLinkPin = \Fleetbase\FleetOps\Models\InspectionLink::generatePin();
-                $inspectionLink->setPin($inspectionLinkPin);
-            }
-
-            $inspectionLink->save();
-
-            echo 'SEEDED_INSPECTION_LINK_TOKEN=' . $inspectionLinkToken . PHP_EOL;
-            echo 'SEEDED_INSPECTION_LINK_PIN=' . $inspectionLinkPin . PHP_EOL;
-            echo 'SEEDED_INSPECTION_LINK_FORM_ID=' . $inspectionForm->fresh()->public_id . PHP_EOL;
-        } else {
-            echo '::warning::Inspection links unavailable; the public inspection requests will 403.' . PHP_EOL;
-            echo 'SEEDED_INSPECTION_LINK_TOKEN=' . PHP_EOL;
-            echo 'SEEDED_INSPECTION_LINK_PIN=' . PHP_EOL;
-            echo 'SEEDED_INSPECTION_LINK_FORM_ID=' . PHP_EOL;
-        }
-
-        /* --------------------------------------------------------
          | Inspection form field groups (custom-field system)
          * -------------------------------------------------------- */
 
@@ -626,9 +552,6 @@ try {
         }
     } else {
         echo 'SEEDED_INSPECTION_FORM_ID=' . PHP_EOL;
-        echo 'SEEDED_INSPECTION_LINK_TOKEN=' . PHP_EOL;
-        echo 'SEEDED_INSPECTION_LINK_PIN=' . PHP_EOL;
-        echo 'SEEDED_INSPECTION_LINK_FORM_ID=' . PHP_EOL;
         echo 'SEEDED_INSPECTION_FORM_GROUP_IDS=' . PHP_EOL;
     }
 
