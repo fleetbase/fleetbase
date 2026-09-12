@@ -1,0 +1,29 @@
+{
+    "name": "fleetbase-screenshots",
+    "version": "0.0.0",
+    "private": true,
+    "type": "module",
+    "description": "Deterministic console screenshot capture for the fleetbase.io image library.",
+    "scripts": {
+        "capture": "node bin/capture.mjs",
+        "compare": "node bin/compare.mjs",
+        "test": "node --test \"test/*.test.mjs\""
+    },
+    "engines": {
+        "node": ">= 22"
+    },
+    "//": [
+        "Every dependency is pinned EXACTLY, with no ^ or ~, and that is load-bearing.",
+        "sharp bundles libwebp: a patch bump re-encodes every screenshot byte-differently,",
+        "which would present as ~32 changed files in a pull request that contains no real",
+        "UI change. playwright is pinned for the same reason (its bundled Chromium is the",
+        "rasterizer) and is asserted against PLAYWRIGHT_IMAGE_TAG in src/determinism.mjs.",
+        "Bumping either is a deliberate act that produces one large, expected churn PR."
+    ],
+    "dependencies": {
+        "pixelmatch": "7.2.0",
+        "playwright": "1.62.1",
+        "pngjs": "7.0.0",
+        "sharp": "0.35.3"
+    }
+}
