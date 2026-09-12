@@ -12,6 +12,7 @@ export default class AuthLoginController extends Controller {
     @service router;
     @service intl;
     @service fetch;
+    @service oauth;
 
     /**
      * Whether or not to remember the users session
@@ -155,6 +156,93 @@ export default class AuthLoginController extends Controller {
      */
     @action transitionToOnboard() {
         return this.router.transitionTo('onboard');
+    }
+
+    // -----------------------------------------------------------------------
+    // OAuth provider sign-in (issue #453)
+    // -----------------------------------------------------------------------
+    //
+    // Each action delegates the provider-side handshake to the `oauth`
+    // service, then hands the resulting credential to the existing
+    // FleetbaseAuthenticator with the `auth/oauth/<provider>` path. The
+    // server verifies the token, creates / links the user, and issues a
+    // Sanctum token — so the session state below is identical to a
+    // successful password login.
+    //
+    // We DON'T pre-check 2FA here (unlike the password path) because the
+    // server-side OAuth endpoint may return the same 2FA challenge
+    // payload on demand. The `success`/`failure` reset semantics are
+    // shared with `login`.
+
+    /** Google Sign-In. */
+    @action loginWithGoogle() {
+        return this._oauthSignIn('google', () => this.oauth.signInWithGoogle(), 'auth/oauth/google');
+    }
+
+    /** Facebook Login. */
+    @action loginWithFacebook() {
+        return this._oauthSignIn('facebook', () => this.oauth.signInWithFacebook(), 'auth/oauth/facebook');
+    }
+
+    /** Microsoft / Office365 Sign-In. */
+    @action loginWithOffice365() {
+        return this._oauthSignIn('office365', () => this.oauth.signInWithOffice365(), 'auth/oauth/office365');
+    }
+
+    /** Sign in with Apple. */
+    @action loginWithApple() {
+        return this._oauthSignIn('apple', () => this.oauth.signInWithApple(), 'auth/oauth/apple');
+    }
+
+    /**
+     * Shared OAuth login flow. Catches both the provider-side handshake
+     * failures (popup blocked, user cancelled, SDK load failed) and the
+     * server-side verification failures (HTTP 400 from the AuthController)
+     * with provider-specific notification copy.
+     */
+    async _oauthSignIn(providerKey, obtainCredential, authPath) {
+        if (this.isLoading) return;
+        this.set('isLoading', true);
+        this.setRedirect();
+
+        let credentials;
+        try {
+            credentials = await obtainCredential();
+        } catch (error) {
+            this.notifications.error(
+                this.intl.t(`auth.login.oauth.${providerKey}.handshake-failed`, {
+                    error: error && error.message ? error.message : String(error),
+                })
+            );
+            this.reset('error');
+            return;
+        }
+
+        try {
+            await this.session.authenticate('authenticator:fleetbase', credentials, false, authPath);
+        } catch (error) {
+            this.notifications.serverError(error);
+            this.reset('error');
+            return;
+        }
+
+        if (this.session.isAuthenticated) {
+            this.success();
+        }
+    }
+
+    /** True when the corresponding provider has a clientId/appId set. */
+    get isGoogleConfigured()    { return this.oauth.isConfigured('google'); }
+    get isFacebookConfigured()  { return this.oauth.isConfigured('facebook'); }
+    get isOffice365Configured() { return this.oauth.isConfigured('microsoft'); }
+    get isAppleConfigured()     { return this.oauth.isConfigured('apple'); }
+
+    /** True when at least one OAuth provider is configured — controls the divider. */
+    get anyOauthConfigured() {
+        return this.isGoogleConfigured
+            || this.isFacebookConfigured
+            || this.isOffice365Configured
+            || this.isAppleConfigured;
     }
 
     /**
