@@ -153,7 +153,7 @@ export default class AuthTwoFaController extends Controller {
                 return this.router.transitionTo('console');
             });
         } catch (error) {
-            if (error.message.includes('Verification code has expired')) {
+            if (error?.message?.includes('Verification code has expired')) {
                 this.notifications.info(this.intl.t('auth.two-fa.verify-code.verification-code-expired-notification'));
             } else {
                 this.notifications.error(this.intl.t('auth.two-fa.verify-code.verification-code-failed-notification'));
