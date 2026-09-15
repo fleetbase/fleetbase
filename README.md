@@ -265,7 +265,7 @@ git clone --recurse-submodules git@github.com:fleetbase/fleetbase.git
 
 | Feature | Status | Expected Release | Description |
 |---------|--------|------------------|-------------|
-| **Pallet (WMS)** | 🚧 In Development | Q2 2026 | Inventory and Warehouse Management extension |
+| **Pallet (WMS)** | 🚧 In Development | Q4 2026 | Inventory and Warehouse Management extension |
 | **Dynamic Rules** | 📋 Planned | 2027 | Rule builder to trigger events, tasks, and jobs |
 
 Want to influence the roadmap? [Join the discussion](https://github.com/orgs/fleetbase/discussions).
