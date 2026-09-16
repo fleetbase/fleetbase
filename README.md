@@ -13,281 +13,184 @@
     <a href="https://codecov.io/gh/fleetbase/fleetbase"><img src="https://codecov.io/gh/fleetbase/fleetbase/branch/main/graph/badge.svg" alt="Coverage"></a>
     <a href="https://github.com/fleetbase/fleetbase/stargazers"><img src="https://img.shields.io/github/stars/fleetbase/fleetbase?style=social" alt="GitHub Stars"></a>
     <a href="https://discord.gg/V7RVWRQ2Wm"><img src="https://img.shields.io/discord/699834923032248430?logo=discord&label=Discord" alt="Discord"></a>
-    <a href="https://github.com/fleetbase/fleetbase/issues"><img src="https://img.shields.io/github/issues/fleetbase/fleetbase" alt="GitHub Issues"></a>
   </p>
   <p align="center" dir="auto">
-    <strong>Modular logistics and supply chain operating system</strong>
+    <strong>Open-source logistics and supply chain operating system</strong>
     <br>
-    <a href="https://www.fleetbase.io/docs" rel="nofollow" target="_fleetbase_docs">Documentation</a>
+    <a href="https://www.fleetbase.io/docs" rel="nofollow">Documentation</a>
     ·
-    <a href="https://www.fleetbase.io/docs/api" rel="nofollow" target="_fleetbase_api_docs">API Reference</a>
+    <a href="https://www.fleetbase.io/docs/api" rel="nofollow">API Reference</a>
     ·
-    <a href="https://console.fleetbase.io" rel="nofollow" target="_fleetbase_console">Fleetbase Cloud</a>
+    <a href="https://console.fleetbase.io/onboard" rel="nofollow">Try Fleetbase Cloud</a>
     ·
     <a href="https://tally.so/r/3NBpAW" rel="nofollow">Book a Demo</a>
     ·
-    <a href="https://discord.gg/V7RVWRQ2Wm" target="discord" rel="nofollow">Discord</a>
+    <a href="https://discord.gg/V7RVWRQ2Wm" rel="nofollow">Discord</a>
   </p>
   <hr />
 </div>
 
 ## What is Fleetbase?
 
-Fleetbase is an open-source, modular logistics and supply chain operating system. It gives you order management, dispatch, live fleet tracking, service zones, a full REST API, and an extension system to build the rest, whether you run last-mile delivery, a courier network, field services, or an enterprise supply chain.
+Fleetbase is an open-source, modular operating system for logistics and supply chain operations. It covers dispatch, fleet management, live tracking, commerce, warehousing, and finance in one platform, with a REST API, webhooks, and an extension system for everything else. Run it on your own infrastructure or use [Fleetbase Cloud](https://console.fleetbase.io/onboard).
 
 <p align="center" dir="auto">
-  <img src="https://flb-assets.s3.ap-southeast-1.amazonaws.com/static/fleetbase_overview.png" alt="Fleetbase Console" width="1200" style="max-width: 100%;" />
+  <img src="https://fleetbase.io/images/screenshots/fleet-ops/fleet-ops-multi-waypoint-order.webp" alt="A multi-waypoint order in Fleet-Ops, showing the route on a map beside the order's activity, driver, and vehicle details" width="1200" style="max-width: 100%;" />
 </p>
-
-## Quickstart
-
-```bash
-npm install -g @fleetbase/cli
-flb install-fleetbase
-```
-
-Once the installer finishes, the console is at http://localhost:4200 and the API is at http://localhost:8000. See [Install](#install) for prerequisites, the script-based alternative, and configuration.
 
 ## Table of Contents
 
-- [Who Is Fleetbase For?](#who-is-fleetbase-for)
+- [Who Uses Fleetbase](#who-uses-fleetbase)
+- [Platform](#platform)
 - [Features](#features)
 - [Screenshots](#screenshots)
-- [Install](#install)
-- [Fleetbase CLI](#fleetbase-cli)
+- [Getting Started](#getting-started)
 - [Extensions](#extensions)
-- [Apps](#apps)
-- [Repository Layout](#repository-layout)
 - [Roadmap](#roadmap)
-- [Deployment Options](#deployment-options)
 - [Documentation](#documentation)
 - [Community & Support](#community--support)
 - [Contributing](#contributing)
 - [Creators](#creators)
 - [License](#license)
 
-## Who Is Fleetbase For?
+## Who Uses Fleetbase
 
-- **E-commerce & Retail** - Manage deliveries, track orders, and optimize last-mile logistics
-- **Food & Beverage** - Coordinate restaurant deliveries, manage drivers, and track orders in real time
-- **Courier Services** - Dispatch drivers, optimize routes, and give customers live tracking
-- **Field Services** - Schedule technicians, manage service areas, and track job completion
-- **Enterprise Logistics** - Build custom supply chain solutions on top of a full API
-- **Developers** - Extend and customize the platform through its modular architecture
+Fleetbase is built for teams that move goods, people, or equipment and want to own the software that runs it. Because every workflow, field, and status is configurable, the same platform adapts to very different operations.
+
+| Industry | How Fleetbase is used |
+|----------|-----------------------|
+| [Trucking & Haulage](https://fleetbase.io/solutions/trucking) | Replace a legacy TMS with real-time tracking, route optimization, and digital proof of delivery. |
+| [Courier & Parcel](https://fleetbase.io/solutions/courier-services) | Automate dispatch, raise first-attempt delivery rates, and give customers live parcel tracking. |
+| [Food & Grocery Delivery](https://fleetbase.io/solutions/food-delivery) | Run on-demand delivery with instant dispatch, live customer tracking, and automated notifications. |
+| [E-commerce & Retail](https://fleetbase.io/solutions/ecommerce) | Power same-day and next-day delivery and returns through a headless API. |
+| [Healthcare & Pharmacy](https://fleetbase.io/solutions/healthcare) | Track chain of custody and prioritize urgent deliveries with full audit trails. |
+| [Waste & Recycling](https://fleetbase.io/solutions/waste-management) | Optimize collection routes, track containers, and produce compliance reports. |
+| [Container Operations](https://fleetbase.io/solutions/container-operations) | Follow containers across multi-modal journeys from port to door. |
+| [Government & Defense](https://fleetbase.io/solutions/government) | Self-host with role-based access, full audit trails, and complete data sovereignty. |
+
+Developers use Fleetbase as a foundation too, building custom logistics products on its API and extension framework.
+
+## Platform
+
+Fleetbase is made up of modules that install into the console as extensions. Each one works on its own and integrates with the rest.
+
+| Module | What it does |
+|--------|--------------|
+| [Fleet-Ops](https://www.fleetbase.io/docs/fleet-ops) | Fleet management and dispatch: orders, drivers, vehicles, live tracking, route optimization, configurable workflows, and maintenance. |
+| [Storefront](https://www.fleetbase.io/docs/storefront) | Headless commerce for on-demand businesses, with multi-vendor marketplaces and native Fleet-Ops delivery. |
+| [Pallet](https://www.fleetbase.io/docs/pallet) | Warehouse management for inventory, pick lists, cycle counts, and fulfilment. |
+| [Ledger](https://www.fleetbase.io/docs/ledger) | Invoicing, payments, wallets, and accounting for logistics operators. |
+| [AI](https://fleetbase.io/platform/ai) | Natural-language order creation, operational queries, and order insights powered by OpenAI or Claude. |
+| [Navigator App](https://github.com/fleetbase/navigator-app) | Open-source driver app for iOS and Android with real-time dispatch, navigation, and proof of delivery. |
+| [Storefront App](https://github.com/fleetbase/storefront-app) | Open-source iOS and Android app for launching your own shop or marketplace. |
 
 ## Features
 
 | Feature | Description |
 |---------|-------------|
-| 🔌 **Extensible** | Install extensions or build your own to add features directly into the OS. |
-| 👨‍💻 **Developer Friendly** | REST API, WebSockets, and webhooks for integrating external systems or building custom apps. |
-| 📱 **Native Apps** | Open-source driver and storefront apps for iOS and Android. |
-| 🔄 **Dynamic Workflows** | Configurable order flows, rules, custom fields, and automation. |
-| 📊 **Dashboards** | Custom dashboards and widgets for full visibility into operations. |
-| 📡 **Telematics** | Connect hardware devices and sensors for live feedback from the field. |
-| 🤝 **Collaboration** | Built-in chat and comments across your organization. |
-| 🔒 **Security** | Data encryption and a dynamic Identity and Access Management (IAM) system. |
-| 🌐 **Internationalized** | Translate the console into any language. See [TRANSLATING.md](TRANSLATING.md). |
-| ⚙️ **Framework** | A PHP core built around logistics and supply chain abstractions to speed up extension development. |
-| 🌍 **Open Source** | AGPL-3.0 licensed. Run it on-premise or in the cloud, or use [Fleetbase Cloud](https://console.fleetbase.io). |
+| **Extensible** | Install extensions from the marketplace or build your own to add features directly into the OS. |
+| **Developer friendly** | REST API, WebSockets, and webhooks for integrating external systems or building custom apps. |
+| **Configurable workflows** | Define order types with their own activity flows, custom fields, and automation. |
+| **Real-time operations** | Track drivers, vehicles, and orders live, with geofences and service zones. |
+| **Telematics** | Connect GPS devices and sensors for live feedback from the field. |
+| **Identity & access** | Organizations, users, roles, policies, and two-factor authentication. |
+| **Dashboards** | Build custom dashboards and widgets for visibility into operations. |
+| **Collaboration** | Built-in chat, comments, and notifications across your organization. |
+| **Internationalized** | Translate the console into any language. |
+| **Self-hosted or cloud** | Run it on your own infrastructure with full control of your data, or let us host it. |
 
 ## Screenshots
 
-| Feature | Screenshot | Description |
-|---------|------------|-------------|
-| **Order Board** | <img src="https://flb-assets.s3.ap-southeast-1.amazonaws.com/static/order-board-kanban.png" alt="Fleetbase Order Board" width="600" /> | Visualize and manage orders on a dynamic Kanban board. |
-| **Order Config** | <img src="https://flb-assets.s3.ap-southeast-1.amazonaws.com/static/order-workflow-config.png" alt="Fleetbase Order Configuration" width="600" /> | Build custom order configurations with logic, rules, automation, activity flows, and custom fields. |
-| **Order Tracking** | <img src="https://flb-assets.s3.ap-southeast-1.amazonaws.com/static/order-map-view.png" alt="Fleetbase Order Map View" width="600" /> | Track individual orders in real time on an interactive map. |
-| **Live Fleet Map** | <img src="https://flb-assets.s3.ap-southeast-1.amazonaws.com/static/live-map-tracking.png" alt="Fleetbase Live Map Tracking" width="600" /> | See your whole fleet and every active order on one live map. |
-| **Service Zones** | <img src="https://flb-assets.s3.ap-southeast-1.amazonaws.com/static/fleet-map-zones.png" alt="Fleetbase Fleet Map with Zones" width="600" /> | Define and manage service areas and zones for your fleet. |
+<table>
+  <tr>
+    <td width="50%" valign="top">
+      <img src="https://fleetbase.io/images/screenshots/fleet-ops/fleet-ops-orders-kanban.webp" alt="Fleet-Ops order board" width="100%" />
+      <p align="center"><strong>Order Board</strong><br>Move orders through each stage on a Kanban board.</p>
+    </td>
+    <td width="50%" valign="top">
+      <img src="https://fleetbase.io/images/screenshots/fleet-ops/fleet-ops-live-orders-panel.webp" alt="Fleet-Ops live map with active orders" width="100%" />
+      <p align="center"><strong>Live Operations</strong><br>See active and unassigned orders beside your fleet on a live map.</p>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <img src="https://fleetbase.io/images/screenshots/fleet-ops/fleet-ops-order-config-activity-flow.webp" alt="Fleet-Ops order configuration activity flow editor" width="100%" />
+      <p align="center"><strong>Order Config</strong><br>Design custom activity flows, fields, and entities for each order type.</p>
+    </td>
+    <td width="50%" valign="top">
+      <img src="https://fleetbase.io/images/screenshots/fleet-ops/fleet-ops-orchestrator-1.webp" alt="Fleet-Ops orchestrator workbench" width="100%" />
+      <p align="center"><strong>Orchestrator</strong><br>Plan and assign batches of orders across available vehicles and drivers.</p>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <img src="https://fleetbase.io/images/screenshots/fleet-ops/fleet-ops-geofences.webp" alt="Fleet-Ops service areas, zones, and geofence events" width="100%" />
+      <p align="center"><strong>Service Zones & Geofences</strong><br>Define service areas and zones, and watch geofence events as they happen.</p>
+    </td>
+    <td width="50%" valign="top">
+      <img src="https://fleetbase.io/images/screenshots/storefront/storefront-products-overview.webp" alt="Storefront product catalog" width="100%" />
+      <p align="center"><strong>Storefront</strong><br>Manage products, catalogs, and orders for your shop or marketplace.</p>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <img src="https://fleetbase.io/images/screenshots/ledger/ledger-dashboard.webp" alt="Ledger financial dashboard" width="100%" />
+      <p align="center"><strong>Ledger</strong><br>Track revenue, invoices, receivables, and wallet balances.</p>
+    </td>
+    <td width="50%" valign="top">
+      <img src="https://fleetbase.io/images/screenshots/extensions/extensions-browse.webp" alt="Extensions marketplace" width="100%" />
+      <p align="center"><strong>Extensions</strong><br>Browse and install free and paid extensions from the marketplace.</p>
+    </td>
+  </tr>
+</table>
 
-## Install
+## Getting Started
 
-The Fleetbase CLI automates the whole Docker-based installation. For other local setups, read the [running locally guide](https://www.fleetbase.io/docs/platform/quickstart/running-locally).
+There are three ways to run Fleetbase:
 
-### Prerequisites
+- **[Fleetbase Cloud](https://www.fleetbase.io/docs/platform/quickstart/cloud-quickstart)**: fully managed, with nothing to install. [Start a free trial](https://console.fleetbase.io/onboard).
+- **[Run locally](https://www.fleetbase.io/docs/platform/quickstart/running-locally)**: self-host with Docker on your own machine or server.
+- **[Deploy in your cloud](https://www.fleetbase.io/docs/platform/quickstart/deploy-in-cloud)**: run production workloads on AWS, GCP, Azure, or any other provider.
 
-- Node.js 22 or newer
-- Docker and Docker Compose
-- Git
+### Quickstart
 
-### Install with the CLI
+You need Docker with Docker Compose v2, Git, Node.js 18 or newer, and at least 4 GB of RAM allocated to Docker. Then install the Fleetbase CLI and run the interactive installer:
 
 ```bash
-# Install the Fleetbase CLI globally
 npm install -g @fleetbase/cli
-
-# Run the interactive installer
 flb install-fleetbase
 ```
 
-### Install with the script
+When setup finishes, open the console at http://localhost:4200 and create your first admin account and organization. The API is served at http://localhost:8000.
 
-```bash
-git clone git@github.com:fleetbase/fleetbase.git
-cd fleetbase && ./scripts/docker-install.sh
-```
-
-### Access Fleetbase
-
-| Service | URL |
-|---------|-----|
-| Console | http://localhost:4200 |
-| API | http://localhost:8000 |
-
-### Configuration
-
-Fleetbase is configured through environment variables on its containers. Copy [`docker-compose.override.yml.example`](docker-compose.override.yml.example) to `docker-compose.override.yml` and set what you need:
-
-```yaml
-services:
-  application:
-    environment:
-      CONSOLE_HOST: http://localhost:4200
-      MAIL_MAILER: smtp # or ses, mailgun, postmark, sendgrid
-      OSRM_HOST: https://router.project-osrm.org
-      IPINFO_API_KEY:
-      GOOGLE_MAPS_API_KEY:
-      GOOGLE_MAPS_LOCALE: us
-      TWILIO_SID:
-      TWILIO_TOKEN:
-      TWILIO_FROM:
-
-  socket:
-    environment:
-      # Development (localhost only, all protocols):
-      SOCKETCLUSTER_OPTIONS: '{"origins":"http://localhost:*,https://localhost:*,ws://localhost:*,wss://localhost:*"}'
-      # Production (replace with your domain):
-      # SOCKETCLUSTER_OPTIONS: '{"origins":"https://yourdomain.com:*,wss://yourdomain.com:*"}'
-```
-
-**CORS.** When installing on a server, set `CONSOLE_HOST` on the application container to the URL the console is served from. Add any other frontends as a comma-delimited list in `FRONTEND_HOSTS`.
-
-**Application key.** If you see an error about a missing application key, generate one and set it as `APP_KEY` on the application container, then restart:
-
-```bash
-docker compose exec application bash -c "php artisan key:generate --show"
-```
-
-**Routing.** Fleetbase uses the public OSRM server at [router.project-osrm.org](https://router.project-osrm.org) by default. Point `OSRM_HOST` at your own OSRM-compatible server to change this.
-
-**WebSocket security.** `SOCKETCLUSTER_OPTIONS` controls which origins may connect to the socket server. Always restrict it to your own domains in production.
-
-More detail is in the [running locally guide](https://www.fleetbase.io/docs/platform/quickstart/running-locally) and the [development setup guide](https://www.fleetbase.io/docs/platform/quickstart/development-setup).
-
-## Fleetbase CLI
-
-The CLI handles installation, extension management, registry authentication, and extension development.
-
-```bash
-npm install -g @fleetbase/cli
-```
-
-| Command | Description |
-|---------|-------------|
-| `flb install-fleetbase` | Install Fleetbase with Docker using an interactive setup |
-| `flb search [query]` | Search and browse available extensions |
-| `flb install <extension>` | Install an extension into your Fleetbase instance |
-| `flb uninstall <extension>` | Remove an extension from your instance |
-| `flb register` | Register a registry developer account |
-| `flb verify` | Verify your developer account email |
-| `flb generate-token` | Generate or regenerate your registry authentication token |
-| `flb set-auth <token>` | Set your registry token for installing extensions |
-| `flb login` | Authenticate with the registry for publishing |
-| `flb scaffold` | Scaffold a new extension |
-| `flb publish` | Publish an extension to the registry |
-| `flb unpublish` | Remove an extension from the registry |
+The [running locally guide](https://www.fleetbase.io/docs/platform/quickstart/running-locally) also covers installing with Docker Compose or the setup script, configuring services like mail, maps, and SMS, and troubleshooting. To work on Fleetbase itself, follow the [development setup guide](https://www.fleetbase.io/docs/platform/quickstart/development-setup).
 
 ## Extensions
 
-Extensions are modular packages that add features, change existing behavior, or integrate Fleetbase with external systems. Browse them from the CLI:
+Extensions add features, integrate external systems, or change how Fleetbase behaves. Browse and install them from the console or with the [Fleetbase CLI](https://www.fleetbase.io/docs/cli), and publish your own to the marketplace as free or paid extensions.
 
-```bash
-flb search              # list all extensions
-flb search fleet        # search by keyword
-flb search --category logistics
-flb search --free
-flb search --json       # machine-readable output
-```
-
-### Installing extensions
-
-Installing on a self-hosted instance needs a registry token, which is a one-time setup:
-
-```bash
-flb register                                              # 1. create an account
-flb verify -e your-email@example.com -c verification-code # 2. verify your email
-flb generate-token -e your-email@example.com              # 3. generate your token
-flb set-auth your-registry-token-here                     # 4. store it locally
-flb install fleetbase/pallet                              # 5. install extensions
-```
-
-### Developing extensions
-
-You can build and publish your own extensions, free or paid, through the registry. Start with the [extension development quickstart](https://www.fleetbase.io/docs/extension-development/getting-started/quickstart).
-
-```bash
-flb scaffold                                                          # scaffold a new extension
-flb login -u your-username -p your-password -e your-email@example.com # authenticate for publishing
-flb publish                                                           # publish to the registry
-```
-
-## Apps
-
-Fleetbase ships open-source mobile apps that you can brand and deploy as your own.
-
-| App | Description | Platform | Repository |
-|-----|-------------|----------|------------|
-| **Navigator** | Driver app for managing orders with real-time location tracking | iOS & Android | [fleetbase/navigator-app](https://github.com/fleetbase/navigator-app) |
-| **Storefront** | E-commerce and on-demand app for launching your own shop or marketplace | iOS & Android | [fleetbase/storefront-app](https://github.com/fleetbase/storefront-app) |
-
-## Repository Layout
-
-This is a monorepo. The two applications live at the top level and every extension is a git submodule under `packages/`.
-
-| Path | What it is |
-|------|------------|
-| [`api/`](api) | The Fleetbase API. Laravel 10 running on Octane with FrankenPHP. |
-| [`console/`](console) | The Fleetbase console. An Ember 5 application. |
-| [`packages/`](packages) | Extensions and shared libraries as submodules: `core-api`, `fleetops`, `fleetops-data`, `storefront`, `pallet`, `ledger`, `ai`, `iam-engine`, `dev-engine`, `registry-bridge`, `customer-portal`, `ember-core`, `ember-ui`, and `fleetbase-extensions-indexer`. |
-| [`docker/`](docker) | Dockerfiles for the API and HTTP server, plus seed data. |
-| [`scripts/`](scripts) | The Docker install script and package-linking tooling. |
-| [`docker-compose.yml`](docker-compose.yml) | The default stack: `application`, `console`, `httpd`, `database` (MySQL 8), `cache` (Redis), `socket` (SocketCluster), `queue`, and `scheduler`. |
-| [`erd.svg`](erd.svg) | The database entity relationship diagram, regenerated on each release. |
-
-Clone with submodules to get the extensions:
-
-```bash
-git clone --recurse-submodules git@github.com:fleetbase/fleetbase.git
-```
+- [Browse and install extensions](https://www.fleetbase.io/docs/platform/extensions/browsing-and-installing)
+- [Build your first extension](https://www.fleetbase.io/docs/extension-development/getting-started/quickstart)
+- [Extension architecture](https://www.fleetbase.io/docs/extension-development/architecture/overview)
 
 ## Roadmap
 
 | Feature | Status | Expected Release | Description |
 |---------|--------|------------------|-------------|
-| **Pallet (WMS)** | 🚧 In Development | Q4 2026 | Inventory and Warehouse Management extension |
-| **Dynamic Rules** | 📋 Planned | 2027 | Rule builder to trigger events, tasks, and jobs |
+| **Pallet (WMS)** | In development | Q4 2026 | Inventory and warehouse management extension |
+| **Dynamic Rules** | Planned | 2027 | Rule builder to trigger events, tasks, and jobs |
 
 Want to influence the roadmap? [Join the discussion](https://github.com/orgs/fleetbase/discussions).
 
-## Deployment Options
-
-| Option | Best For | Setup Time | Maintenance |
-|--------|----------|------------|-------------|
-| **Docker (Local)** | Development and testing | 5 minutes | Self-managed |
-| **On-Premise** | Production on your own infrastructure | 30-60 minutes | Self-managed |
-| **Cloud Self-Hosted** | Production on AWS, GCP, or Azure | 30-60 minutes | Self-managed |
-| **Fleetbase Cloud** | Quick start, no DevOps | Instant | Fully managed |
-
-[View the cloud deployment guide →](https://www.fleetbase.io/docs/platform/quickstart/deploy-in-cloud)
-
 ## Documentation
 
-- **Getting Started**: [Run Fleetbase locally](https://www.fleetbase.io/docs/platform/quickstart/running-locally)
-- **API Reference**: [API documentation](https://www.fleetbase.io/docs/api)
-- **Developer Console**: [API keys and integration setup](https://www.fleetbase.io/docs/platform/developer-console/api-keys)
-- **Extension Development**: [Extension quickstart](https://www.fleetbase.io/docs/extension-development/getting-started/quickstart)
-- **Deployment**: [Deploy Fleetbase in the cloud](https://www.fleetbase.io/docs/platform/quickstart/deploy-in-cloud)
+- **[Overview](https://www.fleetbase.io/docs/platform/getting-started/overview)** and **[architecture](https://www.fleetbase.io/docs/platform/getting-started/architecture)**: how the platform fits together
+- **[Installation](https://www.fleetbase.io/docs/platform/quickstart/running-locally)**: run Fleetbase locally or [deploy it in the cloud](https://www.fleetbase.io/docs/platform/quickstart/deploy-in-cloud)
+- **[System setup](https://www.fleetbase.io/docs/platform/system-setup/services)**: configure mail, maps, SMS, storage, queues, and sockets
+- **[API reference](https://www.fleetbase.io/docs/api)**: endpoints, authentication, and [API keys](https://www.fleetbase.io/docs/platform/developer-console/api-keys)
+- **[Fleetbase CLI](https://www.fleetbase.io/docs/cli)**: every command for installing, managing, and publishing extensions
+- **[Extension development](https://www.fleetbase.io/docs/extension-development/getting-started/quickstart)**: build and publish your own extensions
+- **[Database schema](erd.svg)**: an entity relationship diagram of the full database, regenerated with each release ([dark version](erd-dark.svg))
 
 ## Community & Support
 
@@ -295,7 +198,8 @@ Want to influence the roadmap? [Join the discussion](https://github.com/orgs/fle
 - **Discussions**: Ask questions and share ideas in [GitHub Discussions](https://github.com/orgs/fleetbase/discussions).
 - **Bugs**: Search the [issue tracker](https://github.com/fleetbase/fleetbase/issues) first, then [open a new issue](https://github.com/fleetbase/fleetbase/issues/new).
 - **Security**: Report vulnerabilities privately as described in [SECURITY.md](SECURITY.md).
-- **Releases**: Changelogs are on the [Releases](https://github.com/fleetbase/fleetbase/releases) page. Release announcements are on the [Fleetbase blog](https://www.fleetbase.io/blog).
+- **Support plans**: See [community, cloud, and enterprise support options](https://www.fleetbase.io/docs/community/support-plans).
+- **Releases**: Read changelogs on the [Releases](https://github.com/fleetbase/fleetbase/releases) page and announcements on the [Fleetbase blog](https://www.fleetbase.io/blog).
 - **X**: Follow [@fleetbase_io](https://x.com/fleetbase_io).
 
 ## Contributing
@@ -338,12 +242,13 @@ To set up a local development environment, see the [development setup guide](htt
 
 ## License
 
-Fleetbase is licensed under the [GNU Affero General Public License v3.0 (AGPL-3.0)](LICENSE.md). You are free to use, modify, and distribute it, provided that:
+Fleetbase is dual-licensed. Choose the license that fits how you use it.
 
-- Any modifications or derivative works are also made available under AGPL-3.0
-- If you run a modified version as a network service, you make the source code available to its users
+**Open source (AGPL-3.0).** Fleetbase is released under the [GNU Affero General Public License v3.0](LICENSE.md). You can use, modify, and self-host it freely, including to run your own commercial operations. If you modify Fleetbase and make it available to others over a network, you must release those modifications under AGPL-3.0.
 
-Organizations that need to use Fleetbase without AGPL obligations, keep integrations proprietary, or require commercial support and legal assurances can obtain a commercial license. Contact [hello@fleetbase.io](mailto:hello@fleetbase.io) or visit [fleetbase.io](https://fleetbase.io).
+**Fleetbase Commercial License (FCL).** The commercial license removes the AGPL-3.0 obligations. It lets you keep modifications proprietary, build SaaS products on Fleetbase, and white-label or distribute it under your own brand. It also includes support options and IP indemnification.
+
+Read the [licensing overview](https://fleetbase.io/licensing) to see which license applies to you, or see the [Commercial License](https://fleetbase.io/licensing/commercial) for details. Questions go to [hello@fleetbase.io](mailto:hello@fleetbase.io).
 
 ---
 
