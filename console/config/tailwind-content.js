@@ -39,6 +39,6 @@ module.exports = function addonContent(root = process.cwd()) {
             `${directory
                 .split(path.sep)
                 .join('/')
-                .replace(/[!*?{}()[\]]/g, '\\$&')}/**/*.{hbs,js}`
+                .replace(/[\\!*?{}()[\]]/g, '\\$&')}/**/*.{hbs,js}`
     );
 };
