@@ -59,14 +59,14 @@ Fleetbase is built for teams that move goods, people, or equipment and want to o
 
 | Industry | How Fleetbase is used |
 |----------|-----------------------|
-| [Trucking & Haulage](https://fleetbase.io/solutions/trucking) | Replace a legacy TMS with real-time tracking, route optimization, and digital proof of delivery. |
-| [Courier & Parcel](https://fleetbase.io/solutions/courier-services) | Automate dispatch, raise first-attempt delivery rates, and give customers live parcel tracking. |
-| [Food & Grocery Delivery](https://fleetbase.io/solutions/food-delivery) | Run on-demand delivery with instant dispatch, live customer tracking, and automated notifications. |
-| [E-commerce & Retail](https://fleetbase.io/solutions/ecommerce) | Power same-day and next-day delivery and returns through a headless API. |
-| [Healthcare & Pharmacy](https://fleetbase.io/solutions/healthcare) | Track chain of custody and prioritize urgent deliveries with full audit trails. |
-| [Waste & Recycling](https://fleetbase.io/solutions/waste-management) | Optimize collection routes, track containers, and produce compliance reports. |
-| [Container Operations](https://fleetbase.io/solutions/container-operations) | Follow containers across multi-modal journeys from port to door. |
-| [Government & Defense](https://fleetbase.io/solutions/government) | Self-host with role-based access, full audit trails, and complete data sovereignty. |
+| [Trucking&nbsp;&&nbsp;Haulage](https://fleetbase.io/solutions/trucking) | Replace a legacy TMS with real-time tracking, route optimization, and digital proof of delivery. |
+| [Courier&nbsp;&&nbsp;Parcel](https://fleetbase.io/solutions/courier-services) | Automate dispatch, raise first-attempt delivery rates, and give customers live parcel tracking. |
+| [Food&nbsp;&&nbsp;Grocery&nbsp;Delivery](https://fleetbase.io/solutions/food-delivery) | Run on-demand delivery with instant dispatch, live customer tracking, and automated notifications. |
+| [E&#8209;commerce&nbsp;&&nbsp;Retail](https://fleetbase.io/solutions/ecommerce) | Power same-day and next-day delivery and returns through a headless API. |
+| [Healthcare&nbsp;&&nbsp;Pharmacy](https://fleetbase.io/solutions/healthcare) | Track chain of custody and prioritize urgent deliveries with full audit trails. |
+| [Waste&nbsp;&&nbsp;Recycling](https://fleetbase.io/solutions/waste-management) | Optimize collection routes, track containers, and produce compliance reports. |
+| [Container&nbsp;Operations](https://fleetbase.io/solutions/container-operations) | Follow containers across multi-modal journeys from port to door. |
+| [Government&nbsp;&&nbsp;Defense](https://fleetbase.io/solutions/government) | Self-host with role-based access, full audit trails, and complete data sovereignty. |
 
 Developers use Fleetbase as a foundation too, building custom logistics products on its API and extension framework.
 
@@ -76,16 +76,16 @@ Fleetbase is made up of modules that install into the console as extensions. Eac
 
 | Module | What it does |
 |--------|--------------|
-| [Fleet-Ops](https://www.fleetbase.io/docs/fleet-ops) | Fleet management and dispatch: orders, drivers, vehicles, live tracking, route optimization, configurable workflows, and maintenance. |
+| [Fleet&#8209;Ops](https://www.fleetbase.io/docs/fleet-ops) | Fleet management and dispatch: orders, drivers, vehicles, live tracking, route optimization, configurable workflows, and maintenance. |
 | [Storefront](https://www.fleetbase.io/docs/storefront) | Headless commerce for on-demand businesses, with multi-vendor marketplaces and native Fleet-Ops delivery. |
 | [Pallet](https://www.fleetbase.io/docs/pallet) | Warehouse management for inventory, pick lists, cycle counts, and fulfilment. |
 | [Ledger](https://www.fleetbase.io/docs/ledger) | Invoicing, payments, wallets, and accounting for logistics operators. |
-| [Customer Portal](https://github.com/fleetbase/customer-portal) | A self-service workspace for your customers to place and track orders, get quotes and pay, view invoices, manage documents, and open support tickets. |
+| [Customer&nbsp;Portal](https://github.com/fleetbase/customer-portal) | A self-service workspace for your customers to place and track orders, get quotes and pay, view invoices, manage documents, and open support tickets. |
 | [AI](https://fleetbase.io/platform/ai) | Natural-language order creation, operational queries, and order insights powered by OpenAI or Claude. |
 | [IAM](https://www.fleetbase.io/docs/platform/identity-and-access/users) | Identity and access management: users, groups, roles, policies, and two-factor authentication across your organization. |
 | [Developers](https://www.fleetbase.io/docs/platform/developer-console) | The developer console: API keys, webhooks, socket and system events, and request logs, with separate test and live environments. |
-| [Navigator App](https://github.com/fleetbase/navigator-app) | Open-source driver app for iOS and Android with real-time dispatch, navigation, and proof of delivery. |
-| [Storefront App](https://github.com/fleetbase/storefront-app) | Open-source iOS and Android app for launching your own shop or marketplace. |
+| [Navigator&nbsp;App](https://github.com/fleetbase/navigator-app) | Open-source driver app for iOS and Android with real-time dispatch, navigation, and proof of delivery. |
+| [Storefront&nbsp;App](https://github.com/fleetbase/storefront-app) | Open-source iOS and Android app for launching your own shop or marketplace. |
 
 ## Features
 
