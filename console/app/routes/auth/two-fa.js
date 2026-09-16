@@ -28,7 +28,8 @@ export default class AuthTwoFaRoute extends Route {
         // validate 2fa session with server
         let { token, clientToken } = transition.to.queryParams;
 
-        return this.session.store.restore().then(({ identity }) => {
+        return this.session.store.restore().then((restored) => {
+            const { identity } = restored ?? {};
             if (!identity) {
                 this.notifications.error('2FA failed to initialize.');
                 return this.router.transitionTo('auth.login');
@@ -59,12 +60,16 @@ export default class AuthTwoFaRoute extends Route {
     setupController(controller) {
         super.setupController(...arguments);
 
-        this.session.store.restore().then(({ clientToken, identity }) => {
-            controller.clientToken = clientToken;
-            controller.identity = identity;
-            controller.twoFactorSessionExpiresAfter = controller.getExpirationDateFromClientToken(clientToken);
-            controller.countdownReady = true;
-        });
+        this.session.store
+            .restore()
+            .then((restored) => {
+                const { clientToken, identity } = restored ?? {};
+                controller.clientToken = clientToken;
+                controller.identity = identity;
+                controller.twoFactorSessionExpiresAfter = controller.getExpirationDateFromClientToken(clientToken);
+                controller.countdownReady = true;
+            })
+            .catch(() => {});
     }
 
     async invalidateTwoFaSession(token, identity) {

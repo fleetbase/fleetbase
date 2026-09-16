@@ -1,16 +1,10 @@
+/* eslint-env node */
 /** @type {import('tailwindcss').Config} */
 module.exports = {
     darkMode: ['class', '[data-theme="dark"]'],
     content: {
         relative: true,
-        files: [
-            './app/**/*.{hbs,js}',
-            './node_modules/.pnpm/@fleetbase+*/**/addon/**/*.{hbs,js}',
-            './node_modules/@fleetbase+*/addon/**/*.{hbs,js}',
-            './node_modules/@fleetbase/ember-ui/addon/templates/**/*.{hbs,js}',
-            './node_modules/@fleetbase/ember-ui/addon/components/**/*.{hbs,js}',
-            './node_modules/**/*-engine/addon/**/*.{hbs,js}',
-        ],
+        files: ['./app/**/*.{hbs,js}', ...require('./config/tailwind-content')(__dirname)],
     },
     safelist: [
         {

@@ -100,6 +100,7 @@ export default class AuthVerificationController extends Controller {
                 const phone = modal.getOption('phone');
                 if (!phone) {
                     this.notifications.error('No phone number provided.');
+                    return modal.stopLoading();
                 }
 
                 try {
@@ -124,6 +125,7 @@ export default class AuthVerificationController extends Controller {
                 const email = modal.getOption('email');
                 if (!email) {
                     this.notifications.error('No email number provided.');
+                    return modal.stopLoading();
                 }
 
                 try {
