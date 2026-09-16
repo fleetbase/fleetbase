@@ -241,8 +241,17 @@ export default class AuthTwoFaController extends Controller {
      * @returns {Date|null} - Date representing the expiration date, or null if invalid.
      */
     getExpirationDateFromClientToken(clientToken) {
+        if (!clientToken || typeof clientToken !== 'string') {
+            return null;
+        }
+
         const decoder = new TextDecoder();
-        const binString = atob(clientToken);
+        let binString;
+        try {
+            binString = atob(clientToken);
+        } catch {
+            return null;
+        }
         const bytes = Uint8Array.from(binString, (m) => m.codePointAt(0));
         const decodedString = decoder.decode(bytes);
 

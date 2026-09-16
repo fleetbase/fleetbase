@@ -64,6 +64,22 @@ module('Unit | Route | auth/two-fa', function (hooks) {
         assert.deepEqual(route.notifications.errors, ['2FA failed to initialize.']);
     });
 
+    test('beforeModel redirects to login when the store restores nothing', async function (assert) {
+        registerSession(this.owner, undefined);
+
+        const route = this.owner.lookup('route:auth/two-fa');
+        let transitionedTo;
+        Object.defineProperty(route.router, 'transitionTo', {
+            configurable: true,
+            value: (routeName) => (transitionedTo = routeName),
+        });
+
+        await route.beforeModel({ to: { queryParams: {} } });
+
+        assert.strictEqual(transitionedTo, 'auth.login');
+        assert.deepEqual(route.notifications.errors, ['2FA failed to initialize.']);
+    });
+
     test('beforeModel persists the refreshed client token when validation succeeds', async function (assert) {
         const persisted = registerSession(this.owner, { identity: 'ron@fleetbase.io' });
 
@@ -154,5 +170,43 @@ module('Unit | Route | auth/two-fa', function (hooks) {
         assert.strictEqual(controller.clientToken, 'client-token');
         assert.strictEqual(controller.twoFactorSessionExpiresAfter, 'expires:client-token');
         assert.true(controller.countdownReady);
+    });
+
+    test('setupController tolerates a store that restores nothing', async function (assert) {
+        registerSession(this.owner, undefined);
+
+        const route = this.owner.lookup('route:auth/two-fa');
+        const controller = {
+            getExpirationDateFromClientToken(token) {
+                return token ?? null;
+            },
+        };
+
+        route.setupController(controller);
+        await new Promise((resolve) => setTimeout(resolve, 0));
+
+        assert.strictEqual(controller.identity, undefined);
+        assert.strictEqual(controller.clientToken, undefined);
+        assert.strictEqual(controller.twoFactorSessionExpiresAfter, null);
+        assert.true(controller.countdownReady);
+    });
+
+    test('setupController swallows a failed restore and leaves the countdown off', async function (assert) {
+        class SessionStub extends Service {
+            store = {
+                restore() {
+                    return Promise.reject(new Error('storage unavailable'));
+                },
+            };
+        }
+        this.owner.register('service:session', SessionStub);
+
+        const route = this.owner.lookup('route:auth/two-fa');
+        const controller = {};
+
+        route.setupController(controller);
+        await new Promise((resolve) => setTimeout(resolve, 0));
+
+        assert.notStrictEqual(controller.countdownReady, true, 'the countdown never starts');
     });
 });
