@@ -81,6 +81,8 @@ Fleetbase is made up of modules that install into the console as extensions. Eac
 | [Pallet](https://www.fleetbase.io/docs/pallet) | Warehouse management for inventory, pick lists, cycle counts, and fulfilment. |
 | [Ledger](https://www.fleetbase.io/docs/ledger) | Invoicing, payments, wallets, and accounting for logistics operators. |
 | [AI](https://fleetbase.io/platform/ai) | Natural-language order creation, operational queries, and order insights powered by OpenAI or Claude. |
+| [IAM](https://www.fleetbase.io/docs/platform/identity-and-access/users) | Identity and access management: users, groups, roles, policies, and two-factor authentication across your organization. |
+| [Developers](https://www.fleetbase.io/docs/platform/developer-console) | The developer console: API keys, webhooks, socket and system events, and request logs, with separate test and live environments. |
 | [Navigator App](https://github.com/fleetbase/navigator-app) | Open-source driver app for iOS and Android with real-time dispatch, navigation, and proof of delivery. |
 | [Storefront App](https://github.com/fleetbase/storefront-app) | Open-source iOS and Android app for launching your own shop or marketplace. |
 
@@ -119,7 +121,7 @@ Fleetbase is made up of modules that install into the console as extensions. Eac
     </td>
     <td width="50%" valign="top">
       <img src="https://fleetbase.io/images/screenshots/fleet-ops/fleet-ops-orchestrator-1.webp" alt="Fleet-Ops orchestrator workbench" width="100%" />
-      <p align="center"><strong>Orchestrator</strong><br>Plan and assign batches of orders across available vehicles and drivers.</p>
+      <p align="center"><strong>Orchestrator</strong><br>Allocate vehicles and drivers, assign orders in batches, and plan and schedule routes before committing.</p>
     </td>
   </tr>
   <tr>
