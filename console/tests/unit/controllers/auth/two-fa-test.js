@@ -249,4 +249,14 @@ module('Unit | Controller | auth/two-fa | client token expiry', function (hooks)
     test('a token with no separator yields no expiry', function (assert) {
         assert.strictEqual(this.controller.getExpirationDateFromClientToken(this.token('sessiononly')), null);
     });
+
+    test('a missing or non-string token yields no expiry', function (assert) {
+        assert.strictEqual(this.controller.getExpirationDateFromClientToken(undefined), null, 'no token');
+        assert.strictEqual(this.controller.getExpirationDateFromClientToken(''), null, 'an empty token');
+        assert.strictEqual(this.controller.getExpirationDateFromClientToken(12345), null, 'a non-string token');
+    });
+
+    test('a token that is not valid base64 yields no expiry instead of throwing', function (assert) {
+        assert.strictEqual(this.controller.getExpirationDateFromClientToken('!!!'), null);
+    });
 });
