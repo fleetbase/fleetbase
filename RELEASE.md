@@ -1,33 +1,42 @@
-> v0.7.61 ~ "Hotfix: hidden tooltips and popovers in production builds"
+> v0.7.62 ~ "Telematics reliability"
 
 ---
 ## Highlights
-Fleetbase `0.7.61` is a hotfix release. Since `0.7.60`, every tooltip and popover in production Console builds rendered visible without a hover. Ember UI `0.4.2` fixes the build configuration that caused it.
+Fleetbase `0.7.62` ships Fleet-Ops `0.6.67`, a telematics reliability release. Safee / DSCO syncs now use a few batched requests instead of several requests per vehicle, polling recovers from transient provider failures within a minute, and large instances can move telematics work onto dedicated queue workers. The FrankenPHP worker entrypoint is now kept in version control.
 
 ---
 ## Component Versions
-- `console`: `0.7.61`
+- `console`: `0.7.62`
 - `core-api`: `1.6.62`
-- `fleetops`: `0.6.66`
+- `fleetops`: `0.6.67`
 - `fleetops-data`: `0.2.1`
 - `ember-ui`: `0.4.2`
 
 ---
-## Ember UI
-- Fixed `Attach::Tooltip` and `Attach::Popover` showing at full opacity without a hover in production builds.
-- Ember UI `0.4.1` started passing the host's browser targets to PostCSS Preset Env. With the Console's modern targets, nested CSS was no longer flattened, and the production CSS minifier could not parse the nested attacher rules that keep attachments hidden. Nesting is now always flattened, whatever the targets.
-- Added a build test that compiles and minifies the attacher styles for the Console's targets and checks that the hide rules survive.
+## Fleet-Ops
+- Safee / DSCO polling fetches current position, speed, heading and odometer in batches of up to 1,000 vehicles with a cached vehicle list. A 93-vehicle fleet uses one request per minute instead of about 281.
+- Safee access tokens are cached encrypted and refreshed before expiry, requests stay within Safee's 50-per-second account limit, and rate-limit responses are honoured.
+- Poll attempts finish within the queue's 90-second reservation, so bounded providers no longer fail with "SyncTelematicDevicesJob has been attempted too many times". Older queued sync jobs hand off to bounded polling.
+- Scheduled poll retries wait at most 60 seconds after a transient provider or TLS failure, and connections in an error state keep being polled.
+- Vehicles that have never reported a position no longer mark sweeps partial, quarantine deliveries, or show the connection as degraded.
+- AFAQY recovers from unreadable cached tokens and shares one request deadline across sign-in and unit retrieval.
+- New opt-in `TELEMATICS_BROADCAST_QUEUE`, alongside `TELEMATICS_POLL_QUEUE` and `TELEMATICS_INGESTION_QUEUE`, moves telematics polling, position processing and live-map broadcasts to dedicated workers. Nothing changes when they are unset. See `docs/TELEMATICS_QUEUES.md` in Fleet-Ops.
+- Adds a `device_events` UUID lookup index. Run migrations when deploying.
 
 ---
 ## Console and API Packages
-- Bumped the root Docker image version to `0.7.61`.
-- Bumped Console to `0.7.61`.
-- Updated the Console dependency for `@fleetbase/ember-ui` to `^0.4.2`.
-- Updated the `ember-ui` submodule to its `v0.4.2` release tag.
+- Bumped the root Docker image version to `0.7.62`.
+- Bumped Console to `0.7.62`.
+- Updated the API dependency for `fleetbase/fleetops-api` and the Console dependency for `@fleetbase/fleetops-engine` to `^0.6.67`.
+- Updated the `fleetops` submodule to its `v0.6.67` release tag.
+- Updated the API and Console lockfiles for Fleet-Ops `0.6.67`.
+- Added the application-owned `api/public/frankenphp-worker.php`. It removes PHP's script time limit during worker startup, because booting is not an HTTP request and can exceed the default limit; Octane still applies the configured per-request limit. `api/.gitignore` no longer ignores the file, so Octane uses it instead of generating its stub.
 
 ---
 ## Bug Fixes
-- Fixed tooltips and popovers appearing without a hover in production Console builds.
+- Fixed telematics syncs failing with "SyncTelematicDevicesJob has been attempted too many times" for Safee and other bounded polling providers.
+- Fixed telematics polling pausing for several minutes after a transient provider timeout.
+- Fixed FrankenPHP worker startup being cut off by PHP's default script time limit.
 
 ---
 ## Upgrade Steps
