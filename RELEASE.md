@@ -1,40 +1,38 @@
-> v0.7.62 ~ "Telematics reliability"
+> v0.7.63 ~ "Telematics sync status and SASCO fuel"
 
 ---
 ## Highlights
-Fleetbase `0.7.62` ships Fleet-Ops `0.6.67`, a telematics reliability release. Safee / DSCO syncs now use a few batched requests instead of several requests per vehicle, polling recovers from transient provider failures within a minute, and large instances can move telematics work onto dedicated queue workers.
+Fleetbase `0.7.63` ships Fleet-Ops `0.6.68`. Telematics connections now show their real sync state: completed background sweeps update the status and last sync time, and "Sync Devices" works while polling is running. SASCO joins PetroApp as a native fuel provider.
 
 ---
 ## Component Versions
-- `console`: `0.7.62`
+- `console`: `0.7.63`
 - `core-api`: `1.6.62`
-- `fleetops`: `0.6.67`
+- `fleetops`: `0.6.68`
 - `fleetops-data`: `0.2.1`
 - `ember-ui`: `0.4.2`
 
 ---
 ## Fleet-Ops
-- Safee / DSCO polling fetches current position, speed, heading and odometer in batches of up to 1,000 vehicles with a cached vehicle list. A 93-vehicle fleet uses one request per minute instead of about 281.
-- Safee access tokens are cached encrypted and refreshed before expiry, requests stay within Safee's 50-per-second account limit, and rate-limit responses are honoured.
-- Poll attempts finish within the queue's 90-second reservation, so bounded providers no longer fail with "SyncTelematicDevicesJob has been attempted too many times". Older queued sync jobs hand off to bounded polling.
-- Scheduled poll retries wait at most 60 seconds after a transient provider or TLS failure, and connections in an error state keep being polled.
-- Vehicles that have never reported a position no longer mark sweeps partial, quarantine deliveries, or show the connection as degraded.
-- AFAQY recovers from unreadable cached tokens and shares one request deadline across sign-in and unit retrieval.
-- New opt-in `TELEMATICS_BROADCAST_QUEUE`, alongside `TELEMATICS_POLL_QUEUE` and `TELEMATICS_INGESTION_QUEUE`, moves telematics polling, position processing and live-map broadcasts to dedicated workers. Nothing changes when they are unset. See `docs/TELEMATICS_QUEUES.md` in Fleet-Ops.
-- Adds a `device_events` UUID lookup index. Run migrations when deploying.
+- Each completed scheduled telematics sweep updates the connection status and last sync time, so a connection that has recovered no longer shows "Needs attention" or an old last sync date.
+- "Sync Devices" no longer fails with "already queued or running" while a scheduled sweep is queued or running. The request is recorded and the next sweep completes it.
+- Manual sync requests left behind by a lost or interrupted job are completed by the next scheduled sweep instead of staying queued or failed.
+- SASCO B2B is available as a native fuel provider, with sandbox and production environments, SAR amounts, driver details and receipt images. Transactions are matched to vehicles by plate.
+- Fuel provider environment labels and sync run details no longer refer to PetroApp for other providers.
+- The dedicated telematics worker guide now requires every worker to share the queue worker's image and `APP_KEY`, and adds verification and troubleshooting steps.
 
 ---
 ## Console and API Packages
-- Bumped the root Docker image version to `0.7.62`.
-- Bumped Console to `0.7.62`.
-- Updated the API dependency for `fleetbase/fleetops-api` and the Console dependency for `@fleetbase/fleetops-engine` to `^0.6.67`.
-- Updated the `fleetops` submodule to its `v0.6.67` release tag.
-- Updated the API and Console lockfiles for Fleet-Ops `0.6.67`.
+- Bumped the root Docker image version to `0.7.63`.
+- Bumped Console to `0.7.63`.
+- Updated the API dependency for `fleetbase/fleetops-api` and the Console dependency for `@fleetbase/fleetops-engine` to `^0.6.68`.
+- Updated the `fleetops` submodule to its `v0.6.68` release tag.
+- Updated the API and Console lockfiles for Fleet-Ops `0.6.68`.
 
 ---
 ## Bug Fixes
-- Fixed telematics syncs failing with "SyncTelematicDevicesJob has been attempted too many times" for Safee and other bounded polling providers.
-- Fixed telematics polling pausing for several minutes after a transient provider timeout.
+- Fixed telematics connections showing "Needs attention" and a stale last sync after scheduled polling recovered.
+- Fixed "Sync Devices" failing with "already queued or running" while telematics polling was active.
 
 ---
 ## Upgrade Steps
