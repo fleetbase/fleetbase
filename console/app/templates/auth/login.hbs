@@ -104,3 +104,66 @@
         </RegistryYield>
     </div>
 </form>
+
+{{!-- OAuth providers (issue #453). Buttons render only when the
+      corresponding provider is configured in ENV.oauth — deployments
+      without OAuth credentials see no broken / unconfigured buttons. --}}
+{{#if this.anyOauthConfigured}}
+    <div class="flex items-center my-6">
+        <div class="flex-grow border-t border-gray-300 dark:border-gray-700"></div>
+        <span class="px-3 text-xs font-medium text-gray-500 uppercase dark:text-gray-400">
+            {{t "auth.login.oauth.divider"}}
+        </span>
+        <div class="flex-grow border-t border-gray-300 dark:border-gray-700"></div>
+    </div>
+
+    <div class="space-y-3">
+        {{#if this.isGoogleConfigured}}
+            <Button
+                @text={{t "auth.login.oauth.google.button"}}
+                @icon="google"
+                @iconPrefix="fab"
+                @type="default"
+                @wrapperClass="btn-block"
+                @disabled={{this.isLoading}}
+                @onClick={{this.loginWithGoogle}}
+            />
+        {{/if}}
+
+        {{#if this.isFacebookConfigured}}
+            <Button
+                @text={{t "auth.login.oauth.facebook.button"}}
+                @icon="facebook"
+                @iconPrefix="fab"
+                @type="default"
+                @wrapperClass="btn-block"
+                @disabled={{this.isLoading}}
+                @onClick={{this.loginWithFacebook}}
+            />
+        {{/if}}
+
+        {{#if this.isOffice365Configured}}
+            <Button
+                @text={{t "auth.login.oauth.office365.button"}}
+                @icon="microsoft"
+                @iconPrefix="fab"
+                @type="default"
+                @wrapperClass="btn-block"
+                @disabled={{this.isLoading}}
+                @onClick={{this.loginWithOffice365}}
+            />
+        {{/if}}
+
+        {{#if this.isAppleConfigured}}
+            <Button
+                @text={{t "auth.login.oauth.apple.button"}}
+                @icon="apple"
+                @iconPrefix="fab"
+                @type="default"
+                @wrapperClass="btn-block"
+                @disabled={{this.isLoading}}
+                @onClick={{this.loginWithApple}}
+            />
+        {{/if}}
+    </div>
+{{/if}}
