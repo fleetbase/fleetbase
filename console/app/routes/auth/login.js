@@ -8,6 +8,7 @@ export default class AuthLoginRoute extends Route {
     @service universe;
     @service installation;
     @service router;
+    @service oauth;
 
     @action activate() {
         removeBootLoader();
@@ -31,6 +32,13 @@ export default class AuthLoginRoute extends Route {
         }
 
         this.session.prohibitAuthentication('console');
+
+        // Which providers to offer is a server-side decision an administrator makes at
+        // runtime, so it cannot come from the build-time config. Not awaited as a
+        // blocking step of sign-in: a failure here leaves the list empty and the form
+        // renders email/password exactly as it did before OAuth existed.
+        this.oauth.loadProviders();
+
         return this.universe.virtualRouteRedirect(transition, 'auth:login', 'virtual', { restoreQueryParams: true });
     }
 }
