@@ -589,6 +589,25 @@ auth:
       forgot-password-label: Parolingizni unutdingizmi?
       sign-in-button: Kirish
       create-account-button: Yangi hisob yaratish
+    oauth:
+      divider: 'Yoki davom eting'
+      continue-with: '{provider} bilan davom etish'
+      signing-in: 'Tizimga kirilmoqda...'
+      finish-signup: 'Davom etish uchun Fleetbase hisobingizni sozlashni yakunlang.'
+      errors:
+        generic: 'Kirishni yakunlab bo‘lmadi. Qaytadan urinib ko‘ring.'
+        access-denied: 'Kirish bekor qilindi.'
+        provider-error: 'Kirish provayderi xatolik haqida xabar berdi. Qaytadan urinib ko‘ring.'
+        provider-disabled: 'Bu kirish usuli mavjud emas.'
+        invalid-state: 'Bu kirish havolasi endi yaroqli emas. Qaytadan urinib ko‘ring.'
+        exchange-failed: 'Kirish provayderiga ulanib bo‘lmadi. Qaytadan urinib ko‘ring.'
+        expired: 'Bu kirish seansi muddati tugagan. Qaytadan urinib ko‘ring.'
+        hosted-domain: 'Hisobingiz ruxsat etilgan domenga tegishli emas.'
+        registration-disabled: 'Yangi ro‘yxatdan o‘tish mavjud emas.'
+        link-required: 'Bu e-pochta bilan hisob allaqachon mavjud. Tizimga kiring va hisob sozlamalaridan ushbu provayderni bog‘lang.'
+        customer-account: 'Mijoz hisoblari mijozlar portali orqali kirishi kerak.'
+        not-verified: 'Davom etish uchun hisobingiz tasdiqlanishi kerak.'
+        rate-limited: 'Urinishlar juda ko‘p. Birozdan so‘ng qayta urinib ko‘ring.'
     slow-connection-message: Ulanish muammolari yuzaga kelmoqda.
   reset-password:
     success-message: Parolingiz tiklandi! Davom etish uchun tizimga kiring.
@@ -755,6 +774,7 @@ onboard:
     password-help-text: Sizning parolingiz, yaxshi ekanligiga ishonch hosil qiling.
     confirm-password: Parolingizni tasdiqlang
     confirm-password-help-text: Yuqorida kiritgan parolingizni tasdiqlash uchun.
+    oauth-verified: 'Shaxsingiz tasdiqlandi. Parol kerak emas — provayderingiz orqali kirasiz.'
     continue-button-text: Davom etish
   verify-email:
     header-title: Hisobni tekshirish

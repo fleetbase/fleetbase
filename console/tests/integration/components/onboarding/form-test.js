@@ -247,4 +247,95 @@ module('Integration | Component | onboarding/form | onboard', function (hooks) {
 
         assert.deepEqual(this.notifications().serverErrors, [failure]);
     });
+
+    test('a signup started from a provider drops the password fields and prefills the identity', async function (assert) {
+        const oauth = this.owner.lookup('service:oauth');
+        oauth.setRegistration({ intent: 'rti_abc', prefill: { name: 'Ada Lovelace', email: 'ada@example.com', email_verified: true } });
+
+        await render(hbs`<Onboarding::Form />`);
+
+        // The provider identity IS the credential, so no password is collected.
+        assert.dom('input[type="password"]').doesNotExist('no password fields are rendered');
+        assert.dom('input[type="email"]').hasValue('ada@example.com', 'the provider email is prefilled');
+        assert.dom('input[type="email"]').isDisabled('the email is locked to the address the provider verified');
+    });
+
+    test('a provider signup can be submitted without a password', async function (assert) {
+        const oauth = this.owner.lookup('service:oauth');
+        oauth.setRegistration({ intent: 'rti_abc', prefill: { name: 'Ada Lovelace', email: 'ada@example.com' } });
+
+        const captured = captureComponent(this.owner, 'onboarding/form', OnboardingFormComponent);
+        await render(hbs`<Onboarding::Form />`);
+
+        const component = captured.instance;
+        component.phone = '+15555550123';
+        component.organization_name = 'Compiler Logistics';
+
+        assert.true(component.hasOauthIntent, 'the component picked up the intent');
+        assert.true(component.filled, 'a password is not required to submit');
+        assert.deepEqual(component.requiredFields, ['name', 'email', 'phone', 'organization_name']);
+    });
+
+    test('a password signup still requires a password', async function (assert) {
+        const captured = captureComponent(this.owner, 'onboarding/form', OnboardingFormComponent);
+        await render(hbs`<Onboarding::Form />`);
+
+        const component = captured.instance;
+        component.name = 'Ada Lovelace';
+        component.email = 'ada@example.com';
+        component.phone = '+15555550123';
+        component.organization_name = 'Compiler Logistics';
+
+        assert.false(component.hasOauthIntent);
+        assert.false(component.filled, 'the password fields are still required');
+
+        component.password = 'correct horse battery staple';
+        component.password_confirmation = 'correct horse battery staple';
+        assert.true(component.filled);
+    });
+
+    test('the intent is sent with the signup and cleared once spent', async function (assert) {
+        const posted = [];
+
+        class FetchStub extends Service {
+            post(path, body) {
+                posted.push({ path, body });
+                return Promise.resolve({ status: 'success', session: 'sess', skipVerification: false });
+            }
+        }
+
+        this.owner.register('service:fetch', FetchStub);
+
+        const oauth = this.owner.lookup('service:oauth');
+        oauth.setRegistration({ intent: 'rti_abc', prefill: { name: 'Ada Lovelace', email: 'ada@example.com' } });
+
+        this.noop = () => {};
+
+        const captured = captureComponent(this.owner, 'onboarding/form', OnboardingFormComponent);
+        await render(hbs`<Onboarding::Form @context={{hash persist=this.noop}} @orchestrator={{hash next=this.noop}} />`);
+
+        const component = captured.instance;
+        component.phone = '+15555550123';
+        component.organization_name = 'Compiler Logistics';
+
+        await component.onboard.perform();
+
+        assert.strictEqual(posted.length, 1, 'the account was created');
+        assert.strictEqual(posted[0].body.oauth_intent, 'rti_abc', 'the intent is sent in place of a password');
+        assert.notOk(posted[0].body.password, 'no password is sent');
+        // Single use: it is spent server side and must not be replayed.
+        assert.strictEqual(oauth.registration, null, 'the intent is cleared afterwards');
+    });
+
+    test('the intent is never written to the onboarding context', async function (assert) {
+        const context = this.owner.lookup('service:onboarding-context');
+
+        context.set('oauth_intent', 'rti_abc', { persist: true });
+        context.merge({ oauth_intent: 'rti_def', organization_name: 'Compiler Logistics' }, { persist: true });
+
+        // It is a single-use bearer credential proving a verified identity; it belongs
+        // in memory for the length of the wizard, not in localStorage.
+        assert.notOk(context.data.oauth_intent, 'the intent is not held in the context');
+        assert.strictEqual(context.data.organization_name, 'Compiler Logistics', 'other values still merge');
+    });
 });

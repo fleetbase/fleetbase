@@ -574,6 +574,25 @@ auth:
       forgot-password-label: Esqueceu sua senha?
       sign-in-button: Entrar
       create-account-button: Criar uma nova conta
+    oauth:
+      divider: 'Ou continuar com'
+      continue-with: 'Continuar com {provider}'
+      signing-in: 'Entrando...'
+      finish-signup: 'Conclua a configuração da sua conta Fleetbase para continuar.'
+      errors:
+        generic: 'Não foi possível concluir o login. Tente novamente.'
+        access-denied: 'O login foi cancelado.'
+        provider-error: 'O provedor de login relatou um problema. Tente novamente.'
+        provider-disabled: 'Esse método de login não está disponível.'
+        invalid-state: 'Esse link de login não é mais válido. Tente novamente.'
+        exchange-failed: 'Não foi possível contatar o provedor de login. Tente novamente.'
+        expired: 'Essa sessão de login expirou. Tente novamente.'
+        hosted-domain: 'Sua conta não pertence a um domínio permitido.'
+        registration-disabled: 'Novos cadastros não estão disponíveis.'
+        link-required: 'Já existe uma conta com este e-mail. Entre e vincule este provedor nas configurações da sua conta.'
+        customer-account: 'Contas de cliente devem entrar pelo portal do cliente.'
+        not-verified: 'Sua conta precisa ser verificada para continuar.'
+        rate-limited: 'Muitas tentativas. Tente novamente em breve.'
     slow-connection-message: Problemas de conexão detectados.
   reset-password:
     success-message: Sua senha foi redefinida! Faça login para continuar.
@@ -741,6 +760,7 @@ onboard:
     password-help-text: Sua senha, certifique-se de que seja uma boa.
     confirm-password: Confirme sua senha
     confirm-password-help-text: Apenas para confirmar a senha que você digitou acima.
+    oauth-verified: 'Sua identidade foi verificada. Não é necessária senha — você entrará com seu provedor.'
     continue-button-text: Continuar
   verify-email:
     header-title: Verificação de Conta

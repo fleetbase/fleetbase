@@ -135,7 +135,7 @@ export default class OnboardingContextService extends Service {
         }
 
         // Filter out sensitive fields
-        const sensitiveFields = ['password', 'password_confirmation'];
+        const sensitiveFields = ['password', 'password_confirmation', 'oauth_intent'];
         const filteredData = {};
 
         for (const [key, value] of Object.entries(data)) {
@@ -164,7 +164,7 @@ export default class OnboardingContextService extends Service {
      */
     set(key, value, options = {}) {
         // Don't store sensitive fields
-        const sensitiveFields = ['password', 'password_confirmation'];
+        const sensitiveFields = ['password', 'password_confirmation', 'oauth_intent'];
         if (sensitiveFields.includes(key)) {
             return;
         }
