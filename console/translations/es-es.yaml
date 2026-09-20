@@ -578,6 +578,25 @@ auth:
       forgot-password-label: ¿Olvidaste tu contraseña?
       sign-in-button: Iniciar sesión
       create-account-button: Crear una nueva cuenta
+    oauth:
+      divider: 'O continuar con'
+      continue-with: 'Continuar con {provider}'
+      signing-in: 'Iniciando sesión...'
+      finish-signup: 'Termine de configurar su cuenta de Fleetbase para continuar.'
+      errors:
+        generic: 'No se pudo completar el inicio de sesión. Inténtelo de nuevo.'
+        access-denied: 'Se canceló el inicio de sesión.'
+        provider-error: 'El proveedor de inicio de sesión informó de un problema. Inténtelo de nuevo.'
+        provider-disabled: 'Ese método de inicio de sesión no está disponible.'
+        invalid-state: 'Ese enlace de inicio de sesión ya no es válido. Inténtelo de nuevo.'
+        exchange-failed: 'No se pudo contactar con el proveedor de inicio de sesión. Inténtelo de nuevo.'
+        expired: 'Esa sesión de inicio de sesión ha caducado. Inténtelo de nuevo.'
+        hosted-domain: 'Su cuenta no pertenece a un dominio permitido.'
+        registration-disabled: 'Los nuevos registros no están disponibles.'
+        link-required: 'Ya existe una cuenta con este correo electrónico. Inicie sesión y vincule este proveedor desde la configuración de su cuenta.'
+        customer-account: 'Las cuentas de cliente deben iniciar sesión a través del portal de clientes.'
+        not-verified: 'Su cuenta debe ser verificada para continuar.'
+        rate-limited: 'Demasiados intentos. Inténtelo de nuevo en breve.'
     slow-connection-message: Experimentando problemas de conectividad.
   reset-password:
     success-message: ¡Tu contraseña ha sido restablecida! Inicia sesión para continuar.
@@ -747,6 +766,7 @@ onboard:
     confirm-password: Confirma tu contraseña
     confirm-password-help-text: Solo para confirmar la contraseña que introdujiste
       arriba.
+    oauth-verified: 'Su identidad está verificada. No necesita contraseña: iniciará sesión con su proveedor.'
     continue-button-text: Continuar
   verify-email:
     header-title: Verificación de cuenta

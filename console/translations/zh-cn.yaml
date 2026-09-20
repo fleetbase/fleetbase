@@ -553,6 +553,25 @@ auth:
       forgot-password-label: 忘记密码？
       sign-in-button: 登录
       create-account-button: 创建新账户
+    oauth:
+      divider: '或使用以下方式继续'
+      continue-with: '使用 {provider} 继续'
+      signing-in: '正在登录...'
+      finish-signup: '请完成 Fleetbase 账户设置以继续。'
+      errors:
+        generic: '无法完成登录，请重试。'
+        access-denied: '登录已取消。'
+        provider-error: '登录服务提供方报告了一个问题，请重试。'
+        provider-disabled: '该登录方式不可用。'
+        invalid-state: '该登录链接已失效，请重试。'
+        exchange-failed: '无法连接到登录服务提供方，请重试。'
+        expired: '该登录会话已过期，请重试。'
+        hosted-domain: '您的账户不属于允许的域。'
+        registration-disabled: '当前不开放新用户注册。'
+        link-required: '该邮箱已存在账户。请登录后在账户设置中关联此登录方式。'
+        customer-account: '客户账户必须通过客户门户登录。'
+        not-verified: '您的账户需要通过验证才能继续。'
+        rate-limited: '尝试次数过多，请稍后重试。'
     slow-connection-message: 网络连接不稳定。
   reset-password:
     success-message: 密码已重置！请登录继续。
@@ -714,6 +733,7 @@ onboard:
     password-help-text: 您的密码，请确保密码安全。
     confirm-password: 确认密码
     confirm-password-help-text: 确认您上面输入的密码。
+    oauth-verified: '您的身份已验证。无需密码，您将使用该登录方式登录。'
     continue-button-text: 继续
   verify-email:
     header-title: 账户验证
