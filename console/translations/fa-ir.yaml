@@ -560,6 +560,25 @@ auth:
       forgot-password-label: رمز عبور خود را فراموش کرده‌اید؟
       sign-in-button: ورود
       create-account-button: ایجاد حساب جدید
+    oauth:
+      divider: 'یا ادامه با'
+      continue-with: 'ادامه با {provider}'
+      signing-in: 'در حال ورود...'
+      finish-signup: 'برای ادامه، راه‌اندازی حساب Fleetbase خود را کامل کنید.'
+      errors:
+        generic: 'ورود کامل نشد. لطفاً دوباره تلاش کنید.'
+        access-denied: 'ورود لغو شد.'
+        provider-error: 'ارائه‌دهنده ورود مشکلی گزارش کرد. لطفاً دوباره تلاش کنید.'
+        provider-disabled: 'این روش ورود در دسترس نیست.'
+        invalid-state: 'این پیوند ورود دیگر معتبر نیست. لطفاً دوباره تلاش کنید.'
+        exchange-failed: 'دسترسی به ارائه‌دهنده ورود ممکن نشد. لطفاً دوباره تلاش کنید.'
+        expired: 'این نشست ورود منقضی شده است. لطفاً دوباره تلاش کنید.'
+        hosted-domain: 'حساب شما در دامنه مجاز قرار ندارد.'
+        registration-disabled: 'ثبت‌نام جدید در دسترس نیست.'
+        link-required: 'حسابی با این ایمیل از قبل وجود دارد. وارد شوید و این ارائه‌دهنده را از تنظیمات حساب خود متصل کنید.'
+        customer-account: 'حساب‌های مشتری باید از طریق پورتال مشتری وارد شوند.'
+        not-verified: 'برای ادامه، حساب شما باید تأیید شود.'
+        rate-limited: 'تلاش‌های بیش از حد. لطفاً کمی بعد دوباره تلاش کنید.'
     slow-connection-message: در حال تجربه مشکلات اتصال
   reset-password:
     success-message: رمز عبور شما بازنشانی شد! برای ادامه وارد شوید
@@ -721,6 +740,7 @@ onboard:
     password-help-text: رمز عبور شما، مطمئن شوید که قوی است
     confirm-password: رمز عبور خود را تأیید کنید
     confirm-password-help-text: فقط برای تأیید رمز عبوری که در بالا وارد کرده‌اید
+    oauth-verified: 'هویت شما تأیید شد. نیازی به رمز عبور نیست — با ارائه‌دهنده خود وارد می‌شوید.'
     continue-button-text: ادامه
   verify-email:
     header-title: تأیید حساب

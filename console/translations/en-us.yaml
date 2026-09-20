@@ -616,6 +616,25 @@ auth:
       forgot-password-label: Forgot your password?
       sign-in-button: Sign in
       create-account-button: Create a new Account
+    oauth:
+      divider: 'Or continue with'
+      continue-with: 'Continue with {provider}'
+      signing-in: 'Signing you in...'
+      finish-signup: 'Finish setting up your Fleetbase account to continue.'
+      errors:
+        generic: 'We could not complete that sign-in. Please try again.'
+        access-denied: 'Sign-in was cancelled.'
+        provider-error: 'The sign-in provider reported a problem. Please try again.'
+        provider-disabled: 'That sign-in method is not available.'
+        invalid-state: 'That sign-in link is no longer valid. Please try again.'
+        exchange-failed: 'We could not reach the sign-in provider. Please try again.'
+        expired: 'That sign-in session expired. Please try again.'
+        hosted-domain: 'Your account is not in an allowed domain.'
+        registration-disabled: 'New sign-ups are not available.'
+        link-required: 'An account with this email already exists. Sign in and link this provider from your account settings.'
+        customer-account: 'Customer accounts must sign in through the customer portal.'
+        not-verified: 'Your account needs to be verified to proceed.'
+        rate-limited: 'Too many attempts. Please try again shortly.'
     slow-connection-message: Experiencing connectivity issues.
 
   reset-password:
@@ -819,6 +838,7 @@ onboard:
     password-help-text: Your password, make sure it's a good one.
     confirm-password: Confirm your password
     confirm-password-help-text: Just to confirm the password you entered above.
+    oauth-verified: 'Your identity is verified. No password needed — you''ll sign in with your provider.'
     continue-button-text: Continue
   verify-email:
     header-title: Account Verification

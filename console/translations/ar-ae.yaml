@@ -569,6 +569,25 @@ auth:
       forgot-password-label: هل نسيت كلمة المرور؟
       sign-in-button: تسجيل الدخول
       create-account-button: إنشاء حساب جديد
+    oauth:
+      divider: 'أو المتابعة باستخدام'
+      continue-with: 'المتابعة باستخدام {provider}'
+      signing-in: 'جارٍ تسجيل الدخول...'
+      finish-signup: 'أكمل إعداد حساب Fleetbase للمتابعة.'
+      errors:
+        generic: 'تعذّر إكمال تسجيل الدخول. يرجى المحاولة مرة أخرى.'
+        access-denied: 'تم إلغاء تسجيل الدخول.'
+        provider-error: 'أبلغ مزوّد تسجيل الدخول عن مشكلة. يرجى المحاولة مرة أخرى.'
+        provider-disabled: 'طريقة تسجيل الدخول هذه غير متاحة.'
+        invalid-state: 'لم يعد رابط تسجيل الدخول هذا صالحًا. يرجى المحاولة مرة أخرى.'
+        exchange-failed: 'تعذّر الوصول إلى مزوّد تسجيل الدخول. يرجى المحاولة مرة أخرى.'
+        expired: 'انتهت صلاحية جلسة تسجيل الدخول. يرجى المحاولة مرة أخرى.'
+        hosted-domain: 'حسابك لا ينتمي إلى نطاق مسموح به.'
+        registration-disabled: 'التسجيلات الجديدة غير متاحة.'
+        link-required: 'يوجد حساب بهذا البريد الإلكتروني بالفعل. سجّل الدخول واربط هذا المزوّد من إعدادات حسابك.'
+        customer-account: 'يجب على حسابات العملاء تسجيل الدخول عبر بوابة العملاء.'
+        not-verified: 'يجب التحقق من حسابك للمتابعة.'
+        rate-limited: 'محاولات كثيرة جدًا. يرجى المحاولة بعد قليل.'
     slow-connection-message: تواجه مشاكل في الاتصال.
   reset-password:
     success-message: تم إعادة تعيين كلمة المرور! قم بتسجيل الدخول للمتابعة.
@@ -733,6 +752,7 @@ onboard:
     password-help-text: كلمة مرورك، تأكد من أنها قوية.
     confirm-password: تأكيد كلمة المرور
     confirm-password-help-text: فقط لتأكيد كلمة المرور التي أدخلتها أعلاه.
+    oauth-verified: 'تم التحقق من هويتك. لا حاجة إلى كلمة مرور — ستسجّل الدخول عبر مزوّدك.'
     continue-button-text: متابعة
   verify-email:
     header-title: التحقق من الحساب
