@@ -12,6 +12,7 @@ export default class AuthLoginController extends Controller {
     @service router;
     @service intl;
     @service fetch;
+    @service oauth;
 
     /**
      * Whether or not to remember the users session
@@ -148,6 +149,34 @@ export default class AuthLoginController extends Controller {
         if (this.session.isAuthenticated) {
             this.success();
         }
+    }
+
+    /**
+     * Begin an OAuth sign-in.
+     *
+     * Deliberately does not reuse login(): that unconditionally checks two-factor
+     * status for a typed identity first, and here there is no identity to check —
+     * the provider has not told us who this is yet. Two-factor is still enforced,
+     * by the server, when the handshake comes back.
+     *
+     * @param {Object} provider
+     * @return {void}
+     */
+    @action continueWithProvider(provider) {
+        if (this.isLoading || !provider?.id) {
+            return;
+        }
+
+        this.set('isLoading', true);
+
+        // The server validates this path and echoes it back through the callback; it
+        // never reaches the redirect host.
+        const shift = this.urlSearchParams.get('shift');
+
+        this.oauth.startAuthorization(provider.id, {
+            intent: 'login',
+            returnTo: shift && shift.startsWith('/') ? shift : null,
+        });
     }
 
     /**
