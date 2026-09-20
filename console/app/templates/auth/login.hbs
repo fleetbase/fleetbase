@@ -91,6 +91,27 @@
             @onClick={{this.login}}
         />
         <Button @text={{t "auth.login.form.create-account-button"}} @icon="briefcase" @wrapperClass="btn-block" @disabled={{this.isLoading}} @onClick={{fn (transition-to "onboard")}} />
+
+        {{!-- Provider buttons. Rendered only for providers the API reports as enabled,
+              so an install with no OAuth configured sees the form exactly as before. --}}
+        {{#if this.oauth.isEnabled}}
+            <div class="flex items-center py-2">
+                <div class="flex-grow border-t border-gray-300 dark:border-gray-700"></div>
+                <span class="px-3 text-xs font-medium text-gray-500 uppercase dark:text-gray-400">{{t "auth.login.oauth.divider"}}</span>
+                <div class="flex-grow border-t border-gray-300 dark:border-gray-700"></div>
+            </div>
+
+            {{#each this.oauth.providers as |provider|}}
+                <Button
+                    @text={{t "auth.login.oauth.continue-with" provider=provider.label}}
+                    @icon={{provider.icon}}
+                    @iconPrefix="fab"
+                    @wrapperClass="btn-block"
+                    @disabled={{this.isLoading}}
+                    @onClick={{fn this.continueWithProvider provider}}
+                />
+            {{/each}}
+        {{/if}}
         <RegistryYield @type="menu" @registry="auth:login" as |menuItem|>
             <Button
                 @text={{menuItem.title}}
