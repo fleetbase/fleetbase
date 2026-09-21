@@ -651,6 +651,7 @@ console:
       filesystem: Sistema de Arquivos
       queue: Fila
       socket: Socket
+      oauth: 'Login OAuth'
       push-notifications: Notificações Push
     schedule-monitor:
       schedule-monitor: Monitor de Agendamento
@@ -672,6 +673,8 @@ console:
         title: Configuração do Banco de Dados
       filesystem:
         title: Configuração do Sistema de Arquivos
+      oauth:
+        title: 'Configuração do login OAuth'
       mail:
         title: Configuração de Email
       notification-channels:

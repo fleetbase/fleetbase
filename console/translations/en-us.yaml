@@ -698,6 +698,7 @@ console:
       filesystem: Filesystem
       queue: Queue
       socket: Socket
+      oauth: 'OAuth Sign-in'
       push-notifications: Push Notifications
     schedule-monitor:
       schedule-monitor: Schedule Monitor
@@ -720,6 +721,8 @@ console:
         title: Database Configuration
       filesystem:
         title: Filesystem Configuration
+      oauth:
+        title: 'OAuth Sign-in Configuration'
       mail:
         title: Mail Configuration
       notification-channels: 

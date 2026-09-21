@@ -653,6 +653,7 @@ console:
       filesystem: Файлова система
       queue: Опашка
       socket: Сокет
+      oauth: 'Вход чрез OAuth'
       push-notifications: Известия
     schedule-monitor:
       schedule-monitor: Монитор на графика
@@ -674,6 +675,8 @@ console:
         title: Конфигурация на базата данни
       filesystem:
         title: Конфигурация на файловата система
+      oauth:
+        title: 'Настройка на вход чрез OAuth'
       mail:
         title: Конфигурация на пощата
       notification-channels:

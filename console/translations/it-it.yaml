@@ -683,6 +683,7 @@ console:
       filesystem: Filesystem
       queue: Coda
       socket: Socket
+      oauth: 'Accesso OAuth'
       push-notifications: Notifiche push
     schedule-monitor:
       schedule-monitor: Monitoraggio pianificazioni
@@ -705,6 +706,8 @@ console:
         title: Configurazione database
       filesystem:
         title: Configurazione filesystem
+      oauth:
+        title: 'Configurazione dell''accesso OAuth'
       mail:
         title: Configurazione posta
       notification-channels:
