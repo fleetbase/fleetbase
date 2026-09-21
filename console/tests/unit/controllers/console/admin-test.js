@@ -43,7 +43,7 @@ class IntlStub extends Service {
         'console.admin.menu.overview': 'Overview',
         'console.admin.menu.organizations': 'Organizations',
         'console.admin.menu.branding': 'Branding',
-        'console.admin.menu.2fa-config': '2FA Config',
+        'console.admin.menu.2fa-config': 'Two-Factor Auth',
         'console.admin.menu.platform-api-token': 'Platform API Token',
         'console.admin.schedule-monitor.schedule-monitor': 'Schedule Monitor',
         'console.admin.menu.services': 'Services',
@@ -222,7 +222,7 @@ module('Unit | Controller | console/admin', function (hooks) {
         assert.ok(authConfig, 'the group exists');
         assert.deepEqual(
             authConfig.children.map((item) => item.label),
-            ['OAuth Sign-in', '2FA Config'],
+            ['OAuth Sign-in', 'Two-Factor Auth'],
             'sign-in first, then the second factor'
         );
         // Grouping is sidebar-only: 2FA keeps its route, so existing links still work.
@@ -232,7 +232,7 @@ module('Unit | Controller | console/admin', function (hooks) {
         );
         assert.strictEqual(labels.indexOf('Auth Config') + 1, labels.indexOf('System Config'), 'auth config sits just before system config');
         assert.notOk(
-            controller.navigationItems.some((item) => item.label === '2FA Config'),
+            controller.navigationItems.some((item) => item.label === 'Two-Factor Auth'),
             '2FA is no longer a top-level item'
         );
     });

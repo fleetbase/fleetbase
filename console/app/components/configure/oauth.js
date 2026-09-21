@@ -45,7 +45,30 @@ export default class ConfigureOauthComponent extends Component {
 
     @tracked redirectUris = {};
 
+    /**
+     * The last check result per provider. Cleared when that provider's credentials
+     * are edited, because it no longer describes what is in the form.
+     *
+     * @var {Object}
+     */
     @tracked testResults = {};
+
+    /**
+     * Which providers are live on the server, as of the last load or save. A live
+     * provider can always be switched off; switching one on takes a passing check.
+     *
+     * @var {Object}
+     */
+    @tracked savedEnabled = {};
+
+    /**
+     * Whether each provider's panel starts open. Set once, on load: binding @open to
+     * anything that changes as the admin types makes ContentPanel reset its open state
+     * on every keystroke.
+     *
+     * @var {Object}
+     */
+    @tracked panelOpen = {};
 
     constructor() {
         super(...arguments);
@@ -84,6 +107,23 @@ export default class ConfigureOauthComponent extends Component {
         return this.values[providerId]?.enabled === true;
     }
 
+    /**
+     * Switching a provider off is always allowed. Switching one on needs the provider
+     * to have accepted the credentials currently in the form — the server enforces the
+     * same rule on save, this just says so before the admin gets that far.
+     */
+    @action canToggleProvider(providerId) {
+        return this.isProviderEnabled(providerId) || this.testResults[providerId]?.verified === true;
+    }
+
+    @action toggleHelp(provider) {
+        if (this.canToggleProvider(provider.id)) {
+            return null;
+        }
+
+        return `Run "Check configuration" to confirm ${provider.label} accepts these credentials before offering it.`;
+    }
+
     @action updateField(providerId, field, event) {
         const value = event?.target ? event.target.value : event;
 
@@ -91,6 +131,11 @@ export default class ConfigureOauthComponent extends Component {
             ...this.values,
             [providerId]: { ...(this.values[providerId] ?? {}), [field]: value },
         };
+
+        if (field !== 'enabled' && this.testResults[providerId]) {
+            const { [providerId]: stale, ...rest } = this.testResults; // eslint-disable-line no-unused-vars
+            this.testResults = rest;
+        }
     }
 
     @action toggleProvider(providerId, enabled) {
@@ -127,30 +172,38 @@ export default class ConfigureOauthComponent extends Component {
 
         this.values = values;
         this.secretStatus = secretStatus;
+        this.savedEnabled = Object.fromEntries(this.providers.map((provider) => [provider.id, values[provider.id].enabled]));
     }
 
     /**
-     * The save payload. Secret fields left empty are omitted rather than sent blank,
-     * so the stored value is kept.
+     * One provider's fields as they stand in the form. Secret fields left empty are
+     * omitted rather than sent blank, so the stored value is kept.
+     */
+    serializeProvider(provider) {
+        const current = this.values[provider.id] ?? {};
+        const out = { enabled: current.enabled === true };
+
+        for (const field of this.fieldsFor(provider)) {
+            const value = current[field.key];
+
+            if (field.secret && (value === undefined || value === null || String(value).trim() === '')) {
+                continue;
+            }
+
+            out[field.key] = value ?? '';
+        }
+
+        return out;
+    }
+
+    /**
+     * The save payload.
      */
     serialize() {
         const providers = {};
 
         for (const provider of this.providers) {
-            const current = this.values[provider.id] ?? {};
-            const out = { enabled: current.enabled === true };
-
-            for (const field of this.fieldsFor(provider)) {
-                const value = current[field.key];
-
-                if (field.secret && (value === undefined || value === null || String(value).trim() === '')) {
-                    continue;
-                }
-
-                out[field.key] = value ?? '';
-            }
-
-            providers[provider.id] = out;
+            providers[provider.id] = this.serializeProvider(provider);
         }
 
         return {
@@ -164,6 +217,7 @@ export default class ConfigureOauthComponent extends Component {
         try {
             const payload = yield this.fetch.get('settings/oauth-config');
             this.applyConfig(payload);
+            this.panelOpen = { ...this.savedEnabled };
         } catch (error) {
             this.notifications.serverError(error);
         }
@@ -180,32 +234,19 @@ export default class ConfigureOauthComponent extends Component {
         }
     }
 
+    /**
+     * Check the credentials currently in the form — saved or not — with the provider.
+     */
     @task *test(providerId) {
+        const provider = this.providers.find((candidate) => candidate.id === providerId);
+        // eslint-disable-next-line no-unused-vars
+        const { enabled, ...values } = this.serializeProvider(provider);
+
         try {
-            const result = yield this.fetch.post('settings/test-oauth-config', { provider: providerId });
+            const result = yield this.fetch.post('settings/test-oauth-config', { provider: providerId, values });
             this.testResults = { ...this.testResults, [providerId]: result };
         } catch (error) {
             this.notifications.serverError(error);
         }
-    }
-
-    @action testMessage(result) {
-        if (!result) {
-            return null;
-        }
-
-        if (result.problem === 'invalid_signing_key') {
-            return 'The signing key could not be used to mint a client secret. Check that it is the full .p8 file for this Key ID.';
-        }
-
-        if (result.problem === 'missing_credentials') {
-            return 'Some required credentials are missing. Fill in every required field and save before testing.';
-        }
-
-        if (result.configured && !result.enabled) {
-            return 'Credentials look complete. Enable the provider and save to offer it on the sign-in page.';
-        }
-
-        return 'Credentials look complete. Register the callback URL below with the provider if you have not already.';
     }
 }
