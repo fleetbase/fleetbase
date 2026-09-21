@@ -21,7 +21,7 @@
     </InputGroup>
 </ContentPanel>
 
-{{#each this.providers as |provider|}}
+{{#each this.providers key="id" as |provider|}}
     <ContentPanel @title={{provider.label}} @open={{get this.panelOpen provider.id}} @wrapperClass="bordered-classic">
         <InputGroup>
             <Toggle
@@ -44,7 +44,7 @@
                         class="form-input w-full font-mono text-xs"
                         rows="6"
                         @value={{this.valueFor provider.id field.key}}
-                        placeholder={{if field.secret (this.secretPlaceholder provider.id field.key) ""}}
+                        placeholder={{this.placeholderFor provider.id field}}
                         autocomplete="off"
                         spellcheck="false"
                         disabled={{this.load.isRunning}}
@@ -55,7 +55,7 @@
                         class="form-input w-full"
                         @type={{if field.secret "password" "text"}}
                         @value={{this.valueFor provider.id field.key}}
-                        placeholder={{if field.secret (this.secretPlaceholder provider.id field.key) ""}}
+                        placeholder={{this.placeholderFor provider.id field}}
                         autocomplete={{if field.secret "new-password" "off"}}
                         disabled={{this.load.isRunning}}
                         {{on "input" (fn this.updateField provider.id field.key)}}

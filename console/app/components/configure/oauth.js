@@ -85,6 +85,7 @@ export default class ConfigureOauthComponent extends Component {
         return Object.entries(provider?.schema ?? {}).map(([key, definition]) => ({
             key,
             label: definition.label ?? key,
+            placeholder: definition.placeholder ?? '',
             help: definition.help ?? null,
             secret: this.isSecret(definition),
             required: definition.required === true,
@@ -97,10 +98,14 @@ export default class ConfigureOauthComponent extends Component {
         return this.values[providerId]?.[field] ?? '';
     }
 
-    @action secretPlaceholder(providerId, field) {
-        const status = this.secretStatus[providerId]?.[field];
+    /**
+     * A saved secret is never sent back, so its box stays empty; the placeholder says
+     * one is saved. Otherwise, like every other field, it shows an example value.
+     */
+    @action placeholderFor(providerId, field) {
+        const status = field.secret ? this.secretStatus[providerId]?.[field.key] : null;
 
-        return status?.configured ? `Saved (${status.hint ?? '••••'}) — leave blank to keep` : 'Not set';
+        return status?.configured ? `Saved (${status.hint ?? '••••'}) — leave blank to keep` : field.placeholder;
     }
 
     @action isProviderEnabled(providerId) {
@@ -145,7 +150,14 @@ export default class ConfigureOauthComponent extends Component {
     @action applyConfig(payload = {}) {
         const oauth = payload.oauth ?? {};
 
-        this.providers = Array.isArray(payload.providers) ? payload.providers : [];
+        const providers = Array.isArray(payload.providers) ? payload.providers : [];
+
+        // A save answers with the same definitions. Keeping the objects the panels were
+        // rendered from stops every panel re-reading @open and snapping back to its
+        // on-load state, which would close whatever the admin had opened.
+        if (JSON.stringify(providers) !== JSON.stringify(this.providers)) {
+            this.providers = providers;
+        }
         this.redirectUris = payload.redirect_uris ?? {};
         this.enabled = oauth.enabled !== false;
         this.allowRegistration = oauth.allow_registration !== false;
