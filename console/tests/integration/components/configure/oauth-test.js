@@ -32,9 +32,9 @@ const CONFIG = {
             label: 'Google',
             icon: 'google',
             schema: {
-                client_id: { label: 'Client ID', required: true },
-                client_secret: { label: 'Client Secret', secret: true, required: true },
-                hosted_domain: { label: 'Restrict to Workspace domain' },
+                client_id: { label: 'Client ID', placeholder: '123-abc.apps.googleusercontent.com', required: true },
+                client_secret: { label: 'Client Secret', placeholder: 'GOCSPX-…', secret: true, required: true },
+                hosted_domain: { label: 'Restrict to Workspace domain', placeholder: 'example.com' },
             },
         },
         {
@@ -42,10 +42,10 @@ const CONFIG = {
             label: 'Apple',
             icon: 'apple',
             schema: {
-                client_id: { label: 'Services ID', required: true },
-                team_id: { label: 'Team ID', required: true },
-                key_id: { label: 'Key ID', required: true },
-                private_key: { label: 'Signing key (.p8)', secret: true, required: true },
+                client_id: { label: 'Services ID', placeholder: 'com.example.signin', required: true },
+                team_id: { label: 'Team ID', placeholder: 'A1B2C3D4E5', required: true },
+                key_id: { label: 'Key ID', placeholder: 'ABC123DEFG', required: true },
+                private_key: { label: 'Signing key (.p8)', placeholder: '-----BEGIN PRIVATE KEY-----', secret: true, required: true },
             },
         },
     ],
@@ -215,6 +215,26 @@ module('Integration | Component | configure/oauth', function (hooks) {
 
         assert.dom(this.element).containsText('Signing key (.p8)');
         assert.strictEqual(this.element.querySelectorAll('.next-content-panel-header.next-content-panel-is-closed').length, 0);
+    });
+
+    test('saving keeps opened panels open', async function (assert) {
+        await render(hbs`<div id="next-view-section-subheader-actions"></div><Configure::Oauth />`);
+        await expandAll(this.element);
+
+        await click('#next-view-section-subheader-actions button');
+
+        assert.dom(this.element).containsText('Signing key (.p8)', 'the disabled provider the admin opened is still open');
+        assert.strictEqual(this.element.querySelectorAll('.next-content-panel-header.next-content-panel-is-closed').length, 0);
+    });
+
+    test('every field shows a placeholder', async function (assert) {
+        await render(hbs`<div id="next-view-section-subheader-actions"></div><Configure::Oauth />`);
+        await expandAll(this.element);
+
+        const editable = [...this.element.querySelectorAll('.next-content-panel-body input:not([readonly]), .next-content-panel-body textarea')].filter((input) => input.type !== 'checkbox');
+
+        assert.ok(editable.length >= 7, 'every provider field is rendered');
+        editable.forEach((input, index) => assert.notStrictEqual(input.placeholder, '', `field ${index + 1} has a placeholder`));
     });
 
     test('a provider can only be switched on after the provider accepts its credentials', async function (assert) {
