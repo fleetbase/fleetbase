@@ -8,7 +8,7 @@ export default class ConsoleAdminController extends Controller {
     @service intl;
 
     get navigationItems() {
-        return [...this.coreNavigationItems, ...this.registryNavigationItems, ...this.registryPanelItems, this.systemConfigNavigationItem];
+        return [...this.coreNavigationItems, ...this.registryNavigationItems, ...this.registryPanelItems, this.authConfigNavigationItem, this.systemConfigNavigationItem];
     }
 
     get coreNavigationItems() {
@@ -33,13 +33,6 @@ export default class ConsoleAdminController extends Controller {
                 icon: 'palette',
                 route: 'console.admin.branding',
                 keywords: ['brand', 'logo', 'theme', 'colors'],
-            },
-            {
-                label: this.intl.t('console.admin.menu.2fa-config'),
-                description: 'Configure administrator two-factor authentication policy.',
-                icon: 'shield-halved',
-                route: 'console.admin.two-fa-settings',
-                keywords: ['two factor', '2fa', 'security', 'mfa'],
             },
             {
                 label: this.intl.t('console.admin.menu.platform-api-token'),
@@ -73,6 +66,36 @@ export default class ConsoleAdminController extends Controller {
                 children: (panel.items ?? []).map((menuItem) => this.buildRegistryItem(menuItem, panel)),
             };
         });
+    }
+
+    /**
+     * How people sign in — kept apart from System Config, which is infrastructure
+     * (mail, storage, queues). Grouping only affects the sidebar: each child keeps its
+     * own route, so existing links to the 2FA page are unaffected.
+     */
+    get authConfigNavigationItem() {
+        return {
+            label: 'Auth Config',
+            description: 'Configure how people sign in: OAuth providers and two-factor authentication.',
+            icon: 'user-shield',
+            keywords: ['auth', 'authentication', 'sign in', 'login', 'security'],
+            children: [
+                {
+                    label: this.intl.t('console.admin.menu.oauth'),
+                    description: 'Configure sign-in with Google, Microsoft, GitHub and Apple.',
+                    icon: 'right-to-bracket',
+                    route: 'console.admin.oauth-settings',
+                    keywords: ['oauth', 'sso', 'sign in', 'login', 'google', 'microsoft', 'github', 'apple'],
+                },
+                {
+                    label: this.intl.t('console.admin.menu.2fa-config'),
+                    description: 'Configure administrator two-factor authentication policy.',
+                    icon: 'shield-halved',
+                    route: 'console.admin.two-fa-settings',
+                    keywords: ['two factor', '2fa', 'security', 'mfa'],
+                },
+            ],
+        };
     }
 
     get systemConfigNavigationItem() {
@@ -116,13 +139,6 @@ export default class ConsoleAdminController extends Controller {
                     icon: 'plug',
                     route: 'console.admin.config.socket',
                     keywords: ['socket', 'realtime', 'websocket'],
-                },
-                {
-                    label: this.intl.t('console.admin.menu.oauth'),
-                    description: 'Configure sign-in with Google, Microsoft, GitHub and Apple.',
-                    icon: 'right-to-bracket',
-                    route: 'console.admin.config.oauth',
-                    keywords: ['oauth', 'sso', 'sign in', 'login', 'google', 'microsoft', 'github', 'apple'],
                 },
                 {
                     label: this.intl.t('console.admin.menu.push-notifications'),

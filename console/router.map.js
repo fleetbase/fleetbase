@@ -19,6 +19,7 @@ Router.map(function () {
         this.route('two-fa');
         this.route('verification');
         this.route('portal-login', { path: '/portal' });
+        this.route('oauth-callback', { path: '/oauth/callback' });
     });
     this.route('invite', { path: 'join' }, function () {
         this.route('for-driver', { path: '/fleet/:public_id' });
@@ -51,6 +52,7 @@ Router.map(function () {
             });
             this.route('branding');
             this.route('two-fa-settings');
+            this.route('oauth-settings');
             this.route('platform-api-token');
             this.route('virtual', { path: '/:slug' });
             this.route('organizations', function () {
