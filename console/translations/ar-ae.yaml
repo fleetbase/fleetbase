@@ -574,6 +574,14 @@ auth:
       continue-with: 'المتابعة باستخدام {provider}'
       signing-in: 'جارٍ تسجيل الدخول...'
       finish-signup: 'أكمل إعداد حساب Fleetbase للمتابعة.'
+      connected-accounts: 'الحسابات المرتبطة'
+      connected-accounts-help: 'سجّل الدخول عبر مزوّد بدلاً من كلمة المرور. يمكنك ربط أكثر من مزوّد.'
+      link-button: 'ربط'
+      unlink-button: 'إلغاء الربط'
+      unlink-title: 'إلغاء ربط {provider}؟'
+      unlink-body: 'لن تتمكن بعد الآن من تسجيل الدخول عبر {provider}. يمكنك ربطه مجددًا لاحقًا.'
+      linked: 'تم ربط المزوّد بحسابك.'
+      unlinked: 'تم إلغاء ربط {provider}.'
       errors:
         generic: 'تعذّر إكمال تسجيل الدخول. يرجى المحاولة مرة أخرى.'
         access-denied: 'تم إلغاء تسجيل الدخول.'
@@ -588,6 +596,10 @@ auth:
         customer-account: 'يجب على حسابات العملاء تسجيل الدخول عبر بوابة العملاء.'
         not-verified: 'يجب التحقق من حسابك للمتابعة.'
         rate-limited: 'محاولات كثيرة جدًا. يرجى المحاولة بعد قليل.'
+        already-linked: 'هذا المزوّد مرتبط بحسابك بالفعل.'
+        identity-already-linked: 'هذا الحساب مرتبط بالفعل بمستخدم Fleetbase آخر.'
+        last-credential: 'عيّن كلمة مرور أو اربط مزوّدًا آخر أولاً، وإلا فلن تتمكن من تسجيل الدخول.'
+        link-failed: 'تعذّر ربط هذا المزوّد. يرجى المحاولة مرة أخرى.'
     slow-connection-message: تواجه مشاكل في الاتصال.
   reset-password:
     success-message: تم إعادة تعيين كلمة المرور! قم بتسجيل الدخول للمتابعة.

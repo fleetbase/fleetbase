@@ -565,6 +565,14 @@ auth:
       continue-with: 'ادامه با {provider}'
       signing-in: 'در حال ورود...'
       finish-signup: 'برای ادامه، راه‌اندازی حساب Fleetbase خود را کامل کنید.'
+      connected-accounts: 'حساب‌های متصل'
+      connected-accounts-help: 'به‌جای رمز عبور با یک ارائه‌دهنده وارد شوید. می‌توانید بیش از یکی متصل کنید.'
+      link-button: 'اتصال'
+      unlink-button: 'قطع اتصال'
+      unlink-title: 'اتصال {provider} قطع شود؟'
+      unlink-body: 'دیگر نمی‌توانید با {provider} وارد شوید. بعداً می‌توانید دوباره آن را متصل کنید.'
+      linked: 'ارائه‌دهنده به حساب شما متصل شد.'
+      unlinked: 'اتصال {provider} قطع شد.'
       errors:
         generic: 'ورود کامل نشد. لطفاً دوباره تلاش کنید.'
         access-denied: 'ورود لغو شد.'
@@ -579,6 +587,10 @@ auth:
         customer-account: 'حساب‌های مشتری باید از طریق پورتال مشتری وارد شوند.'
         not-verified: 'برای ادامه، حساب شما باید تأیید شود.'
         rate-limited: 'تلاش‌های بیش از حد. لطفاً کمی بعد دوباره تلاش کنید.'
+        already-linked: 'این ارائه‌دهنده قبلاً به حساب شما متصل شده است.'
+        identity-already-linked: 'این حساب قبلاً به کاربر دیگری در Fleetbase متصل شده است.'
+        last-credential: 'ابتدا رمز عبور تعیین کنید یا ارائه‌دهنده دیگری متصل کنید، وگرنه نمی‌توانید وارد شوید.'
+        link-failed: 'اتصال این ارائه‌دهنده ممکن نشد. لطفاً دوباره تلاش کنید.'
     slow-connection-message: در حال تجربه مشکلات اتصال
   reset-password:
     success-message: رمز عبور شما بازنشانی شد! برای ادامه وارد شوید

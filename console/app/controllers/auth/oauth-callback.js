@@ -23,6 +23,8 @@ const ERROR_KEYS = {
     customer_login_not_allowed: 'auth.login.oauth.errors.customer-account',
     not_verified: 'auth.login.oauth.errors.not-verified',
     rate_limited: 'auth.login.oauth.errors.rate-limited',
+    already_linked: 'auth.login.oauth.errors.already-linked',
+    identity_already_linked: 'auth.login.oauth.errors.identity-already-linked',
 };
 
 export default class AuthOauthCallbackController extends Controller {
@@ -49,7 +51,11 @@ export default class AuthOauthCallbackController extends Controller {
      * @return {Promise<void>}
      */
     async start(payload = {}) {
-        const { handoff, error, returnTo } = payload;
+        const { handoff, error, returnTo, intent } = payload;
+
+        if (intent === 'link') {
+            return this.finishLink(handoff, error);
+        }
 
         if (error) {
             return this.fail(error);
@@ -71,6 +77,40 @@ export default class AuthOauthCallbackController extends Controller {
         }
 
         return this.handle(response, returnTo);
+    }
+
+    /**
+     * Finish linking a provider to the signed-in user.
+     *
+     * Goes through the protected endpoint, never the public exchange: the API checks
+     * that the signed-in user is the one who started the link. Either way the user is
+     * returned to their account page, where the result shows.
+     *
+     * @param {String|null} handoff
+     * @param {String|null} error
+     * @return {Promise<void>}
+     */
+    async finishLink(handoff, error) {
+        const destination = 'console.account.auth';
+
+        if (error || !handoff) {
+            this.isExchanging = false;
+            this.notifications.error(this.intl.t(ERROR_KEYS[error] ?? 'auth.login.oauth.errors.link-failed'));
+
+            return this.router.transitionTo(destination);
+        }
+
+        try {
+            await this.oauth.completeLink(handoff);
+            this.notifications.success(this.intl.t('auth.login.oauth.linked'));
+        } catch (serverError) {
+            const code = this.codeFrom(serverError);
+            this.notifications.error(this.intl.t(code === 'invalid_exchange_code' ? 'auth.login.oauth.errors.link-failed' : (ERROR_KEYS[code] ?? 'auth.login.oauth.errors.link-failed')));
+        }
+
+        this.isExchanging = false;
+
+        return this.router.transitionTo(destination);
     }
 
     /**

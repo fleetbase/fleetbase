@@ -43,6 +43,13 @@ module('Unit | Route | auth/oauth-callback', function (hooks) {
 
         const payload = route.model();
 
-        assert.deepEqual(payload, { handoff: null, error: null, returnTo: null });
+        assert.deepEqual(payload, { handoff: null, error: null, returnTo: null, intent: null });
+    });
+
+    test('it reads a link intent out of the fragment', function (assert) {
+        window.location.hash = '#handoff=abc123&intent=link';
+        const route = this.owner.lookup('route:auth/oauth-callback');
+
+        assert.strictEqual(route.model().intent, 'link');
     });
 });

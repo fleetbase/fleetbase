@@ -610,6 +610,14 @@ auth:
       continue-with: 'Mit {provider} fortfahren'
       signing-in: 'Sie werden angemeldet...'
       finish-signup: 'Schließen Sie die Einrichtung Ihres Fleetbase-Kontos ab, um fortzufahren.'
+      connected-accounts: 'Verknüpfte Konten'
+      connected-accounts-help: 'Melden Sie sich über einen Anbieter statt mit einem Passwort an. Sie können mehrere verknüpfen.'
+      link-button: 'Verknüpfen'
+      unlink-button: 'Trennen'
+      unlink-title: '{provider} trennen?'
+      unlink-body: 'Sie können sich dann nicht mehr über {provider} anmelden. Sie können ihn später erneut verknüpfen.'
+      linked: 'Anbieter mit Ihrem Konto verknüpft.'
+      unlinked: '{provider} getrennt.'
       errors:
         generic: 'Die Anmeldung konnte nicht abgeschlossen werden. Bitte versuchen Sie es erneut.'
         access-denied: 'Die Anmeldung wurde abgebrochen.'
@@ -624,6 +632,10 @@ auth:
         customer-account: 'Kundenkonten müssen sich über das Kundenportal anmelden.'
         not-verified: 'Ihr Konto muss verifiziert werden, um fortzufahren.'
         rate-limited: 'Zu viele Versuche. Bitte versuchen Sie es in Kürze erneut.'
+        already-linked: 'Dieser Anbieter ist bereits mit Ihrem Konto verknüpft.'
+        identity-already-linked: 'Dieses Konto ist bereits mit einem anderen Fleetbase-Benutzer verknüpft.'
+        last-credential: 'Legen Sie zuerst ein Passwort fest oder verknüpfen Sie einen anderen Anbieter, sonst könnten Sie sich nicht mehr anmelden.'
+        link-failed: 'Der Anbieter konnte nicht verknüpft werden. Bitte versuchen Sie es erneut.'
     slow-connection-message: Es treten Verbindungsprobleme auf.
 
   reset-password:
