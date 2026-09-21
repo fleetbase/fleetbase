@@ -20,6 +20,7 @@ export default class ConfigureOauthComponent extends Component {
 
     @tracked enabled = true;
     @tracked allowRegistration = true;
+    @tracked autoLink = true;
 
     /**
      * [{ id, label, icon, schema }]
@@ -161,6 +162,7 @@ export default class ConfigureOauthComponent extends Component {
         this.redirectUris = payload.redirect_uris ?? {};
         this.enabled = oauth.enabled !== false;
         this.allowRegistration = oauth.allow_registration !== false;
+        this.autoLink = oauth.auto_link !== false;
 
         const values = {};
         const secretStatus = {};
@@ -221,6 +223,7 @@ export default class ConfigureOauthComponent extends Component {
         return {
             enabled: this.enabled,
             allow_registration: this.allowRegistration,
+            auto_link: this.autoLink,
             providers,
         };
     }

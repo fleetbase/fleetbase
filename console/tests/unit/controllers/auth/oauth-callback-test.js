@@ -111,6 +111,33 @@ module('Unit | Controller | auth/oauth-callback', function (hooks) {
         assert.deepEqual(this.manualTokens, [], 'no session is established yet');
     });
 
+    test('it says when the provider was linked automatically on the way in', async function (assert) {
+        this.exchangeResult = () => Promise.resolve({ token: 'sanctum-token', type: 'user', linked: 'google', linked_label: 'Google' });
+        const calls = [];
+        Object.defineProperty(this.controller.intl, 't', { configurable: true, value: (key, options) => (calls.push([key, options]), key) });
+
+        await this.controller.start({ handoff: 'handoff-code' });
+
+        assert.deepEqual(this.notified.info, ['auth.login.oauth.auto-linked']);
+        assert.deepEqual(calls, [['auth.login.oauth.auto-linked', { provider: 'Google' }]]);
+        assert.deepEqual(this.manualTokens, ['sanctum-token']);
+    });
+
+    test('it says so before a two factor challenge too', async function (assert) {
+        this.exchangeResult = () => Promise.resolve({ isEnabled: true, twoFaSession: 'two-fa-token', linked: 'google', linked_label: 'Google' });
+
+        await this.controller.start({ handoff: 'handoff-code' });
+
+        assert.deepEqual(this.notified.info, ['auth.login.oauth.auto-linked']);
+        assert.deepEqual(this.transitions, [['auth.two-fa', { queryParams: { token: 'two-fa-token' } }]]);
+    });
+
+    test('an ordinary sign-in says nothing about linking', async function (assert) {
+        await this.controller.start({ handoff: 'handoff-code' });
+
+        assert.deepEqual(this.notified.info, []);
+    });
+
     test('it hands a registration intent to the onboarding flow', async function (assert) {
         this.exchangeResult = () =>
             Promise.resolve({
