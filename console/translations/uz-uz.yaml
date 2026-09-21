@@ -594,6 +594,14 @@ auth:
       continue-with: '{provider} bilan davom etish'
       signing-in: 'Tizimga kirilmoqda...'
       finish-signup: 'Davom etish uchun Fleetbase hisobingizni sozlashni yakunlang.'
+      connected-accounts: 'Bog‘langan hisoblar'
+      connected-accounts-help: 'Parol o‘rniga provayder orqali kiring. Bir nechtasini bog‘lash mumkin.'
+      link-button: 'Bog‘lash'
+      unlink-button: 'Uzish'
+      unlink-title: '{provider} uzilsinmi?'
+      unlink-body: 'Endi {provider} orqali kira olmaysiz. Keyinroq uni qayta bog‘lashingiz mumkin.'
+      linked: 'Provayder hisobingizga bog‘landi.'
+      unlinked: '{provider} uzildi.'
       errors:
         generic: 'Kirishni yakunlab bo‘lmadi. Qaytadan urinib ko‘ring.'
         access-denied: 'Kirish bekor qilindi.'
@@ -608,6 +616,10 @@ auth:
         customer-account: 'Mijoz hisoblari mijozlar portali orqali kirishi kerak.'
         not-verified: 'Davom etish uchun hisobingiz tasdiqlanishi kerak.'
         rate-limited: 'Urinishlar juda ko‘p. Birozdan so‘ng qayta urinib ko‘ring.'
+        already-linked: 'Bu provayder allaqachon hisobingizga bog‘langan.'
+        identity-already-linked: 'Bu hisob allaqachon boshqa Fleetbase foydalanuvchisiga bog‘langan.'
+        last-credential: 'Avval parol o‘rnating yoki boshqa provayderni bog‘lang, aks holda tizimga kira olmaysiz.'
+        link-failed: 'Provayderni bog‘lab bo‘lmadi. Qayta urinib ko‘ring.'
     slow-connection-message: Ulanish muammolari yuzaga kelmoqda.
   reset-password:
     success-message: Parolingiz tiklandi! Davom etish uchun tizimga kiring.

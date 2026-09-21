@@ -583,6 +583,14 @@ auth:
       continue-with: 'Tiếp tục với {provider}'
       signing-in: 'Đang đăng nhập...'
       finish-signup: 'Hoàn tất thiết lập tài khoản Fleetbase của bạn để tiếp tục.'
+      connected-accounts: 'Tài khoản đã liên kết'
+      connected-accounts-help: 'Đăng nhập bằng nhà cung cấp thay vì mật khẩu. Bạn có thể liên kết nhiều nhà cung cấp.'
+      link-button: 'Liên kết'
+      unlink-button: 'Hủy liên kết'
+      unlink-title: 'Hủy liên kết {provider}?'
+      unlink-body: 'Bạn sẽ không thể đăng nhập bằng {provider} nữa. Bạn có thể liên kết lại sau.'
+      linked: 'Đã liên kết nhà cung cấp với tài khoản của bạn.'
+      unlinked: 'Đã hủy liên kết {provider}.'
       errors:
         generic: 'Không thể hoàn tất đăng nhập. Vui lòng thử lại.'
         access-denied: 'Đăng nhập đã bị hủy.'
@@ -597,6 +605,10 @@ auth:
         customer-account: 'Tài khoản khách hàng phải đăng nhập qua cổng khách hàng.'
         not-verified: 'Tài khoản của bạn cần được xác minh để tiếp tục.'
         rate-limited: 'Quá nhiều lần thử. Vui lòng thử lại sau giây lát.'
+        already-linked: 'Nhà cung cấp này đã được liên kết với tài khoản của bạn.'
+        identity-already-linked: 'Tài khoản này đã được liên kết với một người dùng Fleetbase khác.'
+        last-credential: 'Hãy đặt mật khẩu hoặc liên kết nhà cung cấp khác trước, nếu không bạn sẽ không thể đăng nhập.'
+        link-failed: 'Không thể liên kết nhà cung cấp này. Vui lòng thử lại.'
     slow-connection-message: Gặp sự cố kết nối.
   reset-password:
     success-message: Mật khẩu của bạn đã được đặt lại! Đăng nhập để tiếp tục.

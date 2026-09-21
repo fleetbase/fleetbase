@@ -584,6 +584,14 @@ auth:
       continue-with: 'Continuer avec {provider}'
       signing-in: 'Connexion en cours...'
       finish-signup: 'Terminez la configuration de votre compte Fleetbase pour continuer.'
+      connected-accounts: 'Comptes associés'
+      connected-accounts-help: 'Connectez-vous via un fournisseur plutôt qu''avec un mot de passe. Vous pouvez en associer plusieurs.'
+      link-button: 'Associer'
+      unlink-button: 'Dissocier'
+      unlink-title: 'Dissocier {provider} ?'
+      unlink-body: 'Vous ne pourrez plus vous connecter avec {provider}. Vous pourrez l''associer à nouveau plus tard.'
+      linked: 'Fournisseur associé à votre compte.'
+      unlinked: '{provider} dissocié.'
       errors:
         generic: 'La connexion n''a pas pu être finalisée. Veuillez réessayer.'
         access-denied: 'La connexion a été annulée.'
@@ -598,6 +606,10 @@ auth:
         customer-account: 'Les comptes clients doivent se connecter via le portail client.'
         not-verified: 'Votre compte doit être vérifié pour continuer.'
         rate-limited: 'Trop de tentatives. Veuillez réessayer dans un instant.'
+        already-linked: 'Ce fournisseur est déjà associé à votre compte.'
+        identity-already-linked: 'Ce compte est déjà associé à un autre utilisateur Fleetbase.'
+        last-credential: 'Définissez d''abord un mot de passe ou associez un autre fournisseur, sinon vous ne pourrez plus vous connecter.'
+        link-failed: 'Impossible d''associer ce fournisseur. Veuillez réessayer.'
     slow-connection-message: Problèmes de connexion en cours.
   reset-password:
     success-message: Votre mot de passe a été réinitialisé ! Connectez-vous pour continuer.

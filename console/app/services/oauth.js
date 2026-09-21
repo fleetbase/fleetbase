@@ -125,6 +125,49 @@ export default class OauthService extends Service {
     }
 
     /**
+     * The signed-in user's linked identities and the providers they could link.
+     *
+     * @return {Promise<{identities: Array, available: Array, has_password: Boolean}>}
+     */
+    loadIdentities() {
+        return this.fetch.get('auth/oauth/identities');
+    }
+
+    /**
+     * Begin linking a provider to the signed-in user.
+     *
+     * The API returns the provider URL rather than redirecting, because the endpoint
+     * needs the bearer token and a top-level navigation cannot carry it.
+     *
+     * @param {String} providerId
+     * @return {Promise<void>}
+     */
+    async startLink(providerId) {
+        const { redirect_url } = await this.fetch.post(`auth/oauth/${encodeURIComponent(providerId)}/link`, {}, { rawError: true });
+
+        window.location.assign(redirect_url);
+    }
+
+    /**
+     * Finish a link from the callback. Protected: the API checks the signed-in user
+     * is the one who started it, which is what defeats account-linking CSRF.
+     *
+     * @param {String} code
+     * @return {Promise<Object>}
+     */
+    completeLink(code) {
+        return this.fetch.post('auth/oauth/link/complete', { code }, { rawError: true });
+    }
+
+    /**
+     * @param {String} providerId
+     * @return {Promise<Object>}
+     */
+    unlink(providerId) {
+        return this.fetch.delete(`auth/oauth/${encodeURIComponent(providerId)}/unlink`, {}, { rawError: true });
+    }
+
+    /**
      * Remember a registration intent for the onboarding flow to pick up.
      *
      * @param {Object} registration
