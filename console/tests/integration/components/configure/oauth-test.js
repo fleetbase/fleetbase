@@ -72,6 +72,7 @@ module('Integration | Component | configure/oauth', function (hooks) {
 
     hooks.beforeEach(function () {
         this.posted = [];
+        this.checkResult = { configured: false, verified: false, problem: 'invalid_signing_key', message: 'The signing key could not be used to mint a client secret.' };
         const self = this;
 
         class FetchStub extends Service {
@@ -82,7 +83,7 @@ module('Integration | Component | configure/oauth', function (hooks) {
                 self.posted.push({ path, payload });
 
                 if (path === 'settings/test-oauth-config') {
-                    return Promise.resolve({ provider: payload.provider, configured: false, enabled: false, problem: 'invalid_signing_key' });
+                    return Promise.resolve({ provider: payload.provider, ...self.checkResult });
                 }
 
                 return Promise.resolve(JSON.parse(JSON.stringify(CONFIG)));
@@ -164,7 +165,7 @@ module('Integration | Component | configure/oauth', function (hooks) {
         assert.strictEqual(saved.providers.google.client_secret, 'a-brand-new-secret');
     });
 
-    test('checking a provider reports the problem in plain language', async function (assert) {
+    test('checking a provider reports what the server found', async function (assert) {
         const captured = captureComponent(this.owner, 'configure/oauth', ConfigureOauthComponent);
         await render(hbs`<div id="next-view-section-subheader-actions"></div><Configure::Oauth />`);
         await expandAll(this.element);
@@ -173,16 +174,75 @@ module('Integration | Component | configure/oauth', function (hooks) {
         await settled();
 
         assert.strictEqual(this.posted.at(-1).path, 'settings/test-oauth-config');
-        assert.deepEqual(this.posted.at(-1).payload, { provider: 'apple' });
+        assert.strictEqual(this.posted.at(-1).payload.provider, 'apple');
         assert.dom(this.element).containsText('signing key could not be used');
     });
 
-    test('it explains each check outcome', function (assert) {
-        const component = Object.create(ConfigureOauthComponent.prototype);
+    test('checking sends what is in the form, before it is saved', async function (assert) {
+        const captured = captureComponent(this.owner, 'configure/oauth', ConfigureOauthComponent);
+        await render(hbs`<div id="next-view-section-subheader-actions"></div><Configure::Oauth />`);
 
-        assert.strictEqual(component.testMessage(null), null);
-        assert.true(component.testMessage({ problem: 'missing_credentials' }).includes('missing'));
-        assert.true(component.testMessage({ configured: true, enabled: false, problem: null }).includes('Enable the provider'));
-        assert.true(component.testMessage({ configured: true, enabled: true, problem: null }).includes('Register the callback URL'));
+        await fillIn('input[type="password"]', 'typed-not-saved');
+        await captured.instance.test.perform('google');
+
+        assert.deepEqual(this.posted.at(-1).payload, {
+            provider: 'google',
+            values: { client_id: 'google-client-id', client_secret: 'typed-not-saved', hosted_domain: '' },
+        });
+        assert.notOk(
+            this.posted.some((p) => p.path === 'settings/oauth-config'),
+            'nothing was saved to run the check'
+        );
+    });
+
+    test('a blank secret is left out of the check so the saved one is used', async function (assert) {
+        const captured = captureComponent(this.owner, 'configure/oauth', ConfigureOauthComponent);
+        await render(hbs`<div id="next-view-section-subheader-actions"></div><Configure::Oauth />`);
+
+        await captured.instance.test.perform('google');
+
+        assert.notOk('client_secret' in this.posted.at(-1).payload.values);
+    });
+
+    test('typing into a provider field keeps its panel open', async function (assert) {
+        await render(hbs`<div id="next-view-section-subheader-actions"></div><Configure::Oauth />`);
+        await expandAll(this.element);
+
+        // Apple is disabled, so its panel only stays open if typing does not reset it.
+        const teamId = [...this.element.querySelectorAll('.next-content-panel-wrapper')].find((panel) => panel.textContent.includes('Team ID')).querySelector('input[type="text"]');
+        await fillIn(teamId, 'T');
+        await fillIn(teamId, 'TE');
+
+        assert.dom(this.element).containsText('Signing key (.p8)');
+        assert.strictEqual(this.element.querySelectorAll('.next-content-panel-header.next-content-panel-is-closed').length, 0);
+    });
+
+    test('a provider can only be switched on after the provider accepts its credentials', async function (assert) {
+        const captured = captureComponent(this.owner, 'configure/oauth', ConfigureOauthComponent);
+        await render(hbs`<div id="next-view-section-subheader-actions"></div><Configure::Oauth />`);
+        await expandAll(this.element);
+        const component = captured.instance;
+
+        assert.false(component.canToggleProvider('apple'), 'not before a check');
+        assert.dom(this.element).containsText('to confirm Apple accepts these credentials');
+
+        await component.test.perform('apple');
+        assert.false(component.canToggleProvider('apple'), 'not after a failed check');
+
+        this.checkResult = { configured: true, verified: true, problem: null, message: 'Apple accepted these credentials.' };
+        await component.test.perform('apple');
+        await settled();
+        assert.true(component.canToggleProvider('apple'), 'after a passing check');
+        assert.dom(this.element).doesNotContainText('to confirm Apple accepts these credentials');
+
+        component.updateField('apple', 'key_id', 'CHANGED');
+        assert.false(component.canToggleProvider('apple'), 'editing a credential invalidates the check');
+    });
+
+    test('a live provider can always be switched off', async function (assert) {
+        const captured = captureComponent(this.owner, 'configure/oauth', ConfigureOauthComponent);
+        await render(hbs`<div id="next-view-section-subheader-actions"></div><Configure::Oauth />`);
+
+        assert.true(captured.instance.canToggleProvider('google'), 'google is enabled in the fixture');
     });
 });

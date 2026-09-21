@@ -1,7 +1,7 @@
 <ContentPanel @title="Sign-in with OAuth" @open={{true}} @wrapperClass="bordered-classic">
     <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
-        Let people sign in with an existing account from a provider. Provider credentials are stored encrypted and are never sent back to the
-        browser. Leave a secret field blank to keep the saved value.
+        Let people sign in with an existing account from a provider. Provider credentials are stored encrypted and are never sent back to the browser. Leave a secret field blank to keep the
+        saved value.
     </p>
     <InputGroup>
         <Toggle
@@ -22,13 +22,19 @@
 </ContentPanel>
 
 {{#each this.providers as |provider|}}
-    <ContentPanel @title={{provider.label}} @open={{this.isProviderEnabled provider.id}} @wrapperClass="bordered-classic">
+    <ContentPanel @title={{provider.label}} @open={{get this.panelOpen provider.id}} @wrapperClass="bordered-classic">
         <InputGroup>
             <Toggle
                 @isToggled={{this.isProviderEnabled provider.id}}
                 @onToggle={{fn this.toggleProvider provider.id}}
+                @disabled={{not (this.canToggleProvider provider.id)}}
                 @label={{concat "Offer " provider.label " on the sign-in page"}}
             />
+            {{#let (this.toggleHelp provider) as |hint|}}
+                {{#if hint}}
+                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{hint}}</p>
+                {{/if}}
+            {{/let}}
         </InputGroup>
 
         {{#each (this.fieldsFor provider) as |field|}}
@@ -66,11 +72,11 @@
             {{#if result}}
                 <div
                     class="flex flex-row items-center rounded-lg border
-                        {{if result.configured 'border-green-900 bg-green-800 text-green-100' 'border-red-900 bg-red-800 text-red-100'}}
+                        {{if result.verified 'border-green-900 bg-green-800 text-green-100' 'border-red-900 bg-red-800 text-red-100'}}
                         shadow-sm my-2 px-4 py-2"
                 >
-                    <FaIcon @icon={{if result.configured "circle-check" "triangle-exclamation"}} class="mr-1.5" />
-                    <span class="text-xs">{{this.testMessage result}}</span>
+                    <FaIcon @icon={{if result.verified "circle-check" "triangle-exclamation"}} class="mr-1.5" />
+                    <span class="text-xs">{{result.message}}</span>
                 </div>
             {{/if}}
         {{/let}}
