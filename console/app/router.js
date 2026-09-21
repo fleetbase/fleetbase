@@ -112,14 +112,14 @@ Router.map(function () {
             path: 'ledger'
         });
 
-        this.mount('@fleetbase/registry-bridge-engine', {
-            as: 'extensions',
-            path: 'extensions'
-        });
-
         this.mount('@fleetbase/storefront-engine', {
             as: 'storefront',
             path: 'storefront'
+        });
+
+        this.mount('@fleetbase/registry-bridge-engine', {
+            as: 'extensions',
+            path: 'extensions'
         });
 
         this.mount('@fleetbase/valhalla-engine', {

@@ -629,6 +629,7 @@ console:
       filesystem: 文件系统
       queue: 队列
       socket: 套接字
+      oauth: 'OAuth 登录'
       push-notifications: 推送通知
     schedule-monitor:
       schedule-monitor: 计划监控
@@ -650,6 +651,8 @@ console:
         title: 数据库配置
       filesystem:
         title: 文件系统配置
+      oauth:
+        title: 'OAuth 登录配置'
       mail:
         title: 邮件配置
       notification-channels:

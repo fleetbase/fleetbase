@@ -51,6 +51,7 @@ class IntlStub extends Service {
         'console.admin.menu.filesystem': 'Filesystem',
         'console.admin.menu.queue': 'Queue',
         'console.admin.menu.socket': 'Socket',
+        'console.admin.menu.oauth': 'OAuth Sign-in',
         'console.admin.menu.push-notifications': 'Push Notifications',
     };
 
@@ -219,7 +220,7 @@ module('Unit | Controller | console/admin', function (hooks) {
         assert.strictEqual(systemConfig.label, 'System Config');
         assert.deepEqual(
             systemConfig.children.map((item) => item.label),
-            ['Services', 'Mail', 'Filesystem', 'Queue', 'Socket', 'Push Notifications'],
+            ['Services', 'Mail', 'Filesystem', 'Queue', 'Socket', 'OAuth Sign-in', 'Push Notifications'],
             'system config children retain their current order'
         );
         assert.deepEqual(
@@ -230,6 +231,7 @@ module('Unit | Controller | console/admin', function (hooks) {
                 'console.admin.config.filesystem',
                 'console.admin.config.queue',
                 'console.admin.config.socket',
+                'console.admin.config.oauth',
                 'console.admin.config.notification-channels',
             ],
             'system config children retain their routes'
