@@ -619,6 +619,14 @@ auth:
       continue-with: 'Continua con {provider}'
       signing-in: 'Accesso in corso...'
       finish-signup: 'Completa la configurazione del tuo account Fleetbase per continuare.'
+      connected-accounts: 'Account collegati'
+      connected-accounts-help: 'Accedi con un provider invece che con una password. Puoi collegarne più di uno.'
+      link-button: 'Collega'
+      unlink-button: 'Scollega'
+      unlink-title: 'Scollegare {provider}?'
+      unlink-body: 'Non potrai più accedere con {provider}. Potrai collegarlo di nuovo in seguito.'
+      linked: 'Provider collegato al tuo account.'
+      unlinked: '{provider} scollegato.'
       errors:
         generic: 'Non è stato possibile completare l''accesso. Riprova.'
         access-denied: 'Accesso annullato.'
@@ -633,6 +641,10 @@ auth:
         customer-account: 'Gli account cliente devono accedere tramite il portale clienti.'
         not-verified: 'Il tuo account deve essere verificato per continuare.'
         rate-limited: 'Troppi tentativi. Riprova tra poco.'
+        already-linked: 'Questo provider è già collegato al tuo account.'
+        identity-already-linked: 'Questo account è già collegato a un altro utente Fleetbase.'
+        last-credential: 'Imposta prima una password o collega un altro provider, altrimenti non potrai accedere.'
+        link-failed: 'Impossibile collegare il provider. Riprova.'
     slow-connection-message: Si stanno verificando problemi di connettività.
 
   reset-password:

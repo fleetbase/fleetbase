@@ -37,6 +37,9 @@ module('Unit | Controller | auth/oauth-callback', function (hooks) {
             info(m) {
                 self.notified.info.push(m);
             }
+            success(m) {
+                self.notified.info.push(m);
+            }
         }
 
         this.owner.register('service:fetch', FetchStub);
@@ -177,5 +180,57 @@ module('Unit | Controller | auth/oauth-callback', function (hooks) {
         assert.deepEqual(this.manualTokens, []);
         assert.deepEqual(this.notified.errors, ['auth.login.oauth.errors.exchange-failed']);
         assert.deepEqual(this.transitions, [['auth.login']]);
+    });
+
+    test('a link handoff is completed through the protected endpoint, never the public exchange', async function (assert) {
+        const controller = this.controller;
+        const completed = [];
+        controller.oauth.completeLink = (code) => {
+            completed.push(code);
+            return Promise.resolve({ identities: [] });
+        };
+
+        await controller.start({ handoff: 'link-code', intent: 'link' });
+
+        assert.deepEqual(completed, ['link-code'], 'completed as a link');
+        assert.deepEqual(this.posted, [], 'the public exchange is never called');
+        assert.deepEqual(this.manualTokens, [], 'no session is created — the user is already signed in');
+        assert.deepEqual(this.transitions, [['console.account.auth']]);
+    });
+
+    test('a refused link returns the user to their account page with a message', async function (assert) {
+        const controller = this.controller;
+        controller.oauth.completeLink = () => Promise.reject({ code: 'identity_already_linked' });
+
+        await controller.start({ handoff: 'link-code', intent: 'link' });
+
+        assert.deepEqual(this.notified.errors, ['auth.login.oauth.errors.identity-already-linked']);
+        assert.deepEqual(this.transitions, [['console.account.auth']]);
+    });
+
+    test('a link rejected as invalid shows a generic link failure', async function (assert) {
+        const controller = this.controller;
+        // Includes the account-linking CSRF case, which the API reports exactly like an
+        // expired code on purpose.
+        controller.oauth.completeLink = () => Promise.reject({ code: 'invalid_exchange_code' });
+
+        await controller.start({ handoff: 'link-code', intent: 'link' });
+
+        assert.deepEqual(this.notified.errors, ['auth.login.oauth.errors.link-failed']);
+    });
+
+    test('a link cancelled at the provider returns to the account page without calling the API', async function (assert) {
+        const controller = this.controller;
+        let called = false;
+        controller.oauth.completeLink = () => {
+            called = true;
+            return Promise.resolve();
+        };
+
+        await controller.start({ error: 'access_denied', intent: 'link' });
+
+        assert.false(called);
+        assert.deepEqual(this.notified.errors, ['auth.login.oauth.errors.access-denied']);
+        assert.deepEqual(this.transitions, [['console.account.auth']]);
     });
 });

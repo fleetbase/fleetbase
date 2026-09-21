@@ -583,6 +583,14 @@ auth:
       continue-with: 'Continuar con {provider}'
       signing-in: 'Iniciando sesión...'
       finish-signup: 'Termine de configurar su cuenta de Fleetbase para continuar.'
+      connected-accounts: 'Cuentas vinculadas'
+      connected-accounts-help: 'Inicie sesión con un proveedor en lugar de una contraseña. Puede vincular más de uno.'
+      link-button: 'Vincular'
+      unlink-button: 'Desvincular'
+      unlink-title: '¿Desvincular {provider}?'
+      unlink-body: 'Ya no podrá iniciar sesión con {provider}. Puede volver a vincularlo más adelante.'
+      linked: 'Proveedor vinculado a su cuenta.'
+      unlinked: '{provider} desvinculado.'
       errors:
         generic: 'No se pudo completar el inicio de sesión. Inténtelo de nuevo.'
         access-denied: 'Se canceló el inicio de sesión.'
@@ -597,6 +605,10 @@ auth:
         customer-account: 'Las cuentas de cliente deben iniciar sesión a través del portal de clientes.'
         not-verified: 'Su cuenta debe ser verificada para continuar.'
         rate-limited: 'Demasiados intentos. Inténtelo de nuevo en breve.'
+        already-linked: 'Ese proveedor ya está vinculado a su cuenta.'
+        identity-already-linked: 'Esa cuenta ya está vinculada a otro usuario de Fleetbase.'
+        last-credential: 'Establezca una contraseña o vincule otro proveedor primero, o no podrá iniciar sesión.'
+        link-failed: 'No se pudo vincular ese proveedor. Inténtelo de nuevo.'
     slow-connection-message: Experimentando problemas de conectividad.
   reset-password:
     success-message: ¡Tu contraseña ha sido restablecida! Inicia sesión para continuar.

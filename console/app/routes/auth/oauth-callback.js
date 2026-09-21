@@ -51,6 +51,7 @@ export default class AuthOauthCallbackRoute extends Route {
             handoff: params.get('handoff'),
             error: params.get('error'),
             returnTo: params.get('return_to'),
+            intent: params.get('intent'),
         };
 
         if (hash) {

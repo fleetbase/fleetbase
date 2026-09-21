@@ -621,6 +621,14 @@ auth:
       continue-with: 'Continue with {provider}'
       signing-in: 'Signing you in...'
       finish-signup: 'Finish setting up your Fleetbase account to continue.'
+      connected-accounts: 'Connected accounts'
+      connected-accounts-help: 'Sign in with a provider instead of a password. You can link more than one.'
+      link-button: 'Link'
+      unlink-button: 'Unlink'
+      unlink-title: 'Unlink {provider}?'
+      unlink-body: 'You will no longer be able to sign in with {provider}. You can link it again later.'
+      linked: 'Provider linked to your account.'
+      unlinked: '{provider} unlinked.'
       errors:
         generic: 'We could not complete that sign-in. Please try again.'
         access-denied: 'Sign-in was cancelled.'
@@ -635,6 +643,10 @@ auth:
         customer-account: 'Customer accounts must sign in through the customer portal.'
         not-verified: 'Your account needs to be verified to proceed.'
         rate-limited: 'Too many attempts. Please try again shortly.'
+        already-linked: 'That provider is already linked to your account.'
+        identity-already-linked: 'That account is already linked to another Fleetbase user.'
+        last-credential: 'Set a password or link another provider first, or you would not be able to sign in.'
+        link-failed: 'We could not link that provider. Please try again.'
     slow-connection-message: Experiencing connectivity issues.
 
   reset-password:
