@@ -118,6 +118,13 @@ export default class ConsoleAdminController extends Controller {
                     keywords: ['socket', 'realtime', 'websocket'],
                 },
                 {
+                    label: this.intl.t('console.admin.menu.oauth'),
+                    description: 'Configure sign-in with Google, Microsoft, GitHub and Apple.',
+                    icon: 'right-to-bracket',
+                    route: 'console.admin.config.oauth',
+                    keywords: ['oauth', 'sso', 'sign in', 'login', 'google', 'microsoft', 'github', 'apple'],
+                },
+                {
                     label: this.intl.t('console.admin.menu.push-notifications'),
                     description: 'Configure notification channels.',
                     icon: 'tower-broadcast',

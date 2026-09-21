@@ -658,6 +658,7 @@ console:
       filesystem: Système de fichiers
       queue: File d'attente
       socket: Socket
+      oauth: 'Connexion OAuth'
       push-notifications: Notifications Push
     schedule-monitor:
       schedule-monitor: Moniteur de planification
@@ -679,6 +680,8 @@ console:
         title: Configuration de la base de données
       filesystem:
         title: Configuration du système de fichiers
+      oauth:
+        title: 'Configuration de la connexion OAuth'
       mail:
         title: Configuration du courrier
       notification-channels:

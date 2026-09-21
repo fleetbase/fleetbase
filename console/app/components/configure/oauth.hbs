@@ -1,0 +1,84 @@
+<ContentPanel @title="Sign-in with OAuth" @open={{true}} @wrapperClass="bordered-classic">
+    <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+        Let people sign in with an existing account from a provider. Provider credentials are stored encrypted and are never sent back to the
+        browser. Leave a secret field blank to keep the saved value.
+    </p>
+    <InputGroup>
+        <Toggle
+            @isToggled={{this.enabled}}
+            @onToggle={{fn (mut this.enabled)}}
+            @label="Enable OAuth sign-in"
+            @helpText="Master switch. When off, no provider buttons are shown on the sign-in page."
+        />
+    </InputGroup>
+    <InputGroup>
+        <Toggle
+            @isToggled={{this.allowRegistration}}
+            @onToggle={{fn (mut this.allowRegistration)}}
+            @label="Allow new sign-ups through a provider"
+            @helpText="When off, only people who already have an account and have linked the provider can sign in with it."
+        />
+    </InputGroup>
+</ContentPanel>
+
+{{#each this.providers as |provider|}}
+    <ContentPanel @title={{provider.label}} @open={{this.isProviderEnabled provider.id}} @wrapperClass="bordered-classic">
+        <InputGroup>
+            <Toggle
+                @isToggled={{this.isProviderEnabled provider.id}}
+                @onToggle={{fn this.toggleProvider provider.id}}
+                @label={{concat "Offer " provider.label " on the sign-in page"}}
+            />
+        </InputGroup>
+
+        {{#each (this.fieldsFor provider) as |field|}}
+            <InputGroup @name={{field.label}} @helpText={{field.help}}>
+                {{#if field.multiline}}
+                    <Textarea
+                        class="form-input w-full font-mono text-xs"
+                        rows="6"
+                        @value={{this.valueFor provider.id field.key}}
+                        placeholder={{if field.secret (this.secretPlaceholder provider.id field.key) ""}}
+                        autocomplete="off"
+                        spellcheck="false"
+                        disabled={{this.load.isRunning}}
+                        {{on "input" (fn this.updateField provider.id field.key)}}
+                    />
+                {{else}}
+                    <Input
+                        class="form-input w-full"
+                        @type={{if field.secret "password" "text"}}
+                        @value={{this.valueFor provider.id field.key}}
+                        placeholder={{if field.secret (this.secretPlaceholder provider.id field.key) ""}}
+                        autocomplete={{if field.secret "new-password" "off"}}
+                        disabled={{this.load.isRunning}}
+                        {{on "input" (fn this.updateField provider.id field.key)}}
+                    />
+                {{/if}}
+            </InputGroup>
+        {{/each}}
+
+        <InputGroup @name="Callback URL" @helpText="Register this exact URL as an authorized redirect URI in the provider's developer console.">
+            <Input class="form-input w-full font-mono text-xs" @value={{get this.redirectUris provider.id}} readonly="readonly" />
+        </InputGroup>
+
+        {{#let (get this.testResults provider.id) as |result|}}
+            {{#if result}}
+                <div
+                    class="flex flex-row items-center rounded-lg border
+                        {{if result.configured 'border-green-900 bg-green-800 text-green-100' 'border-red-900 bg-red-800 text-red-100'}}
+                        shadow-sm my-2 px-4 py-2"
+                >
+                    <FaIcon @icon={{if result.configured "circle-check" "triangle-exclamation"}} class="mr-1.5" />
+                    <span class="text-xs">{{this.testMessage result}}</span>
+                </div>
+            {{/if}}
+        {{/let}}
+
+        <Button @wrapperClass="mt-3" @icon="plug" @text="Check configuration" @onClick={{perform this.test provider.id}} @isLoading={{this.test.isRunning}} />
+    </ContentPanel>
+{{/each}}
+
+<EmberWormhole @to="next-view-section-subheader-actions">
+    <Button @type="primary" @size="sm" @icon="save" @text="Save Changes" @onClick={{perform this.save}} @disabled={{this.save.isRunning}} @isLoading={{this.save.isRunning}} />
+</EmberWormhole>

@@ -691,6 +691,7 @@ console:
       filesystem: Sistema de archivos
       queue: Cola
       socket: Socket
+      oauth: 'Inicio de sesión OAuth'
       push-notifications: Notificaciones push
 
     schedule-monitor:
@@ -714,6 +715,8 @@ console:
         title: Configuración de la base de datos
       filesystem:
         title: Configuración del sistema de archivos
+      oauth:
+        title: 'Configuración del inicio de sesión OAuth'
       mail:
         title: Configuración de correo
       notification-channels:

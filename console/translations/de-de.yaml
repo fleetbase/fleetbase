@@ -686,6 +686,7 @@ console:
       filesystem: Dateisystem
       queue: Warteschlange
       socket: Socket
+      oauth: 'OAuth-Anmeldung'
       push-notifications: Push-Benachrichtigungen
     schedule-monitor:
       schedule-monitor: Zeitplan-Monitor
@@ -708,6 +709,8 @@ console:
         title: Datenbankkonfiguration
       filesystem:
         title: Dateisystemkonfiguration
+      oauth:
+        title: 'Konfiguration der OAuth-Anmeldung'
       mail:
         title: E-Mail-Konfiguration
       notification-channels:
