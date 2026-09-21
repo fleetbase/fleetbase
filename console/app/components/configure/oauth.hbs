@@ -19,6 +19,14 @@
             @helpText="When off, only people who already have an account and have linked the provider can sign in with it."
         />
     </InputGroup>
+    <InputGroup>
+        <Toggle
+            @isToggled={{this.autoLink}}
+            @onToggle={{fn (mut this.autoLink)}}
+            @label="Link existing accounts automatically"
+            @helpText="When someone signs in with a provider for the first time and the provider has verified their email, link it to the console account with that confirmed email instead of asking them to link it themselves. Only admin and user accounts, never customers, contacts or drivers. Two-factor still applies, and the account holder is emailed."
+        />
+    </InputGroup>
 </ContentPanel>
 
 {{#each this.providers key="id" as |provider|}}
@@ -84,6 +92,8 @@
         <Button @wrapperClass="mt-3" @icon="plug" @text="Check configuration" @onClick={{perform this.test provider.id}} @isLoading={{this.test.isRunning}} />
     </ContentPanel>
 {{/each}}
+
+<Spacer @height="100px" />
 
 <EmberWormhole @to="next-view-section-subheader-actions">
     <Button @type="primary" @size="sm" @icon="save" @text="Save Changes" @onClick={{perform this.save}} @disabled={{this.save.isRunning}} @isLoading={{this.save.isRunning}} />

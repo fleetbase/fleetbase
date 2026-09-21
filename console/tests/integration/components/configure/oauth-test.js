@@ -10,6 +10,7 @@ const CONFIG = {
     oauth: {
         enabled: true,
         allow_registration: true,
+        auto_link: true,
         providers: {
             google: {
                 enabled: true,
@@ -152,6 +153,18 @@ module('Integration | Component | configure/oauth', function (hooks) {
         assert.notOk('client_secret' in saved.providers.google, 'an untouched secret is not sent');
         assert.notOk('private_key' in saved.providers.apple);
         assert.strictEqual(saved.providers.google.enabled, true);
+        assert.true(saved.auto_link, 'automatic linking is sent with the global switches');
+    });
+
+    test('automatic linking can be switched off', async function (assert) {
+        const captured = captureComponent(this.owner, 'configure/oauth', ConfigureOauthComponent);
+        await render(hbs`<div id="next-view-section-subheader-actions"></div><Configure::Oauth />`);
+
+        assert.dom(this.element).containsText('Link existing accounts automatically');
+        captured.instance.autoLink = false;
+        await click('#next-view-section-subheader-actions button');
+
+        assert.false(this.posted.find((p) => p.path === 'settings/oauth-config').payload.auto_link);
     });
 
     test('saving sends a secret the admin typed', async function (assert) {
