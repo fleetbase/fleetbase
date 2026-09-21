@@ -121,6 +121,12 @@ export default class AuthOauthCallbackController extends Controller {
      * @return {Promise<void>}
      */
     async handle(response = {}, returnTo = null) {
+        // The provider was linked to an existing account on the way in, because its
+        // verified email matched. Said here, whichever way sign-in goes on from here.
+        if (response.linked) {
+            this.notifications.info(this.intl.t('auth.login.oauth.auto-linked', { provider: response.linked_label ?? response.linked }));
+        }
+
         // 2FA is not waived for a provider sign-in — the server issues no token until
         // the second factor is satisfied.
         if (response.isEnabled === true && response.twoFaSession) {
