@@ -18,6 +18,8 @@ Router.map(function () {
         this.route('reset-password', { path: '/reset-password/:id' });
         this.route('two-fa');
         this.route('verification');
+        this.route('confirm-email-change', { path: '/confirm-email-change/:id' });
+        this.route('verify-contact', { path: '/verify-contact/:id' });
         this.route('portal-login', { path: '/portal' });
         this.route('oauth-callback', { path: '/oauth/callback' });
     });
