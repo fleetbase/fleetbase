@@ -88,6 +88,7 @@ Fleetbase `0.7.64` ships Core API `1.6.63`, Fleet-Ops `0.6.69` and Fleetbase AI 
 - New driver actions: **Reset Password**, **Send Credentials** and **Deactivate/Reactivate Login**. Deactivating a login also signs out the driver app, and credentials go by email, or by SMS when there's no email (#338).
 - Deleting a driver also deletes its login account. Creating a driver no longer sends an organization invite, which could let drivers into the console (#338).
 - Contact import rejects a row whose phone number belongs to a driver's account, instead of linking them (#338).
+- Driver and customer details drop the separate User Account panel, which only repeated the profile's name, email and phone. Driver details are laid out in three columns, and customer details gain an **Addresses** panel listing the customer's saved places, with the primary one marked. The customer phone field was labelled Email and now says Phone (#336).
 - AI resource search works again. It failed on every call, and sent the database error to the AI provider. Common words no longer match half the database, and order amount filters respect the currency (#330).
 - New AI tools to search Fleet-Ops and propose new orders, plus Fleet-Ops console commands the AI can offer (#330).
 - The Track Order button on the sign-in page matches the other sign-in buttons (#339).
@@ -99,6 +100,7 @@ Fleetbase `0.7.64` ships Core API `1.6.63`, Fleet-Ops `0.6.69` and Fleetbase AI 
 - The AI can propose one of 73 console actions on a card with **Go** and **Dismiss**. Nothing runs until you press Go, and your permissions are checked again at that point (ai #6, fleetops #330, dev-engine #46, iam-engine #33).
 - Conversations keep full history and support tool calling with Anthropic and OpenAI, with refreshed model lists. A **Look up answers with tools** switch turns tool calling off (ai #6).
 - The log viewer is rebuilt, with JSONL/CSV export, thumbs up/down feedback and a redesigned usage analytics page. New `ai:export-logs`, `ai:eval` and `ai:replay` commands (ai #6).
+- **Reveal Content is removed** from the AI logs. Anyone with the `ai view audit logs` permission sees full conversations and can export them. Exports are still access-logged (ai #6).
 - The AI log and analytics pages use the full width of the admin area (fleetbase #671).
 
 ---
