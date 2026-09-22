@@ -46,6 +46,37 @@ erDiagram
     TIMESTAMP updated_at
   }
 
+  fleetbase_ai_knowledge_chunks {
+    INTUNSIGNED id PK, UK
+    CHAR uuid UK
+    CHAR ai_knowledge_document_uuid FK
+    VARCHAR heading
+    VARCHAR heading_path
+    VARCHAR anchor
+    VARCHAR audience
+    INTUNSIGNED position
+    MEDIUMTEXT content
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  fleetbase_ai_knowledge_documents {
+    INTUNSIGNED id PK, UK
+    CHAR uuid UK
+    VARCHAR source
+    VARCHAR url UK
+    VARCHAR path
+    VARCHAR title
+    TEXT description
+    VARCHAR module
+    VARCHAR section
+    VARCHAR audience
+    VARCHAR content_hash
+    TIMESTAMP fetched_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
   fleetbase_ai_sessions {
     INTUNSIGNED id PK, UK
     CHAR uuid UK
@@ -100,6 +131,9 @@ erDiagram
     INTUNSIGNED input_tokens
     INTUNSIGNED output_tokens
     INTUNSIGNED total_tokens
+    TINYINT feedback_rating
+    TEXT feedback_comment
+    TIMESTAMP feedback_at
     JSON context
     JSON usage
     JSON metadata
@@ -1634,6 +1668,36 @@ erDiagram
     CHAR notifiable_id
     TEXT data
     TIMESTAMP read_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  fleetbase_oauth_identities {
+    INTUNSIGNED id PK, UK
+    CHAR uuid
+    CHAR user_uuid FK
+    VARCHAR provider UK
+    VARCHAR provider_user_id UK
+    VARCHAR provider_email
+    BIT email_verified
+    JSON meta
+    TIMESTAMP last_login_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  fleetbase_oauth_states {
+    INTUNSIGNED id PK, UK
+    CHAR uuid
+    VARCHAR purpose
+    CHAR token_hash UK
+    VARCHAR provider
+    VARCHAR intent
+    CHAR user_uuid FK
+    TEXT payload
+    CHAR ip_hash
+    TIMESTAMP expires_at
+    TIMESTAMP consumed_at
     TIMESTAMP created_at
     TIMESTAMP updated_at
   }
@@ -3577,6 +3641,7 @@ erDiagram
     TIMESTAMP updated_at
   }
 
+  fleetbase_ai_knowledge_documents ||--o{ fleetbase_ai_knowledge_chunks : "foreign key"
   fleetbase_ai_sessions ||--o{ fleetbase_ai_admin_access_logs : "foreign key"
   fleetbase_ai_sessions ||--o{ fleetbase_ai_tasks : "foreign key"
   fleetbase_ai_tasks ||--o{ fleetbase_ai_admin_access_logs : "foreign key"
@@ -3875,6 +3940,8 @@ erDiagram
   fleetbase_users ||--o{ fleetbase_issues : "foreign key"
   fleetbase_users ||--o{ fleetbase_maintenance_schedules : "foreign key"
   fleetbase_users ||--o{ fleetbase_maintenances : "foreign key"
+  fleetbase_users ||--o{ fleetbase_oauth_identities : "foreign key"
+  fleetbase_users ||--o{ fleetbase_oauth_states : "foreign key"
   fleetbase_users ||--o{ fleetbase_order_configs : "foreign key"
   fleetbase_users ||--o{ fleetbase_orders : "foreign key"
   fleetbase_users ||--o{ fleetbase_parts : "foreign key"
