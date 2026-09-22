@@ -65,7 +65,7 @@ Fleetbase `0.7.64` ships Core API `1.6.63`, Fleet-Ops `0.6.69` and Fleetbase AI 
 ---
 ## Security
 - **Blank role no longer means Administrator** (core-api #266). Creating, inviting or promoting a user without a role gave them the full Administrator role; for example, IAM › Customers › Add customer with no role selected. A role is now required, and only admins and Administrator-role holders can grant Administrator. Accepting an invite, or joining an organization, grants the invite's role.
-- **Order actions are limited to your own organization** (fleetops #331). Anyone with ordinary order permissions could cancel, dispatch, start, schedule or reassign another organization's orders by supplying their IDs, and could read another organization's order import file. The same check now covers activity updates, route edits, photo capture, proofs, tracking-number lookups and driver pings.
+- **Order actions are limited to your own organization** (fleetops #331). Anyone with ordinary order permissions could cancel, dispatch, start, schedule or reassign another organization's orders by supplying their IDs, and could read another organization's order import file. The same check now covers activity updates, route edits, photo capture, proofs and driver pings. The public Track Order page still finds any order by its tracking number.
 
 ---
 ## Accounts and Access
@@ -130,6 +130,7 @@ Fleetbase `0.7.64` ships Core API `1.6.63`, Fleet-Ops `0.6.69` and Fleetbase AI 
 - Fixed numbers and dates appearing in Arabic regardless of language.
 - Fixed the email-change confirmation link not opening.
 - Fixed phone number fields accepting letters.
+- Fixed map previews showing an "API key required" watermark: the onboarding journey map, the location picker and the Customer Portal order map. They now use OpenStreetMap's keyless tiles, as Fleet-Ops already does.
 - Fixed two "Unauthenticated." error notifications after signing out on an account or two-factor settings page.
 
 ---
