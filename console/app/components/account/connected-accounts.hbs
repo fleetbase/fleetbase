@@ -2,48 +2,52 @@
     <ContentPanel @title={{t "auth.login.oauth.connected-accounts"}} @open={{true}} @wrapperClass="bordered-classic">
         <p class="text-sm text-gray-700 dark:text-gray-300 mb-4">{{t "auth.login.oauth.connected-accounts-help"}}</p>
 
-        <div class="space-y-2">
-            {{#each this.identities as |identity|}}
-                <div class="flex items-center justify-between rounded-md border border-gray-200 dark:border-gray-700 px-3 py-2">
-                    <div class="flex items-center">
-                        {{#if identity.icon}}
-                            <FaIcon @icon={{identity.icon}} @prefix="fab" class="mr-3 text-gray-600 dark:text-gray-300" />
-                        {{/if}}
-                        <div>
-                            <div class="text-sm font-semibold text-gray-900 dark:text-white">{{identity.label}}</div>
-                            {{#if identity.provider_email}}
-                                <div class="text-xs text-gray-500 dark:text-gray-400">{{identity.provider_email}}</div>
+        {{#if this.identities.length}}
+            <h4 class="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400 mb-2">{{t "auth.login.oauth.linked-heading"}}</h4>
+            <div class="space-y-2" data-test-linked-providers>
+                {{#each this.identities as |identity|}}
+                    <div class="flex items-center justify-between rounded-md border border-gray-200 dark:border-gray-700 px-3 py-2">
+                        <div class="flex items-center">
+                            {{#if identity.icon}}
+                                <FaIcon @icon={{identity.icon}} @prefix="fab" class="mr-3 text-gray-600 dark:text-gray-300" />
                             {{/if}}
+                            <div>
+                                <div class="text-sm font-semibold text-gray-900 dark:text-white">{{identity.label}}</div>
+                                {{#if identity.provider_email}}
+                                    <div class="text-xs text-gray-500 dark:text-gray-400">{{identity.provider_email}}</div>
+                                {{/if}}
+                            </div>
                         </div>
+                        <Button
+                            @size="xs"
+                            @type="danger"
+                            @icon="link-slash"
+                            @text={{t "auth.login.oauth.unlink-button"}}
+                            @disabled={{this.isLastCredential identity}}
+                            @helpText={{if (this.isLastCredential identity) (t "auth.login.oauth.errors.last-credential")}}
+                            @isLoading={{this.unlink.isRunning}}
+                            @onClick={{fn this.confirmUnlink identity}}
+                        />
                     </div>
-                    <Button
-                        @size="xs"
-                        @type="danger"
-                        @icon="link-slash"
-                        @text={{t "auth.login.oauth.unlink-button"}}
-                        @disabled={{this.isLastCredential identity}}
-                        @helpText={{if (this.isLastCredential identity) (t "auth.login.oauth.errors.last-credential")}}
-                        @isLoading={{this.unlink.isRunning}}
-                        @onClick={{fn this.confirmUnlink identity}}
-                    />
-                </div>
-            {{/each}}
+                {{/each}}
+            </div>
+        {{/if}}
 
-            {{#each this.available as |provider|}}
-                <div class="flex items-center justify-between rounded-md border border-dashed border-gray-300 dark:border-gray-700 px-3 py-2">
-                    <div class="flex items-center">
-                        <FaIcon @icon={{provider.icon}} @prefix="fab" class="mr-3 text-gray-400" />
-                        <div class="text-sm text-gray-700 dark:text-gray-300">{{provider.label}}</div>
+        {{#if this.available.length}}
+            <h4 class="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400 mb-2 {{if this.identities.length 'mt-5'}}">
+                {{t "auth.login.oauth.available-heading"}}
+            </h4>
+            <div class="space-y-2" data-test-available-providers>
+                {{#each this.available as |provider|}}
+                    <div class="flex items-center justify-between rounded-md border border-dashed border-gray-300 dark:border-gray-700 px-3 py-2">
+                        <div class="flex items-center">
+                            <FaIcon @icon={{provider.icon}} @prefix="fab" class="mr-3 text-gray-400" />
+                            <div class="text-sm text-gray-700 dark:text-gray-300">{{provider.label}}</div>
+                        </div>
+                        <Button @size="xs" @icon="link" @text={{t "auth.login.oauth.link-button"}} @isLoading={{this.link.isRunning}} @onClick={{perform this.link provider}} />
                     </div>
-                    <Button
-                        @size="xs"
-                        @icon="link"
-                        @text={{t "auth.login.oauth.link-button"}}
-                        @isLoading={{this.link.isRunning}}
-                        @onClick={{perform this.link provider}}
-                    />
-                </div>
-            {{/each}}
-        </div>
+                {{/each}}
+            </div>
+        {{/if}}
     </ContentPanel>
 {{/if}}
