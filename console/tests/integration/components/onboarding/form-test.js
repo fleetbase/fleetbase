@@ -260,6 +260,17 @@ module('Integration | Component | onboarding/form | onboard', function (hooks) {
         assert.dom('input[type="email"]').isDisabled('the email is locked to the address the provider verified');
     });
 
+    test('an email the provider did not verify stays editable', async function (assert) {
+        const oauth = this.owner.lookup('service:oauth');
+        oauth.setRegistration({ intent: 'rti_abc', prefill: { name: 'Ada Lovelace', email: 'ada@example.com', email_verified: false } });
+
+        await render(hbs`<Onboarding::Form />`);
+
+        // Only a suggestion: they may use another address, verified by code as usual.
+        assert.dom('input[type="email"]').hasValue('ada@example.com');
+        assert.dom('input[type="email"]').isNotDisabled();
+    });
+
     test('a provider signup can be submitted without a password', async function (assert) {
         const oauth = this.owner.lookup('service:oauth');
         oauth.setRegistration({ intent: 'rti_abc', prefill: { name: 'Ada Lovelace', email: 'ada@example.com' } });
