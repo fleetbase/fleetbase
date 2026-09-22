@@ -79,4 +79,13 @@ module('Unit | Route | auth/oauth-callback', function (hooks) {
         assert.deepEqual(started, [payload]);
         assert.strictEqual(controller.model, payload, 'the model is still set on the controller');
     });
+
+    test('clearing an already empty fragment leaves the url alone', function (assert) {
+        window.location.hash = '';
+        const route = this.owner.lookup('route:auth/oauth-callback');
+
+        route.clearFragment();
+
+        assert.strictEqual(String(window.location.hash), '');
+    });
 });
