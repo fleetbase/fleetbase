@@ -7,7 +7,7 @@ import { setupTest } from '@fleetbase/console/tests/helpers';
  * them, so assert it once per route from a single table rather than copying the same test
  * into five files.
  */
-const ROUTES_THAT_CLEAR_THE_BOOT_LOADER = ['route:auth/login', 'route:auth/reset-password', 'route:auth/confirm-email-change', 'route:auth/two-fa', 'route:auth/verification'];
+const ROUTES_THAT_CLEAR_THE_BOOT_LOADER = ['route:auth/login', 'route:auth/reset-password', 'route:auth/confirm-email-change', 'route:auth/verify-contact', 'route:auth/two-fa', 'route:auth/verification'];
 
 module('Unit | Route | auth boot loader teardown', function (hooks) {
     setupTest(hooks);
