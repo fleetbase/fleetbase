@@ -75,12 +75,16 @@ export default class ConsoleAccountAuthController extends Controller {
     @tracked methods = getTwoFaMethods();
 
     /**
-     * Constructor method for the ConsoleAccountAuthController.
+     * Load the 2FA settings this page shows. Called by the route on entry.
      *
-     * @constructor
+     * Not done in the constructor: the router looks a route's controller up to read its
+     * query params before the parent route's authentication check has run. After a
+     * sign-out reloads the page on this URL, that lookup alone would fire these requests
+     * with no session, and each 401 would surface as an "Unauthenticated." error.
+     *
+     * @method load
      */
-    constructor() {
-        super(...arguments);
+    @action load() {
         this.loadSystemTwoFaConfig.perform();
         this.loadUserTwoFaSettings.perform();
     }

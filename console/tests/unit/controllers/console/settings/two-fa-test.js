@@ -70,6 +70,7 @@ module('Unit | Controller | console/settings/two-fa | loading and saving', funct
 
         this.build = async () => {
             const controller = this.owner.lookup('controller:console/settings/two-fa');
+            controller.load();
             await controller.loadSystemTwoFaConfig.last;
             await controller.loadCompanyTwoFaSettings.last;
             await controller.loadUserTwoFaSettings.last;
@@ -78,7 +79,14 @@ module('Unit | Controller | console/settings/two-fa | loading and saving', funct
         this.notifications = () => this.owner.lookup('service:notifications');
     });
 
-    test('it loads the system, company and user settings on construction', async function (assert) {
+    test('looking the controller up requests nothing', function (assert) {
+        // The router does this before authentication is checked; see controller.load().
+        this.owner.lookup('controller:console/settings/two-fa');
+
+        assert.deepEqual(this.requests, []);
+    });
+
+    test('it loads the system, company and user settings when the route is entered', async function (assert) {
         const controller = await this.build();
 
         assert.deepEqual(this.requests.map((request) => request.path).sort(), ['companies/two-fa', 'two-fa/config', 'users/two-fa'], 'all three sources are consulted');
