@@ -8,4 +8,13 @@ module('Unit | Route | console/settings/two-fa', function (hooks) {
         let route = this.owner.lookup('route:console/settings/two-fa');
         assert.ok(route);
     });
+
+    test('entering the route loads its settings', function (assert) {
+        const route = this.owner.lookup('route:console/settings/two-fa');
+        let loads = 0;
+
+        route.setupController({ load: () => loads++ }, undefined);
+
+        assert.strictEqual(loads, 1);
+    });
 });
