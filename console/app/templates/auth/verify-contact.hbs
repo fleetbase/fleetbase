@@ -1,0 +1,42 @@
+<div class="bg-white dark:bg-gray-800 py-8 px-4 shadow rounded-lg">
+    <div class="mb-4">
+        <LinkTo @route="console" class="flex items-center justify-center">
+            <LogoIcon @brand={{this.brand}} @size="12" class="rounded-md" />
+        </LinkTo>
+        <h2 class="text-center text-lg font-extrabold text-gray-900 dark:text-white truncate">
+            {{if (eq this.model.channel "phone") (t "auth.verify-contact.phone-title") (t "auth.verify-contact.email-title")}}
+        </h2>
+    </div>
+
+    {{#if this.verified}}
+        <InfoBlock @type="success" @icon="circle-check" @iconSize="lg">
+            {{if (eq this.model.channel "phone") (t "auth.verify-contact.phone-verified") (t "auth.verify-contact.email-verified")}}
+        </InfoBlock>
+        <div class="mt-8 flex">
+            <Button @size="lg" @type="primary" @icon="arrow-right" @text={{t "auth.verify-contact.continue-button"}} @onClick={{this.continue}} />
+        </div>
+    {{else}}
+        <InfoBlock @type="info" @icon={{if (eq this.model.channel "phone") "mobile-screen" "envelope-circle-check"}} @iconSize="lg">
+            {{if (eq this.model.channel "phone") (t "auth.verify-contact.phone-message") (t "auth.verify-contact.email-message")}}
+        </InfoBlock>
+
+        <form class="mt-8 space-y-6" {{on "submit" (perform this.verify)}}>
+            {{#unless this.code}}
+                <InputGroup @name={{t "auth.verify-contact.form.code.label"}} @value={{this.code}} @inputClass="form-input-lg" @helpText={{t "auth.verify-contact.form.code.help-text"}} />
+            {{/unless}}
+
+            <div class="flex space-x-2">
+                <Button
+                    @icon="check"
+                    @size="lg"
+                    @type="primary"
+                    @buttonType="submit"
+                    @text={{t "auth.verify-contact.form.submit-button"}}
+                    @onClick={{perform this.verify}}
+                    @isLoading={{not this.verify.isIdle}}
+                />
+                <Button @size="lg" @buttonType="button" @text={{t "auth.verify-contact.form.back-button"}} @onClick={{fn (transition-to "auth.login")}} @disabled={{not this.verify.isIdle}} />
+            </div>
+        </form>
+    {{/if}}
+</div>
