@@ -101,10 +101,10 @@
                 <div class="flex-grow border-t border-gray-300 dark:border-gray-700"></div>
             </div>
 
-            {{!-- ember-ui's OauthProviderButton: each provider's logo and colours on the
-                  shared btn-auth button, the same buttons the sign-up page shows. --}}
+            {{!-- Each provider's logo and colours on Fleetbase's button (see
+                  auth/oauth-provider-button); the sign-up page shows the same ones. --}}
             {{#each this.oauth.providers as |provider|}}
-                <OauthProviderButton
+                <Auth::OauthProviderButton
                     @provider={{provider}}
                     @text={{t "auth.login.oauth.continue-with" provider=provider.label}}
                     @disabled={{this.isLoading}}
