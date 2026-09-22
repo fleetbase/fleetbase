@@ -73,7 +73,7 @@ module('Unit | Controller | auth/verify-contact', function (hooks) {
         assert.true(prevented);
         assert.deepEqual(this.posted, [{ path: 'auth/confirm-contact-verification', payload: { link: 'link_1', code: '123456' } }]);
         assert.true(controller.verified);
-        assert.deepEqual(this.notifications().successes, ['auth.verify-contact.phone-verified']);
+        assert.deepEqual(this.notifications().successes, [controller.intl.t('auth.verify-contact.phone-verified')]);
     });
 
     test('an email link reports the email as verified', async function (assert) {
@@ -81,7 +81,7 @@ module('Unit | Controller | auth/verify-contact', function (hooks) {
 
         await controller.verify.perform();
 
-        assert.deepEqual(this.notifications().successes, ['auth.verify-contact.email-verified']);
+        assert.deepEqual(this.notifications().successes, [controller.intl.t('auth.verify-contact.email-verified')]);
     });
 
     test('a rejected verification is reported and the page stays unverified', async function (assert) {
