@@ -1,9 +1,12 @@
-> v0.7.64 ~ "Managed driver and customer logins, verification requests, and Fleetbase AI actions"
+> v0.7.64 ~ "Sign in with Google, Microsoft, GitHub and Apple, managed driver and customer logins, and Fleetbase AI actions"
 
 ---
 ## Highlights
 Fleetbase `0.7.64` ships Core API `1.6.63`, Fleet-Ops `0.6.69` and Fleetbase AI `0.0.5`.
 
+- **Sign in and sign up with Google, Microsoft, GitHub or Apple.** Administrators choose which providers to offer, and each is checked against the provider before it can be switched on.
+  - New people can create an account with a provider, with no password needed.
+  - Existing users can link providers to their account.
 - **Driver, customer and contact logins are managed from their profiles and kept out of the console.** Driver logins are reset, sent and deactivated from the driver profile, and IAM lists only team members.
 - **Admins can request email and phone verification from IAM.** People confirm it through a one-click link.
 - **Fleetbase AI now answers from the Fleetbase documentation** and can propose console actions that only run after you confirm them.
@@ -25,6 +28,41 @@ Fleetbase `0.7.64` ships Core API `1.6.63`, Fleet-Ops `0.6.69` and Fleetbase AI 
 - `ai`: `0.0.5`
 
 ---
+## Sign In with Google, Microsoft, GitHub and Apple
+
+**Configuring providers**
+- In **Admin › Auth Config › OAuth Sign-in** you configure Google, Microsoft, GitHub and Apple, and choose which to offer. Client secrets and Apple signing keys are stored encrypted, and are never sent back to the browser.
+- **Check configuration** tests the credentials in the form, saved or not, against the provider without signing anyone in. It reports missing fields, rejected credentials, an unregistered callback URL, or an Apple key that can't sign.
+- A provider can't be switched on until the check passes. Changing a live provider's credentials is checked again before it's saved.
+- Each provider shows the callback URL to register with it.
+
+**Signing in and signing up**
+- The sign-in and sign-up pages show branded **Continue with …** buttons for the providers you offer. The sign-up page shows them only while sign-ups through a provider are allowed.
+- Someone new is taken to the sign-up form with their name and email filled in, and doesn't need a password. When the provider has verified the email, the account starts verified and no verification code is sent.
+- An email the provider didn't verify can be changed on the form, and is then confirmed by code as usual.
+- An email that already has an account is never used to create a second one. The person is asked to sign in and link the provider instead.
+
+**Existing accounts**
+- **Account › Auth › Connected accounts** lists linked providers, and lets people link another one or unlink one. Removing someone's only way to sign in is refused.
+- With **Link existing accounts automatically** switched on (the default), signing in with a provider for the first time links it to an existing account and signs the person in. This happens only when all of these hold:
+  - the provider verified the email;
+  - exactly one account has that email, and it's a team member account (never a customer, contact or driver);
+  - the account's own email is confirmed;
+  - no account from that provider is already linked to it.
+- Two-factor authentication still applies to provider sign-ins.
+- The account holder is emailed whenever a provider is linked to, or removed from, their account.
+
+**How it works**
+- Sign-in uses the authorization-code flow with PKCE, run on the server.
+- An account is only ever found by its linked provider identity, never by email address alone.
+- Provider access tokens are never stored.
+
+**Two-factor settings**
+- Admin OAuth and two-factor settings are grouped under a new **Auth Config** section, and "2FA Config" is renamed **Two-Factor Auth**.
+
+(core-api #261, fleetbase #672, ember-ui #179 and #182)
+
+---
 ## Security
 - **Blank role no longer means Administrator** (core-api #266). Creating, inviting or promoting a user without a role gave them the full Administrator role; for example, IAM › Customers › Add customer with no role selected. A role is now required, and only admins and Administrator-role holders can grant Administrator. Accepting an invite, or joining an organization, grants the invite's role.
 - **Order actions are limited to your own organization** (fleetops #331). Anyone with ordinary order permissions could cancel, dispatch, start, schedule or reassign another organization's orders by supplying their IDs, and could read another organization's order import file. The same check now covers activity updates, route edits, photo capture, proofs, tracking-number lookups and driver pings.
@@ -36,7 +74,6 @@ Fleetbase `0.7.64` ships Core API `1.6.63`, Fleet-Ops `0.6.69` and Fleetbase AI 
 - A deleted user's email and phone number can be used again for a new account (core-api #264).
 - IAM manages team members only. The Drivers and Customers tabs are removed, and the Role field is required (iam-engine #35).
 - The unused `CompanyScope` global scope is removed. It was never registered, so nothing changes; tenant isolation relies on the explicit company checks (core-api #260).
-- Groundwork for signing in with Google, Microsoft, GitHub and Apple (core-api #261). The console sign-in screens ship separately.
 
 ---
 ## Verification Requests
@@ -94,6 +131,7 @@ Fleetbase `0.7.64` ships Core API `1.6.63`, Fleet-Ops `0.6.69` and Fleetbase AI 
 - Fixed numbers and dates appearing in Arabic regardless of language.
 - Fixed the email-change confirmation link not opening.
 - Fixed phone number fields accepting letters.
+- Fixed two "Unauthenticated." error notifications after signing out on an account or two-factor settings page.
 
 ---
 ## Upgrade Steps
@@ -103,6 +141,10 @@ This release includes database migrations and requires **PHP 8.1 or later**.
 - A role is now required to create or invite a user. Extensions that call `Company::addUser`, `Company::assignUser` or `User::assignCompany` must pass a role; none is assigned by default any more.
 - A migration converts existing profile-only accounts to driver or customer accounts.
 - Keep the scheduler running, so the weekly `ai:sync-docs` keeps the AI's documentation current.
+- OAuth sign-in is off until an administrator configures a provider in **Admin › Auth Config › OAuth Sign-in**. Register the callback URL shown there with each provider.
+  - Set `OAUTH_REDIRECT_BASE` if the API's public URL differs from `APP_URL`.
+  - Apple accepts only HTTPS callback URLs on a real domain, so `localhost` won't work.
+  - Microsoft's multi-tenant (`common`) setup trusts an email only when the `xms_edov` optional claim is added to the ID token.
 
 ```bash
 # Pull latest version
