@@ -76,12 +76,22 @@ module('Integration | Component | configure/oauth', function (hooks) {
         this.checkResult = { configured: false, verified: false, problem: 'invalid_signing_key', message: 'The signing key could not be used to mint a client secret.' };
         const self = this;
 
+        this.serverErrors = [];
+        this.failures = {};
+
         class FetchStub extends Service {
-            get() {
+            get(path) {
+                if (self.failures[path]) {
+                    return Promise.reject(self.failures[path]);
+                }
                 return Promise.resolve(JSON.parse(JSON.stringify(CONFIG)));
             }
             post(path, payload) {
                 self.posted.push({ path, payload });
+
+                if (self.failures[path]) {
+                    return Promise.reject(self.failures[path]);
+                }
 
                 if (path === 'settings/test-oauth-config') {
                     return Promise.resolve({ provider: payload.provider, ...self.checkResult });
@@ -93,7 +103,9 @@ module('Integration | Component | configure/oauth', function (hooks) {
         class NotificationsStub extends Service {
             success() {}
             error() {}
-            serverError() {}
+            serverError(error) {
+                self.serverErrors.push(error);
+            }
         }
 
         this.owner.register('service:fetch', FetchStub);
@@ -277,5 +289,87 @@ module('Integration | Component | configure/oauth', function (hooks) {
         await render(hbs`<div id="next-view-section-subheader-actions"></div><Configure::Oauth />`);
 
         assert.true(captured.instance.canToggleProvider('google'), 'google is enabled in the fixture');
+    });
+
+    test('a configuration that fails to load is reported', async function (assert) {
+        const failure = new Error('settings unavailable');
+        this.failures['settings/oauth-config'] = failure;
+
+        await render(hbs`<div id="next-view-section-subheader-actions"></div><Configure::Oauth />`);
+
+        assert.deepEqual(this.serverErrors, [failure]);
+    });
+
+    test('a save the server refuses is reported and leaves the form as it was', async function (assert) {
+        const captured = captureComponent(this.owner, 'configure/oauth', ConfigureOauthComponent);
+        await render(hbs`<div id="next-view-section-subheader-actions"></div><Configure::Oauth />`);
+        const failure = { code: 'oauth_provider_check_failed', message: 'Google rejected these credentials.' };
+        this.failures['settings/oauth-config'] = failure;
+
+        await captured.instance.save.perform();
+
+        assert.deepEqual(this.serverErrors, [failure]);
+        assert.strictEqual(captured.instance.values.google.client_id, 'google-client-id', 'nothing was reset');
+    });
+
+    test('a check that cannot reach the server is reported', async function (assert) {
+        const captured = captureComponent(this.owner, 'configure/oauth', ConfigureOauthComponent);
+        await render(hbs`<div id="next-view-section-subheader-actions"></div><Configure::Oauth />`);
+        const failure = new Error('network down');
+        this.failures['settings/test-oauth-config'] = failure;
+
+        await captured.instance.test.perform('google');
+
+        assert.deepEqual(this.serverErrors, [failure]);
+        assert.notOk(captured.instance.testResults.google, 'no result is recorded');
+    });
+
+    test('the offer toggle switches a provider on and off', async function (assert) {
+        const captured = captureComponent(this.owner, 'configure/oauth', ConfigureOauthComponent);
+        await render(hbs`<div id="next-view-section-subheader-actions"></div><Configure::Oauth />`);
+        const component = captured.instance;
+
+        component.toggleProvider('google', false);
+        assert.false(component.isProviderEnabled('google'));
+
+        component.toggleProvider('google', true);
+        assert.true(component.isProviderEnabled('google'));
+    });
+
+    test('fields fall back to their key, no placeholder and no help, and a provider may have no schema', function (assert) {
+        const component = Object.create(ConfigureOauthComponent.prototype);
+
+        assert.deepEqual(component.fieldsFor({ id: 'okta', schema: { domain: {} } }), [
+            { key: 'domain', label: 'domain', placeholder: '', help: null, secret: false, required: false, multiline: false },
+        ]);
+        assert.deepEqual(component.fieldsFor({ id: 'okta' }), []);
+        assert.deepEqual(component.fieldsFor(undefined), []);
+    });
+
+    test('a saved secret with no hint still says it is saved', async function (assert) {
+        const captured = captureComponent(this.owner, 'configure/oauth', ConfigureOauthComponent);
+        await render(hbs`<div id="next-view-section-subheader-actions"></div><Configure::Oauth />`);
+        const component = captured.instance;
+        component.secretStatus = { google: { client_secret: { configured: true, hint: null } } };
+
+        assert.strictEqual(component.placeholderFor('google', { key: 'client_secret', secret: true, placeholder: 'GOCSPX-…' }), 'Saved (••••) — leave blank to keep');
+        assert.strictEqual(component.placeholderFor('apple', { key: 'private_key', secret: true, placeholder: '-----BEGIN' }), '-----BEGIN', 'nothing saved: the example');
+    });
+
+    test('it starts from empty settings with sign-in, sign-ups and automatic linking on', function (assert) {
+        // Tracked defaults run lazily on first read. Each of these is assigned before it is
+        // ever read in normal use, so read them fresh here to pin the defaults.
+        const component = Object.create(ConfigureOauthComponent.prototype);
+
+        assert.true(component.enabled);
+        assert.true(component.allowRegistration);
+        assert.true(component.autoLink);
+        assert.deepEqual(component.providers, []);
+        assert.deepEqual(component.values, {});
+        assert.deepEqual(component.secretStatus, {});
+        assert.deepEqual(component.redirectUris, {});
+        assert.deepEqual(component.testResults, {});
+        assert.deepEqual(component.savedEnabled, {});
+        assert.deepEqual(component.panelOpen, {});
     });
 });

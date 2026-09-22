@@ -156,4 +156,42 @@ module('Integration | Component | account/connected-accounts', function (hooks) 
         assert.strictEqual(captured.instance.messageFor({ code: 'something-else' }), 'auth.login.oauth.errors.generic');
         assert.strictEqual(this.errors.length, 1);
     });
+
+    test('a link the API refuses is explained in plain language', async function (assert) {
+        const captured = captureComponent(this.owner, 'account/connected-accounts', ConnectedAccountsComponent);
+        await render(hbs`<Account::ConnectedAccounts />`);
+        const oauth = this.owner.lookup('service:oauth');
+
+        oauth.startLink = () => Promise.reject({ payload: { code: 'already_linked' } });
+        await captured.instance.link.perform({ id: 'github' });
+
+        oauth.startLink = () => Promise.reject(new Error('something unexpected'));
+        await captured.instance.link.perform({ id: 'github' });
+
+        assert.deepEqual(this.errors, ['That provider is already linked to your account.', 'We could not complete that sign-in. Please try again.']);
+    });
+
+    test('an empty response leaves an empty panel that assumes a password is set', async function (assert) {
+        const captured = captureComponent(this.owner, 'account/connected-accounts', ConnectedAccountsComponent);
+        await render(hbs`<Account::ConnectedAccounts />`);
+        const component = captured.instance;
+
+        component.apply();
+
+        assert.deepEqual(component.identities, []);
+        assert.deepEqual(component.available, []);
+        assert.true(component.hasPassword);
+        assert.false(component.isVisible, 'nothing to show');
+    });
+
+    test('it starts empty, unloaded, and assuming a password is set', function (assert) {
+        // Tracked defaults run lazily on first read. Each of these is assigned before it is
+        // ever read in normal use, so read them fresh here to pin the defaults.
+        const component = Object.create(ConnectedAccountsComponent.prototype);
+
+        assert.deepEqual(component.identities, []);
+        assert.deepEqual(component.available, []);
+        assert.true(component.hasPassword);
+        assert.false(component.isLoaded);
+    });
 });

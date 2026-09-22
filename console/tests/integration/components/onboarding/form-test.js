@@ -406,4 +406,14 @@ module('Integration | Component | onboarding/form | onboard', function (hooks) {
 
         assert.deepEqual(started, ['google']);
     });
+
+    test('a sign-up starts with no provider intent, nothing started and no verified email', function (assert) {
+        // Tracked defaults run lazily on first read. Each of these is assigned before it is
+        // ever read in normal use, so read them fresh here to pin the defaults.
+        const component = Object.create(OnboardingFormComponent.prototype);
+
+        assert.strictEqual(component.oauthIntent, null);
+        assert.false(component.isStartingProvider);
+        assert.false(component.emailVerifiedByProvider);
+    });
 });
