@@ -48,7 +48,6 @@ module('Unit | Controller | auth/verify-contact', function (hooks) {
             const controller = this.owner.lookup('controller:auth/verify-contact');
             controller.model = { id: 'link_1', channel };
             controller.code = '123456';
-            controller.verified = false;
 
             this.transitions = [];
             Object.defineProperty(controller.router, 'transitionTo', {
@@ -67,6 +66,7 @@ module('Unit | Controller | auth/verify-contact', function (hooks) {
     test('verifying posts the link and code and shows the verified state', async function (assert) {
         const controller = this.build('phone');
         let prevented = false;
+        assert.false(controller.verified, 'nothing is verified before the link is confirmed');
 
         await controller.verify.perform({ preventDefault: () => (prevented = true) });
 
