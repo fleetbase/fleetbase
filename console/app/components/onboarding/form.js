@@ -36,6 +36,7 @@ export default class OnboardingFormComponent extends Component {
             this.oauthIntent = registration.intent;
             this.name = registration.prefill?.name ?? null;
             this.email = registration.prefill?.email ?? null;
+            this.emailVerifiedByProvider = registration.prefill?.email_verified === true;
         }
     }
 
@@ -72,11 +73,19 @@ export default class OnboardingFormComponent extends Component {
     }
 
     /**
-     * The email came from the provider and the API will verify the intent against it,
-     * so editing it here would only produce a mismatch the server rejects.
+     * Whether the provider vouched for the email it gave us.
+     *
+     * @var {Boolean}
+     */
+    @tracked emailVerifiedByProvider = false;
+
+    /**
+     * An email the provider verified is locked: it is what lets the account skip email
+     * verification. One the provider did not verify is only a suggestion, so the person
+     * can change it, and whatever they enter is verified by code as usual.
      */
     get isEmailLocked() {
-        return this.hasOauthIntent && !isBlank(this.email);
+        return this.hasOauthIntent && this.emailVerifiedByProvider && !isBlank(this.email);
     }
 
     get requiredFields() {
