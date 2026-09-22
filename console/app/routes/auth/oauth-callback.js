@@ -44,7 +44,7 @@ export default class AuthOauthCallbackRoute extends Route {
      * @return {Object}
      */
     readFragment() {
-        const hash = String(window.location.hash ?? '').replace(/^#/, '');
+        const hash = window.location.hash.replace(/^#/, '');
         const params = new URLSearchParams(hash);
 
         const payload = {
@@ -78,7 +78,7 @@ export default class AuthOauthCallbackRoute extends Route {
         // ember-window-mock's mocked location. Assigning is the reliable floor, and in
         // a real browser the check above has already cleared the hash so this is a
         // no-op rather than a second history entry.
-        if (String(window.location.hash ?? '').replace(/^#/, '') !== '') {
+        if (window.location.hash.replace(/^#/, '') !== '') {
             window.location.hash = '';
         }
     }

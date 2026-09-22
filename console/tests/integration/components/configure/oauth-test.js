@@ -372,4 +372,43 @@ module('Integration | Component | configure/oauth', function (hooks) {
         assert.deepEqual(component.savedEnabled, {});
         assert.deepEqual(component.panelOpen, {});
     });
+
+    test('it copes with a sparse or missing configuration', async function (assert) {
+        const captured = captureComponent(this.owner, 'configure/oauth', ConfigureOauthComponent);
+        await render(hbs`<div id="next-view-section-subheader-actions"></div><Configure::Oauth />`);
+        const component = captured.instance;
+
+        // Nothing at all: defaults, not a crash.
+        component.applyConfig();
+        assert.deepEqual(component.providers, []);
+        assert.deepEqual(component.redirectUris, {});
+        assert.true(component.enabled);
+        assert.true(component.allowRegistration);
+        assert.true(component.autoLink);
+
+        // A provider the server has no settings for yet, and a malformed provider list.
+        component.applyConfig({ providers: 'not-a-list' });
+        assert.deepEqual(component.providers, []);
+
+        component.applyConfig({
+            oauth: { enabled: false, allow_registration: false, auto_link: false },
+            providers: [{ id: 'okta', label: 'Okta', schema: { domain: { label: 'Domain' }, client_secret: { label: 'Secret', secret: true } } }],
+        });
+        assert.false(component.enabled);
+        assert.false(component.allowRegistration);
+        assert.false(component.autoLink);
+        assert.deepEqual(component.values.okta, { enabled: false, domain: '', client_secret: '' });
+        assert.deepEqual(component.secretStatus.okta, { client_secret: { configured: false, hint: null } });
+        assert.strictEqual(component.valueFor('okta', 'domain'), '');
+        assert.strictEqual(component.valueFor('nobody', 'domain'), '');
+
+        // Editing a provider the form has no values for yet starts its entry.
+        component.values = {};
+        component.updateField('okta', 'domain', 'example.okta.com');
+        assert.deepEqual(component.values.okta, { domain: 'example.okta.com' });
+
+        // Serialising a provider with no values sends it switched off, with blank fields.
+        component.values = {};
+        assert.deepEqual(component.serialize().providers.okta, { enabled: false, domain: '' });
+    });
 });

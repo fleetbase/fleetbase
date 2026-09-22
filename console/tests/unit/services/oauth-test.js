@@ -208,4 +208,23 @@ module('Unit | Service | oauth', function (hooks) {
         assert.false(service.isLoading);
         assert.strictEqual(service.registration, null);
     });
+
+    test('authorization defaults to a sign-in with no return path', function (assert) {
+        const service = this.owner.lookup('service:oauth');
+
+        service.startAuthorization('google');
+
+        const url = new URL(String(window.location.href));
+        assert.strictEqual(url.searchParams.get('intent'), 'login');
+        assert.strictEqual(url.searchParams.get('return_to'), null);
+    });
+
+    test('setting no registration clears it', function (assert) {
+        const service = this.owner.lookup('service:oauth');
+        service.setRegistration({ intent: 'rti_abc' });
+
+        service.setRegistration(undefined);
+
+        assert.strictEqual(service.registration, null);
+    });
 });
