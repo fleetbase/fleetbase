@@ -13,7 +13,7 @@ Fleetbase `0.7.64` ships Core API `1.6.63`, Fleet-Ops `0.6.69` and Fleetbase AI 
 - **Two security fixes:**
   - a user created without a role no longer gets the Administrator role;
   - order actions can no longer reach another organization's orders.
-- **The console is now available in Ukrainian, and the Customer Portal in English and Russian.**
+- **The console is now available in Ukrainian.**
 
 ---
 ## Component Versions
@@ -111,7 +111,6 @@ Fleetbase `0.7.64` ships Core API `1.6.63`, Fleet-Ops `0.6.69` and Fleetbase AI 
 - API key and webhook dialogs in Developers can be opened from anywhere, including by Fleetbase AI (dev-engine #46).
 - Driver and contact records include each person's login status (fleetops-data #81).
 - Ukrainian translations for the console, Fleet-Ops, Developers and IAM, thanks to @ispdomnet (fleetbase #674, fleetops #340, dev-engine #48, iam-engine #37).
-- The Customer Portal is fully translatable and ships in English and Russian, thanks to @spanchenko (customer-portal #13).
 
 ---
 ## Console and API Packages
