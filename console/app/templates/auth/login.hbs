@@ -110,7 +110,10 @@
                     @onClick={{fn this.continueWithProvider provider}}
                     data-test-oauth-provider={{provider.id}}
                 >
-                    <Auth::OauthProviderLogo @provider={{provider.id}} @icon={{provider.icon}} />
+                    {{!-- In Fleetbase's icon slot, so the logo sits at the far left like other buttons. --}}
+                    <span class="btn-icon-wrapper">
+                        <Auth::OauthProviderLogo @provider={{provider.id}} @icon={{provider.icon}} />
+                    </span>
                     <span>{{t "auth.login.oauth.continue-with" provider=provider.label}}</span>
                 </Button>
             {{/each}}
