@@ -681,6 +681,21 @@ auth:
         help-text: The confirmation code from your email.
       submit-button: Confirm Email Change
       back-button: Back
+  verify-contact:
+    invalid-link: This verification link is invalid or has expired.
+    email-title: Verify your email address
+    phone-title: Verify your phone number
+    email-message: Confirm that this email address belongs to you.
+    phone-message: Confirm that this phone number belongs to you.
+    email-verified: Your email address is verified.
+    phone-verified: Your phone number is verified.
+    continue-button: Continue
+    form:
+      code:
+        label: Verification code
+        help-text: The verification code from your email or text message.
+      submit-button: Verify
+      back-button: Back
 
 console:
   create-or-join-organization:
