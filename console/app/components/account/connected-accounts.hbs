@@ -8,9 +8,9 @@
                 {{#each this.identities as |identity|}}
                     <div class="flex items-center justify-between rounded-md border border-gray-200 dark:border-gray-700 px-3 py-2">
                         <div class="flex items-center">
-                            {{#if identity.icon}}
-                                <FaIcon @icon={{identity.icon}} @prefix="fab" class="mr-3 text-gray-600 dark:text-gray-300" />
-                            {{/if}}
+                            <span class="mr-3 inline-flex text-gray-700 dark:text-gray-200">
+                                <Auth::OauthProviderLogo @provider={{identity.provider}} @icon={{identity.icon}} />
+                            </span>
                             <div>
                                 <div class="text-sm font-semibold text-gray-900 dark:text-white">{{identity.label}}</div>
                                 {{#if identity.provider_email}}
@@ -41,7 +41,9 @@
                 {{#each this.available as |provider|}}
                     <div class="flex items-center justify-between rounded-md border border-dashed border-gray-300 dark:border-gray-700 px-3 py-2">
                         <div class="flex items-center">
-                            <FaIcon @icon={{provider.icon}} @prefix="fab" class="mr-3 text-gray-400" />
+                            <span class="mr-3 inline-flex text-gray-700 dark:text-gray-200">
+                                <Auth::OauthProviderLogo @provider={{provider.id}} @icon={{provider.icon}} />
+                            </span>
                             <div class="text-sm text-gray-700 dark:text-gray-300">{{provider.label}}</div>
                         </div>
                         <Button @size="xs" @icon="link" @text={{t "auth.login.oauth.link-button"}} @isLoading={{this.link.isRunning}} @onClick={{perform this.link provider}} />

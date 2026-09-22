@@ -101,15 +101,18 @@
                 <div class="flex-grow border-t border-gray-300 dark:border-gray-700"></div>
             </div>
 
+            {{!-- Branded per provider (see .oauth-provider-button in console.css): each
+                  provider's colours and logo, on Fleetbase's own button shape and shadow. --}}
             {{#each this.oauth.providers as |provider|}}
                 <Button
-                    @text={{t "auth.login.oauth.continue-with" provider=provider.label}}
-                    @icon={{provider.icon}}
-                    @iconPrefix="fab"
-                    @wrapperClass="btn-block"
+                    @wrapperClass="btn-block oauth-provider-button oauth-provider-{{provider.id}}"
                     @disabled={{this.isLoading}}
                     @onClick={{fn this.continueWithProvider provider}}
-                />
+                    data-test-oauth-provider={{provider.id}}
+                >
+                    <Auth::OauthProviderLogo @provider={{provider.id}} @icon={{provider.icon}} />
+                    <span>{{t "auth.login.oauth.continue-with" provider=provider.label}}</span>
+                </Button>
             {{/each}}
         {{/if}}
         <RegistryYield @type="menu" @registry="auth:login" as |menuItem|>
