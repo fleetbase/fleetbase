@@ -416,4 +416,16 @@ module('Integration | Component | onboarding/form | onboard', function (hooks) {
         assert.false(component.isStartingProvider);
         assert.false(component.emailVerifiedByProvider);
     });
+
+    test('an intent without a prefill starts empty and unlocked', async function (assert) {
+        const captured = captureComponent(this.owner, 'onboarding/form', OnboardingFormComponent);
+        this.owner.lookup('service:oauth').setRegistration({ intent: 'rti_abc' });
+
+        await render(hbs`<Onboarding::Form />`);
+
+        assert.strictEqual(captured.instance.name, null);
+        assert.strictEqual(captured.instance.email, null);
+        assert.false(captured.instance.emailVerifiedByProvider);
+        assert.false(captured.instance.isEmailLocked);
+    });
 });

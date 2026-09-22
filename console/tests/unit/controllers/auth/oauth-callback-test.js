@@ -290,4 +290,42 @@ module('Unit | Controller | auth/oauth-callback', function (hooks) {
         assert.strictEqual(controller.error, null);
         assert.true(controller.isExchanging);
     });
+
+    test('a link that fails with a code it does not know shows the generic link failure', async function (assert) {
+        const controller = this.controller;
+        controller.oauth.completeLink = () => Promise.reject({ code: 'something_new' });
+
+        await controller.start({ handoff: 'link-code', intent: 'link' });
+        await controller.start({ error: 'something_else', intent: 'link' });
+
+        assert.deepEqual(this.notified.errors, ['auth.login.oauth.errors.link-failed', 'auth.login.oauth.errors.link-failed']);
+    });
+
+    test('with nothing to go on it fails closed rather than throwing', async function (assert) {
+        const controller = this.controller;
+
+        await controller.start();
+        await controller.handle();
+
+        assert.deepEqual(this.manualTokens, [], 'no session');
+        assert.strictEqual(this.notified.errors.length, 2, 'both report a failure');
+    });
+
+    test('an automatic link without a label names the provider by its id', async function (assert) {
+        this.exchangeResult = () => Promise.resolve({ token: 'sanctum-token', type: 'user', linked: 'okta' });
+        const calls = [];
+        Object.defineProperty(this.controller.intl, 't', { configurable: true, value: (key, options) => (calls.push([key, options]), key) });
+
+        await this.controller.start({ handoff: 'handoff-code' });
+
+        assert.deepEqual(calls, [['auth.login.oauth.auto-linked', { provider: 'okta' }]]);
+    });
+
+    test('a registration intent without a prefill starts an empty form', async function (assert) {
+        this.exchangeResult = () => Promise.resolve({ status: 'registration_required', intent: 'rti_abc' });
+
+        await this.controller.start({ handoff: 'handoff-code' });
+
+        assert.deepEqual(this.controller.oauth.registration, { intent: 'rti_abc', prefill: {} });
+    });
 });

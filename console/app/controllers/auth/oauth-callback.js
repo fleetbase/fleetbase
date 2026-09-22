@@ -173,11 +173,8 @@ export default class AuthOauthCallbackController extends Controller {
             return;
         }
 
-        const route = pathToRoute(returnTo);
-
-        if (route) {
-            this.session.setRedirect(route);
-        }
+        // pathToRoute always yields a route (it prefixes `console.`), so no further check.
+        this.session.setRedirect(pathToRoute(returnTo));
     }
 
     /**
