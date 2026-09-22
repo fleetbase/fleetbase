@@ -623,6 +623,7 @@ auth:
       unlink-body: 'Ya no podrás iniciar sesión con {provider}. Puedes volver a vincularlo más adelante.'
       linked: 'Proveedor vinculado a tu cuenta.'
       auto-linked: '{provider} ya está vinculado a tu cuenta. A partir de ahora puedes iniciar sesión con él.'
+      existing-account: 'Ya tienes una cuenta, así que iniciamos tu sesión.'
       unlinked: '{provider} desvinculado.'
       errors:
         generic: 'No se pudo completar el inicio de sesión. Inténtalo de nuevo.'
@@ -831,6 +832,7 @@ onboard:
     confirm-password-help-text: Solo para confirmar la contraseña que introdujiste
       arriba.
     oauth-verified: 'Tu identidad está verificada. No necesitas contraseña: iniciarás sesión con tu proveedor.'
+    oauth-divider: 'O regístrate con tu correo'
     continue-button-text: Continuar
 
   verify-email:

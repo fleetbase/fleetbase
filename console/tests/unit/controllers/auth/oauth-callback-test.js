@@ -132,6 +132,15 @@ module('Unit | Controller | auth/oauth-callback', function (hooks) {
         assert.deepEqual(this.transitions, [['auth.two-fa', { queryParams: { token: 'two-fa-token' } }]]);
     });
 
+    test('it says when a sign-up turned out to be an existing account', async function (assert) {
+        this.exchangeResult = () => Promise.resolve({ token: 'sanctum-token', type: 'user', existing_account: true });
+
+        await this.controller.start({ handoff: 'handoff-code' });
+
+        assert.deepEqual(this.notified.info, ['auth.login.oauth.existing-account']);
+        assert.deepEqual(this.manualTokens, ['sanctum-token']);
+    });
+
     test('an ordinary sign-in says nothing about linking', async function (assert) {
         await this.controller.start({ handoff: 'handoff-code' });
 

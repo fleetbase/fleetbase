@@ -620,6 +620,7 @@ auth:
       unlink-body: 'Sie können sich dann nicht mehr über {provider} anmelden. Sie können ihn später erneut verknüpfen.'
       linked: 'Anbieter mit Ihrem Konto verknüpft.'
       auto-linked: '{provider} ist jetzt mit Ihrem Konto verknüpft. Sie können sich ab sofort damit anmelden.'
+      existing-account: 'Sie haben bereits ein Konto, daher haben wir Sie angemeldet.'
       unlinked: '{provider} getrennt.'
       errors:
         generic: 'Die Anmeldung konnte nicht abgeschlossen werden. Bitte versuchen Sie es erneut.'
@@ -816,6 +817,7 @@ onboard:
     confirm-password: Passwort bestätigen
     confirm-password-help-text: Nur zur Bestätigung des oben eingegebenen Passworts.
     oauth-verified: 'Ihre Identität ist bestätigt. Kein Passwort nötig – Sie melden sich über Ihren Anbieter an.'
+    oauth-divider: 'Oder mit E-Mail registrieren'
     continue-button-text: Fortfahren
   verify-email:
     header-title: Kontoverifizierung
