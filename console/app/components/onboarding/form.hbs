@@ -20,6 +20,27 @@
                 </p>
             </div>
 
+            {{!-- Sign up with a provider instead of a password. Only when an administrator
+                  allows sign-ups through one, and not once the form is already prefilled
+                  from a provider. --}}
+            {{#if (and this.oauth.canSignUp (not this.hasOauthIntent))}}
+                <div class="space-y-2" data-test-oauth-signup>
+                    {{#each this.oauth.providers as |provider|}}
+                        <OauthProviderButton
+                            @provider={{provider}}
+                            @text={{t "auth.login.oauth.continue-with" provider=provider.label}}
+                            @disabled={{this.isStartingProvider}}
+                            @onClick={{this.continueWithProvider}}
+                        />
+                    {{/each}}
+                </div>
+                <div class="flex items-center py-3">
+                    <div class="flex-grow border-t border-gray-300 dark:border-gray-700"></div>
+                    <span class="px-3 text-xs font-medium text-gray-500 uppercase dark:text-gray-400">{{t "onboard.index.oauth-divider"}}</span>
+                    <div class="flex-grow border-t border-gray-300 dark:border-gray-700"></div>
+                </div>
+            {{/if}}
+
             <form {{on "submit" (perform this.onboard)}}>
                 {{#if this.error}}
                     <InfoBlock @icon="exclamation-triangle" @text={{this.error}} class="mb-6 px-3 py-2 bg-red-300 text-red-900" @textClass="text-red-900" />

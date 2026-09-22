@@ -629,6 +629,7 @@ auth:
       unlink-body: 'Non potrai più accedere con {provider}. Potrai collegarlo di nuovo in seguito.'
       linked: 'Provider collegato al tuo account.'
       auto-linked: '{provider} è ora collegato al tuo account. D’ora in poi puoi accedere con esso.'
+      existing-account: 'Hai già un account, quindi ti abbiamo fatto accedere.'
       unlinked: '{provider} scollegato.'
       errors:
         generic: 'Non è stato possibile completare l''accesso. Riprova.'
@@ -813,6 +814,7 @@ onboard:
     confirm-password: Conferma la tua password
     confirm-password-help-text: Solo per confermare la password inserita sopra.
     oauth-verified: 'La tua identità è verificata. Nessuna password necessaria: accederai con il tuo provider.'
+    oauth-divider: 'Oppure registrati con l’email'
     continue-button-text: Continua
   verify-email:
     header-title: Verifica dell'account

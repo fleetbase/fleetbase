@@ -593,6 +593,7 @@ auth:
       unlink-body: 'Bạn sẽ không thể đăng nhập bằng {provider} nữa. Bạn có thể liên kết lại sau.'
       linked: 'Đã liên kết nhà cung cấp với tài khoản của bạn.'
       auto-linked: '{provider} đã được liên kết với tài khoản của bạn. Từ nay bạn có thể đăng nhập bằng nó.'
+      existing-account: 'Bạn đã có tài khoản nên chúng tôi đã đăng nhập cho bạn.'
       unlinked: 'Đã hủy liên kết {provider}.'
       errors:
         generic: 'Không thể hoàn tất đăng nhập. Vui lòng thử lại.'
@@ -784,6 +785,7 @@ onboard:
     confirm-password: Xác nhận mật khẩu
     confirm-password-help-text: Chỉ để xác nhận mật khẩu bạn đã nhập ở trên.
     oauth-verified: 'Danh tính của bạn đã được xác minh. Không cần mật khẩu — bạn sẽ đăng nhập bằng nhà cung cấp.'
+    oauth-divider: 'Hoặc đăng ký bằng email'
     continue-button-text: Tiếp tục
   verify-email:
     header-title: Xác minh tài khoản

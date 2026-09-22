@@ -584,6 +584,7 @@ auth:
       unlink-body: 'لن تتمكن بعد الآن من تسجيل الدخول عبر {provider}. يمكنك ربطه مجددًا لاحقًا.'
       linked: 'تم ربط المزوّد بحسابك.'
       auto-linked: 'تم ربط {provider} بحسابك. يمكنك تسجيل الدخول به من الآن فصاعدًا.'
+      existing-account: 'لديك حساب بالفعل، لذا سجّلنا دخولك.'
       unlinked: 'تم إلغاء ربط {provider}.'
       errors:
         generic: 'تعذّر إكمال تسجيل الدخول. يرجى المحاولة مرة أخرى.'
@@ -771,6 +772,7 @@ onboard:
     confirm-password: تأكيد كلمة المرور
     confirm-password-help-text: فقط لتأكيد كلمة المرور التي أدخلتها أعلاه.
     oauth-verified: 'تم التحقق من هويتك. لا حاجة إلى كلمة مرور — ستسجّل الدخول عبر مزوّدك.'
+    oauth-divider: 'أو سجّل باستخدام البريد الإلكتروني'
     continue-button-text: متابعة
   verify-email:
     header-title: التحقق من الحساب

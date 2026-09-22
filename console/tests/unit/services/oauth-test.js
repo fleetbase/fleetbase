@@ -34,6 +34,33 @@ module('Unit | Service | oauth', function (hooks) {
         assert.true(service.isEnabled);
     });
 
+    test('it offers sign-up buttons only when sign-ups are open', async function (assert) {
+        const service = this.owner.lookup('service:oauth');
+
+        this.getResult = () => Promise.resolve({ providers: [{ id: 'google', label: 'Google', icon: 'google' }], allow_registration: true });
+        await service.loadProviders();
+        assert.true(service.canSignUp);
+
+        this.getResult = () => Promise.resolve({ providers: [{ id: 'google', label: 'Google', icon: 'google' }], allow_registration: false });
+        await service.loadProviders();
+        assert.false(service.canSignUp, 'closed sign-ups hide them');
+
+        this.getResult = () => Promise.resolve({ providers: [], allow_registration: true });
+        await service.loadProviders();
+        assert.false(service.canSignUp, 'no provider, nothing to offer');
+    });
+
+    test('an api that does not say treats sign-ups as closed', async function (assert) {
+        this.getResult = () => Promise.resolve({ providers: [{ id: 'google', label: 'Google', icon: 'google' }] });
+        const service = this.owner.lookup('service:oauth');
+
+        await service.loadProviders();
+
+        // An older API: the login page still offers the provider, the sign-up page doesn't.
+        assert.true(service.isEnabled);
+        assert.false(service.canSignUp);
+    });
+
     test('an unreachable endpoint leaves sign-in working without oauth', async function (assert) {
         this.getResult = () => Promise.reject(new Error('network down'));
         const service = this.owner.lookup('service:oauth');

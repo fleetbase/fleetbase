@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from '@fleetbase/console/tests/helpers';
-import { render, fillIn } from '@ember/test-helpers';
+import { render, fillIn, click } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import Service from '@ember/service';
 import OnboardingFormComponent from '@fleetbase/console/components/onboarding/form';
@@ -337,5 +337,62 @@ module('Integration | Component | onboarding/form | onboard', function (hooks) {
         // in memory for the length of the wizard, not in localStorage.
         assert.notOk(context.data.oauth_intent, 'the intent is not held in the context');
         assert.strictEqual(context.data.organization_name, 'Compiler Logistics', 'other values still merge');
+    });
+
+    test('it offers the provider buttons when sign-ups through a provider are open', async function (assert) {
+        const oauth = this.owner.lookup('service:oauth');
+        oauth.providers = [
+            { id: 'google', label: 'Google', icon: 'google' },
+            { id: 'github', label: 'GitHub', icon: 'github' },
+        ];
+        oauth.allowsRegistration = true;
+        const started = [];
+        oauth.startAuthorization = (id, options) => started.push([id, options]);
+
+        await render(hbs`<Onboarding::Form />`);
+
+        assert.dom('[data-test-oauth-signup] [data-test-oauth-provider]').exists({ count: 2 });
+        assert.dom('[data-test-oauth-signup]').containsText('Continue with Google');
+        assert.dom(this.element).containsText('Or sign up with email');
+
+        await click('[data-test-oauth-provider="google"]');
+
+        assert.deepEqual(started, [['google', { intent: 'signup' }]], 'the handshake is marked as a sign-up');
+    });
+
+    test('it leaves the provider buttons out when sign-ups are closed', async function (assert) {
+        const oauth = this.owner.lookup('service:oauth');
+        oauth.providers = [{ id: 'google', label: 'Google', icon: 'google' }];
+        oauth.allowsRegistration = false;
+
+        await render(hbs`<Onboarding::Form />`);
+
+        assert.dom('[data-test-oauth-signup]').doesNotExist();
+        assert.dom(this.element).doesNotContainText('Or sign up with email');
+    });
+
+    test('it leaves the provider buttons out once the form is prefilled from a provider', async function (assert) {
+        const oauth = this.owner.lookup('service:oauth');
+        oauth.providers = [{ id: 'google', label: 'Google', icon: 'google' }];
+        oauth.allowsRegistration = true;
+        oauth.setRegistration({ intent: 'rti_abc', prefill: { name: 'Ada Lovelace', email: 'ada@example.com' } });
+
+        await render(hbs`<Onboarding::Form />`);
+
+        assert.dom('[data-test-oauth-signup]').doesNotExist();
+    });
+
+    test('a second press while leaving for the provider does nothing', async function (assert) {
+        const captured = captureComponent(this.owner, 'onboarding/form', OnboardingFormComponent);
+        const oauth = this.owner.lookup('service:oauth');
+        const started = [];
+        oauth.startAuthorization = (id) => started.push(id);
+
+        await render(hbs`<Onboarding::Form />`);
+        captured.instance.continueWithProvider({ id: 'google' });
+        captured.instance.continueWithProvider({ id: 'google' });
+        captured.instance.continueWithProvider(null);
+
+        assert.deepEqual(started, ['google']);
     });
 });

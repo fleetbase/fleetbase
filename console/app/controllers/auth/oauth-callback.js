@@ -127,6 +127,12 @@ export default class AuthOauthCallbackController extends Controller {
             this.notifications.info(this.intl.t('auth.login.oauth.auto-linked', { provider: response.linked_label ?? response.linked }));
         }
 
+        // They pressed a provider button on the sign-up page but already had an account,
+        // so they are being signed in to it rather than signed up.
+        if (response.existing_account) {
+            this.notifications.info(this.intl.t('auth.login.oauth.existing-account'));
+        }
+
         // 2FA is not waived for a provider sign-in — the server issues no token until
         // the second factor is satisfied.
         if (response.isEnabled === true && response.twoFaSession) {
