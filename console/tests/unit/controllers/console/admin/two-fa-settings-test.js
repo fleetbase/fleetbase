@@ -36,11 +36,22 @@ module('Unit | Controller | console/admin/two-fa-settings', function (hooks) {
         this.owner.register('service:fetch', FetchStub);
         this.owner.register('service:notifications', NotificationsStub);
 
-        this.build = () => this.owner.lookup('controller:console/admin/two-fa-settings');
+        this.build = () => {
+            const controller = this.owner.lookup('controller:console/admin/two-fa-settings');
+            controller.load();
+            return controller;
+        };
         this.notifications = () => this.owner.lookup('service:notifications');
     });
 
-    test('it loads the system 2FA config on construction', async function (assert) {
+    test('looking the controller up requests nothing', function (assert) {
+        // The router does this before authentication is checked; see controller.load().
+        this.owner.lookup('controller:console/admin/two-fa-settings');
+
+        assert.deepEqual(this.requests, []);
+    });
+
+    test('it loads the system 2FA config when the route is entered', async function (assert) {
         const controller = this.build();
         await controller.loadSystemTwoFaConfig.last;
 
