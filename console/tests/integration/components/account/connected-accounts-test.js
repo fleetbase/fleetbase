@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from '@fleetbase/console/tests/helpers';
-import { render } from '@ember/test-helpers';
+import { render, click, waitUntil } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import Service from '@ember/service';
 import ConnectedAccountsComponent from '@fleetbase/console/components/account/connected-accounts';
@@ -105,6 +105,44 @@ module('Integration | Component | account/connected-accounts', function (hooks) 
 
         assert.deepEqual(this.unlinked, ['google']);
         assert.deepEqual(captured.instance.identities, []);
+    });
+
+    test('unlinking through the confirmation dialog removes the provider from the linked list', async function (assert) {
+        // What the API really answers: nothing linked, and the provider offered to link again.
+        this.unlinkResult = () =>
+            Promise.resolve({
+                identities: [],
+                available: [
+                    { id: 'google', label: 'Google', icon: 'google' },
+                    { id: 'github', label: 'GitHub', icon: 'github' },
+                ],
+                has_password: true,
+            });
+        await render(hbs`<ModalsContainer /><Account::ConnectedAccounts />`);
+
+        const unlinkButton = [...this.element.querySelectorAll('button')].find((button) => button.textContent.trim() === 'Unlink');
+        await click(unlinkButton);
+        await waitUntil(() => document.querySelector('.flb--confirm-modal'));
+        const accept = [...document.querySelectorAll('.flb--confirm-modal button')].find((button) => button.textContent.trim() === 'Unlink');
+        await click(accept);
+
+        assert.deepEqual(this.unlinked, ['google']);
+        assert.strictEqual([...this.element.querySelectorAll('button')].filter((button) => button.textContent.trim() === 'Unlink').length, 0, 'no provider is shown as linked');
+        assert.dom(this.element).doesNotContainText('ada@example.com');
+        // Google moves to the "available" group, under its own heading, not beside linked ones.
+        assert.dom('[data-test-linked-providers]').doesNotExist();
+        assert.dom('[data-test-available-providers]').containsText('Google');
+        assert.dom(this.element).containsText('Available to link');
+    });
+
+    test('linked and available providers are listed under separate headings', async function (assert) {
+        await render(hbs`<Account::ConnectedAccounts />`);
+
+        assert.dom('[data-test-linked-providers]').containsText('Google');
+        assert.dom('[data-test-linked-providers]').doesNotContainText('GitHub');
+        assert.dom('[data-test-available-providers]').containsText('GitHub');
+        assert.dom(this.element).containsText('Linked');
+        assert.dom(this.element).containsText('Available to link');
     });
 
     test('it explains a refused unlink in plain language', async function (assert) {
