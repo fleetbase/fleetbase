@@ -1,6 +1,7 @@
 import { module, test } from 'qunit';
 import { setupTest } from '@fleetbase/console/tests/helpers';
 import Service from '@ember/service';
+import AuthOauthCallbackController from '@fleetbase/console/controllers/auth/oauth-callback';
 
 module('Unit | Controller | auth/oauth-callback', function (hooks) {
     setupTest(hooks);
@@ -268,5 +269,25 @@ module('Unit | Controller | auth/oauth-callback', function (hooks) {
         assert.false(called);
         assert.deepEqual(this.notified.errors, ['auth.login.oauth.errors.access-denied']);
         assert.deepEqual(this.transitions, [['console.account.auth']]);
+    });
+
+    test('it reads the error code from wherever the rejection carries it', function (assert) {
+        const controller = this.controller;
+
+        assert.strictEqual(controller.codeFrom(null), 'exchange_failed', 'no error at all');
+        assert.strictEqual(controller.codeFrom({ code: 'link_required' }), 'link_required', 'a raw error body');
+        assert.strictEqual(controller.codeFrom({ payload: { code: 'provider_disabled' } }), 'provider_disabled', 'an adapter-style error');
+        assert.strictEqual(controller.codeFrom({ json: { code: 'rate_limited' } }), 'rate_limited', 'a fetch-style error');
+        assert.strictEqual(controller.codeFrom({ code: 42 }), 'exchange_failed', 'a code that is not a string');
+        assert.strictEqual(controller.codeFrom(new Error('Network down')), 'exchange_failed', 'a plain error with no code');
+    });
+
+    test('it starts exchanging, with no error', function (assert) {
+        // Tracked defaults run lazily on first read. Each of these is assigned before it is
+        // ever read in normal use, so read them fresh here to pin the defaults.
+        const controller = Object.create(AuthOauthCallbackController.prototype);
+
+        assert.strictEqual(controller.error, null);
+        assert.true(controller.isExchanging);
     });
 });
