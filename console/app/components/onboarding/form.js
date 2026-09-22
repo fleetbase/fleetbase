@@ -1,7 +1,7 @@
 import Component from '@glimmer/component';
 import { inject as service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
-import { getProperties } from '@ember/object';
+import { action, getProperties } from '@ember/object';
 import { isBlank } from '@ember/utils';
 import { task } from 'ember-concurrency';
 import { onboardValidationsFor } from '../../validations/onboard';
@@ -48,6 +48,27 @@ export default class OnboardingFormComponent extends Component {
 
     get hasOauthIntent() {
         return !isBlank(this.oauthIntent);
+    }
+
+    /**
+     * Set once a provider button is pressed, while the browser leaves for the provider.
+     *
+     * @var {Boolean}
+     */
+    @tracked isStartingProvider = false;
+
+    /**
+     * Sign up with a provider. The same handshake as the login page's buttons, marked as
+     * a sign-up: an unknown identity comes back here with the form prefilled, and one
+     * that already has an account is signed in and told so.
+     */
+    @action continueWithProvider(provider) {
+        if (this.isStartingProvider || !provider?.id) {
+            return;
+        }
+
+        this.isStartingProvider = true;
+        this.oauth.startAuthorization(provider.id, { intent: 'signup' });
     }
 
     /**

@@ -575,6 +575,7 @@ auth:
       unlink-body: 'دیگر نمی‌توانید با {provider} وارد شوید. بعداً می‌توانید دوباره آن را متصل کنید.'
       linked: 'ارائه‌دهنده به حساب شما متصل شد.'
       auto-linked: '{provider} اکنون به حساب شما متصل است. از این پس می‌توانید با آن وارد شوید.'
+      existing-account: 'شما از قبل حساب دارید، بنابراین وارد حسابتان شدید.'
       unlinked: 'اتصال {provider} قطع شد.'
       errors:
         generic: 'ورود کامل نشد. لطفاً دوباره تلاش کنید.'
@@ -759,6 +760,7 @@ onboard:
     confirm-password: رمز عبور خود را تأیید کنید
     confirm-password-help-text: فقط برای تأیید رمز عبوری که در بالا وارد کرده‌اید
     oauth-verified: 'هویت شما تأیید شد. نیازی به رمز عبور نیست — با ارائه‌دهنده خود وارد می‌شوید.'
+    oauth-divider: 'یا با ایمیل ثبت‌نام کنید'
     continue-button-text: ادامه
   verify-email:
     header-title: تأیید حساب

@@ -22,6 +22,15 @@ export default class OauthService extends Service {
      */
     @tracked providers = [];
 
+    /**
+     * Whether an administrator allows new accounts through a provider. When they don't,
+     * the sign-up page leaves its provider buttons out rather than let someone find out
+     * after the round trip.
+     *
+     * @var {Boolean}
+     */
+    @tracked allowsRegistration = false;
+
     @tracked isLoading = false;
 
     /**
@@ -44,6 +53,13 @@ export default class OauthService extends Service {
     }
 
     /**
+     * Whether the sign-up page should offer provider buttons.
+     */
+    get canSignUp() {
+        return this.isEnabled && this.allowsRegistration;
+    }
+
+    /**
      * Ask the API which providers are enabled.
      *
      * Unauthenticated, and safe to call before a session exists — which is the point,
@@ -61,10 +77,12 @@ export default class OauthService extends Service {
         this.isLoading = true;
 
         try {
-            const { providers } = await this.fetch.get('auth/oauth/providers');
+            const { providers, allow_registration } = await this.fetch.get('auth/oauth/providers');
             this.providers = Array.isArray(providers) ? providers : [];
+            this.allowsRegistration = allow_registration === true;
         } catch (error) {
             this.providers = [];
+            this.allowsRegistration = false;
         } finally {
             this.isLoading = false;
         }

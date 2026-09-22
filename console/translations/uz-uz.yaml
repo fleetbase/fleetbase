@@ -604,6 +604,7 @@ auth:
       unlink-body: 'Endi {provider} orqali kira olmaysiz. Keyinroq uni qayta bog‘lashingiz mumkin.'
       linked: 'Provayder hisobingizga bog‘landi.'
       auto-linked: '{provider} endi hisobingizga bog‘landi. Bundan buyon u orqali kirishingiz mumkin.'
+      existing-account: 'Sizda allaqachon hisob bor, shuning uchun tizimga kiritdik.'
       unlinked: '{provider} uzildi.'
       errors:
         generic: 'Kirishni yakunlab bo‘lmadi. Qaytadan urinib ko‘ring.'
@@ -793,6 +794,7 @@ onboard:
     confirm-password: Parolingizni tasdiqlang
     confirm-password-help-text: Yuqorida kiritgan parolingizni tasdiqlash uchun.
     oauth-verified: 'Shaxsingiz tasdiqlandi. Parol kerak emas — provayderingiz orqali kirasiz.'
+    oauth-divider: 'Yoki elektron pochta orqali roʻyxatdan oʻting'
     continue-button-text: Davom etish
   verify-email:
     header-title: Hisobni tekshirish

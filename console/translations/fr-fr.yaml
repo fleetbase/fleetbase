@@ -594,6 +594,7 @@ auth:
       unlink-body: 'Vous ne pourrez plus vous connecter avec {provider}. Vous pourrez l''associer à nouveau plus tard.'
       linked: 'Fournisseur associé à votre compte.'
       auto-linked: '{provider} est maintenant associé à votre compte. Vous pouvez désormais vous connecter avec.'
+      existing-account: 'Vous avez déjà un compte, nous vous avons donc connecté.'
       unlinked: '{provider} dissocié.'
       errors:
         generic: 'La connexion n''a pas pu être finalisée. Veuillez réessayer.'
@@ -788,6 +789,7 @@ onboard:
     confirm-password-help-text: Juste pour confirmer le mot de passe que vous avez
       saisi ci-dessus.
     oauth-verified: 'Votre identité est vérifiée. Aucun mot de passe nécessaire : vous vous connecterez via votre fournisseur.'
+    oauth-divider: 'Ou inscrivez-vous avec votre e-mail'
     continue-button-text: Continuer
   verify-email:
     header-title: Vérification du compte

@@ -631,6 +631,7 @@ auth:
       unlink-body: 'You will no longer be able to sign in with {provider}. You can link it again later.'
       linked: 'Provider linked to your account.'
       auto-linked: '{provider} is now linked to your account. You can sign in with it from now on.'
+      existing-account: 'You already have an account, so we signed you in.'
       unlinked: '{provider} unlinked.'
       errors:
         generic: 'We could not complete that sign-in. Please try again.'
@@ -857,6 +858,7 @@ onboard:
     confirm-password: Confirm your password
     confirm-password-help-text: Just to confirm the password you entered above.
     oauth-verified: 'Your identity is verified. No password needed — you''ll sign in with your provider.'
+    oauth-divider: 'Or sign up with email'
     continue-button-text: Continue
   verify-email:
     header-title: Account Verification

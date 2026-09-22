@@ -101,21 +101,15 @@
                 <div class="flex-grow border-t border-gray-300 dark:border-gray-700"></div>
             </div>
 
-            {{!-- Branded per provider (see .oauth-provider-button in console.css): each
-                  provider's colours and logo, on Fleetbase's own button shape and shadow. --}}
+            {{!-- ember-ui's OauthProviderButton: each provider's logo and colours on the
+                  shared btn-auth button, the same buttons the sign-up page shows. --}}
             {{#each this.oauth.providers as |provider|}}
-                <Button
-                    @wrapperClass="btn-block oauth-provider-button oauth-provider-{{provider.id}}"
+                <OauthProviderButton
+                    @provider={{provider}}
+                    @text={{t "auth.login.oauth.continue-with" provider=provider.label}}
                     @disabled={{this.isLoading}}
-                    @onClick={{fn this.continueWithProvider provider}}
-                    data-test-oauth-provider={{provider.id}}
-                >
-                    {{!-- In Fleetbase's icon slot, so the logo sits at the far left like other buttons. --}}
-                    <span class="btn-icon-wrapper">
-                        <Auth::OauthProviderLogo @provider={{provider.id}} @icon={{provider.icon}} />
-                    </span>
-                    <span>{{t "auth.login.oauth.continue-with" provider=provider.label}}</span>
-                </Button>
+                    @onClick={{this.continueWithProvider}}
+                />
             {{/each}}
         {{/if}}
         <RegistryYield @type="menu" @registry="auth:login" as |menuItem|>
