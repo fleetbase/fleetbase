@@ -66,4 +66,8 @@ module('Unit | Initializer | load-intl-polyfills | default locale', function () 
         // Every console language still has data, which ember-intl needs to start.
         assert.strictEqual(Intl.NumberFormat.supportedLocalesOf(['mn']).length, 1);
     });
+
+    test('with no browser languages it falls back to English', function (assert) {
+        assert.strictEqual(preferredLanguage(['ar', 'en', 'mn']), 'en');
+    });
 });

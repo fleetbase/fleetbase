@@ -1,4 +1,4 @@
-import onboard from '@fleetbase/console/validations/onboard';
+import onboard, { onboardValidationsFor } from '@fleetbase/console/validations/onboard';
 import { module, test } from 'qunit';
 
 module('Unit | Validation | onboard', function () {
@@ -34,5 +34,13 @@ module('Unit | Validation | onboard', function () {
         const [, confirmation] = onboard.password_confirmation;
         assert.strictEqual(confirmation('password_confirmation', 'secret123', null, { password: 'secret123' }, {}), true, 'matching confirmation passes');
         assert.notStrictEqual(confirmation('password_confirmation', 'different', null, { password: 'secret123' }, {}), true, 'mismatched confirmation fails');
+    });
+
+    test('with no options a signup needs a password, as a password signup does', function (assert) {
+        const rules = onboardValidationsFor();
+
+        assert.deepEqual(Object.keys(rules).sort(), Object.keys(onboard).sort());
+        assert.ok(rules.password, 'password rules apply');
+        assert.notOk(onboardValidationsFor({ hasOauthIntent: true }).password, 'an intent needs no password');
     });
 });

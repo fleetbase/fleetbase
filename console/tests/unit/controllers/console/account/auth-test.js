@@ -332,6 +332,21 @@ module('Unit | Controller | console/account/auth | credentials and 2FA', functio
         assert.strictEqual(this.notifications().serverErrors.length, 1);
         assert.deepEqual(this.notifications().successes, []);
     });
+    test('empty 2FA responses leave the defaults untouched', async function (assert) {
+        this.responses = {};
+        const controller = this.owner.lookup('controller:console/account/auth');
+        const before = { system: controller.isSystemTwoFaEnabled, user: controller.isUserTwoFaEnabled, settings: controller.twoFaSettings, config: controller.twoFaConfig };
+
+        controller.load();
+        assert.strictEqual(await controller.loadSystemTwoFaConfig.last, undefined);
+        assert.strictEqual(await controller.loadUserTwoFaSettings.last, undefined);
+
+        assert.deepEqual(
+            { system: controller.isSystemTwoFaEnabled, user: controller.isUserTwoFaEnabled, settings: controller.twoFaSettings, config: controller.twoFaConfig },
+            before,
+            'nothing is applied from an empty response'
+        );
+    });
 });
 
 module('Unit | Controller | console/account/auth | form submission', function (hooks) {
