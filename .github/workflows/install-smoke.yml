@@ -83,8 +83,8 @@ jobs:
       - name: Run non-interactive installer
         if: steps.auth.outputs.available == 'true'
         run: |
-          # Ensure the API .env the compose file mounts exists.
-          [ -f api/.env ] || cp api/.env.example api/.env 2>/dev/null || touch api/.env
+          # The installer creates the api/.env the compose file mounts; do not pre-seed
+          # it here so the smoke test takes the same path a fresh clone does.
           bash scripts/docker-install.sh --non-interactive
 
       - name: Assert migrations ran
