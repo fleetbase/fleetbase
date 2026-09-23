@@ -1,0 +1,16 @@
+# Fleetbase is installed by bash scripts and Linux containers. Git for Windows defaults
+# to core.autocrlf=true, which would check these files out with CRLF and break
+# `bash scripts/docker-install.sh` ($'\r': command not found), dotenv values, the
+# crontab, nginx config and Dockerfile line continuations. Force LF regardless of the
+# user's autocrlf setting.
+*.sh          text eol=lf
+Dockerfile*   text eol=lf
+.dockerignore text eol=lf
+*.yml         text eol=lf
+*.yaml        text eol=lf
+*.hcl         text eol=lf
+.env          text eol=lf
+.env.*        text eol=lf
+crontab       text eol=lf
+*.conf        text eol=lf
+Caddyfile*    text eol=lf
