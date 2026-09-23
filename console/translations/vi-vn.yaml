@@ -578,6 +578,41 @@ auth:
       forgot-password-label: Quên mật khẩu?
       sign-in-button: Đăng nhập
       create-account-button: Tạo tài khoản mới
+    oauth:
+      divider: 'Hoặc tiếp tục với'
+      continue-with: 'Tiếp tục với {provider}'
+      signing-in: 'Đang đăng nhập...'
+      finish-signup: 'Hoàn tất thiết lập tài khoản Fleetbase của bạn để tiếp tục.'
+      connected-accounts: 'Tài khoản đã liên kết'
+      connected-accounts-help: 'Đăng nhập bằng nhà cung cấp thay vì mật khẩu. Bạn có thể liên kết nhiều nhà cung cấp.'
+      linked-heading: 'Đã liên kết'
+      available-heading: 'Có thể liên kết'
+      link-button: 'Liên kết'
+      unlink-button: 'Hủy liên kết'
+      unlink-title: 'Hủy liên kết {provider}?'
+      unlink-body: 'Bạn sẽ không thể đăng nhập bằng {provider} nữa. Bạn có thể liên kết lại sau.'
+      linked: 'Đã liên kết nhà cung cấp với tài khoản của bạn.'
+      auto-linked: '{provider} đã được liên kết với tài khoản của bạn. Từ nay bạn có thể đăng nhập bằng nó.'
+      existing-account: 'Bạn đã có tài khoản nên chúng tôi đã đăng nhập cho bạn.'
+      unlinked: 'Đã hủy liên kết {provider}.'
+      errors:
+        generic: 'Không thể hoàn tất đăng nhập. Vui lòng thử lại.'
+        access-denied: 'Đăng nhập đã bị hủy.'
+        provider-error: 'Nhà cung cấp đăng nhập báo lỗi. Vui lòng thử lại.'
+        provider-disabled: 'Phương thức đăng nhập này không khả dụng.'
+        invalid-state: 'Liên kết đăng nhập này không còn hiệu lực. Vui lòng thử lại.'
+        exchange-failed: 'Không thể kết nối tới nhà cung cấp đăng nhập. Vui lòng thử lại.'
+        expired: 'Phiên đăng nhập đã hết hạn. Vui lòng thử lại.'
+        hosted-domain: 'Tài khoản của bạn không thuộc miền được phép.'
+        registration-disabled: 'Hiện không mở đăng ký mới.'
+        link-required: 'Đã tồn tại tài khoản với email này. Hãy đăng nhập và liên kết nhà cung cấp này trong cài đặt tài khoản.'
+        customer-account: 'Tài khoản khách hàng phải đăng nhập qua cổng khách hàng.'
+        not-verified: 'Tài khoản của bạn cần được xác minh để tiếp tục.'
+        rate-limited: 'Quá nhiều lần thử. Vui lòng thử lại sau giây lát.'
+        already-linked: 'Nhà cung cấp này đã được liên kết với tài khoản của bạn.'
+        identity-already-linked: 'Tài khoản này đã được liên kết với một người dùng Fleetbase khác.'
+        last-credential: 'Hãy đặt mật khẩu hoặc liên kết nhà cung cấp khác trước, nếu không bạn sẽ không thể đăng nhập.'
+        link-failed: 'Không thể liên kết nhà cung cấp này. Vui lòng thử lại.'
     slow-connection-message: Gặp sự cố kết nối.
   reset-password:
     success-message: Mật khẩu của bạn đã được đặt lại! Đăng nhập để tiếp tục.
@@ -637,6 +672,7 @@ console:
       filesystem: Hệ thống tập tin
       queue: Hàng đợi
       socket: Socket
+      oauth: 'Đăng nhập OAuth'
       push-notifications: Thông báo đẩy
     schedule-monitor:
       schedule-monitor: Giám sát lịch trình
@@ -658,6 +694,8 @@ console:
         title: Cấu hình cơ sở dữ liệu
       filesystem:
         title: Cấu hình hệ thống tập tin
+      oauth:
+        title: 'Cấu hình đăng nhập OAuth'
       mail:
         title: Cấu hình thư điện tử
       notification-channels:
@@ -746,6 +784,8 @@ onboard:
     password-help-text: Mật khẩu của bạn, hãy đảm bảo nó đủ mạnh.
     confirm-password: Xác nhận mật khẩu
     confirm-password-help-text: Chỉ để xác nhận mật khẩu bạn đã nhập ở trên.
+    oauth-verified: 'Danh tính của bạn đã được xác minh. Không cần mật khẩu — bạn sẽ đăng nhập bằng nhà cung cấp.'
+    oauth-divider: 'Hoặc đăng ký bằng email'
     continue-button-text: Tiếp tục
   verify-email:
     header-title: Xác minh tài khoản

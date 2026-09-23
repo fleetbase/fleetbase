@@ -254,4 +254,56 @@ module('Unit | Controller | auth/login', function (hooks) {
         controller.reset('anything-else');
         assert.strictEqual(controller.password, 'b', 'an unknown outcome leaves the form alone');
     });
+
+    test('continuing with a provider starts the server-side handshake', async function (assert) {
+        const controller = this.owner.lookup('controller:auth/login');
+        const started = [];
+
+        controller.oauth.startAuthorization = (id, options) => started.push([id, options]);
+
+        controller.continueWithProvider({ id: 'google', label: 'Google' });
+
+        assert.deepEqual(started, [['google', { intent: 'login', returnTo: null }]]);
+        // Unlike login(), no two-factor pre-check is issued: there is no identity to
+        // check yet, and the server enforces 2FA when the handshake returns.
+        assert.deepEqual(this.posted, []);
+        assert.deepEqual(this.authenticateCalls, []);
+    });
+
+    test('it carries an intended destination into the handshake', async function (assert) {
+        const controller = this.owner.lookup('controller:auth/login');
+        const started = [];
+
+        controller.oauth.startAuthorization = (id, options) => started.push([id, options]);
+        controller.urlSearchParams.get = (key) => (key === 'shift' ? '/console/orders' : null);
+
+        controller.continueWithProvider({ id: 'google' });
+
+        assert.deepEqual(started, [['google', { intent: 'login', returnTo: '/console/orders' }]]);
+    });
+
+    test('it refuses to forward a destination that is not console-relative', async function (assert) {
+        const controller = this.owner.lookup('controller:auth/login');
+        const started = [];
+
+        controller.oauth.startAuthorization = (id, options) => started.push([id, options]);
+        controller.urlSearchParams.get = (key) => (key === 'shift' ? 'https://evil.tld/x' : null);
+
+        controller.continueWithProvider({ id: 'google' });
+
+        assert.deepEqual(started, [['google', { intent: 'login', returnTo: null }]]);
+    });
+
+    test('it ignores a provider click while a sign-in is already running', async function (assert) {
+        const controller = this.owner.lookup('controller:auth/login');
+        const started = [];
+
+        controller.oauth.startAuthorization = (id, options) => started.push([id, options]);
+        controller.set('isLoading', true);
+
+        controller.continueWithProvider({ id: 'google' });
+        controller.continueWithProvider({});
+
+        assert.deepEqual(started, [], 'no handshake is started');
+    });
 });

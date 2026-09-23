@@ -323,6 +323,239 @@ try {
     echo 'SEEDED_DRIVER_PHONE=' . $driverPhone . PHP_EOL;
 
     /* ============================================================
+     | INSPECTION FORM (Fleetbase API / Inspections)
+     * ============================================================ */
+
+    // The driver inspection endpoints (fleetops#319, postman#60) list published forms
+    // and submit against one. Forms are authored and published from the console — no
+    // consumable route creates one — so a contract run has to seed it. Organisation-wide
+    // (`subject_uuid` null) so it applies to whatever vehicle the collection creates.
+    // Guarded: the model exists only once the FleetOps release that carries inspections
+    // is installed; earlier stacks skip it and the six requests are the postman run's
+    // problem, not this script's.
+    if (class_exists(\Fleetbase\FleetOps\Models\InspectionForm::class)) {
+        $inspectionForm = \Fleetbase\FleetOps\Models\InspectionForm::withoutGlobalScopes()
+            ->where(['company_uuid' => $company->uuid, 'name' => 'CI Contract Pre-trip'])
+            ->first();
+
+        if (!$inspectionForm) {
+            $inspectionForm = new \Fleetbase\FleetOps\Models\InspectionForm();
+            $inspectionForm->company_uuid    = $company->uuid;
+            $inspectionForm->created_by_uuid = $user->uuid;
+            $inspectionForm->name            = 'CI Contract Pre-trip';
+        }
+
+        // Reasserted on every run: the listing filters on `status=published` AND a
+        // `published_at`, and the submit path counts failures from these two items.
+        $inspectionForm->description  = 'Seeded by the API contract run.';
+        $inspectionForm->type         = 'pre_trip';
+        $inspectionForm->frequency    = 'pre_trip';
+        $inspectionForm->status       = 'published';
+        $inspectionForm->published_at = $inspectionForm->published_at ?? \Illuminate\Support\Carbon::now();
+        $inspectionForm->subject_type = null;
+        $inspectionForm->subject_uuid = null;
+        $inspectionForm->items        = [
+            ['key' => 'brakes', 'label' => 'Brakes', 'category' => 'Brakes', 'required' => true, 'severity' => 'critical'],
+            ['key' => 'lights', 'label' => 'Lights and indicators', 'category' => 'Lights', 'required' => true, 'severity' => 'medium'],
+        ];
+        $inspectionForm->settings     = [
+            'create_issue_on_failure'      => true,
+            'create_work_order_on_failure' => true,
+        ];
+        $inspectionForm->save();
+
+        echo 'SEEDED_INSPECTION_FORM_ID=' . $inspectionForm->fresh()->public_id . PHP_EOL;
+
+        /* --------------------------------------------------------
+         | Inspection form field groups (custom-field system)
+         * -------------------------------------------------------- */
+
+        // The second cut of inspections stops treating a form as a flat JSON `items`
+        // list and builds it out of the platform's custom-field system: a form's groups
+        // are Category rows (`for = custom_field_group`, owned by the form) and its
+        // fields are CustomField rows (`for = fleetops_inspection_form`, subject = the
+        // form). `items` above is left in place so a stack on the first cut still has a
+        // submittable form; the groups below are what the second cut reads.
+        //
+        // Guarded twice over. The two constants only exist on the FleetOps release that
+        // carries the second cut, so they are read through `defined()` with the literal
+        // values as the fallback — referencing an undefined class constant is a fatal
+        // error, not a catchable one, and would take the whole seed with it. Category
+        // and CustomField ship with core-api, but they are checked too so this block
+        // degrades the same way the form itself does rather than half-running.
+        $groupFor = defined('\Fleetbase\FleetOps\Models\InspectionForm::GROUP_FOR')
+            ? \Fleetbase\FleetOps\Models\InspectionForm::GROUP_FOR
+            : 'custom_field_group';
+        $fieldFor = defined('\Fleetbase\FleetOps\Models\InspectionForm::FIELD_FOR')
+            ? \Fleetbase\FleetOps\Models\InspectionForm::FIELD_FOR
+            : 'fleetops_inspection_form';
+
+        if (class_exists(\Fleetbase\Models\Category::class) && class_exists(\Fleetbase\Models\CustomField::class)) {
+            // The morph value both sides key on. Taken from the model rather than
+            // hardcoded so a morph map, if one is ever registered, is respected.
+            $formType = $inspectionForm->getMorphClass();
+
+            // Two groups: what the driver walks around and checks, then what they read
+            // off the dash and sign. `grid_size` is how many columns the group renders
+            // its fields in — the checks pair up two-across, the meter and the signature
+            // want the full width.
+            $inspectionGroups = [
+                [
+                    'name'        => 'Exterior and Safety',
+                    'description' => 'Walk-around checks completed before the vehicle moves.',
+                    'order'       => 1,
+                    'meta'        => ['grid_size' => 2],
+                    'fields'      => [
+                        [
+                            'name'      => 'brakes',
+                            'label'     => 'Brakes',
+                            'type'      => 'pass-fail',
+                            'required'  => true,
+                            'order'     => 1,
+                            'help_text' => 'Service and park brake, including air loss on an air-braked unit.',
+                            'meta'      => [
+                                'severity'                => 'critical',
+                                'require_photo_on_fail'   => true,
+                                'require_comment_on_fail' => true,
+                                'unsafe_on_fail'          => true,
+                                'instructions'            => 'Pump the pedal and hold. Fail on any pull, sponginess or audible leak.',
+                            ],
+                        ],
+                        [
+                            'name'      => 'lights',
+                            'label'     => 'Lights and indicators',
+                            'type'      => 'pass-fail',
+                            'required'  => true,
+                            'order'     => 2,
+                            'help_text' => 'Head, tail, brake, hazard and both indicators.',
+                            'meta'      => [
+                                'severity'                => 'medium',
+                                'require_photo_on_fail'   => true,
+                                'require_comment_on_fail' => true,
+                                'unsafe_on_fail'          => false,
+                                'instructions'            => 'Walk the vehicle with the hazards on, then check brake lights with a second person.',
+                            ],
+                        ],
+                        [
+                            'name'      => 'damage_notes',
+                            'label'     => 'Damage or defects noted',
+                            'type'      => 'textarea',
+                            'required'  => false,
+                            'order'     => 3,
+                            'help_text' => 'Anything the checks above do not already cover.',
+                            'meta'      => [],
+                        ],
+                    ],
+                ],
+                [
+                    'name'        => 'Meter and Sign-off',
+                    'description' => 'Readings taken from the cab, then the driver declaration.',
+                    'order'       => 2,
+                    'meta'        => ['grid_size' => 1],
+                    'fields'      => [
+                        [
+                            'name'      => 'odometer',
+                            'label'     => 'Odometer reading',
+                            'type'      => 'number',
+                            'required'  => true,
+                            'order'     => 1,
+                            'help_text' => 'Whole kilometres as shown on the dash.',
+                            // `role: odometer` is what marks this as the meter the
+                            // submission reads back onto the vehicle, rather than just
+                            // another number on the form.
+                            'meta'      => ['unit' => 'km', 'role' => 'odometer'],
+                        ],
+                        [
+                            'name'      => 'driver_signature',
+                            'label'     => 'Driver signature',
+                            'type'      => 'signature',
+                            'required'  => true,
+                            'order'     => 2,
+                            'help_text' => 'I confirm the checks above were carried out and recorded honestly.',
+                            'meta'      => [],
+                        ],
+                    ],
+                ],
+            ];
+
+            $seededGroupIds = [];
+
+            foreach ($inspectionGroups as $groupDefinition) {
+                // Idempotent the same way every other fixture here is: look the row up on
+                // the tuple that identifies it, reassert its attributes, save. A re-run
+                // updates in place instead of stacking a second copy of every group.
+                $group = \Fleetbase\Models\Category::withoutGlobalScopes()
+                    ->where([
+                        'company_uuid' => $company->uuid,
+                        'owner_uuid'   => $inspectionForm->uuid,
+                        'owner_type'   => $formType,
+                        'for'          => $groupFor,
+                        'name'         => $groupDefinition['name'],
+                    ])
+                    ->first();
+
+                if (!$group) {
+                    $group = new \Fleetbase\Models\Category();
+                    $group->company_uuid = $company->uuid;
+                    $group->owner_uuid   = $inspectionForm->uuid;
+                    $group->owner_type   = $formType;
+                    $group->for          = $groupFor;
+                    $group->name         = $groupDefinition['name'];
+                }
+
+                $group->description = $groupDefinition['description'];
+                $group->order       = $groupDefinition['order'];
+                $group->meta        = $groupDefinition['meta'];
+                $group->save();
+
+                $seededGroupIds[] = $group->fresh()->public_id;
+
+                foreach ($groupDefinition['fields'] as $fieldDefinition) {
+                    $field = \Fleetbase\Models\CustomField::withoutGlobalScopes()
+                        ->where([
+                            'company_uuid' => $company->uuid,
+                            'subject_uuid' => $inspectionForm->uuid,
+                            'subject_type' => $formType,
+                            'for'          => $fieldFor,
+                            'name'         => $fieldDefinition['name'],
+                        ])
+                        ->first();
+
+                    if (!$field) {
+                        $field = new \Fleetbase\Models\CustomField();
+                        $field->company_uuid = $company->uuid;
+                        $field->subject_uuid = $inspectionForm->uuid;
+                        $field->subject_type = $formType;
+                        $field->for          = $fieldFor;
+                        $field->name         = $fieldDefinition['name'];
+                    }
+
+                    // Reasserted every run, category_uuid included: a field that was
+                    // seeded into the other group on an earlier revision of this list
+                    // gets moved rather than duplicated.
+                    $field->category_uuid = $group->uuid;
+                    $field->label         = $fieldDefinition['label'];
+                    $field->type          = $fieldDefinition['type'];
+                    $field->required      = $fieldDefinition['required'];
+                    $field->editable      = true;
+                    $field->order         = $fieldDefinition['order'];
+                    $field->help_text     = $fieldDefinition['help_text'];
+                    $field->meta          = $fieldDefinition['meta'];
+                    $field->save();
+                }
+            }
+
+            echo 'SEEDED_INSPECTION_FORM_GROUP_IDS=' . implode(',', $seededGroupIds) . PHP_EOL;
+        } else {
+            echo '::warning::Custom field models unavailable; inspection form groups skipped.' . PHP_EOL;
+            echo 'SEEDED_INSPECTION_FORM_GROUP_IDS=' . PHP_EOL;
+        }
+    } else {
+        echo 'SEEDED_INSPECTION_FORM_ID=' . PHP_EOL;
+        echo 'SEEDED_INSPECTION_FORM_GROUP_IDS=' . PHP_EOL;
+    }
+
+    /* ============================================================
      | FOOD TRUCK (Storefront)
      * ============================================================ */
 

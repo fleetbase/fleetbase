@@ -29,6 +29,8 @@
                 </form>
             </ContentPanel>
 
+            <Account::ConnectedAccounts />
+
             <ContentPanel @title="Change Password" @open={{true}} @wrapperClass="bordered-classic">
                 <form id="change-password-form" aria-label="change-password" {{on "submit" (perform this.changePassword)}}>
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">

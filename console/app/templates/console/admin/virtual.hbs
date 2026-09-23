@@ -1,11 +1,19 @@
 {{page-title @model.title}}
 <Layout::Section::Header @title={{@model.title}} />
 
-<Layout::Section::Body class={{this.bodyClass}}>
-    <div class={{this.containerClass}}>
+{{#if this.isFullBleed}}
+    <Layout::Section::Body class={{this.bodyClass}}>
         <div class={{this.wrapperClass}}>
             {{component (lazy-engine-component @model.component) params=@model.componentParams controller=this}}
         </div>
-    </div>
-    <Spacer @height="300px" />
-</Layout::Section::Body>
+    </Layout::Section::Body>
+{{else}}
+    <Layout::Section::Body class={{this.bodyClass}}>
+        <div class={{this.containerClass}}>
+            <div class={{this.wrapperClass}}>
+                {{component (lazy-engine-component @model.component) params=@model.componentParams controller=this}}
+            </div>
+        </div>
+        <Spacer @height="300px" />
+    </Layout::Section::Body>
+{{/if}}

@@ -46,6 +46,37 @@ erDiagram
     TIMESTAMP updated_at
   }
 
+  fleetbase_ai_knowledge_chunks {
+    INTUNSIGNED id PK, UK
+    CHAR uuid UK
+    CHAR ai_knowledge_document_uuid FK
+    VARCHAR heading
+    VARCHAR heading_path
+    VARCHAR anchor
+    VARCHAR audience
+    INTUNSIGNED position
+    MEDIUMTEXT content
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  fleetbase_ai_knowledge_documents {
+    INTUNSIGNED id PK, UK
+    CHAR uuid UK
+    VARCHAR source
+    VARCHAR url UK
+    VARCHAR path
+    VARCHAR title
+    TEXT description
+    VARCHAR module
+    VARCHAR section
+    VARCHAR audience
+    VARCHAR content_hash
+    TIMESTAMP fetched_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
   fleetbase_ai_sessions {
     INTUNSIGNED id PK, UK
     CHAR uuid UK
@@ -100,6 +131,9 @@ erDiagram
     INTUNSIGNED input_tokens
     INTUNSIGNED output_tokens
     INTUNSIGNED total_tokens
+    TINYINT feedback_rating
+    TEXT feedback_comment
+    TIMESTAMP feedback_at
     JSON context
     JSON usage
     JSON metadata
@@ -114,11 +148,14 @@ erDiagram
   fleetbase_alerts {
     INTUNSIGNED id PK, UK
     CHAR uuid
+    VARCHAR public_id UK
     VARCHAR _key
     CHAR company_uuid FK
     CHAR category_uuid FK
     CHAR acknowledged_by_uuid FK
     CHAR resolved_by_uuid FK
+    CHAR snoozed_by_uuid FK
+    CHAR assigned_to_uuid FK
     VARCHAR type
     VARCHAR severity
     VARCHAR status
@@ -130,6 +167,8 @@ erDiagram
     JSON meta
     TIMESTAMP triggered_at
     TIMESTAMP acknowledged_at
+    TIMESTAMP snoozed_until
+    TIMESTAMP planned_at
     TIMESTAMP resolved_at
     TIMESTAMP deleted_at
     TIMESTAMP created_at
@@ -530,6 +569,7 @@ erDiagram
   fleetbase_custom_fields {
     INTUNSIGNED id PK, UK
     CHAR uuid
+    VARCHAR public_id
     CHAR company_uuid FK
     CHAR category_uuid
     CHAR subject_uuid
@@ -992,7 +1032,7 @@ erDiagram
     VARCHAR uuid UK
     VARCHAR public_id UK
     CHAR company_uuid UK
-    CHAR fuel_provider_connection_uuid
+    CHAR fuel_provider_connection_uuid UK
     CHAR fuel_report_uuid
     CHAR vehicle_uuid
     CHAR driver_uuid
@@ -1080,6 +1120,119 @@ erDiagram
     CHAR uuid UK
     CHAR group_uuid FK
     CHAR user_uuid FK
+    TIMESTAMP deleted_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  fleetbase_inspection_forms {
+    INTUNSIGNED id PK, UK
+    CHAR uuid
+    VARCHAR _key
+    VARCHAR public_id UK
+    CHAR company_uuid FK
+    VARCHAR name
+    TEXT description
+    VARCHAR type
+    VARCHAR status
+    VARCHAR frequency
+    VARCHAR subject_type
+    CHAR subject_uuid
+    JSON items
+    JSON settings
+    JSON meta
+    TIMESTAMP published_at
+    CHAR created_by_uuid FK
+    CHAR updated_by_uuid FK
+    TIMESTAMP deleted_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  fleetbase_inspection_item_results {
+    INTUNSIGNED id PK, UK
+    CHAR uuid
+    VARCHAR _key
+    CHAR company_uuid FK
+    CHAR inspection_submission_uuid FK
+    CHAR issue_uuid FK
+    CHAR work_order_uuid FK
+    VARCHAR item_key
+    VARCHAR label
+    VARCHAR category
+    VARCHAR status
+    VARCHAR severity
+    BIT passed
+    TEXT comments
+    JSON photos
+    JSON meta
+    CHAR created_by_uuid FK
+    CHAR updated_by_uuid FK
+    TIMESTAMP deleted_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  fleetbase_inspection_links {
+    INTUNSIGNED id PK, UK
+    CHAR uuid
+    VARCHAR _key
+    VARCHAR public_id UK
+    CHAR company_uuid FK
+    CHAR inspection_form_uuid FK
+    CHAR driver_uuid FK
+    CHAR vehicle_uuid FK
+    CHAR assignee_uuid FK
+    CHAR created_by_uuid FK
+    VARCHAR token_hash UK
+    TEXT token
+    VARCHAR pin_hash
+    TEXT pin
+    SMALLINTUNSIGNED pin_attempts
+    VARCHAR pin_sent_via
+    TIMESTAMP pin_sent_at
+    VARCHAR status
+    BIT single_use
+    TIMESTAMP expires_at
+    TIMESTAMP last_viewed_at
+    TIMESTAMP used_at
+    VARCHAR used_ip
+    TEXT used_user_agent
+    JSON meta
+    TIMESTAMP deleted_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  fleetbase_inspection_submissions {
+    INTUNSIGNED id PK, UK
+    CHAR uuid
+    VARCHAR _key
+    VARCHAR public_id UK
+    CHAR company_uuid FK
+    CHAR inspection_form_uuid FK
+    CHAR vehicle_uuid FK
+    CHAR driver_uuid FK
+    CHAR submitted_by_uuid FK
+    CHAR issue_uuid FK
+    CHAR work_order_uuid FK
+    VARCHAR type
+    VARCHAR status
+    VARCHAR result
+    VARCHAR source
+    BIGINTUNSIGNED odometer
+    BIGINTUNSIGNED engine_hours
+    INTUNSIGNED total_items
+    INTUNSIGNED failed_items
+    TIMESTAMP started_at
+    TIMESTAMP submitted_at
+    TIMESTAMP resolved_at
+    JSON location
+    JSON signature
+    JSON attachments
+    JSON meta
+    CHAR created_by_uuid FK
+    CHAR updated_by_uuid FK
     TIMESTAMP deleted_at
     TIMESTAMP created_at
     TIMESTAMP updated_at
@@ -1515,6 +1668,36 @@ erDiagram
     CHAR notifiable_id
     TEXT data
     TIMESTAMP read_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  fleetbase_oauth_identities {
+    INTUNSIGNED id PK, UK
+    CHAR uuid
+    CHAR user_uuid FK
+    VARCHAR provider UK
+    VARCHAR provider_user_id UK
+    VARCHAR provider_email
+    BIT email_verified
+    JSON meta
+    TIMESTAMP last_login_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  fleetbase_oauth_states {
+    INTUNSIGNED id PK, UK
+    CHAR uuid
+    VARCHAR purpose
+    CHAR token_hash UK
+    VARCHAR provider
+    VARCHAR intent
+    CHAR user_uuid FK
+    TEXT payload
+    CHAR ip_hash
+    TIMESTAMP expires_at
+    TIMESTAMP consumed_at
     TIMESTAMP created_at
     TIMESTAMP updated_at
   }
@@ -2379,6 +2562,49 @@ erDiagram
     INTUNSIGNED id PK, UK
     VARCHAR key UK
     JSON value
+  }
+
+  fleetbase_telematic_deliveries {
+    CHAR uuid PK, UK
+    CHAR telematic_uuid
+    CHAR run_uuid
+    VARCHAR source
+    VARCHAR status
+    CHAR payload_hash
+    LONGTEXT payload
+    LONGTEXT retry_payload
+    INTUNSIGNED invalid_count
+    INTUNSIGNED attempts
+    INTUNSIGNED queue_delay_seconds
+    INTUNSIGNED source_delay_seconds
+    INTUNSIGNED applied
+    INTUNSIGNED failed
+    TEXT error
+    TIMESTAMP received_at
+    TIMESTAMP available_at
+    TIMESTAMP processed_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  fleetbase_telematic_sync_runs {
+    CHAR uuid PK, UK
+    CHAR telematic_uuid
+    VARCHAR status
+    INTUNSIGNED pages
+    INTUNSIGNED units
+    INTUNSIGNED applied
+    INTUNSIGNED failed
+    TEXT error
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  fleetbase_telematic_webhook_credentials {
+    CHAR telematic_uuid PK, UK
+    TEXT token
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
   }
 
   fleetbase_telematics {
@@ -3415,6 +3641,7 @@ erDiagram
     TIMESTAMP updated_at
   }
 
+  fleetbase_ai_knowledge_documents ||--o{ fleetbase_ai_knowledge_chunks : "foreign key"
   fleetbase_ai_sessions ||--o{ fleetbase_ai_admin_access_logs : "foreign key"
   fleetbase_ai_sessions ||--o{ fleetbase_ai_tasks : "foreign key"
   fleetbase_ai_tasks ||--o{ fleetbase_ai_admin_access_logs : "foreign key"
@@ -3484,6 +3711,10 @@ erDiagram
   fleetbase_companies ||--o{ fleetbase_fleets : "foreign key"
   fleetbase_companies ||--o{ fleetbase_fuel_reports : "foreign key"
   fleetbase_companies ||--o{ fleetbase_groups : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_inspection_forms : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_inspection_item_results : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_inspection_links : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_inspection_submissions : "foreign key"
   fleetbase_companies ||--o{ fleetbase_integrated_vendors : "foreign key"
   fleetbase_companies ||--o{ fleetbase_invites : "foreign key"
   fleetbase_companies ||--o{ fleetbase_issues : "foreign key"
@@ -3552,6 +3783,8 @@ erDiagram
   fleetbase_drivers ||--o{ fleetbase_entities : "foreign key"
   fleetbase_drivers ||--o{ fleetbase_fleet_drivers : "foreign key"
   fleetbase_drivers ||--o{ fleetbase_fuel_reports : "foreign key"
+  fleetbase_drivers ||--o{ fleetbase_inspection_links : "foreign key"
+  fleetbase_drivers ||--o{ fleetbase_inspection_submissions : "foreign key"
   fleetbase_drivers ||--o{ fleetbase_issues : "foreign key"
   fleetbase_drivers ||--o{ fleetbase_orders : "foreign key"
   fleetbase_extensions ||--o{ fleetbase_extension_installs : "foreign key"
@@ -3581,7 +3814,12 @@ erDiagram
   fleetbase_fleets ||--o{ fleetbase_fleet_vehicles : "foreign key"
   fleetbase_fleets ||--o{ fleetbase_fleets : "foreign key"
   fleetbase_groups ||--o{ fleetbase_group_users : "foreign key"
+  fleetbase_inspection_forms ||--o{ fleetbase_inspection_links : "foreign key"
+  fleetbase_inspection_forms ||--o{ fleetbase_inspection_submissions : "foreign key"
+  fleetbase_inspection_submissions ||--o{ fleetbase_inspection_item_results : "foreign key"
   fleetbase_integrated_vendors ||--o{ fleetbase_service_quotes : "foreign key"
+  fleetbase_issues ||--o{ fleetbase_inspection_item_results : "foreign key"
+  fleetbase_issues ||--o{ fleetbase_inspection_submissions : "foreign key"
   fleetbase_manifests ||--o{ fleetbase_manifest_stops : "foreign key"
   fleetbase_monitored_scheduled_tasks ||--o{ fleetbase_monitored_scheduled_task_log_items : "foreign key"
   fleetbase_order_configs ||--o{ fleetbase_orders : "foreign key"
@@ -3693,11 +3931,17 @@ erDiagram
   fleetbase_users ||--o{ fleetbase_equipments : "foreign key"
   fleetbase_users ||--o{ fleetbase_fuel_reports : "foreign key"
   fleetbase_users ||--o{ fleetbase_group_users : "foreign key"
+  fleetbase_users ||--o{ fleetbase_inspection_forms : "foreign key"
+  fleetbase_users ||--o{ fleetbase_inspection_item_results : "foreign key"
+  fleetbase_users ||--o{ fleetbase_inspection_links : "foreign key"
+  fleetbase_users ||--o{ fleetbase_inspection_submissions : "foreign key"
   fleetbase_users ||--o{ fleetbase_integrated_vendors : "foreign key"
   fleetbase_users ||--o{ fleetbase_invites : "foreign key"
   fleetbase_users ||--o{ fleetbase_issues : "foreign key"
   fleetbase_users ||--o{ fleetbase_maintenance_schedules : "foreign key"
   fleetbase_users ||--o{ fleetbase_maintenances : "foreign key"
+  fleetbase_users ||--o{ fleetbase_oauth_identities : "foreign key"
+  fleetbase_users ||--o{ fleetbase_oauth_states : "foreign key"
   fleetbase_users ||--o{ fleetbase_order_configs : "foreign key"
   fleetbase_users ||--o{ fleetbase_orders : "foreign key"
   fleetbase_users ||--o{ fleetbase_parts : "foreign key"
@@ -3733,6 +3977,8 @@ erDiagram
   fleetbase_vehicles ||--o{ fleetbase_drivers : "foreign key"
   fleetbase_vehicles ||--o{ fleetbase_fleet_vehicles : "foreign key"
   fleetbase_vehicles ||--o{ fleetbase_fuel_reports : "foreign key"
+  fleetbase_vehicles ||--o{ fleetbase_inspection_links : "foreign key"
+  fleetbase_vehicles ||--o{ fleetbase_inspection_submissions : "foreign key"
   fleetbase_vehicles ||--o{ fleetbase_issues : "foreign key"
   fleetbase_vehicles ||--o{ fleetbase_orders : "foreign key"
   fleetbase_vehicles ||--o{ fleetbase_storefront_food_trucks : "foreign key"
@@ -3753,6 +3999,8 @@ erDiagram
   fleetbase_warranties ||--o{ fleetbase_telematics : "foreign key"
   fleetbase_warranties ||--o{ fleetbase_vehicles : "foreign key"
   fleetbase_webhook_endpoints ||--o{ fleetbase_webhook_request_logs : "foreign key"
+  fleetbase_work_orders ||--o{ fleetbase_inspection_item_results : "foreign key"
+  fleetbase_work_orders ||--o{ fleetbase_inspection_submissions : "foreign key"
   fleetbase_work_orders ||--o{ fleetbase_maintenances : "foreign key"
   fleetbase_zones ||--o{ fleetbase_fleets : "foreign key"
   fleetbase_zones ||--o{ fleetbase_service_rates : "foreign key"

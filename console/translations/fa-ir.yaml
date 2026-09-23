@@ -560,6 +560,41 @@ auth:
       forgot-password-label: رمز عبور خود را فراموش کرده‌اید؟
       sign-in-button: ورود
       create-account-button: ایجاد حساب جدید
+    oauth:
+      divider: 'یا ادامه با'
+      continue-with: 'ادامه با {provider}'
+      signing-in: 'در حال ورود...'
+      finish-signup: 'برای ادامه، راه‌اندازی حساب Fleetbase خود را کامل کنید.'
+      connected-accounts: 'حساب‌های متصل'
+      connected-accounts-help: 'به‌جای رمز عبور با یک ارائه‌دهنده وارد شوید. می‌توانید بیش از یکی متصل کنید.'
+      linked-heading: 'متصل‌شده'
+      available-heading: 'قابل اتصال'
+      link-button: 'اتصال'
+      unlink-button: 'قطع اتصال'
+      unlink-title: 'اتصال {provider} قطع شود؟'
+      unlink-body: 'دیگر نمی‌توانید با {provider} وارد شوید. بعداً می‌توانید دوباره آن را متصل کنید.'
+      linked: 'ارائه‌دهنده به حساب شما متصل شد.'
+      auto-linked: '{provider} اکنون به حساب شما متصل است. از این پس می‌توانید با آن وارد شوید.'
+      existing-account: 'شما از قبل حساب دارید، بنابراین وارد حسابتان شدید.'
+      unlinked: 'اتصال {provider} قطع شد.'
+      errors:
+        generic: 'ورود کامل نشد. لطفاً دوباره تلاش کنید.'
+        access-denied: 'ورود لغو شد.'
+        provider-error: 'ارائه‌دهنده ورود مشکلی گزارش کرد. لطفاً دوباره تلاش کنید.'
+        provider-disabled: 'این روش ورود در دسترس نیست.'
+        invalid-state: 'این پیوند ورود دیگر معتبر نیست. لطفاً دوباره تلاش کنید.'
+        exchange-failed: 'دسترسی به ارائه‌دهنده ورود ممکن نشد. لطفاً دوباره تلاش کنید.'
+        expired: 'این نشست ورود منقضی شده است. لطفاً دوباره تلاش کنید.'
+        hosted-domain: 'حساب شما در دامنه مجاز قرار ندارد.'
+        registration-disabled: 'ثبت‌نام جدید در دسترس نیست.'
+        link-required: 'حسابی با این ایمیل از قبل وجود دارد. وارد شوید و این ارائه‌دهنده را از تنظیمات حساب خود متصل کنید.'
+        customer-account: 'حساب‌های مشتری باید از طریق پورتال مشتری وارد شوند.'
+        not-verified: 'برای ادامه، حساب شما باید تأیید شود.'
+        rate-limited: 'تلاش‌های بیش از حد. لطفاً کمی بعد دوباره تلاش کنید.'
+        already-linked: 'این ارائه‌دهنده قبلاً به حساب شما متصل شده است.'
+        identity-already-linked: 'این حساب قبلاً به کاربر دیگری در Fleetbase متصل شده است.'
+        last-credential: 'ابتدا رمز عبور تعیین کنید یا ارائه‌دهنده دیگری متصل کنید، وگرنه نمی‌توانید وارد شوید.'
+        link-failed: 'اتصال این ارائه‌دهنده ممکن نشد. لطفاً دوباره تلاش کنید.'
     slow-connection-message: در حال تجربه مشکلات اتصال
   reset-password:
     success-message: رمز عبور شما بازنشانی شد! برای ادامه وارد شوید
@@ -617,6 +652,7 @@ console:
       filesystem: سیستم فایل
       queue: صف
       socket: سوکت
+      oauth: 'ورود با OAuth'
       push-notifications: اعلان‌های فشاری
     schedule-monitor:
       schedule-monitor: مانیتور برنامه
@@ -638,6 +674,8 @@ console:
         title: پیکربندی پایگاه داده
       filesystem:
         title: پیکربندی سیستم فایل
+      oauth:
+        title: 'پیکربندی ورود با OAuth'
       mail:
         title: پیکربندی ایمیل
       notification-channels:
@@ -721,6 +759,8 @@ onboard:
     password-help-text: رمز عبور شما، مطمئن شوید که قوی است
     confirm-password: رمز عبور خود را تأیید کنید
     confirm-password-help-text: فقط برای تأیید رمز عبوری که در بالا وارد کرده‌اید
+    oauth-verified: 'هویت شما تأیید شد. نیازی به رمز عبور نیست — با ارائه‌دهنده خود وارد می‌شوید.'
+    oauth-divider: 'یا با ایمیل ثبت‌نام کنید'
     continue-button-text: ادامه
   verify-email:
     header-title: تأیید حساب

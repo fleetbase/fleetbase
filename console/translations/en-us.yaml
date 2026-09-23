@@ -616,6 +616,41 @@ auth:
       forgot-password-label: Forgot your password?
       sign-in-button: Sign in
       create-account-button: Create a new Account
+    oauth:
+      divider: 'Or continue with'
+      continue-with: 'Continue with {provider}'
+      signing-in: 'Signing you in...'
+      finish-signup: 'Finish setting up your Fleetbase account to continue.'
+      connected-accounts: 'Connected accounts'
+      connected-accounts-help: 'Sign in with a provider instead of a password. You can link more than one.'
+      linked-heading: 'Linked'
+      available-heading: 'Available to link'
+      link-button: 'Link'
+      unlink-button: 'Unlink'
+      unlink-title: 'Unlink {provider}?'
+      unlink-body: 'You will no longer be able to sign in with {provider}. You can link it again later.'
+      linked: 'Provider linked to your account.'
+      auto-linked: '{provider} is now linked to your account. You can sign in with it from now on.'
+      existing-account: 'You already have an account, so we signed you in.'
+      unlinked: '{provider} unlinked.'
+      errors:
+        generic: 'We could not complete that sign-in. Please try again.'
+        access-denied: 'Sign-in was cancelled.'
+        provider-error: 'The sign-in provider reported a problem. Please try again.'
+        provider-disabled: 'That sign-in method is not available.'
+        invalid-state: 'That sign-in link is no longer valid. Please try again.'
+        exchange-failed: 'We could not reach the sign-in provider. Please try again.'
+        expired: 'That sign-in session expired. Please try again.'
+        hosted-domain: 'Your account is not in an allowed domain.'
+        registration-disabled: 'New sign-ups are not available.'
+        link-required: 'An account with this email already exists. Sign in and link this provider from your account settings.'
+        customer-account: 'Customer accounts must sign in through the customer portal.'
+        not-verified: 'Your account needs to be verified to proceed.'
+        rate-limited: 'Too many attempts. Please try again shortly.'
+        already-linked: 'That provider is already linked to your account.'
+        identity-already-linked: 'That account is already linked to another Fleetbase user.'
+        last-credential: 'Set a password or link another provider first, or you would not be able to sign in.'
+        link-failed: 'We could not link that provider. Please try again.'
     slow-connection-message: Experiencing connectivity issues.
 
   reset-password:
@@ -646,6 +681,21 @@ auth:
         help-text: The confirmation code from your email.
       submit-button: Confirm Email Change
       back-button: Back
+  verify-contact:
+    invalid-link: This verification link is invalid or has expired.
+    email-title: Verify your email address
+    phone-title: Verify your phone number
+    email-message: Confirm that this email address belongs to you.
+    phone-message: Confirm that this phone number belongs to you.
+    email-verified: Your email address is verified.
+    phone-verified: Your phone number is verified.
+    continue-button: Continue
+    form:
+      code:
+        label: Verification code
+        help-text: The verification code from your email or text message.
+      submit-button: Verify
+      back-button: Back
 
 console:
   create-or-join-organization:
@@ -671,7 +721,7 @@ console:
       overview: Overview
       organizations: Organizations
       branding: Branding
-      2fa-config: 2FA Config
+      2fa-config: Two-Factor Auth
       platform-api-token: Platform API Token
       schedule-monitor: Schedule Monitor
       services: Services
@@ -679,6 +729,7 @@ console:
       filesystem: Filesystem
       queue: Queue
       socket: Socket
+      oauth: 'OAuth Sign-in'
       push-notifications: Push Notifications
     schedule-monitor:
       schedule-monitor: Schedule Monitor
@@ -701,6 +752,8 @@ console:
         title: Database Configuration
       filesystem:
         title: Filesystem Configuration
+      oauth:
+        title: 'OAuth Sign-in Configuration'
       mail:
         title: Mail Configuration
       notification-channels: 
@@ -819,6 +872,8 @@ onboard:
     password-help-text: Your password, make sure it's a good one.
     confirm-password: Confirm your password
     confirm-password-help-text: Just to confirm the password you entered above.
+    oauth-verified: 'Your identity is verified. No password needed — you''ll sign in with your provider.'
+    oauth-divider: 'Or sign up with email'
     continue-button-text: Continue
   verify-email:
     header-title: Account Verification

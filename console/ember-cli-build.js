@@ -5,6 +5,7 @@ const EmberApp = require('ember-cli/lib/broccoli/ember-app');
 const Funnel = require('broccoli-funnel');
 const writeFile = require('broccoli-file-creator');
 const toBoolean = require('./config/utils/to-boolean');
+const intlPolyfillContext = require('./config/intl-polyfill-context');
 
 module.exports = function (defaults) {
     const app = new EmberApp(defaults, {
@@ -22,6 +23,12 @@ module.exports = function (defaults) {
 
         intl: {
             silent: true,
+        },
+
+        autoImport: {
+            webpack: {
+                plugins: [intlPolyfillContext()],
+            },
         },
 
         'ember-simple-auth': {
