@@ -117,6 +117,7 @@ Fleetbase `0.7.64` ships Core API `1.6.63`, Fleet-Ops `0.6.69` and Fleetbase AI 
 ---
 ## Console and API Packages
 - Bumped the root Docker image version to `0.7.64`.
+- The Compose `database` service now starts MySQL with `--skip-log-bin`. Nothing in Fleetbase reads the binary log, and with MySQL 8's 30-day default it could grow to hundreds of gigabytes under telematics load.
 - Bumped Console to `0.7.64`.
 - Updated the API dependencies: `fleetbase/core-api` to `^1.6.63`, `fleetbase/fleetops-api` to `^0.6.69`, `fleetbase/ai` to `^0.0.5`, and `fleetbase/customer-portal-api` to `^0.0.14`.
 - Updated the Console dependencies: `@fleetbase/fleetops-engine` to `^0.6.69`, `@fleetbase/fleetops-data` to `^0.2.2`, `@fleetbase/ember-ui` to `^0.4.3`, `@fleetbase/iam-engine` to `^0.1.12`, `@fleetbase/dev-engine` to `^0.2.16`, `@fleetbase/customer-portal-engine` to `^0.0.14`, and `@fleetbase/ai-engine` to `^0.0.5`.
@@ -143,6 +144,7 @@ This release includes database migrations and requires **PHP 8.1 or later**.
 - A role is now required to create or invite a user. Extensions that call `Company::addUser`, `Company::assignUser` or `User::assignCompany` must pass a role; none is assigned by default any more.
 - A migration converts existing profile-only accounts to driver or customer accounts.
 - Keep the scheduler running, so the weekly `ai:sync-docs` keeps the AI's documentation current.
+- `docker compose up -d` recreates the database container without binary logging. Point-in-time recovery from the binlog is no longer available; if you rely on it, override `command` for the `database` service in `docker-compose.override.yml`.
 - OAuth sign-in is off until an administrator configures a provider in **Admin › Auth Config › OAuth Sign-in**. Register the callback URL shown there with each provider.
   - Set `OAUTH_REDIRECT_BASE` if the API's public URL differs from `APP_URL`.
   - Apple accepts only HTTPS callback URLs on a real domain, so `localhost` won't work.
