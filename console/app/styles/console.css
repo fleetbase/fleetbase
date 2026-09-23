@@ -243,3 +243,95 @@ body[data-theme='dark'] .console-dashboard-title h1 {
         padding: 1rem;
     }
 }
+
+/*
+ * Sign-in provider buttons: each provider's logo and light-mode colours on Fleetbase's
+ * own button shape, size, shadow and icon position.
+ *
+ *   Light  Google and Microsoft: white with Fleetbase's usual button border, the
+ *          full-colour logo (Google forbids a single-colour "G"; Microsoft forbids
+ *          altering its logo). Apple: black (Apple HIG). GitHub: #24292F — its mark
+ *          is only ever shown in black or white.
+ *   Dark   Every provider on Fleetbase's gray-900, so the page reads as one set of
+ *          buttons. Apple and GitHub marks turn white with the text; the Google "G"
+ *          keeps a white disc, since Google requires it on white.
+ *
+ * Only these providers are listed, so one added later keeps the default button.
+ * `body` in each selector outranks ember-ui's `body[data-theme='dark'] .btn.btn-default`
+ * rules, hover included.
+ */
+.oauth-provider-google,
+.oauth-provider-microsoft {
+    --oauth-bg: #fff;
+    --oauth-bg-hover: #f3f4f6; /* gray-100 */
+    --oauth-border: #d1d5db; /* gray-300, Fleetbase's default button border */
+    --oauth-border-hover: #9ca3af; /* gray-400 */
+    --oauth-text: #1f2937; /* gray-800 */
+}
+
+.oauth-provider-apple {
+    --oauth-bg: #000;
+    --oauth-bg-hover: #262626;
+    --oauth-border: #000;
+    --oauth-border-hover: #262626;
+    --oauth-text: #fff;
+}
+
+.oauth-provider-github {
+    --oauth-bg: #24292f;
+    --oauth-bg-hover: #3a4149;
+    --oauth-border: #24292f;
+    --oauth-border-hover: #3a4149;
+    --oauth-text: #fff;
+}
+
+body[data-theme='dark'] :is(.oauth-provider-google, .oauth-provider-microsoft, .oauth-provider-apple, .oauth-provider-github) {
+    --oauth-bg: #111827; /* gray-900 */
+    --oauth-bg-hover: #1f2937; /* gray-800 */
+    --oauth-border: #374151; /* gray-700 */
+    --oauth-border-hover: #4b5563; /* gray-600 */
+    --oauth-text: #f3f4f6; /* gray-100 */
+}
+
+body :is(.oauth-provider-google, .oauth-provider-microsoft, .oauth-provider-apple, .oauth-provider-github) > button.btn.btn-default {
+    background-color: var(--oauth-bg);
+    border: 1px solid var(--oauth-border);
+    color: var(--oauth-text);
+    transition:
+        background-color 150ms ease,
+        border-color 150ms ease;
+}
+
+body :is(.oauth-provider-google, .oauth-provider-microsoft, .oauth-provider-apple, .oauth-provider-github) > button.btn.btn-default:focus {
+    border-color: var(--oauth-border-hover);
+    color: var(--oauth-text);
+}
+
+body :is(.oauth-provider-google, .oauth-provider-microsoft, .oauth-provider-apple, .oauth-provider-github) > button.btn.btn-default:hover:not(:disabled) {
+    background-color: var(--oauth-bg-hover);
+    border-color: var(--oauth-border-hover);
+    color: var(--oauth-text);
+}
+
+.oauth-provider-logo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+.oauth-provider-logo svg {
+    width: 16px;
+    height: 16px;
+}
+
+body[data-theme='dark'] .oauth-provider-google .oauth-provider-logo-google {
+    background-color: #fff;
+    border-radius: 9999px;
+    padding: 2px;
+}
+
+body[data-theme='dark'] .oauth-provider-google .oauth-provider-logo-google svg {
+    width: 14px;
+    height: 14px;
+}

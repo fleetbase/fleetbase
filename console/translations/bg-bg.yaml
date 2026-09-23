@@ -576,6 +576,41 @@ auth:
       forgot-password-label: Забравили ли сте паролата си?
       sign-in-button: Вход
       create-account-button: Създайте нов акаунт
+    oauth:
+      divider: 'Или продължете с'
+      continue-with: 'Продължете с {provider}'
+      signing-in: 'Влизане...'
+      finish-signup: 'Завършете настройката на профила си във Fleetbase, за да продължите.'
+      connected-accounts: 'Свързани акаунти'
+      connected-accounts-help: 'Влизайте чрез доставчик вместо с парола. Можете да свържете повече от един.'
+      linked-heading: 'Свързани'
+      available-heading: 'Налични за свързване'
+      link-button: 'Свържи'
+      unlink-button: 'Прекъсни'
+      unlink-title: 'Да се прекъсне ли {provider}?'
+      unlink-body: 'Вече няма да можете да влизате чрез {provider}. Можете да го свържете отново по-късно.'
+      linked: 'Доставчикът е свързан с профила ви.'
+      auto-linked: '{provider} вече е свързан с профила ви. Отсега нататък можете да влизате с него.'
+      existing-account: 'Вече имате профил, затова ви вписахме.'
+      unlinked: '{provider} е прекъснат.'
+      errors:
+        generic: 'Влизането не можа да бъде завършено. Опитайте отново.'
+        access-denied: 'Влизането беше отказано.'
+        provider-error: 'Доставчикът за вход съобщи за проблем. Опитайте отново.'
+        provider-disabled: 'Този начин за вход не е наличен.'
+        invalid-state: 'Тази връзка за вход вече не е валидна. Опитайте отново.'
+        exchange-failed: 'Доставчикът за вход не може да бъде достигнат. Опитайте отново.'
+        expired: 'Сесията за вход изтече. Опитайте отново.'
+        hosted-domain: 'Профилът ви не принадлежи към разрешен домейн.'
+        registration-disabled: 'Новите регистрации не са достъпни.'
+        link-required: 'Вече съществува профил с този имейл. Влезте и свържете този доставчик от настройките на профила си.'
+        customer-account: 'Клиентските профили трябва да влизат през клиентския портал.'
+        not-verified: 'Профилът ви трябва да бъде потвърден, за да продължите.'
+        rate-limited: 'Твърде много опити. Опитайте отново скоро.'
+        already-linked: 'Този доставчик вече е свързан с профила ви.'
+        identity-already-linked: 'Този акаунт вече е свързан с друг потребител на Fleetbase.'
+        last-credential: 'Първо задайте парола или свържете друг доставчик, иначе няма да можете да влизате.'
+        link-failed: 'Доставчикът не можа да бъде свързан. Опитайте отново.'
     slow-connection-message: Имате проблеми с връзката.
   reset-password:
     success-message: Вашата парола беше нулирана! Влезте, за да продължите.
@@ -634,6 +669,7 @@ console:
       filesystem: Файлова система
       queue: Опашка
       socket: Сокет
+      oauth: 'Вход чрез OAuth'
       push-notifications: Известия
     schedule-monitor:
       schedule-monitor: Монитор на графика
@@ -655,6 +691,8 @@ console:
         title: Конфигурация на базата данни
       filesystem:
         title: Конфигурация на файловата система
+      oauth:
+        title: 'Настройка на вход чрез OAuth'
       mail:
         title: Конфигурация на пощата
       notification-channels:
@@ -744,6 +782,8 @@ onboard:
     confirm-password: Потвърдете паролата си
     confirm-password-help-text: Просто за да потвърдите паролата, която въведохте
       по-горе.
+    oauth-verified: 'Самоличността ви е потвърдена. Не е нужна парола — ще влизате чрез своя доставчик.'
+    oauth-divider: 'Или се регистрирайте с имейл'
     continue-button-text: Продължи
   verify-email:
     header-title: Потвърждение на акаунта

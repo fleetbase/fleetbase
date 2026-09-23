@@ -43,7 +43,7 @@ class IntlStub extends Service {
         'console.admin.menu.overview': 'Overview',
         'console.admin.menu.organizations': 'Organizations',
         'console.admin.menu.branding': 'Branding',
-        'console.admin.menu.2fa-config': '2FA Config',
+        'console.admin.menu.2fa-config': 'Two-Factor Auth',
         'console.admin.menu.platform-api-token': 'Platform API Token',
         'console.admin.schedule-monitor.schedule-monitor': 'Schedule Monitor',
         'console.admin.menu.services': 'Services',
@@ -51,12 +51,21 @@ class IntlStub extends Service {
         'console.admin.menu.filesystem': 'Filesystem',
         'console.admin.menu.queue': 'Queue',
         'console.admin.menu.socket': 'Socket',
+        'console.admin.menu.oauth': 'OAuth Sign-in',
         'console.admin.menu.push-notifications': 'Push Notifications',
     };
 
     t(key) {
         return this.translations[key] ?? key;
     }
+}
+
+/**
+ * Look a top-level navigator item up by label. Positions shift whenever a core item
+ * or group is added, so asserting on an index tests the layout by accident.
+ */
+function navItem(controller, label) {
+    return controller.navigationItems.find((item) => item.label === label);
 }
 
 module('Unit | Controller | console/admin', function (hooks) {
@@ -97,32 +106,25 @@ module('Unit | Controller | console/admin', function (hooks) {
         const items = controller.navigationItems;
 
         assert.deepEqual(
-            items.slice(0, 6).map((item) => item.label),
-            ['Overview', 'Organizations', 'Branding', '2FA Config', 'Platform API Token', 'Schedule Monitor'],
+            items.slice(0, 5).map((item) => item.label),
+            ['Overview', 'Organizations', 'Branding', 'Platform API Token', 'Schedule Monitor'],
             'core admin items retain their current order'
         );
         assert.deepEqual(
-            items.slice(0, 6).map((item) => item.route),
-            [
-                'console.admin.index',
-                'console.admin.organizations',
-                'console.admin.branding',
-                'console.admin.two-fa-settings',
-                'console.admin.platform-api-token',
-                'console.admin.schedule-monitor',
-            ],
+            items.slice(0, 5).map((item) => item.route),
+            ['console.admin.index', 'console.admin.organizations', 'console.admin.branding', 'console.admin.platform-api-token', 'console.admin.schedule-monitor'],
             'core admin items retain their routes'
         );
         assert.deepEqual(
-            items.slice(0, 6).map((item) => item.icon),
-            ['rectangle-list', 'building', 'palette', 'shield-halved', 'key', 'calendar-check'],
+            items.slice(0, 5).map((item) => item.icon),
+            ['rectangle-list', 'building', 'palette', 'key', 'calendar-check'],
             'core admin items retain their icons'
         );
     });
 
     test('it converts loose registry admin menu items into root navigator items', function (assert) {
         const controller = this.owner.lookup('controller:console/admin');
-        const registryItem = controller.navigationItems[6];
+        const registryItem = navItem(controller, 'Registry Config');
 
         assert.strictEqual(registryItem.label, 'Registry Config');
         assert.strictEqual(registryItem.icon, 'gear');
@@ -136,7 +138,7 @@ module('Unit | Controller | console/admin', function (hooks) {
 
     test('it converts registry admin panels into nested navigator branches', function (assert) {
         const controller = this.owner.lookup('controller:console/admin');
-        const panel = controller.navigationItems[7];
+        const panel = navItem(controller, 'Fleet-Ops Config');
 
         assert.strictEqual(panel.label, 'Fleet-Ops Config');
         assert.strictEqual(panel.icon, 'truck');
@@ -161,9 +163,9 @@ module('Unit | Controller | console/admin', function (hooks) {
 
     test('it marks virtual registry items active from the current admin virtual URL', function (assert) {
         const controller = this.owner.lookup('controller:console/admin');
-        const rootRegistryItem = controller.navigationItems[6];
-        const navigatorAppItem = controller.navigationItems[7].children[0];
-        const mapItem = controller.navigationItems[7].children[1];
+        const rootRegistryItem = navItem(controller, 'Registry Config');
+        const navigatorAppItem = navItem(controller, 'Fleet-Ops Config').children[0];
+        const mapItem = navItem(controller, 'Fleet-Ops Config').children[1];
 
         // activeWhen delegates to ember-ui's isMenuItemActive, which reads location.pathname
         // through ember-window-mock — but its collaborator getUrlParam has no such import and
@@ -194,8 +196,8 @@ module('Unit | Controller | console/admin', function (hooks) {
     test('it transitions registry items through the admin virtual route', function (assert) {
         const controller = this.owner.lookup('controller:console/admin');
         const universe = this.owner.lookup('service:universe');
-        const rootRegistryItem = controller.navigationItems[6];
-        const panelRegistryItem = controller.navigationItems[7].children[0];
+        const rootRegistryItem = navItem(controller, 'Registry Config');
+        const panelRegistryItem = navItem(controller, 'Fleet-Ops Config').children[0];
 
         rootRegistryItem.onClick();
         panelRegistryItem.onClick();
@@ -212,9 +214,32 @@ module('Unit | Controller | console/admin', function (hooks) {
         assert.true(universe.transitions[1].menuItem._virtual, 'panel registry click passes virtual-enriched item');
     });
 
+    test('it groups sign-in settings under auth config, beside system config', function (assert) {
+        const controller = this.owner.lookup('controller:console/admin');
+        const authConfig = navItem(controller, 'Auth Config');
+        const labels = controller.navigationItems.map((item) => item.label);
+
+        assert.ok(authConfig, 'the group exists');
+        assert.deepEqual(
+            authConfig.children.map((item) => item.label),
+            ['OAuth Sign-in', 'Two-Factor Auth'],
+            'sign-in first, then the second factor'
+        );
+        // Grouping is sidebar-only: 2FA keeps its route, so existing links still work.
+        assert.deepEqual(
+            authConfig.children.map((item) => item.route),
+            ['console.admin.oauth-settings', 'console.admin.two-fa-settings']
+        );
+        assert.strictEqual(labels.indexOf('Auth Config') + 1, labels.indexOf('System Config'), 'auth config sits just before system config');
+        assert.notOk(
+            controller.navigationItems.some((item) => item.label === 'Two-Factor Auth'),
+            '2FA is no longer a top-level item'
+        );
+    });
+
     test('it adds system config as a nested navigator branch', function (assert) {
         const controller = this.owner.lookup('controller:console/admin');
-        const systemConfig = controller.navigationItems[8];
+        const systemConfig = navItem(controller, 'System Config');
 
         assert.strictEqual(systemConfig.label, 'System Config');
         assert.deepEqual(

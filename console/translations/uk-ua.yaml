@@ -1,0 +1,854 @@
+app:
+  name: Fleetbase
+
+common:
+  new: Новий
+  create: Створити
+  add: Додати
+  edit: Редагувати
+  update: Оновити
+  save: Зберегти
+  sav-changes: Зберегти зміни
+  close-and-save: Закрити й зберегти
+  delete: Видалити
+  delet-selected: Видалити обране
+  delete-selected-count: Видалити {count} вибраних
+  your-profile: Ваш профіль
+  date-of-birth: Дата народження
+  organization: Організація
+  two-factor: Двофакторна
+  remove: Видалити
+  cancel: Скасування
+  confirm: Підтвердити
+  close: Закрити
+  open: Відкрити
+  view: Перегляд
+  preview: Попередній перегляд
+  upload: Завантажити
+  download: Завантажити
+  import: Імпорт
+  export: Експорт
+  print: Друк
+  duplicate: Дублювати
+  copy: Копіювати
+  paste: Вставити
+  share: Поділитися
+  refresh: Оновити
+  reset: Скинути
+  retry: Повторити
+  back: Назад
+  next: Далі
+  previous: Попередній
+  submit: Надіслати
+  apply: Застосувати
+  continue: Продовжити
+  proceed: Продовжити
+  select: Вибрати
+  deselect: Зняти вибір
+  search: Пошук
+  filter: Фільтр
+  sort: Сортувати
+  view-all: Переглянути всі
+  clear: Очистити
+  done: Готово
+  finish: Завершити
+  skip: Пропустити
+  method: Метод
+  bulk-delete: Масове видалення
+  bulk-delete-resource: Масове видалення {resource}
+  bulk-cancel: Масова скасування
+  bulk-cancel-resource: Масова скасування {resource}
+  bulk-actions: Масові дії
+  column: Колонка
+  row: Рядок
+  table: Таблиця
+  list: Список
+  grid: Сітка
+  form: Форма
+  field: Поле
+  section: Розділ
+  panel: Панель
+  card: Картка
+  tab: Вкладка
+  modal: Модальне вікно
+  dialog: Діалог
+  menu: Меню
+  dropdown: Список, що випадає
+  tooltip: Підказка
+  sidebar: Бічна панель
+  toolbar: Панель інструментів
+  footer: Нижній колонтитул
+  header: Заголовок
+  title: Заголовок
+  subtitle: Підзаголовок
+  description: Опис
+  placeholder: Заповнювач
+  label: Мітка
+  button: Кнопка
+  icon: Іконка
+  avatar: Аватар
+  link: Посилання
+  badge: Значок
+  tag: Тег
+  banner: Банер
+  step: Крок
+  progress: Прогрес
+  map: Карта
+  board: Дошка
+  loading: Завантаження
+  loading-resource: Завантаження {resource}
+  saving: Збереження
+  processing: Обробка
+  fetching: Отримання
+  updating: Оновлення
+  uploading: Завантаження
+  completed: Завершено
+  success: Успішно
+  failed: Не вдалося
+  error: Помилка
+  warning: Попередження
+  info: Інформація
+  ready: Готово
+  activity: Активність 
+  active: Активний
+  inactive: Неактивний
+  enabled: Увімкнено
+  disabled: Вимкнено
+  online: У мережі
+  offline: Не в мережі
+  pending: В очікуванні
+  archived: Архівовано
+  hidden: Приховано
+  visible: Видимий
+  empty: Пусто
+  not-found: Не знайдено
+  no-results: Немає результатів
+  try-again: Спробуйте знову
+  are-you-sure: Ви впевнені?
+  changes-saved: Зміни успішно збережені.
+  saved-successfully: Зміни успішно збережені.
+  field-saved: >-
+    {field} успішно збережено.
+  changes-discarded: Зміни скасовано.
+  delete-confirm: Ви впевнені, що хочете видалити цей елемент ?
+  action-successful: Дія виконано успішно.
+  action-failed: Не вдалось. Будь ласка, спробуйте знову.
+  something-went-wrong: Щось пішло не так.
+  please-wait: Будь ласка, зачекайте...
+  sign-in: Увійти
+  sign-out: Вийти
+  sign-up: Зареєструватися
+  log-in: Увійти
+  log-out: Вийти
+  register: Реєстрація
+  forgot-password: Забули пароль
+  reset-password: Скинути пароль
+  change-password: Змінити пароль
+  password: Пароль
+  confirm-password: Підтвердьте пароль
+  email: Електронна пошта
+  phone: Телефон
+  username: Імя користувача
+  remember-me: Запамятати мене
+  welcome: Ласкаво просимо
+  welcome-back: З поверненням
+  profile: Профіль
+  account: Акаунт
+  settings: Налаштування
+  preferences: Уподобання
+  record: Запис
+  records: Записи
+  item: Елемент
+  items: Предмети
+  entry: Запис
+  entries: Записи
+  id: ID
+  name: Імя
+  type: Тип
+  category: Категорія
+  overview: Огляд
+  value: Значення
+  amount: Кількість
+  price: Ціна
+  quantity: Кількість
+  status: Статус
+  date: Дата
+  date-created: Дата створення
+  date-updated: Дата поновлення
+  time: Час
+  created-at: Створено у
+  updated-at: Оновлено
+  expired-at: Закінчився в
+  last-seen-at: Останнє відвідування
+  last-modified: Останнє зміна
+  last-modified-data: >-
+    зміна: {date}
+  actions: Дії
+  details: Деталі
+  notes: Нотатки
+  reference: Посилання
+  filter-by: Фільтр по
+  filter-by-field: Фільтрувати за {field}
+  sort-by: Сортувати за
+  ascending: За зростанням
+  descending: За спаданням
+  all: Всі
+  none: Ні
+  select-all: Вибрати все
+  deselect-all: Зняти виділення
+  show-more: Показати більше
+  show-less: Показати менше
+  page: Сторінка
+  of: з
+  total: Всього
+  items-per-page: Елементів на сторінці
+  showing: Показано
+  to: до
+  results: Результати
+  load-more: Завантажити більше
+  no-more-results: Більше результатів немає
+  today: Сьогодні
+  yesterday: Вчора
+  tomorrow: Завтра
+  day: День
+  week: Тиждень
+  month: Місяць
+  year: Рік
+  date-range: Діапазон дат
+  start-date: Дата початку
+  end-date: Дата закінчення
+  time-zone: Часовий пояс
+  system: Система
+  dashboard: Панель керування
+  home: Головна
+  analytics: Аналітика
+  reports: Звіти
+  logs: Журнали
+  help: Допомога
+  support: Підтримка
+  contact: Контакт
+  documentation: Документація
+  language: Мова
+  timezone: Часовий пояс
+  version: Версія
+  theme: Тема
+  light-mode: Світлий режим
+  dark-mode: Темний режим
+  update-available: Доступне оновлення
+  install-update: Встановити оновлення
+  maintenance-mode: Режим обслуговування
+  notification: Повідомлення
+  notifications: Повідомлення
+  mark-as-read: Відзначити як прочитане
+  mark-all-as-read: Відзначити все як прочитані
+  clear-notifications: Очистити повідомлення
+  company: Компанія
+  companies: Компанії
+  user: Користувач
+  users: Користувачі
+  role: Роль
+  roles: Ролі
+  permission: Дозвіл
+  permissions: Дозволи
+  group: Група
+  groups: Групи
+  unauthorized: Неавторизований
+  forbidden: Заборонено
+  resource-not-found: Ресурс не знайдено
+  server-error: Помилка сервера
+  validation-error: Помилка перевірки
+  timeout-error: Час запиту закінчилося
+  network-error: Мережева помилка
+  unknown-error: Невідома помилка
+  file: Файл
+  files: Файли
+  folder: Папка
+  folders: Папки
+  upload-file: Завантажити файл
+  upload-files: Завантажити файли
+  upload-image: Завантажити зображення
+  upload-image-supported: Підтримуються PNG, JPEG та GIF
+  choose-file: Вибрати файл
+  choose-files: Вибрати файли
+  drag-and-drop: Перетягніть та відпустіть
+  download-file: Завантажити файл
+  file-size: Розмір файлу
+  file-type: Тип файлу
+  confirm-delete: Підтвердити видалення
+  confirm-action: Підтвердити дія
+  confirm-exit: Підтвердити вихід
+  confirm-and-save-changes: Підтвердити та зберегти зміни
+  are-you-sure-exit: Ви впевнені, що хочете вийти?
+  unsaved-changes-warning: У вас є незбережені зміни.
+  connected: Підключено
+  disconnected: Вимкнено
+  reconnecting: Повторне підключення
+  connection-lost: Зєднання втрачено
+  connection-restored: Зєднання відновлено
+  show: Показати
+  hide: Приховати
+  expand: Розгорнути
+  collapse: Згорнути
+  enable: Увімкнути
+  disable: Вимкнути
+  minimize: Згорнути
+  maximize: Розгорнути
+  restore: Відновити
+  zoom-in: Збільшити
+  zoom-out: Зменшити
+  fullscreen: Повноекранний режим
+  exit-fullscreen: Вийти з повноекранного режиму
+  yes: Так
+  no: Ні
+  ok: ОК
+  none-available: Немає доступних
+  default: За замовчуванням
+  custom: Користувацький
+  general: Загальні
+  advanced: Розширені
+  placeholder-text: Введіть текст тут.
+  learn-more: Дізнатися більше
+  view-resource: Переглянути {resource}
+  view-resource-details: Переглянути деталі {resource}
+  create-a-new-resource: Створити новий {resource}
+  create-new-resource: Створити новий {resource}
+  search-resource: Пошук {resource}
+  new-resource: Новий {resource}
+  update-resource: Оновити {resource}
+  save-resource-changes: Зберегти зміни {resource}
+  creating-resource: Створення {resource}
+  cancel-resource: Скасувати {resource}
+  delete-resource: Видалити {resource}
+  delete-resource-name: >-
+    Delete: {resourceName}
+  resource-actions: >-
+    {resource} Дії
+  resource-location: >-
+    {resource} Локація 
+  delete-resource-named: Видалити {resource} ({resourceName})
+  delete-resource-prompt: Це дія не можна скасувати. Після видалення запис буде видалено назавжди.
+  delete-cannot-be-undone: Це дія не можна скасувати. Після видалення запис буде видалено назавжди.
+  create-resource: Створити {resource}
+  edit-resource: Редагувати {resource}
+  edit-resource-details: Редагувати деталі {resource}
+  edit-resource-type-name: >-
+    Редагувати {resource}: {resourceName}
+  edit-resource-name: >-
+    Редагувати: {resourceName}
+  config: Налаштування
+  select-field: Вибрати {field}
+  columns: Колонки
+  metadata: Метадані
+  meta: Мета
+  resource-created-success: Новий {resource} успішно створено.
+  resource-created-success-name: Новий {resource} ({resourceName}) успішно створено.
+  resource-updated-success: >-
+    {resource} ({resourceName}) успішно оновлено.
+  resource-action-success: >-
+    {resource} ({resourceName}) {action} успішно.
+  resource-deleted-success: >-
+    {resource} ({resourceName}) успішно видалено.
+  resource-deleted: >-
+    {resource} ({resourceName}) видалено.
+  continue-without-saving: Продовжити без збереження ?
+  continue-without-saving-prompt: У вас є незбережені зміни в цьому {resource}. Продовження приведе до них втрати. Натисніть Продовжити продовжити.
+  changelog: Список змін
+  reload: Перезавантажити
+
+resource:
+  alert: Оповіщення
+  alerts: Оповіщення
+  brand: Бренд
+  brands: Бренди
+  category: Категорія
+  categories: Категорії
+  chat-attachment: Вкладення чату
+  chat-attachments: Вкладення чату
+  chat-channel: Канал чату
+  chat-channels: Канали чату
+  chat-log: Журнал чату
+  chat-logs: Журнали чату
+  chat-message: Повідомлення чату
+  chat-messages: Повідомлення чату
+  chat-participant: Учасник чату
+  chat-participants: Учасники чату
+  chat-receipt: Квитанція чату
+  chat-receipts: Квитанції чату
+  comment: Коментар
+  comments: Коментарі
+  company: Компанія
+  companies: Компанії
+  custom-field-value: Значення користувача поля
+  custom-field-values: Значення користувальницьких полів
+  custom-field: Користувальницьке поле
+  custom-fields: Користувальницькі поля
+  dashboard-widget: Віджет панелі
+  dashboard-widgets: Віджети панелі
+  dashboard: Панель
+  dashboards: Панелі
+  extension: Розширення
+  extensions: Розширення
+  file: Файл
+  files: Файли
+  group: Група
+  groups: Групи
+  notification: Повідомлення
+  notifications: Повідомлення
+  permission: Дозвіл
+  permissions: Дозволи
+  policy: Політика
+  policies: Політики
+  report: Звіт
+  reports: Звіти
+  role: Роль
+  roles: Ролі
+  setting: Налаштування
+  settings: Налаштування
+  transaction: Транзакція
+  transactions: Транзакції
+  user-device: Пристрій користувача
+  user-devices: Пристрої користувача
+  user: Користувач
+  users: Користувачі
+  country: Країна
+
+dropzone:
+  file: файл
+  drop-to-upload: Перетягніть для завантаження
+  invalid: Недійсно
+  files-ready-for-upload:  >-
+    {numOfFiles} готовий до завантаження.
+  upload-images-videos: Завантажити зображення та відео
+  upload-documents: Завантажити документи
+  upload-documents-files: Завантажити документи та файли
+  upload-avatar-files: Завантажити аватари
+  dropzone-supported-images-videos: Перетягніть сюди файли зображень та відео
+  dropzone-supported-avatars: Перетягніть файли SVG або PNG
+  dropzone-supported-files: Перетягніть файли сюди
+  or-select-button-text: або виберіть файли для завантаження.
+  upload-queue: Черга завантаження
+  uploading: Завантаження...
+
+two-fa-enforcement-alert:
+  message: Для підвищення безпеки вашої облікового запису ваша організація вимагає двофакторну автентифікацію (2FA). Увімкніть 2FA у налаштуваннях облікового запису для додаткового рівня захисту.
+  button-text: Налаштувати 2FA
+
+comment-thread:
+  publish-comment-button-text: Опублікувати коментар
+  publish-reply-button-text: Опублікувати відповідь
+  reply-comment-button-text: Відповісти
+  edit-comment-button-text: Редагувати
+  delete-comment-button-text: Видалити
+  comment-published-ago: >-
+    {createdAgo} назад
+  comment-input-placeholder: Введіть новий коментар...
+  comment-reply-placeholder: Введіть відповідь...
+  comment-input-empty-notification: Ви не можете публікувати порожні коментарі...
+  comment-min-length-notification: Коментар повинен містити не менше 2 символів
+
+dashboard:
+  select-dashboard: Вибрати панель керування
+  create-new-dashboard: Створити нову панель управління
+  create-a-new-dashboard: Створити нову панель управління
+  confirm-create-dashboard: Створити панель управління !
+  edit-layout: Редагувати макет
+  add-widgets: Додати віджети
+  delete-dashboard: Видалити панель керування
+  save-dashboard: Зберегти панель керування
+  you-cannot-delete-this-dashboard: Ви не можете видалити цю панель управління.
+  are-you-sure-you-want-delete-dashboard: Ви впевнені, що хочете видалити {dashboardName}?
+
+dashboard-widget-panel:
+  widget-name: >-
+    {widgetName} Віджет
+  select-widgets: Вибрати віджети
+  close-and-save: Закрити та зберегти
+  filter-widgets: Пошук віджетів…
+  no-widgets-match: Жодні віджети не відповідають вашим фільтрам.
+  tab-all: Усі
+  tab-default: Рекомендовано
+  tab-added: На інформаційній панелі
+  badge-default: За замовчуванням
+  add: Додати
+  add-another: Додати ще один
+
+filters-picker:
+  filters: Фільтри
+  filter-data: Фільтрувати дані
+
+visible-column-picker:
+  select-viewable-columns: Вибрати стовпці для відображення
+  customize-columns: Налаштувати стовпці
+
+component:
+  file:
+    dropdown-label: Дії з файлом
+
+  import-modal:
+    loading-message: Обробка імпорту...
+    drop-upload: Перетягніть для завантаження
+    invalid: Недійсно
+    ready-upload: готовий до завантаження.
+    upload-spreadsheets: Завантажити таблиці
+    drag-drop: Перетягніть файли таблиць на цю область
+    button-text: або виберіть таблиці для завантаження
+    spreadsheets: таблиці
+    upload-queue: Черга завантаження
+
+  dropzone:
+    file: файл
+    drop-to-upload: Перетягніть для завантаження
+    invalid: Недійсно
+    files-ready-for-upload:  >-
+      {numOfFiles} готовий до завантаження.
+    upload-images-videos: Завантажити зображення та відео
+    upload-documents: Завантажити документи
+    upload-documents-files: Завантажити документи та файли
+    upload-avatar-files: Завантажити аватари
+    dropzone-supported-images-videos: Перетягніть зображення та відео на цю область
+    dropzone-supported-avatars: Перетягніть файли SVG або PNG
+    dropzone-supported-files: Перетягніть файли на цю область
+    or-select-button-text: або виберіть файли для завантаження.
+    upload-queue: Черга завантаження
+    uploading: Завантаження...
+
+  two-fa-enforcement-alert:
+    message: Для підвищення безпеки вашої облікового запису ваша організація вимагає двофакторну автентифікацію (2FA). Увімкніть 2FA у налаштуваннях облікового запису для додаткового рівня захисту.
+    button-text: Налаштувати 2FA
+
+  comment-thread:
+    publish-comment-button-text: Опублікувати коментар
+    publish-reply-button-text: Опублікувати відповідь
+    reply-comment-button-text: Відповісти
+    edit-comment-button-text: Редагувати
+    delete-comment-button-text: Видалити
+    comment-published-ago: >-
+      {createdAgo} назад
+    comment-input-placeholder: Введіть новий коментар...
+    comment-reply-placeholder: Введіть відповідь...
+    comment-input-empty-notification: Ви не можете опублікувати порожній коментар...
+    comment-min-length-notification: Коментар повинен містити не менше 2 символів
+
+  dashboard:
+    select-dashboard: Вибрати панель
+    create-new-dashboard: Створити нову панель
+    create-a-new-dashboard: Створити нову панель
+    confirm-create-dashboard: Створити панель!
+    edit-layout: Редагувати макет
+    add-widgets: Додати віджети
+    delete-dashboard: Видалити панель
+    save-dashboard: Зберегти панель
+    you-cannot-delete-this-dashboard: Ви не можете видалити цю панель.
+    are-you-sure-you-want-delete-dashboard: Ви впевнені, що хочете видалити {dashboardName}?
+    create-to-customize-hint: Створіть панель керування для налаштування віджетів.
+
+  dashboard-widget-panel:
+    widget-name: >-
+      {widgetName} Віджет
+    select-widgets: Вибрати віджети
+    close-and-save: Закрити та зберегти
+
+services:
+  dashboard-service:
+    create-dashboard-success-notification: Нова панель `{dashboardName}` успішно створено.
+    delete-dashboard-success-notification: Панель `{dashboardName}` була видалено.
+
+auth:
+  verification:
+    header-title: Підтвердження акаунту
+    title: Підтвердіть вашу електронну адресу пошти
+    message-text: <strong>Майже готово!</strong><br> Перевірте вашу електронну пошту для коду підтвердження.
+    verification-code-text: Введіть код підтвердження, який ви отримали по електронній поштою.
+    verification-input-label: Код підтвердження
+    verify-button-text: Підтвердити та продовжити
+    didnt-receive-a-code: Чи не отримали код?
+    not-sent:
+      message: Чи не отримали код?
+      alternative-choice: Використовуйте альтернативні варіанти нижче для підтвердження акаунту.
+      resend-email: Надіслати лист повторно
+      send-by-sms: Надіслати SMS
+
+  two-fa:
+    verify-code:
+      verification-code: Код підтвердження
+      check-title: Перевірте вашу пошту або телефон
+      check-subtitle: Ми відправили вам код підтвердження. Введіть код нижче, щоб завершити процес входу.
+      expired-help-text: Ваш код двофакторний автентифікації минув. Ви можете запросити новий код, якщо вам потрібно більше часу.
+      resend-code: Надіслати код повторно
+      verify-code: Підтвердити код
+      cancel-two-factor: Скасувати двофакторну автентифікацію
+      invalid-session-error-notification: Недійсна сесія. Будь ласка, спробуйте знову.
+      verification-successful-notification: Підтвердження минуло успішно !
+      verification-code-expired-notification: Код підтвердження минув. Будь ласка, запитайте новий.
+      verification-code-failed-notification: Підтвердження не вдалося. Будь ласка, спробуйте знову.
+
+    resend-code:
+      verification-code-resent-notification: Новий код підтвердження відправлений.
+      verification-code-resent-error-notification: Помилка повторної відправці коду підтвердження. Будь ласка, спробуйте знову.
+
+  forgot-password:
+    success-message: Перевірте вашу електронну пошту, щоб продовжити !
+    is-sent:
+      title: Майже готово!
+      message: <strong>Перевірте вашу пошту!</strong><br> Ми відправили вам чарівне посилання на електронну пошту, яка дозволить скинути пароль. Посилання діє 15 хвилин.
+    not-sent:
+      title: Забули пароль?
+      message: <strong>Не хвилюйтеся, ми допоможемо.</strong><br> Введіть електронну пошту, яку ви Ви використовуєте для входу в {appName}, і ми відправимо вам безпечну посилання для скидання пароля.
+    form:
+      email-label: Ваша електронна адреса пошти
+      submit-button: ОК, надішліть мені чарівне посилання !
+      nevermind-button: Не важливо
+
+  login:
+    title: Увійдіть у свій акаунт
+    no-identity-notification: Ви забули ввести електронну пошту ?
+    no-password-notification: Ви забули ввести пароль?
+    unverified-notification: Ваш обліковий запис повинен бути підтверджений для продовження.
+    password-reset-required: Для продовження потрібно скидання пароля.
+    failed-attempt:
+      message: <strong>Забули пароль?</strong><br> Натисніть кнопку нижче, щоб скинути пароль.
+      button-text: Ок, допоможіть скинути !
+
+    form:
+      email-label: Адреса електронної пошти
+      password-label: Пароль
+      remember-me-label: Запамятати мене
+      forgot-password-label: Забули пароль?
+      sign-in-button: Увійти
+      create-account-button: Створити новий акаунт
+    slow-connection-message: Проблеми із підключенням.
+
+  reset-password:
+    success-message: Ваш пароль був скинутий ! Увійдіть, щоб продовжити.
+    invalid-verification-code: Ця посилання для скидання пароля недійсне або закінчилася.
+    title: Скиньте пароль
+    form:
+      code:
+        label: Ваш код скидання
+        help-text: Код підтвердження, який ви отримали на електронну пошту.
+      password:
+        label: Новий пароль
+        help-text: Введіть пароль довжиною щонайменше 6 символів для продовження.
+      confirm-password:
+        label: Підтвердіть новий пароль
+        help-text: Введіть пароль довжиною щонайменше 6 символів для продовження.
+      submit-button: Скинути пароль
+      back-button: Назад
+
+  confirm-email-change:
+    success-message: Your email address has been updated.
+    invalid-verification-code: This email change link is invalid or expired.
+    title: Confirm email change
+    message-text: Confirm this change to update the login email for your Fleetbase account.
+    form:
+      code:
+        label: Confirmation code
+        help-text: The confirmation code from your email.
+      submit-button: Confirm Email Change
+      back-button: Back
+
+console:
+  create-or-join-organization:
+    modal-title: Створити або приєднатися до організації
+    join-success-notification: Ви приєдналися до нової організації !
+    create-success-notification: Ви створили нову організацію !
+
+  switch-organization:
+    modal-title: Ви впевнені, що хочете переключитися на організацію {organizationName}?
+    modal-body: Підтвердивши, ваш обліковий запис залишиться в системі, але основна організація буде змінено.
+    modal-accept-button-text: Так, хочу перейти на іншу організацію
+    success-notification: Ви перейшли на іншу організацію
+
+  account:
+    index:
+      upload-new: Завантажити нове
+      phone: Ваш номер телефону.
+      photos: фотографії
+      timezone: Виберіть часовий пояс.
+
+  admin:
+    menu:
+      overview: Огляд
+      organizations: Організації
+      branding: Брендінг
+      2fa-config: Налаштування 2FA
+      platform-api-token: Токен API платформи
+      schedule-monitor: Моніторинг розклади
+      services: Сервіси
+      mail: Пошта
+      filesystem: Файлова система
+      queue: Черга
+      socket: Сокет
+      push-notifications: Push-сповіщення
+    schedule-monitor:
+      schedule-monitor: Монітор розклади
+      task-logs-for: >-
+        Логи завдань для: 
+      showing-last-count: Показано останні {count} логів
+      name: Імя
+      type: Тип
+      timezone: Часовий пояс
+      last-started: Останній запуск
+      last-finished: Останнє завершення
+      last-failure: Остання помилка
+      date: Дата
+      memory: Память
+      runtime: Час виконання
+      output: Висновок
+      no-output: Немає висновку
+    config:
+      database:
+        title: Налаштування бази даних
+      filesystem:
+        title: Налаштування файлового системи
+      mail:
+        title: Налаштування пошти
+      notification-channels:
+        title: Налаштування push-повідомлень
+      queue:
+        title: Налаштування черги
+      services:
+        title: Налаштування сервісів
+      socket:
+        title: Налаштування сокету
+    platform-api-token:
+      title: Токен API платформи
+      description: Керуйте токеном API платформи, який використовується довіреними інтеграціями для доступу до захищених кінцевих точок платформи, таких як каталог організації.
+      loading: Завантаження статусу токена API платформи...
+      status: Статус
+      configured: Налаштовано
+      not-configured: Не налаштовано
+      last-rotated: Востаннє повернуто
+      last-used: Останнє використання
+      never: Ніколи
+      generate-token: Згенерувати токен
+      rotate-token: Оновити токен
+      revoke-token: Анулювати токен
+      one-time-warning: Скопіюйте цей токен зараз. Більше він не відображатиметься.
+      rotate-confirm-title: Оновити токен API платформи?
+      rotate-warning: Оновлення цього токена негайно скасовує дію інтеграцій, що використовували попередній токен.
+      revoke-confirm-title: Анулювати токен API платформи?
+      revoke-warning: Скасування позбавляє можливості доступу до захищених кінцевих точок платформи за допомогою токена платформи.
+      generated: Токен API платформи згенеровано.
+      rotated: Токен API платформи оновлено.
+      revoked: Токен API платформи відкликано.
+      copied: Токен API платформи скопійовано в буфер обміну.
+    branding:
+      title: Брендінг
+      icon-text: Іконка
+      upload-new: Завантажити нову
+      reset-default: Скинути за замовчуванням
+      logo-text: Логотип
+      theme: Тема за замовчуванням
+    index:
+      total-users: Всього користувачів
+      total-organizations: Всього організацій
+      total-transactions: Усього транзакцій
+    notifications:
+      title: Повідомлення
+      notification-settings: Налаштування повідомлень
+    organizations:
+      index:
+        title: Організації
+        owner-name-column: Власник
+        owner-phone-column: Телефон власника
+        owner-email-column: Телефон власника
+        users-count-column: Користувачі
+        phone-column: Телефон
+        email-column: Електронна пошта
+      users:
+        title: Користувачі
+
+  settings:
+    index:
+      title: Налаштування організації
+      organization-name: Назва організації
+      organization-description: Опис організації
+      organization-phone: Телефон організації
+      organization-currency: Валюта організації
+      organization-id: ID організації
+      organization-branding: Брендінг організації
+      logo: Логотип
+      logo-help-text: Логотип вашої організації.
+      upload-new-logo: Завантажити новий логотип
+      backdrop: Фон
+      backdrop-help-text: Необовязковий банер або фонове зображення для вашої організації.
+      upload-new-backdrop: Завантажити новий фон
+      organization-timezone: Виберіть часовий пояс за промовчанням для вашої організації.
+      select-timezone: Вибрати часовий пояс.
+
+  extensions:
+    title: Розширення скоро зявляться !
+    message: Будь ласка, повертайтеся до наступних версіях, поки ми готуємось до запуску репозиторія та маркетплейсу розширень.
+
+  notifications:
+    select-all: Вибрати все
+    mark-as-read: Відзначити як прочитане
+    received: >-
+      Отримано:
+    message: Немає повідомлень для відображення.
+
+modals:
+  set-password:
+    message: Ваш обліковий запис було створено за запрошенням, і він ще не має пароля. Встановіть його зараз, щоб завершити захист свого облікового запису.
+    new-password: Новий пароль
+    confirm-password: Підтвердьте пароль
+    help-text: Щоб продовжити, введіть пароль довжиною щонайменше 6 символів.
+
+invite:
+  for-users:
+    invitation-message: Вас запросили приєднатися до {companyName}
+    invitation-sent-message: Вас запросили приєднатися до організації {companyName} в {appName}. Щоб прийняти запрошення, введіть код запрошення, отриманий електронною поштою, та натисніть продовжити.
+    invitation-code-sent-text: Ваш код запрошення
+    accept-invitation-text: Прийняти запрошення
+
+onboard:
+  index:
+    title: Створіть свій акаунт
+    welcome-title: <strong>Ласкаво просимо до {companyName}!</strong><br />
+    welcome-text: Заповніть необхідні дані нижче, щоб почати.
+    full-name: Повне імя
+    full-name-help-text: Ваше повне імя
+    your-email: Адреса електронної пошти
+    your-email-help-text: Ваша електронна адреса пошти
+    phone: Номер телефону
+    phone-help-text: Ваш номер телефону
+    organization-name: Назва організації
+    organization-help-text: Назва вашої організації, всі ваші сервіси та ресурси будуть керуватися в рамках цієї організації, пізніше ви зможете створити стільки організацій, скільки захочете або знадобиться.
+    password: Введіть пароль
+    password-help-text: Ваш пароль, переконайтеся, що він надійний.
+    confirm-password: Підтвердьте пароль
+    confirm-password-help-text: Просто підтвердьте пароль що ви ввели вище.
+    continue-button-text: Продовжити
+  verify-email:
+    header-title: Підтвердження акаунту
+    title: Підтвердіть вашу електронну адресу пошти
+    message-text: <strong>Майже готово!</strong><br> Перевірте вашу пошту для отримання коду підтвердження.
+    verification-code-text: Введіть код підтвердження, отриманий електронною поштою поштою.
+    verification-input-label: Код підтвердження
+    verify-button-text: Підтвердити та продовжити
+    didnt-receive-a-code: Код ще не отримано ?
+    not-sent:
+      message: Код ще не отримано ?
+      alternative-choice: Використовуйте альтернативні варіанти нижче для підтвердження акаунту.
+      resend-email: Надіслати лист повторно
+      send-by-sms: Надіслати SMS
+
+install:
+  not-configured-title: Fleetbase не встановлено або не налаштовано.
+  not-configured-message: Завершіть налаштування через CLI Fleetbase або контейнер застосунку, а потім перезавантажте цю сторінку, коли база даних, міграції та початкові дані будуть готові.
+  running-locally-docs: Див. документацію щодо локального запуску.
+  cloud-docs: Див. документацію щодо розгортання в хмарі.
+  refreshing: Встановлення завершено, оновлення...
+
+layout:
+  header:
+    menus:
+      organization:
+        settings: Налаштування організації
+        create-or-join: Створити або приєднатися до організацій
+        explore-extensions: Вивчити розширення
+      user:
+        view-profile: Переглянути профіль
+        keyboard-shortcuts: Показати гарячі клавіші
+        changelog: Журнал змін

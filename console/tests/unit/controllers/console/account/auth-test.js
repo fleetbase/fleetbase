@@ -2,8 +2,8 @@ import { module, test } from 'qunit';
 import { setupTest } from '@fleetbase/console/tests/helpers';
 import Service from '@ember/service';
 
-// The controller's constructor immediately performs loadSystemTwoFaConfig and
-// loadUserTwoFaSettings, so service:fetch must be registered before any lookup.
+// load() — called by the route on entry — performs loadSystemTwoFaConfig and
+// loadUserTwoFaSettings, so service:fetch must be registered before it runs.
 function stubServices(owner, { get = () => Promise.resolve(null), post = () => Promise.resolve({}) } = {}) {
     const posts = [];
     const notified = { success: [], errors: [] };
@@ -194,6 +194,7 @@ module('Unit | Controller | console/account/auth | credentials and 2FA', functio
 
         this.build = async () => {
             const controller = this.owner.lookup('controller:console/account/auth');
+            controller.load();
             await controller.loadSystemTwoFaConfig.last;
             await controller.loadUserTwoFaSettings.last;
             return controller;
@@ -201,7 +202,15 @@ module('Unit | Controller | console/account/auth | credentials and 2FA', functio
         this.notifications = () => this.owner.lookup('service:notifications');
     });
 
-    test('it loads the system config and the user 2FA settings on construction', async function (assert) {
+    test('looking the controller up requests nothing', function (assert) {
+        // The router does this before authentication is checked — e.g. when a sign-out
+        // reloads the page on this URL — so it must not fire authenticated requests.
+        this.owner.lookup('controller:console/account/auth');
+
+        assert.deepEqual(this.requests, []);
+    });
+
+    test('it loads the system config and the user 2FA settings when the route is entered', async function (assert) {
         const controller = await this.build();
 
         assert.deepEqual(this.requests.map((request) => request.path).sort(), ['two-fa/config', 'users/two-fa']);
@@ -322,6 +331,21 @@ module('Unit | Controller | console/account/auth | credentials and 2FA', functio
 
         assert.strictEqual(this.notifications().serverErrors.length, 1);
         assert.deepEqual(this.notifications().successes, []);
+    });
+    test('empty 2FA responses leave the defaults untouched', async function (assert) {
+        this.responses = {};
+        const controller = this.owner.lookup('controller:console/account/auth');
+        const before = { system: controller.isSystemTwoFaEnabled, user: controller.isUserTwoFaEnabled, settings: controller.twoFaSettings, config: controller.twoFaConfig };
+
+        controller.load();
+        assert.strictEqual(await controller.loadSystemTwoFaConfig.last, undefined);
+        assert.strictEqual(await controller.loadUserTwoFaSettings.last, undefined);
+
+        assert.deepEqual(
+            { system: controller.isSystemTwoFaEnabled, user: controller.isUserTwoFaEnabled, settings: controller.twoFaSettings, config: controller.twoFaConfig },
+            before,
+            'nothing is applied from an empty response'
+        );
     });
 });
 

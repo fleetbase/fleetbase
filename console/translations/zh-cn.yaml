@@ -553,6 +553,41 @@ auth:
       forgot-password-label: 忘记密码？
       sign-in-button: 登录
       create-account-button: 创建新账户
+    oauth:
+      divider: '或使用以下方式继续'
+      continue-with: '使用 {provider} 继续'
+      signing-in: '正在登录...'
+      finish-signup: '请完成 Fleetbase 账户设置以继续。'
+      connected-accounts: '已关联账户'
+      connected-accounts-help: '使用登录服务代替密码登录。可以关联多个。'
+      linked-heading: '已关联'
+      available-heading: '可关联'
+      link-button: '关联'
+      unlink-button: '取消关联'
+      unlink-title: '取消关联 {provider}？'
+      unlink-body: '您将无法再使用 {provider} 登录。之后可以重新关联。'
+      linked: '已将登录方式关联到您的账户。'
+      auto-linked: '{provider} 已关联到您的账户。今后您可以使用它登录。'
+      existing-account: '您已有账户，我们已为您登录。'
+      unlinked: '已取消关联 {provider}。'
+      errors:
+        generic: '无法完成登录，请重试。'
+        access-denied: '登录已取消。'
+        provider-error: '登录服务提供方报告了一个问题，请重试。'
+        provider-disabled: '该登录方式不可用。'
+        invalid-state: '该登录链接已失效，请重试。'
+        exchange-failed: '无法连接到登录服务提供方，请重试。'
+        expired: '该登录会话已过期，请重试。'
+        hosted-domain: '您的账户不属于允许的域。'
+        registration-disabled: '当前不开放新用户注册。'
+        link-required: '该邮箱已存在账户。请登录后在账户设置中关联此登录方式。'
+        customer-account: '客户账户必须通过客户门户登录。'
+        not-verified: '您的账户需要通过验证才能继续。'
+        rate-limited: '尝试次数过多，请稍后重试。'
+        already-linked: '该登录方式已关联到您的账户。'
+        identity-already-linked: '该账户已关联到另一位 Fleetbase 用户。'
+        last-credential: '请先设置密码或关联其他登录方式，否则您将无法登录。'
+        link-failed: '无法关联该登录方式，请重试。'
     slow-connection-message: 网络连接不稳定。
   reset-password:
     success-message: 密码已重置！请登录继续。
@@ -610,6 +645,7 @@ console:
       filesystem: 文件系统
       queue: 队列
       socket: 套接字
+      oauth: 'OAuth 登录'
       push-notifications: 推送通知
     schedule-monitor:
       schedule-monitor: 计划监控
@@ -631,6 +667,8 @@ console:
         title: 数据库配置
       filesystem:
         title: 文件系统配置
+      oauth:
+        title: 'OAuth 登录配置'
       mail:
         title: 邮件配置
       notification-channels:
@@ -714,6 +752,8 @@ onboard:
     password-help-text: 您的密码，请确保密码安全。
     confirm-password: 确认密码
     confirm-password-help-text: 确认您上面输入的密码。
+    oauth-verified: '您的身份已验证。无需密码，您将使用该登录方式登录。'
+    oauth-divider: '或使用电子邮件注册'
     continue-button-text: 继续
   verify-email:
     header-title: 账户验证

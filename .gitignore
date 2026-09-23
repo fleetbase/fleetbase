@@ -28,26 +28,6 @@ composer-auth.json
 docker/database/*
 docker/database/mysql/*
 .talismanrc
-verdaccio/minio
-verdaccio/config/htpasswd
-verdaccio/storage
-docker/vroom
-# private packages
-packages/billing
-packages/flespi
-packages/loconav
-packages/internals
-packages/projectargus-engine
-packages/solid
-packages/aws-marketplace
-packages/countries
-packages/fliit
-packages/samsara
-packages/solid*
-packages/valhalla
-packages/vroom
-solid
-verdaccio
 # asdf
 .tools-versions
 # binary build resources

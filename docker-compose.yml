@@ -11,6 +11,10 @@ services:
   database:
     image: mysql:8.0-oracle
     restart: unless-stopped
+    # Binary logging is on by default in MySQL 8 with a 30-day expiry. Nothing
+    # here replicates from or reads the binlog, and the telematics ingest made it
+    # grow past 300 GB locally, so it is switched off.
+    command: ["mysqld", "--skip-log-bin"]
     ports:
       - "3306:3306"
     volumes:

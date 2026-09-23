@@ -574,6 +574,41 @@ auth:
       forgot-password-label: Esqueceu sua senha?
       sign-in-button: Entrar
       create-account-button: Criar uma nova conta
+    oauth:
+      divider: 'Ou continuar com'
+      continue-with: 'Continuar com {provider}'
+      signing-in: 'Entrando...'
+      finish-signup: 'Conclua a configuração da sua conta Fleetbase para continuar.'
+      connected-accounts: 'Contas conectadas'
+      connected-accounts-help: 'Entre com um provedor em vez de uma senha. Você pode conectar mais de um.'
+      linked-heading: 'Conectadas'
+      available-heading: 'Disponíveis para conectar'
+      link-button: 'Conectar'
+      unlink-button: 'Desconectar'
+      unlink-title: 'Desconectar {provider}?'
+      unlink-body: 'Você não poderá mais entrar com {provider}. Você pode conectá-lo novamente depois.'
+      linked: 'Provedor conectado à sua conta.'
+      auto-linked: '{provider} agora está conectado à sua conta. A partir de agora você pode entrar com ele.'
+      existing-account: 'Você já tem uma conta, então fizemos seu login.'
+      unlinked: '{provider} desconectado.'
+      errors:
+        generic: 'Não foi possível concluir o login. Tente novamente.'
+        access-denied: 'O login foi cancelado.'
+        provider-error: 'O provedor de login relatou um problema. Tente novamente.'
+        provider-disabled: 'Esse método de login não está disponível.'
+        invalid-state: 'Esse link de login não é mais válido. Tente novamente.'
+        exchange-failed: 'Não foi possível contatar o provedor de login. Tente novamente.'
+        expired: 'Essa sessão de login expirou. Tente novamente.'
+        hosted-domain: 'Sua conta não pertence a um domínio permitido.'
+        registration-disabled: 'Novos cadastros não estão disponíveis.'
+        link-required: 'Já existe uma conta com este e-mail. Entre e vincule este provedor nas configurações da sua conta.'
+        customer-account: 'Contas de cliente devem entrar pelo portal do cliente.'
+        not-verified: 'Sua conta precisa ser verificada para continuar.'
+        rate-limited: 'Muitas tentativas. Tente novamente em breve.'
+        already-linked: 'Esse provedor já está conectado à sua conta.'
+        identity-already-linked: 'Essa conta já está conectada a outro usuário do Fleetbase.'
+        last-credential: 'Defina uma senha ou conecte outro provedor primeiro, ou você não conseguirá entrar.'
+        link-failed: 'Não foi possível conectar esse provedor. Tente novamente.'
     slow-connection-message: Problemas de conexão detectados.
   reset-password:
     success-message: Sua senha foi redefinida! Faça login para continuar.
@@ -632,6 +667,7 @@ console:
       filesystem: Sistema de Arquivos
       queue: Fila
       socket: Socket
+      oauth: 'Login OAuth'
       push-notifications: Notificações Push
     schedule-monitor:
       schedule-monitor: Monitor de Agendamento
@@ -653,6 +689,8 @@ console:
         title: Configuração do Banco de Dados
       filesystem:
         title: Configuração do Sistema de Arquivos
+      oauth:
+        title: 'Configuração do login OAuth'
       mail:
         title: Configuração de Email
       notification-channels:
@@ -741,6 +779,8 @@ onboard:
     password-help-text: Sua senha, certifique-se de que seja uma boa.
     confirm-password: Confirme sua senha
     confirm-password-help-text: Apenas para confirmar a senha que você digitou acima.
+    oauth-verified: 'Sua identidade foi verificada. Não é necessária senha — você entrará com seu provedor.'
+    oauth-divider: 'Ou cadastre-se com e-mail'
     continue-button-text: Continuar
   verify-email:
     header-title: Verificação de Conta

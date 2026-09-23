@@ -605,6 +605,41 @@ auth:
       forgot-password-label: Passwort vergessen?
       sign-in-button: Anmelden
       create-account-button: Neues Konto erstellen
+    oauth:
+      divider: 'Oder fortfahren mit'
+      continue-with: 'Mit {provider} fortfahren'
+      signing-in: 'Sie werden angemeldet...'
+      finish-signup: 'Schließen Sie die Einrichtung Ihres Fleetbase-Kontos ab, um fortzufahren.'
+      connected-accounts: 'Verknüpfte Konten'
+      connected-accounts-help: 'Melden Sie sich über einen Anbieter statt mit einem Passwort an. Sie können mehrere verknüpfen.'
+      linked-heading: 'Verknüpft'
+      available-heading: 'Zum Verknüpfen verfügbar'
+      link-button: 'Verknüpfen'
+      unlink-button: 'Trennen'
+      unlink-title: '{provider} trennen?'
+      unlink-body: 'Sie können sich dann nicht mehr über {provider} anmelden. Sie können ihn später erneut verknüpfen.'
+      linked: 'Anbieter mit Ihrem Konto verknüpft.'
+      auto-linked: '{provider} ist jetzt mit Ihrem Konto verknüpft. Sie können sich ab sofort damit anmelden.'
+      existing-account: 'Sie haben bereits ein Konto, daher haben wir Sie angemeldet.'
+      unlinked: '{provider} getrennt.'
+      errors:
+        generic: 'Die Anmeldung konnte nicht abgeschlossen werden. Bitte versuchen Sie es erneut.'
+        access-denied: 'Die Anmeldung wurde abgebrochen.'
+        provider-error: 'Der Anmeldeanbieter hat ein Problem gemeldet. Bitte versuchen Sie es erneut.'
+        provider-disabled: 'Diese Anmeldemethode ist nicht verfügbar.'
+        invalid-state: 'Dieser Anmeldelink ist nicht mehr gültig. Bitte versuchen Sie es erneut.'
+        exchange-failed: 'Der Anmeldeanbieter konnte nicht erreicht werden. Bitte versuchen Sie es erneut.'
+        expired: 'Diese Anmeldesitzung ist abgelaufen. Bitte versuchen Sie es erneut.'
+        hosted-domain: 'Ihr Konto gehört nicht zu einer zugelassenen Domain.'
+        registration-disabled: 'Neuregistrierungen sind nicht verfügbar.'
+        link-required: 'Ein Konto mit dieser E-Mail-Adresse existiert bereits. Melden Sie sich an und verknüpfen Sie diesen Anbieter in Ihren Kontoeinstellungen.'
+        customer-account: 'Kundenkonten müssen sich über das Kundenportal anmelden.'
+        not-verified: 'Ihr Konto muss verifiziert werden, um fortzufahren.'
+        rate-limited: 'Zu viele Versuche. Bitte versuchen Sie es in Kürze erneut.'
+        already-linked: 'Dieser Anbieter ist bereits mit Ihrem Konto verknüpft.'
+        identity-already-linked: 'Dieses Konto ist bereits mit einem anderen Fleetbase-Benutzer verknüpft.'
+        last-credential: 'Legen Sie zuerst ein Passwort fest oder verknüpfen Sie einen anderen Anbieter, sonst könnten Sie sich nicht mehr anmelden.'
+        link-failed: 'Der Anbieter konnte nicht verknüpft werden. Bitte versuchen Sie es erneut.'
     slow-connection-message: Es treten Verbindungsprobleme auf.
 
   reset-password:
@@ -667,6 +702,7 @@ console:
       filesystem: Dateisystem
       queue: Warteschlange
       socket: Socket
+      oauth: 'OAuth-Anmeldung'
       push-notifications: Push-Benachrichtigungen
     schedule-monitor:
       schedule-monitor: Zeitplan-Monitor
@@ -689,6 +725,8 @@ console:
         title: Datenbankkonfiguration
       filesystem:
         title: Dateisystemkonfiguration
+      oauth:
+        title: 'Konfiguration der OAuth-Anmeldung'
       mail:
         title: E-Mail-Konfiguration
       notification-channels:
@@ -778,6 +816,8 @@ onboard:
     password-help-text: Ihr Passwort, achten Sie auf ein sicheres.
     confirm-password: Passwort bestätigen
     confirm-password-help-text: Nur zur Bestätigung des oben eingegebenen Passworts.
+    oauth-verified: 'Ihre Identität ist bestätigt. Kein Passwort nötig – Sie melden sich über Ihren Anbieter an.'
+    oauth-divider: 'Oder mit E-Mail registrieren'
     continue-button-text: Fortfahren
   verify-email:
     header-title: Kontoverifizierung

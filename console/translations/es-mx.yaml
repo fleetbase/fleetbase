@@ -608,6 +608,41 @@ auth:
       forgot-password-label: ¿Olvidaste tu contraseña?
       sign-in-button: Iniciar sesión
       create-account-button: Crear una nueva cuenta
+    oauth:
+      divider: 'O continuar con'
+      continue-with: 'Continuar con {provider}'
+      signing-in: 'Iniciando sesión...'
+      finish-signup: 'Termina de configurar tu cuenta de Fleetbase para continuar.'
+      connected-accounts: 'Cuentas vinculadas'
+      connected-accounts-help: 'Inicia sesión con un proveedor en lugar de una contraseña. Puedes vincular más de uno.'
+      linked-heading: 'Vinculadas'
+      available-heading: 'Disponibles para vincular'
+      link-button: 'Vincular'
+      unlink-button: 'Desvincular'
+      unlink-title: '¿Desvincular {provider}?'
+      unlink-body: 'Ya no podrás iniciar sesión con {provider}. Puedes volver a vincularlo más adelante.'
+      linked: 'Proveedor vinculado a tu cuenta.'
+      auto-linked: '{provider} ya está vinculado a tu cuenta. A partir de ahora puedes iniciar sesión con él.'
+      existing-account: 'Ya tienes una cuenta, así que iniciamos tu sesión.'
+      unlinked: '{provider} desvinculado.'
+      errors:
+        generic: 'No se pudo completar el inicio de sesión. Inténtalo de nuevo.'
+        access-denied: 'Se canceló el inicio de sesión.'
+        provider-error: 'El proveedor de inicio de sesión reportó un problema. Inténtalo de nuevo.'
+        provider-disabled: 'Ese método de inicio de sesión no está disponible.'
+        invalid-state: 'Ese enlace de inicio de sesión ya no es válido. Inténtalo de nuevo.'
+        exchange-failed: 'No se pudo contactar al proveedor de inicio de sesión. Inténtalo de nuevo.'
+        expired: 'Esa sesión de inicio de sesión expiró. Inténtalo de nuevo.'
+        hosted-domain: 'Tu cuenta no pertenece a un dominio permitido.'
+        registration-disabled: 'Los nuevos registros no están disponibles.'
+        link-required: 'Ya existe una cuenta con este correo electrónico. Inicia sesión y vincula este proveedor desde la configuración de tu cuenta.'
+        customer-account: 'Las cuentas de cliente deben iniciar sesión a través del portal de clientes.'
+        not-verified: 'Tu cuenta debe ser verificada para continuar.'
+        rate-limited: 'Demasiados intentos. Inténtalo de nuevo en breve.'
+        already-linked: 'Ese proveedor ya está vinculado a tu cuenta.'
+        identity-already-linked: 'Esa cuenta ya está vinculada a otro usuario de Fleetbase.'
+        last-credential: 'Establece una contraseña o vincula otro proveedor primero, o no podrás iniciar sesión.'
+        link-failed: 'No se pudo vincular ese proveedor. Inténtalo de nuevo.'
     slow-connection-message: Experimentando problemas de conectividad.
 
   reset-password:
@@ -672,6 +707,7 @@ console:
       filesystem: Sistema de archivos
       queue: Cola
       socket: Socket
+      oauth: 'Inicio de sesión OAuth'
       push-notifications: Notificaciones push
 
     schedule-monitor:
@@ -695,6 +731,8 @@ console:
         title: Configuración de la base de datos
       filesystem:
         title: Configuración del sistema de archivos
+      oauth:
+        title: 'Configuración del inicio de sesión OAuth'
       mail:
         title: Configuración de correo
       notification-channels:
@@ -793,6 +831,8 @@ onboard:
     confirm-password: Confirma tu contraseña
     confirm-password-help-text: Solo para confirmar la contraseña que introdujiste
       arriba.
+    oauth-verified: 'Tu identidad está verificada. No necesitas contraseña: iniciarás sesión con tu proveedor.'
+    oauth-divider: 'O regístrate con tu correo'
     continue-button-text: Continuar
 
   verify-email:

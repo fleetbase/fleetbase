@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from '@fleetbase/console/tests/helpers';
-import { render, fillIn } from '@ember/test-helpers';
+import { render, fillIn, click } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import Service from '@ember/service';
 import OnboardingFormComponent from '@fleetbase/console/components/onboarding/form';
@@ -246,5 +246,186 @@ module('Integration | Component | onboarding/form | onboard', function (hooks) {
         await component.onboard.perform();
 
         assert.deepEqual(this.notifications().serverErrors, [failure]);
+    });
+
+    test('a signup started from a provider drops the password fields and prefills the identity', async function (assert) {
+        const oauth = this.owner.lookup('service:oauth');
+        oauth.setRegistration({ intent: 'rti_abc', prefill: { name: 'Ada Lovelace', email: 'ada@example.com', email_verified: true } });
+
+        await render(hbs`<Onboarding::Form />`);
+
+        // The provider identity IS the credential, so no password is collected.
+        assert.dom('input[type="password"]').doesNotExist('no password fields are rendered');
+        assert.dom('input[type="email"]').hasValue('ada@example.com', 'the provider email is prefilled');
+        assert.dom('input[type="email"]').isDisabled('the email is locked to the address the provider verified');
+    });
+
+    test('an email the provider did not verify stays editable', async function (assert) {
+        const oauth = this.owner.lookup('service:oauth');
+        oauth.setRegistration({ intent: 'rti_abc', prefill: { name: 'Ada Lovelace', email: 'ada@example.com', email_verified: false } });
+
+        await render(hbs`<Onboarding::Form />`);
+
+        // Only a suggestion: they may use another address, verified by code as usual.
+        assert.dom('input[type="email"]').hasValue('ada@example.com');
+        assert.dom('input[type="email"]').isNotDisabled();
+    });
+
+    test('a provider signup can be submitted without a password', async function (assert) {
+        const oauth = this.owner.lookup('service:oauth');
+        oauth.setRegistration({ intent: 'rti_abc', prefill: { name: 'Ada Lovelace', email: 'ada@example.com' } });
+
+        const captured = captureComponent(this.owner, 'onboarding/form', OnboardingFormComponent);
+        await render(hbs`<Onboarding::Form />`);
+
+        const component = captured.instance;
+        component.phone = '+15555550123';
+        component.organization_name = 'Compiler Logistics';
+
+        assert.true(component.hasOauthIntent, 'the component picked up the intent');
+        assert.true(component.filled, 'a password is not required to submit');
+        assert.deepEqual(component.requiredFields, ['name', 'email', 'phone', 'organization_name']);
+    });
+
+    test('a password signup still requires a password', async function (assert) {
+        const captured = captureComponent(this.owner, 'onboarding/form', OnboardingFormComponent);
+        await render(hbs`<Onboarding::Form />`);
+
+        const component = captured.instance;
+        component.name = 'Ada Lovelace';
+        component.email = 'ada@example.com';
+        component.phone = '+15555550123';
+        component.organization_name = 'Compiler Logistics';
+
+        assert.false(component.hasOauthIntent);
+        assert.false(component.filled, 'the password fields are still required');
+
+        component.password = 'correct horse battery staple';
+        component.password_confirmation = 'correct horse battery staple';
+        assert.true(component.filled);
+    });
+
+    test('the intent is sent with the signup and cleared once spent', async function (assert) {
+        const posted = [];
+
+        class FetchStub extends Service {
+            post(path, body) {
+                posted.push({ path, body });
+                return Promise.resolve({ status: 'success', session: 'sess', skipVerification: false });
+            }
+        }
+
+        this.owner.register('service:fetch', FetchStub);
+
+        const oauth = this.owner.lookup('service:oauth');
+        oauth.setRegistration({ intent: 'rti_abc', prefill: { name: 'Ada Lovelace', email: 'ada@example.com' } });
+
+        this.noop = () => {};
+
+        const captured = captureComponent(this.owner, 'onboarding/form', OnboardingFormComponent);
+        await render(hbs`<Onboarding::Form @context={{hash persist=this.noop}} @orchestrator={{hash next=this.noop}} />`);
+
+        const component = captured.instance;
+        component.phone = '+15555550123';
+        component.organization_name = 'Compiler Logistics';
+
+        await component.onboard.perform();
+
+        assert.strictEqual(posted.length, 1, 'the account was created');
+        assert.strictEqual(posted[0].body.oauth_intent, 'rti_abc', 'the intent is sent in place of a password');
+        assert.notOk(posted[0].body.password, 'no password is sent');
+        // Single use: it is spent server side and must not be replayed.
+        assert.strictEqual(oauth.registration, null, 'the intent is cleared afterwards');
+    });
+
+    test('the intent is never written to the onboarding context', async function (assert) {
+        const context = this.owner.lookup('service:onboarding-context');
+
+        context.set('oauth_intent', 'rti_abc', { persist: true });
+        context.merge({ oauth_intent: 'rti_def', organization_name: 'Compiler Logistics' }, { persist: true });
+
+        // It is a single-use bearer credential proving a verified identity; it belongs
+        // in memory for the length of the wizard, not in localStorage.
+        assert.notOk(context.data.oauth_intent, 'the intent is not held in the context');
+        assert.strictEqual(context.data.organization_name, 'Compiler Logistics', 'other values still merge');
+    });
+
+    test('it offers the provider buttons when sign-ups through a provider are open', async function (assert) {
+        const oauth = this.owner.lookup('service:oauth');
+        oauth.providers = [
+            { id: 'google', label: 'Google', icon: 'google' },
+            { id: 'github', label: 'GitHub', icon: 'github' },
+        ];
+        oauth.allowsRegistration = true;
+        const started = [];
+        oauth.startAuthorization = (id, options) => started.push([id, options]);
+
+        await render(hbs`<Onboarding::Form />`);
+
+        assert.dom('[data-test-oauth-signup] [data-test-oauth-provider]').exists({ count: 2 });
+        assert.dom('[data-test-oauth-signup]').containsText('Continue with Google');
+        assert.dom(this.element).containsText('Or sign up with email');
+
+        await click('[data-test-oauth-provider="google"]');
+
+        assert.deepEqual(started, [['google', { intent: 'signup' }]], 'the handshake is marked as a sign-up');
+    });
+
+    test('it leaves the provider buttons out when sign-ups are closed', async function (assert) {
+        const oauth = this.owner.lookup('service:oauth');
+        oauth.providers = [{ id: 'google', label: 'Google', icon: 'google' }];
+        oauth.allowsRegistration = false;
+
+        await render(hbs`<Onboarding::Form />`);
+
+        assert.dom('[data-test-oauth-signup]').doesNotExist();
+        assert.dom(this.element).doesNotContainText('Or sign up with email');
+    });
+
+    test('it leaves the provider buttons out once the form is prefilled from a provider', async function (assert) {
+        const oauth = this.owner.lookup('service:oauth');
+        oauth.providers = [{ id: 'google', label: 'Google', icon: 'google' }];
+        oauth.allowsRegistration = true;
+        oauth.setRegistration({ intent: 'rti_abc', prefill: { name: 'Ada Lovelace', email: 'ada@example.com' } });
+
+        await render(hbs`<Onboarding::Form />`);
+
+        assert.dom('[data-test-oauth-signup]').doesNotExist();
+    });
+
+    test('a second press while leaving for the provider does nothing', async function (assert) {
+        const captured = captureComponent(this.owner, 'onboarding/form', OnboardingFormComponent);
+        const oauth = this.owner.lookup('service:oauth');
+        const started = [];
+        oauth.startAuthorization = (id) => started.push(id);
+
+        await render(hbs`<Onboarding::Form />`);
+        captured.instance.continueWithProvider({ id: 'google' });
+        captured.instance.continueWithProvider({ id: 'google' });
+        captured.instance.continueWithProvider(null);
+
+        assert.deepEqual(started, ['google']);
+    });
+
+    test('a sign-up starts with no provider intent, nothing started and no verified email', function (assert) {
+        // Tracked defaults run lazily on first read. Each of these is assigned before it is
+        // ever read in normal use, so read them fresh here to pin the defaults.
+        const component = Object.create(OnboardingFormComponent.prototype);
+
+        assert.strictEqual(component.oauthIntent, null);
+        assert.false(component.isStartingProvider);
+        assert.false(component.emailVerifiedByProvider);
+    });
+
+    test('an intent without a prefill starts empty and unlocked', async function (assert) {
+        const captured = captureComponent(this.owner, 'onboarding/form', OnboardingFormComponent);
+        this.owner.lookup('service:oauth').setRegistration({ intent: 'rti_abc' });
+
+        await render(hbs`<Onboarding::Form />`);
+
+        assert.strictEqual(captured.instance.name, null);
+        assert.strictEqual(captured.instance.email, null);
+        assert.false(captured.instance.emailVerifiedByProvider);
+        assert.false(captured.instance.isEmailLocked);
     });
 });
