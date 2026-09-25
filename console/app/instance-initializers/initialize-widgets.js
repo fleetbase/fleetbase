@@ -32,7 +32,10 @@ export function initialize(appInstance) {
                 description: 'Lists latest news and events from the Fleetbase official team.',
                 icon: 'newspaper',
                 component: 'fleetbase-blog',
-                grid_options: { w: 7, h: 9, minW: 7, minH: 9 },
+                grid_options: { w: 6, h: 13, minW: 6, minH: 9 },
+                // Beside ledger's Recent Financial Activity (150), above the GitHub card;
+                // extensions place their widgets before these with lower `order` values.
+                order: 160,
                 default: true,
             }),
             new Widget({
@@ -41,7 +44,10 @@ export function initialize(appInstance) {
                 description: 'Displays current Github stats from the official Fleetbase repo.',
                 icon: faGithub,
                 component: 'github-card',
-                grid_options: { w: 5, h: 9, minW: 5, minH: 9 },
+                grid_options: { w: 6, h: 6, minW: 5, minH: 6 },
+                // Under the blog, beside ledger's Recent Financial Activity (h 19 = 13 + 6). Six
+                // rows fit the card without scrolling; it stretches to fill them.
+                order: 170,
                 default: true,
             }),
         ];
