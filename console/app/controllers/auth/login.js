@@ -105,45 +105,37 @@ export default class AuthLoginController extends Controller {
         // set where to redirect on login
         this.setRedirect();
 
-        // send request to check for 2fa
+        // Submit the password first. The server only starts a two-factor session once the
+        // password checks out, so the emailed/SMS code can never stand in for it.
+        let response;
         try {
-            let { twoFaSession, isTwoFaEnabled } = await this.session.checkForTwoFactor(identity);
-
-            if (isTwoFaEnabled) {
-                return this.session.store
-                    .persist({ identity })
-                    .then(() => {
-                        return this.router.transitionTo('auth.two-fa', { queryParams: { token: twoFaSession } }).then(() => {
-                            this.reset('success');
-                        });
-                    })
-                    .catch((error) => {
-                        this.notifications.serverError(error);
-                        this.reset('error');
-
-                        throw error;
-                    });
-            }
+            response = await this.fetch.post('auth/login', { identity, password, remember: rememberMe });
         } catch (error) {
-            return this.notifications.serverError(error);
+            return this.handleLoginError(error, identity);
         }
 
+        if (response?.isEnabled === true && response.twoFaSession) {
+            return this.session.store
+                .persist({ identity })
+                .then(() => {
+                    return this.router.transitionTo('auth.two-fa', { queryParams: { token: response.twoFaSession } }).then(() => {
+                        this.reset('success');
+                    });
+                })
+                .catch((error) => {
+                    this.notifications.serverError(error);
+                    this.reset('error');
+
+                    throw error;
+                });
+        }
+
+        // Establish the session with the token just issued, rather than sending the
+        // password a second time.
         try {
-            await this.session.authenticate('authenticator:fleetbase', { identity, password }, rememberMe);
+            await this.session.authenticate('authenticator:fleetbase', { identity, authToken: response?.token }, rememberMe);
         } catch (error) {
-            this.failedAttempts++;
-
-            // Handle unverified user
-            if (error.toString().includes('not verified')) {
-                return this.sendUserForEmailVerification(identity);
-            }
-
-            // Handle password reset required
-            if (error.toString().includes('reset required')) {
-                return this.sendUserForPasswordReset(identity);
-            }
-
-            return this.failure(error);
+            return this.handleLoginError(error, identity);
         }
 
         if (this.session.isAuthenticated) {
@@ -152,12 +144,34 @@ export default class AuthLoginController extends Controller {
     }
 
     /**
+     * Route a failed login to the right follow-up.
+     *
+     * @param {Error} error
+     * @param {String} identity
+     * @return {void}
+     */
+    handleLoginError(error, identity) {
+        this.failedAttempts++;
+
+        // Handle unverified user
+        if (error.toString().includes('not verified')) {
+            return this.sendUserForEmailVerification(identity);
+        }
+
+        // Handle password reset required
+        if (error.toString().includes('reset required')) {
+            return this.sendUserForPasswordReset(identity);
+        }
+
+        return this.failure(error);
+    }
+
+    /**
      * Begin an OAuth sign-in.
      *
-     * Deliberately does not reuse login(): that unconditionally checks two-factor
-     * status for a typed identity first, and here there is no identity to check —
-     * the provider has not told us who this is yet. Two-factor is still enforced,
-     * by the server, when the handshake comes back.
+     * Deliberately does not reuse login(): there is no typed identity or password
+     * here — the provider has not told us who this is yet. Two-factor is still
+     * enforced, by the server, when the handshake comes back.
      *
      * @param {Object} provider
      * @return {void}

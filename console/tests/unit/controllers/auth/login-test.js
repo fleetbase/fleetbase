@@ -32,8 +32,8 @@ module('Unit | Controller | auth/login', function (hooks) {
         this.redirects = [];
         this.posted = [];
 
-        // Defaults: no 2FA, authentication succeeds.
-        this.twoFactor = () => Promise.resolve({ isTwoFaEnabled: false });
+        // Defaults: no 2FA, the password is accepted and authentication succeeds.
+        this.loginResult = () => Promise.resolve({ token: 'auth-token', type: 'user' });
         this.authenticateResult = () => Promise.resolve();
         this.isAuthenticated = true;
 
@@ -47,8 +47,9 @@ module('Unit | Controller | auth/login', function (hooks) {
             get isAuthenticated() {
                 return self.isAuthenticated;
             }
-            checkForTwoFactor(identity) {
-                return self.twoFactor(identity);
+            checkForTwoFactor() {
+                self.twoFactorChecks = (self.twoFactorChecks ?? 0) + 1;
+                return Promise.resolve({ isTwoFaEnabled: false });
             }
             authenticate(...args) {
                 self.authenticateCalls.push(args);
@@ -67,6 +68,9 @@ module('Unit | Controller | auth/login', function (hooks) {
         class FetchStub extends Service {
             post(path, payload) {
                 self.posted.push({ path, payload });
+                if (path === 'auth/login') {
+                    return self.loginResult(payload);
+                }
                 return Promise.resolve({ token: 'verify-token', session: 'sess_1' });
             }
         }
@@ -101,17 +105,24 @@ module('Unit | Controller | auth/login', function (hooks) {
         await this.submit();
         assert.strictEqual(this.notifications.warnings.length, 2, 'a missing password is refused');
 
+        assert.deepEqual(this.posted, [], 'nothing is submitted');
         assert.deepEqual(this.authenticateCalls, [], 'nothing is submitted');
     });
 
-    test('login authenticates and clears the form on success', async function (assert) {
+    test('login checks the password then authenticates with the issued token and clears the form', async function (assert) {
         this.controller.identity = 'ron@fleetbase.io';
         this.controller.password = 'hunter2';
         this.controller.rememberMe = true;
 
         await this.submit();
 
-        assert.deepEqual(this.authenticateCalls.at(-1), ['authenticator:fleetbase', { identity: 'ron@fleetbase.io', password: 'hunter2' }, true]);
+        assert.deepEqual(this.posted, [{ path: 'auth/login', payload: { identity: 'ron@fleetbase.io', password: 'hunter2', remember: true } }]);
+        assert.deepEqual(
+            this.authenticateCalls,
+            [['authenticator:fleetbase', { identity: 'ron@fleetbase.io', authToken: 'auth-token' }, true]],
+            'the session is established with the issued token, not by sending the password again'
+        );
+        assert.strictEqual(this.twoFactorChecks, undefined, 'the identity-only two-factor check is never called');
         assert.strictEqual(this.controller.identity, null, 'the form is cleared on success');
         assert.strictEqual(this.controller.password, null);
         assert.false(this.controller.isLoading);
@@ -127,20 +138,36 @@ module('Unit | Controller | auth/login', function (hooks) {
         assert.strictEqual(this.controller.identity, 'ron@fleetbase.io', 'no success reset');
     });
 
-    test('login diverts to two-factor when the identity requires it', async function (assert) {
-        this.twoFactor = () => Promise.resolve({ isTwoFaEnabled: true, twoFaSession: 'two-fa-token' });
+    test('login diverts to two-factor only after the password is accepted', async function (assert) {
+        this.loginResult = () => Promise.resolve({ isEnabled: true, twoFaSession: 'two-fa-token' });
         this.controller.identity = 'ron@fleetbase.io';
         this.controller.password = 'hunter2';
 
         await this.submit();
 
+        assert.deepEqual(this.posted.at(0), { path: 'auth/login', payload: { identity: 'ron@fleetbase.io', password: 'hunter2', remember: false } }, 'the password is checked first');
         assert.deepEqual(this.persisted.at(-1), { identity: 'ron@fleetbase.io' }, 'the identity is persisted for the 2FA step');
         assert.deepEqual(this.transitions.at(-1), ['auth.two-fa', { queryParams: { token: 'two-fa-token' } }]);
-        assert.deepEqual(this.authenticateCalls, [], 'the password is never submitted when 2FA is required');
+        assert.deepEqual(this.authenticateCalls, [], 'no session is established until the code is verified');
+        assert.strictEqual(this.twoFactorChecks, undefined, 'the identity-only two-factor check is never called');
+    });
+
+    test('a wrong password never reaches two-factor', async function (assert) {
+        this.loginResult = () => Promise.reject(new Error('These credentials do not match our records.'));
+        this.controller.identity = 'ron@fleetbase.io';
+        this.controller.password = 'wrong';
+
+        await this.submit();
+
+        assert.strictEqual(this.controller.failedAttempts, 1, 'the attempt is counted');
+        assert.strictEqual(this.notifications.errors.length, 1, 'the error is surfaced');
+        assert.deepEqual(this.transitions, [], 'the user is not sent to the 2FA step');
+        assert.deepEqual(this.persisted, []);
+        assert.deepEqual(this.authenticateCalls, []);
     });
 
     test('a failure during the two-factor handoff is reported', async function (assert) {
-        this.twoFactor = () => Promise.resolve({ isTwoFaEnabled: true, twoFaSession: 'two-fa-token' });
+        this.loginResult = () => Promise.resolve({ isEnabled: true, twoFaSession: 'two-fa-token' });
         Object.defineProperty(this.controller.router, 'transitionTo', {
             configurable: true,
             value: () => Promise.reject(new Error('cannot route')),
@@ -153,19 +180,8 @@ module('Unit | Controller | auth/login', function (hooks) {
         assert.strictEqual(this.controller.password, null, 'the password is cleared on error');
     });
 
-    test('a failing two-factor check is reported and stops the login', async function (assert) {
-        this.twoFactor = () => Promise.reject(new Error('2fa lookup failed'));
-        this.controller.identity = 'ron@fleetbase.io';
-        this.controller.password = 'hunter2';
-
-        await this.submit();
-
-        assert.strictEqual(this.notifications.errors.length, 1);
-        assert.deepEqual(this.authenticateCalls, [], 'authentication is not attempted');
-    });
-
     test('an unverified account is sent to email verification', async function (assert) {
-        this.authenticateResult = () => Promise.reject(new Error('account not verified'));
+        this.loginResult = () => Promise.reject(new Error('account not verified'));
         this.controller.identity = 'ron@fleetbase.io';
         this.controller.password = 'hunter2';
 
@@ -177,7 +193,7 @@ module('Unit | Controller | auth/login', function (hooks) {
     });
 
     test('an account needing a reset is sent to forgot-password', async function (assert) {
-        this.authenticateResult = () => Promise.reject(new Error('password reset required'));
+        this.loginResult = () => Promise.reject(new Error('password reset required'));
         this.controller.identity = 'ron@fleetbase.io';
         this.controller.password = 'hunter2';
 
@@ -188,7 +204,7 @@ module('Unit | Controller | auth/login', function (hooks) {
     });
 
     test('any other authentication error is surfaced and clears the password', async function (assert) {
-        this.authenticateResult = () => Promise.reject(new Error('bad credentials'));
+        this.loginResult = () => Promise.reject(new Error('bad credentials'));
         this.controller.identity = 'ron@fleetbase.io';
         this.controller.password = 'hunter2';
 
@@ -197,6 +213,18 @@ module('Unit | Controller | auth/login', function (hooks) {
         assert.strictEqual(this.notifications.errors.length, 1);
         assert.strictEqual(this.controller.password, null);
         assert.strictEqual(this.controller.identity, 'ron@fleetbase.io', 'the identity is kept so the user can retry');
+    });
+
+    test('a failure establishing the session after the password is accepted is surfaced', async function (assert) {
+        this.authenticateResult = () => Promise.reject(new Error('session could not be restored'));
+        this.controller.identity = 'ron@fleetbase.io';
+        this.controller.password = 'hunter2';
+
+        await this.submit();
+
+        assert.strictEqual(this.controller.failedAttempts, 1);
+        assert.strictEqual(this.notifications.errors.length, 1);
+        assert.strictEqual(this.controller.password, null);
     });
 
     test('setRedirect stores a redirect only when a shift param is present', async function (assert) {
@@ -264,8 +292,7 @@ module('Unit | Controller | auth/login', function (hooks) {
         controller.continueWithProvider({ id: 'google', label: 'Google' });
 
         assert.deepEqual(started, [['google', { intent: 'login', returnTo: null }]]);
-        // Unlike login(), no two-factor pre-check is issued: there is no identity to
-        // check yet, and the server enforces 2FA when the handshake returns.
+        // Nothing is posted from here: the server enforces 2FA when the handshake returns.
         assert.deepEqual(this.posted, []);
         assert.deepEqual(this.authenticateCalls, []);
     });
