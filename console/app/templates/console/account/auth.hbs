@@ -32,15 +32,30 @@
             <Account::ConnectedAccounts />
 
             <ContentPanel @title="Change Password" @open={{true}} @wrapperClass="bordered-classic">
-                <form id="change-password-form" aria-label="change-password" {{on "submit" (perform this.changePassword)}}>
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                        <InputGroup @name="Enter new Password" @type="password" @value={{this.newPassword}} />
-                        <InputGroup @name="Confirm Password" @type="password" @value={{this.newConfirmPassword}} />
-                    </div>
-                    <div class="mt-3">
-                        <Button @type="primary" @buttonType="submit" @text="Confirm & Change Password" @icon="save" @disabled={{not (and this.newPassword this.newConfirmPassword)}} {{on "click" (perform this.changePassword)}} />
-                    </div>
-                </form>
+                {{#if this.canChangePassword}}
+                    <form id="change-password-form" aria-label="change-password" {{on "submit" (perform this.changePassword)}}>
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                            <InputGroup @name="Current Password" @type="password" @value={{this.changePasswordCurrentPassword}} @wrapperClass="lg:col-span-2" />
+                            <InputGroup @name="Enter new Password" @type="password" @value={{this.newPassword}} />
+                            <InputGroup @name="Confirm Password" @type="password" @value={{this.newConfirmPassword}} />
+                        </div>
+                        <div class="mt-3">
+                            <Button
+                                @type="primary"
+                                @buttonType="submit"
+                                @text="Confirm & Change Password"
+                                @icon="save"
+                                @disabled={{not (and this.changePasswordCurrentPassword this.newPassword this.newConfirmPassword)}}
+                                @isLoading={{this.changePassword.isRunning}}
+                                {{on "click" (perform this.changePassword)}}
+                            />
+                        </div>
+                    </form>
+                {{else}}
+                    <p class="text-sm text-gray-700 dark:text-gray-300">
+                        Your organization does not allow you to change your own password. Ask an administrator to change it for you.
+                    </p>
+                {{/if}}
             </ContentPanel>
 
             {{#if this.isSystemTwoFaEnabled}}
