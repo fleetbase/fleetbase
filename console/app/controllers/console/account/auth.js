@@ -16,7 +16,6 @@ export default class ConsoleAccountAuthController extends Controller {
     @service fetch;
     @service notifications;
     @service router;
-    @service modalsManager;
 
     /**
      * The new email address the user wants to verify.
@@ -33,11 +32,25 @@ export default class ConsoleAccountAuthController extends Controller {
     @tracked currentPassword;
 
     /**
+     * The current password used to authorize a password change.
+     *
+     * @type {string}
+     */
+    @tracked changePasswordCurrentPassword;
+
+    /**
      * The new password the user intends to set.
      *
      * @type {string}
      */
     @tracked newPassword;
+
+    /**
+     * Whether the user may change their own password.
+     *
+     * @type {boolean}
+     */
+    @tracked canChangePassword = true;
 
     /**
      * The user's confirmation of the new password.
@@ -87,6 +100,7 @@ export default class ConsoleAccountAuthController extends Controller {
     @action load() {
         this.loadSystemTwoFaConfig.perform();
         this.loadUserTwoFaSettings.perform();
+        this.loadPasswordPolicy.perform();
     }
 
     /**
@@ -149,7 +163,8 @@ export default class ConsoleAccountAuthController extends Controller {
     }
 
     /**
-     * Initiates the task to change the user's password asynchronously.
+     * Initiates the task to change the user's password asynchronously. The current
+     * password is sent with the new one and checked by the server.
      *
      * @method changePassword
      */
@@ -159,45 +174,36 @@ export default class ConsoleAccountAuthController extends Controller {
             event.preventDefault();
         }
 
-        // Validate current password
-        const isPasswordValid = yield this.validatePassword.perform();
-        if (!isPasswordValid) {
-            this.newPassword = undefined;
-            this.newConfirmPassword = undefined;
-            return;
-        }
-
         try {
             yield this.fetch.post('users/change-password', {
+                current_password: this.changePasswordCurrentPassword,
                 password: this.newPassword,
                 password_confirmation: this.newConfirmPassword,
             });
 
-            this.notifications.success('Password change successfully.');
+            this.notifications.success('Password changed successfully.');
         } catch (error) {
             this.notifications.serverError(error, 'Failed to change password.');
         }
 
+        this.changePasswordCurrentPassword = undefined;
         this.newPassword = undefined;
         this.newConfirmPassword = undefined;
     }
 
     /**
-     * Task to validate current password
+     * Loads whether the user may change their own password.
      *
-     * @return {boolean}
+     * @method loadPasswordPolicy
      */
-    @task *validatePassword() {
-        let isPasswordValid = false;
-
-        yield this.modalsManager.show('modals/validate-password', {
-            body: 'You must validate your current password before it can be changed.',
-            onValidated: (isValid) => {
-                isPasswordValid = isValid;
-            },
-        });
-
-        return isPasswordValid;
+    @task *loadPasswordPolicy() {
+        try {
+            const policy = yield this.fetch.get('users/password-policy');
+            this.canChangePassword = policy?.can_change_password !== false;
+        } catch {
+            // Older servers have no password policy endpoint; keep the form available.
+            this.canChangePassword = true;
+        }
     }
 
     /**
