@@ -151,6 +151,17 @@ module('Unit | Controller | auth/two-fa | verification flow', function (hooks) {
         assert.strictEqual(this.notifications().infos.length, 0);
     });
 
+    test('too many wrong codes sends the user back to sign in again', async function (assert) {
+        this.postRejectsWith = new Error('Too many failed verification attempts. Please sign in again.');
+        const controller = this.build();
+        controller.clientToken = 'client-tok';
+
+        await controller.verifyCode();
+
+        assert.deepEqual(this.notifications().errors, [controller.intl.t('auth.two-fa.verify-code.too-many-attempts-notification')]);
+        assert.strictEqual(this.transitions.at(-1), 'auth.login', 'the dead 2FA session is abandoned');
+    });
+
     test('handleOtpInput stores the code and immediately verifies it', async function (assert) {
         const controller = this.build();
         controller.clientToken = 'client-tok';

@@ -155,6 +155,10 @@ export default class AuthTwoFaController extends Controller {
         } catch (error) {
             if (error?.message?.includes('Verification code has expired')) {
                 this.notifications.info(this.intl.t('auth.two-fa.verify-code.verification-code-expired-notification'));
+            } else if (error?.message?.includes('Too many failed verification attempts')) {
+                // The server has ended this 2FA session; only a fresh sign-in starts another.
+                this.notifications.error(this.intl.t('auth.two-fa.verify-code.too-many-attempts-notification'));
+                return this.router.transitionTo('auth.login');
             } else {
                 this.notifications.error(this.intl.t('auth.two-fa.verify-code.verification-code-failed-notification'));
             }
