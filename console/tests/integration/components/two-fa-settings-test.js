@@ -24,6 +24,19 @@ module('Integration | Component | two-fa-settings', function (hooks) {
         assert.dom(this.element).doesNotContainText('Choose an authentication method', 'method selection is hidden while disabled');
     });
 
+    test('it marks methods that still need setting up', async function (assert) {
+        this.set('settings', { enabled: true, method: 'email' });
+        this.set('methods', [
+            { key: 'authenticator_app', name: 'Authenticator App', recommended: true, requiresSetup: true },
+            { key: 'email', name: 'Email' },
+        ]);
+
+        await render(hbs`<TwoFaSettings @twoFaSettings={{this.settings}} @twoFaMethods={{this.methods}} />`);
+
+        assert.dom(this.element).containsText('Needs setup');
+        assert.dom('input[value="email"]').isChecked();
+    });
+
     test('it shows the method selection when 2FA is enabled', async function (assert) {
         this.set('settings', { enabled: true, method: 'sms' });
 
@@ -174,6 +187,65 @@ module('Integration | Component | two-fa-settings | actions', function (hooks) {
 
         assert.strictEqual(component.selectedTwoFaMethod, 'email');
         assert.deepEqual(this.calls, [['method', 'email']]);
+    });
+
+    test('enabling 2FA never picks a recommended method that still needs setting up', async function (assert) {
+        this.set('methods', [
+            { key: 'authenticator_app', name: 'Authenticator App', recommended: true, requiresSetup: true },
+            { key: 'email', name: 'Email' },
+        ]);
+        const component = await this.build();
+
+        component.onTwoFaToggled(true);
+
+        assert.strictEqual(component.selectedTwoFaMethod, 'email');
+        assert.deepEqual(this.calls, [
+            ['toggled', true],
+            ['method', 'email'],
+        ]);
+    });
+
+    test('a method the page could not set up keeps the previous choice', async function (assert) {
+        this.set('settings', { enabled: true, method: 'email' });
+        this.set('before', (method) => {
+            this.calls.push(['before', method]);
+            return Promise.resolve(false);
+        });
+        const captured = captureComponent(this.owner, 'two-fa-settings', TwoFaSettingsComponent);
+        await render(hbs`
+            <TwoFaSettings
+                @twoFaSettings={{this.settings}}
+                @twoFaMethods={{this.methods}}
+                @onTwoFaMethodSelected={{this.onTwoFaMethodSelected}}
+                @beforeTwoFaMethodSelected={{this.before}}
+            />
+        `);
+
+        await captured.instance.onTwoFaSelected('sms');
+
+        assert.strictEqual(captured.instance.selectedTwoFaMethod, 'email');
+        assert.dom('input[value="email"]').isChecked();
+        assert.dom('input[value="sms"]').isNotChecked();
+        assert.deepEqual(this.calls, [['before', 'sms']], 'the choice is not reported');
+    });
+
+    test('a method the page set up first is chosen', async function (assert) {
+        this.set('settings', { enabled: true, method: 'email' });
+        this.set('before', () => Promise.resolve(true));
+        const captured = captureComponent(this.owner, 'two-fa-settings', TwoFaSettingsComponent);
+        await render(hbs`
+            <TwoFaSettings
+                @twoFaSettings={{this.settings}}
+                @twoFaMethods={{this.methods}}
+                @onTwoFaMethodSelected={{this.onTwoFaMethodSelected}}
+                @beforeTwoFaMethodSelected={{this.before}}
+            />
+        `);
+
+        await captured.instance.onTwoFaSelected('sms');
+
+        assert.strictEqual(captured.instance.selectedTwoFaMethod, 'sms');
+        assert.deepEqual(this.calls, [['method', 'sms']]);
     });
 
     test('both enforcement toggles update the flag and report it', async function (assert) {

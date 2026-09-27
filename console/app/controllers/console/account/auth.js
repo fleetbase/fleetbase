@@ -81,11 +81,28 @@ export default class ConsoleAccountAuthController extends Controller {
     @tracked isSystemTwoFaEnabled = false;
 
     /**
-     * Available two-factor authentication methods.
+     * The user's authenticator app, without any secrets.
+     *
+     * @type {Object}
+     */
+    @tracked authenticator = { enabled: false, confirmed_at: null, recovery_codes_remaining: 0 };
+
+    /**
+     * Bumped to redraw the 2FA settings when they change outside the settings form.
+     *
+     * @type {number}
+     */
+    @tracked twoFaSettingsRevision = 0;
+
+    /**
+     * Available two-factor authentication methods. The authenticator app needs setting
+     * up before it can be chosen.
      *
      * @type {Array}
      */
-    @tracked methods = getTwoFaMethods();
+    get methods() {
+        return getTwoFaMethods({ includeAuthenticatorApp: true }).map((method) => (method.key === 'authenticator_app' ? { ...method, requiresSetup: !this.authenticator.enabled } : method));
+    }
 
     /**
      * Load the 2FA settings this page shows. Called by the route on entry.
@@ -101,6 +118,60 @@ export default class ConsoleAccountAuthController extends Controller {
         this.loadSystemTwoFaConfig.perform();
         this.loadUserTwoFaSettings.perform();
         this.loadPasswordPolicy.perform();
+        this.loadAuthenticator.perform();
+    }
+
+    /**
+     * Before the authenticator app is chosen as the 2FA method, set it up if needed.
+     *
+     * @method beforeTwoFaMethodSelected
+     * @param {string} method
+     * @return {Promise<boolean>} whether the method can be chosen
+     */
+    @action beforeTwoFaMethodSelected(method) {
+        if (method !== 'authenticator_app' || this.authenticator.enabled) {
+            return Promise.resolve(true);
+        }
+
+        return this.openAuthenticatorModal('setup');
+    }
+
+    /**
+     * Set up, remove, or get new recovery codes for the authenticator app from its panel,
+     * then redraw the 2FA settings, which the change may have updated.
+     *
+     * @method manageAuthenticator
+     * @param {string} mode - `setup`, `recovery-codes` or `disable`
+     */
+    @action async manageAuthenticator(mode) {
+        if (await this.openAuthenticatorModal(mode)) {
+            this.twoFaSettingsRevision++;
+        }
+    }
+
+    /**
+     * Open the authenticator app modal.
+     *
+     * @method openAuthenticatorModal
+     * @param {string} mode - `setup`, `recovery-codes` or `disable`
+     * @return {Promise<boolean>} whether the change was made
+     */
+    @action openAuthenticatorModal(mode = 'setup') {
+        return new Promise((resolve) => {
+            this.modalsManager.show('modals/authenticator-app', {
+                mode,
+                onChanged: ({ status, settings }) => {
+                    if (status) {
+                        this.authenticator = status;
+                    }
+                    if (settings) {
+                        this.twoFaSettings = settings;
+                        this.isUserTwoFaEnabled = settings.enabled;
+                    }
+                },
+                onClosed: (changed) => resolve(changed),
+            });
+        });
     }
 
     /**
@@ -237,6 +308,22 @@ export default class ConsoleAccountAuthController extends Controller {
             return twoFaSettings;
         } catch (error) {
             this.notifications.serverError(error);
+        }
+    }
+
+    /**
+     * Loads the user's authenticator app status.
+     *
+     * @method loadAuthenticator
+     */
+    @task *loadAuthenticator() {
+        try {
+            const authenticator = yield this.fetch.get('users/two-fa/authenticator');
+            if (authenticator) {
+                this.authenticator = authenticator;
+            }
+        } catch {
+            // Older servers have no authenticator app support; the option stays unavailable.
         }
     }
 

@@ -180,11 +180,17 @@ module('Unit | Controller | console/account/auth | credentials and 2FA', functio
                 this.serverErrors.push([error, fallback]);
             }
         }
+        this.modalResponse = null;
         class ModalsManagerStub extends Service {
             shown = [];
             show(name, options) {
                 this.shown.push({ name, options });
                 options.onValidated?.(context.passwordIsValid);
+                // The authenticator modal reports a change, then closes
+                if (context.modalResponse) {
+                    options.onChanged?.(context.modalResponse);
+                }
+                options.onClosed?.(Boolean(context.modalResponse));
                 return Promise.resolve();
             }
         }
@@ -213,7 +219,7 @@ module('Unit | Controller | console/account/auth | credentials and 2FA', functio
     test('it loads the system config and the user 2FA settings when the route is entered', async function (assert) {
         const controller = await this.build();
 
-        assert.deepEqual(this.requests.map((request) => request.path).sort(), ['two-fa/config', 'users/two-fa']);
+        assert.deepEqual(this.requests.map((request) => request.path).sort(), ['two-fa/config', 'users/two-fa', 'users/two-fa/authenticator']);
         assert.true(controller.isSystemTwoFaEnabled);
         assert.deepEqual(controller.twoFaSettings, this.responses['users/two-fa']);
     });
@@ -346,6 +352,60 @@ module('Unit | Controller | console/account/auth | credentials and 2FA', functio
             before,
             'nothing is applied from an empty response'
         );
+    });
+
+    test('the authenticator app is offered, marked as needing setup until it is set up', async function (assert) {
+        const controller = await this.build();
+
+        assert.deepEqual(
+            controller.methods.map(({ key, requiresSetup }) => [key, requiresSetup]),
+            [
+                ['authenticator_app', true],
+                ['sms', undefined],
+                ['email', undefined],
+            ]
+        );
+
+        controller.authenticator = { enabled: true, confirmed_at: '2026-09-27T00:00:00Z', recovery_codes_remaining: 8 };
+
+        assert.false(controller.methods[0].requiresSetup);
+    });
+
+    test('choosing the authenticator app sets it up first', async function (assert) {
+        const controller = await this.build();
+        const modals = this.owner.lookup('service:modals-manager');
+
+        assert.true(await controller.beforeTwoFaMethodSelected('sms'), 'other methods need nothing');
+        assert.strictEqual(modals.shown.length, 0);
+
+        assert.false(await controller.beforeTwoFaMethodSelected('authenticator_app'), 'a cancelled setup keeps the previous choice');
+        assert.strictEqual(modals.shown[0].name, 'modals/authenticator-app');
+        assert.strictEqual(modals.shown[0].options.mode, 'setup');
+
+        this.modalResponse = {
+            status: { enabled: true, confirmed_at: '2026-09-27T00:00:00Z', recovery_codes_remaining: 8 },
+            settings: { enabled: true, method: 'authenticator_app' },
+        };
+
+        assert.true(await controller.beforeTwoFaMethodSelected('authenticator_app'), 'a finished setup allows the choice');
+        assert.true(controller.authenticator.enabled);
+        assert.deepEqual(controller.twoFaSettings, { enabled: true, method: 'authenticator_app' });
+        assert.true(await controller.beforeTwoFaMethodSelected('authenticator_app'), 'once set up, no modal is needed');
+        assert.strictEqual(modals.shown.length, 2);
+    });
+
+    test('changes from the authenticator panel redraw the 2FA settings', async function (assert) {
+        const controller = await this.build();
+
+        await controller.manageAuthenticator('recovery-codes');
+        assert.strictEqual(controller.twoFaSettingsRevision, 0, 'nothing changed');
+
+        this.modalResponse = { status: { enabled: false, confirmed_at: null, recovery_codes_remaining: 0 }, settings: { enabled: false, method: 'email' } };
+        await controller.manageAuthenticator('disable');
+
+        assert.strictEqual(controller.twoFaSettingsRevision, 1);
+        assert.strictEqual(this.owner.lookup('service:modals-manager').shown.at(-1).options.mode, 'disable');
+        assert.deepEqual(controller.twoFaSettings, { enabled: false, method: 'email' });
     });
 });
 
