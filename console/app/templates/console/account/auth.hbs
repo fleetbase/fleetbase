@@ -61,13 +61,17 @@
             {{#if this.isSystemTwoFaEnabled}}
                 <ContentPanel @title="2FA Settings" @open={{true}} @wrapperClass="bordered-classic">
                     <div class="mb-3">
-                        {{#if this.loadUserTwoFaSettings.isIdle}}
-                            <TwoFaSettings
-                                @twoFaMethods={{this.methods}}
-                                @twoFaSettings={{this.twoFaSettings}}
-                                @onTwoFaToggled={{this.onTwoFaToggled}}
-                                @onTwoFaMethodSelected={{this.onTwoFaMethodSelected}}
-                            />
+                        {{#if (and this.loadUserTwoFaSettings.isIdle this.loadAuthenticator.isIdle)}}
+                            {{! Redrawn when the settings change outside this form }}
+                            {{#each (array this.twoFaSettingsRevision) key="@identity"}}
+                                <TwoFaSettings
+                                    @twoFaMethods={{this.methods}}
+                                    @twoFaSettings={{this.twoFaSettings}}
+                                    @onTwoFaToggled={{this.onTwoFaToggled}}
+                                    @onTwoFaMethodSelected={{this.onTwoFaMethodSelected}}
+                                    @beforeTwoFaMethodSelected={{this.beforeTwoFaMethodSelected}}
+                                />
+                            {{/each}}
                         {{else}}
                             <div class="flex items-center justify-center p-4">
                                 <Spinner @loadingMessage="Loading User 2FA Settings..." @wrapperClass="flex flex-row" @iconClass="mr-2" />
@@ -82,6 +86,27 @@
                         @onClick={{this.saveTwoFactorAuthSettings}}
                         @isLoading={{this.saveUserTwoFaSettings.isRunning}}
                     />
+                </ContentPanel>
+
+                <ContentPanel @title="Authenticator App" @open={{true}} @wrapperClass="bordered-classic">
+                    {{#if this.authenticator.enabled}}
+                        <p class="text-sm text-gray-700 dark:text-gray-300">
+                            Your authenticator app is set up.
+                            {{this.authenticator.recovery_codes_remaining}}
+                            recovery codes left.
+                        </p>
+                        <div class="flex flex-row space-x-2 mt-3">
+                            <Button @icon="key" @text="Get new recovery codes" @onClick={{fn this.manageAuthenticator "recovery-codes"}} />
+                            <Button @type="danger" @icon="trash" @text="Remove authenticator app" @onClick={{fn this.manageAuthenticator "disable"}} />
+                        </div>
+                    {{else}}
+                        <p class="text-sm text-gray-700 dark:text-gray-300">
+                            Use an app like Google Authenticator, Microsoft Authenticator, Authy or 1Password to get sign-in codes, even without signal.
+                        </p>
+                        <div class="mt-3">
+                            <Button @type="primary" @icon="mobile-screen" @text="Set up authenticator app" @onClick={{fn this.manageAuthenticator "setup"}} />
+                        </div>
+                    {{/if}}
                 </ContentPanel>
             {{/if}}
         </div>

@@ -110,9 +110,12 @@ export default class TwoFaSettingsComponent extends Component {
         this.isTwoFaEnabled = isTwoFaEnabled;
 
         if (isTwoFaEnabled) {
-            const recommendedMethod = isArray(this.args.twoFaMethods) ? this.args.twoFaMethods.find((method) => method.recommended) : null;
+            // A method that still needs setting up is never picked automatically
+            const recommendedMethod = isArray(this.args.twoFaMethods) ? this.args.twoFaMethods.find((method) => method.recommended && !method.requiresSetup) : null;
             if (recommendedMethod) {
                 this.selectedTwoFaMethod = recommendedMethod.key;
+            } else if (!this.selectedTwoFaMethod) {
+                this.selectedTwoFaMethod = DEFAULT_2FA_METHOD;
             }
         } else {
             this.selectedTwoFaMethod = null;
@@ -151,11 +154,24 @@ export default class TwoFaSettingsComponent extends Component {
      * @return {void}
      * @public
      */
-    @action onTwoFaSelected(method) {
+    @action async onTwoFaSelected(method, event) {
+        // Let the page set a method up first (e.g. an authenticator app); keep the
+        // previous choice when it is not set up.
+        if (typeof this.args.beforeTwoFaMethodSelected === 'function') {
+            const previousMethod = this.selectedTwoFaMethod;
+            const allowed = await this.args.beforeTwoFaMethodSelected(method);
+
+            if (allowed === false) {
+                const radios = event?.target?.form?.elements?.['2fa-method'] ?? document.querySelectorAll('input[name="2fa-method"]');
+                Array.from(radios).forEach((radio) => (radio.checked = radio.value === previousMethod));
+                return;
+            }
+        }
+
         this.selectedTwoFaMethod = method;
 
         if (typeof this.args.onTwoFaMethodSelected === 'function') {
-            this.args.onTwoFaMethodSelected(...arguments);
+            this.args.onTwoFaMethodSelected(method);
         }
     }
 
