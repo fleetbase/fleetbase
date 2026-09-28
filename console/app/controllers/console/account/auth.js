@@ -16,6 +16,7 @@ export default class ConsoleAccountAuthController extends Controller {
     @service fetch;
     @service notifications;
     @service router;
+    @service modalsManager;
 
     /**
      * The new email address the user wants to verify.
