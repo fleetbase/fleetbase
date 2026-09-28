@@ -1,6 +1,8 @@
 import { module, test } from 'qunit';
 import { setupTest } from '@fleetbase/console/tests/helpers';
 import Service from '@ember/service';
+import EmberObject from '@ember/object';
+import { A } from '@ember/array';
 import window from 'ember-window-mock';
 
 class IntlStub extends Service {
@@ -251,11 +253,36 @@ module('Unit | Controller | console/admin/organizations/index', function (hooks)
         });
 
         this.controller.exportOrganization();
-        assert.deepEqual(exported, { type: 'companies', options: { params: { selections: [] } } }, 'no table means no selections');
+        assert.deepEqual(exported, { type: 'companies', options: { params: { selections: [] } } }, 'no model means no selections');
 
-        this.controller.table = { selectedRows: [{ id: 'a' }, { id: 'b' }] };
+        this.controller.set(
+            'model',
+            A([
+                { id: 'a', checked: true },
+                { id: 'b', checked: true },
+                { id: 'c', checked: false },
+            ])
+        );
         this.controller.exportOrganization();
         assert.deepEqual(exported.options.params.selections, ['a', 'b']);
+    });
+
+    test('selection follows checked records and the current route model without a table instance', function (assert) {
+        const first = EmberObject.create({ id: 'first', checked: false });
+        const second = EmberObject.create({ id: 'second', checked: true });
+        this.controller.set('model', A([first, second]));
+
+        assert.deepEqual(this.controller.selectedOrganizations.mapBy('id'), ['second']);
+
+        first.set('checked', true);
+        second.set('checked', false);
+        assert.deepEqual(this.controller.selectedOrganizations.mapBy('id'), ['first'], 'checkbox changes update the header selection');
+
+        this.controller.set('model', A([EmberObject.create({ id: 'reopened', checked: false })]));
+        assert.strictEqual(this.controller.selectedOrganizations.length, 0, 'returning to the route does not retain the former table selection');
+
+        this.controller.set('model', undefined);
+        assert.strictEqual(this.controller.selectedOrganizations.length, 0, 'selection remains safe while the route has no model');
     });
 
     test('applySavedView sets exactly one filter and resets paging', function (assert) {
@@ -522,9 +549,16 @@ module('Unit | Controller | console/admin/organizations/index | actions', functi
         const crud = this.owner.lookup('service:crud');
 
         controller.exportOrganization();
-        assert.deepEqual(crud.exported.at(-1), { type: 'companies', options: { params: { selections: [] } } }, 'no table means no selection');
+        assert.deepEqual(crud.exported.at(-1), { type: 'companies', options: { params: { selections: [] } } }, 'no model means no selection');
 
-        controller.table = { selectedRows: [{ id: 'a' }, { id: 'b' }] };
+        controller.set(
+            'model',
+            A([
+                { id: 'a', checked: true },
+                { id: 'b', checked: true },
+                { id: 'c', checked: false },
+            ])
+        );
         controller.exportOrganization();
         assert.deepEqual(crud.exported.at(-1), { type: 'companies', options: { params: { selections: ['a', 'b'] } } });
     });

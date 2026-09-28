@@ -36,7 +36,7 @@
             </DropdownButton>
         {{else}}
             <Button
-                @text={{if this.table.selectedRows.length "Export selected" headerAction.text}}
+                @text={{if this.selectedOrganizations.length "Export selected" headerAction.text}}
                 @icon={{headerAction.icon}}
                 @iconClass={{headerAction.iconClass}}
                 @onClick={{headerAction.onClick}}
@@ -54,7 +54,6 @@
         @paginationMeta={{@model.meta}}
         @page={{this.page}}
         @onPageChange={{fn (mut this.page)}}
-        @onSetup={{fn (mut this.table)}}
         @sortBy={{this.sort}}
         @onSort={{this.sortOrganizations}}
         @selectable={{true}}

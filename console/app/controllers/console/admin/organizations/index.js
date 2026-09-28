@@ -2,6 +2,7 @@ import Controller from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
 import { action } from '@ember/object';
+import { filter } from '@ember/object/computed';
 import window from 'ember-window-mock';
 
 /**
@@ -78,7 +79,8 @@ export default class ConsoleAdminOrganizationsController extends Controller {
     @tracked needs_attention;
     @tracked missing_owner;
     @tracked inactive_status;
-    @tracked table;
+    // Controllers survive route changes; selection must not retain a destroyed table.
+    @filter('model.@each.checked', (organization) => organization.checked) selectedOrganizations;
 
     /**
      * Array to store the fetched companies.
@@ -435,7 +437,7 @@ export default class ConsoleAdminOrganizationsController extends Controller {
      * @void
      */
     @action exportOrganization() {
-        const selections = this.table?.selectedRows?.map((_) => _.id) ?? [];
+        const selections = this.selectedOrganizations.map((organization) => organization.id);
         this.crud.export('companies', { params: { selections } });
     }
 
