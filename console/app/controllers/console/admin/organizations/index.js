@@ -350,7 +350,11 @@ export default class ConsoleAdminOrganizationsController extends Controller {
     }
 
     @action clearFilters() {
-        this.filters.reset(this);
+        for (const param of this.queryParams) {
+            if (!['query', 'page', 'limit', 'sort'].includes(param)) {
+                this[param] = undefined;
+            }
+        }
         this.filters.pendingQueryParams = {};
         this.query = '';
         this.clearSavedView();

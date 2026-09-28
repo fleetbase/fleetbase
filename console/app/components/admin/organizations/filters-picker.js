@@ -13,7 +13,13 @@ export default class AdminOrganizationsFiltersPickerComponent extends FiltersPic
         return this.router;
     }
 
-    @action updateFilters() {
+    @action updateFilters(dropdown) {
+        // The shared template calls this on both open and close. Apply closes
+        // the dropdown before reading pending values, so only reset on open.
+        if (dropdown?.isOpen) {
+            return;
+        }
+
         this.filterState.pendingQueryParams = {};
         const queryParams = this.router.currentRoute?.queryParams ?? {};
 

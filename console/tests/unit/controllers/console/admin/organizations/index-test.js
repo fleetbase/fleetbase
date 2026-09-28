@@ -142,6 +142,8 @@ module('Unit | Controller | console/admin/organizations/index', function (hooks)
         controller.created_at_after = '2026-01-01';
         controller.needs_attention = 1;
         controller.page = 9;
+        controller.limit = 50;
+        controller.sort = '-users_count';
         controller.filters.pendingQueryParams = { timezone: 'Asia/Singapore' };
         controller.clearFilters();
         assert.strictEqual(controller.query, '');
@@ -151,6 +153,8 @@ module('Unit | Controller | console/admin/organizations/index', function (hooks)
         assert.strictEqual(controller.needs_attention, null);
         assert.deepEqual(controller.filters.pendingQueryParams, {});
         assert.strictEqual(controller.page, 1);
+        assert.strictEqual(controller.limit, 50, 'clearing filters preserves the chosen page size');
+        assert.strictEqual(controller.sort, '-users_count', 'clearing filters preserves the chosen sort');
     });
 
     test('goToCompany and openActivity transition with the public id', function (assert) {

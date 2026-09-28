@@ -1,48 +1,43 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from '@fleetbase/console/tests/helpers';
-import { render, clearRender } from '@ember/test-helpers';
+import { render, clearRender, click, fillIn } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
-import Service from '@ember/service';
 import AdminOrganizationsFiltersPickerComponent from '@fleetbase/console/components/admin/organizations/filters-picker';
 import { captureComponent } from '@fleetbase/console/tests/helpers/capture-component';
-
-class RouterStub extends Service {
-    currentRoute = { queryParams: {} };
-    listeners = new Set();
-    transitions = [];
-
-    on(event, callback) {
-        this.listeners.add(callback);
-    }
-
-    off(event, callback) {
-        this.listeners.delete(callback);
-    }
-
-    transitionTo(...args) {
-        this.transitions.push(args);
-    }
-}
 
 module('Integration | Component | admin/organizations/filters-picker', function (hooks) {
     setupRenderingTest(hooks);
 
     hooks.beforeEach(function () {
         this.owner.lookup('service:intl').setLocale('en-us');
-        this.owner.register('service:router', RouterStub);
+        // Rendering setup has already instantiated the router. Patch that instance
+        // instead of registering a replacement the container will never look up.
         this.router = this.owner.lookup('service:router');
+        this.listeners = new Set();
+        this.transitions = [];
+        Object.defineProperties(this.router, {
+            currentRoute: { configurable: true, writable: true, value: { queryParams: {} } },
+            on: { configurable: true, value: (_event, callback) => this.listeners.add(callback) },
+            off: { configurable: true, value: (_event, callback) => this.listeners.delete(callback) },
+            transitionTo: { configurable: true, value: (...args) => this.transitions.push(args) },
+        });
         this.onClear = () => {};
+        this.onChange = (...args) => this.owner.lookup('service:filters').set(...args);
+        this.onApply = () => {};
         this.captured = captureComponent(this.owner, 'admin/organizations/filters-picker', AdminOrganizationsFiltersPickerComponent);
-        this.build = () => render(hbs`<Admin::Organizations::FiltersPicker @columns={{this.columns}} @onClear={{this.onClear}} @iconOnly={{true}} />`);
+        this.build = () =>
+            render(
+                hbs`<Admin::Organizations::FiltersPicker @columns={{this.columns}} @onChange={{this.onChange}} @onApply={{this.onApply}} @onClear={{this.onClear}} @iconOnly={{true}} @renderInPlace={{true}} />`
+            );
     });
 
     test('renders with the Console router and removes its route listener when destroyed', async function (assert) {
         await this.build();
         assert.strictEqual(this.captured.instance.activeRouter, this.router, 'no engine host-router service is required');
         assert.dom('button').exists();
-        assert.strictEqual(this.router.listeners.size, 1);
+        assert.strictEqual(this.listeners.size, 1);
         await clearRender();
-        assert.strictEqual(this.router.listeners.size, 0);
+        assert.strictEqual(this.listeners.size, 0);
     });
 
     test('opening the picker reads current filter values including explicit false and zero', async function (assert) {
@@ -89,6 +84,22 @@ module('Integration | Component | admin/organizations/filters-picker', function 
         assert.deepEqual(this.captured.instance.activeFilters, []);
     });
 
+    test('applying a filter preserves pending values while the dropdown closes', async function (assert) {
+        this.columns = [{ label: 'Organization name', valuePath: 'name', filterable: true, filterComponent: 'filter/string' }];
+        let applied;
+        this.onApply = () => {
+            applied = { ...this.owner.lookup('service:filters').pendingQueryParams };
+        };
+        await this.build();
+        await click('button');
+        await fillIn('.filter-string input', 'Acme');
+        await click('.filters-dropdown-footer button.btn-primary');
+
+        assert.deepEqual(applied, { name: 'Acme' }, 'Apply receives the entered value after its close handler has run');
+        await click('button');
+        assert.deepEqual(this.owner.lookup('service:filters').pendingQueryParams, {}, 'reopening discards values from the previous picker session');
+    });
+
     test('clearing delegates once without restoring stale search or saved-view parameters', async function (assert) {
         this.router.currentRoute.queryParams = { query: 'Acme', needs_attention: '1', owner_email: 'owner@example.com' };
         let clears = 0;
@@ -99,6 +110,6 @@ module('Integration | Component | admin/organizations/filters-picker', function 
         this.captured.instance.clearFilters();
 
         assert.strictEqual(clears, 1, 'the controller owns the reset');
-        assert.deepEqual(this.router.transitions, [], 'the picker never starts a second transition with the old query params');
+        assert.deepEqual(this.transitions, [], 'the picker never starts a second transition with the old query params');
     });
 });

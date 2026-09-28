@@ -12,7 +12,7 @@ module('Integration | Component | admin/filter/date', function (hooks) {
         this.onChange = (filter, value) => this.changed.push({ filter, value });
         await render(hbs`<Admin::Filter::Date @value="2026-09-01" @placeholder="Registered on or after" @filter={{this.filter}} @onChange={{this.onChange}} />`);
         assert.dom('input').hasAttribute('type', 'date');
-        assert.dom('input').hasAccessibleName('Registered on or after');
+        assert.dom('input').hasAttribute('aria-label', 'Registered on or after');
         assert.dom('input').hasValue('2026-09-01');
         await fillIn('input', '2026-09-28');
         await triggerEvent('input', 'change');
