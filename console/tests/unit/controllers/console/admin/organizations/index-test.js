@@ -80,6 +80,79 @@ module('Unit | Controller | console/admin/organizations/index', function (hooks)
         assert.strictEqual(this.controller.query, '', 'a missing value becomes an empty query');
     });
 
+    test('identity cells, filters and sorts use the API contract', function (assert) {
+        const columns = this.controller.columns;
+        assert.strictEqual(columns[0].cellComponent, 'table/cell/identity');
+        assert.strictEqual(columns[0].resourceType, 'company');
+        assert.strictEqual(columns[0].onClick, this.controller.goToCompany);
+        const owner = columns.find((column) => column.valuePath === 'owner_uuid');
+        assert.strictEqual(owner.cellComponent, 'table/cell/identity');
+        assert.strictEqual(owner.resourcePath, 'owner');
+        assert.strictEqual(owner.emptyText, 'Missing owner');
+        assert.strictEqual(columns.find((column) => column.valuePath === 'createdAt').sortParam, 'created_at');
+        assert.strictEqual(columns.find((column) => column.valuePath === 'updatedAt').sortParam, 'updated_at');
+        assert.true(columns.find((column) => column.valuePath === 'users_count').sortable);
+
+        const filters = this.controller.filterColumns;
+        for (const filter of filters) {
+            const param = filter.filterParam ?? filter.valuePath;
+            assert.ok(filter.filterComponent, `${param} has an input`);
+            assert.true(this.controller.queryParams.includes(param), `${param} is a query parameter`);
+        }
+        for (const param of ['country', 'timezone', 'ip_address', 'owner_name', 'owner_phone', 'created_at_after', 'created_at_before', 'updated_at_after', 'updated_at_before']) {
+            assert.ok(
+                filters.find((column) => column.valuePath === param),
+                `${param} can be filtered`
+            );
+        }
+        assert.strictEqual(filters.find((column) => column.valuePath === 'country').filterComponent, 'filter/country');
+    });
+
+    test('empty-state filtering includes search, saved views and explicit false values', function (assert) {
+        assert.false(this.controller.isFiltered);
+        this.controller.query = '';
+        assert.false(this.controller.isFiltered);
+        this.controller.query = 'owner';
+        assert.true(this.controller.isFiltered);
+        this.controller.query = null;
+        assert.false(this.controller.isFiltered);
+        this.controller.onboarding_completed = false;
+        assert.true(this.controller.isFiltered, 'incomplete onboarding is an active filter');
+        this.controller.onboarding_completed = null;
+        this.controller.missing_owner = 1;
+        assert.true(this.controller.isFiltered);
+    });
+
+    test('sorting resets pagination and column visibility does not remove filters', function (assert) {
+        this.controller.page = 8;
+        this.controller.sortOrganizations('-users_count,created_at');
+        assert.strictEqual(this.controller.sort, '-users_count,created_at');
+        assert.strictEqual(this.controller.page, 1);
+        const columns = this.controller.columns.map((column) => ({ ...column, hidden: true }));
+        this.controller.setColumns(columns);
+        assert.strictEqual(this.controller.columns, columns);
+        assert.ok(this.controller.filterColumns.some((column) => column.valuePath === 'country'));
+    });
+
+    test('clearing search and filters also clears pending changes and saved views', function (assert) {
+        const controller = this.controller;
+        controller.query = 'owner@example.com';
+        controller.country = 'SG';
+        controller.owner_phone = '+65';
+        controller.created_at_after = '2026-01-01';
+        controller.needs_attention = 1;
+        controller.page = 9;
+        controller.filters.pendingQueryParams = { timezone: 'Asia/Singapore' };
+        controller.clearFilters();
+        assert.strictEqual(controller.query, '');
+        assert.strictEqual(controller.country, undefined);
+        assert.strictEqual(controller.owner_phone, undefined);
+        assert.strictEqual(controller.created_at_after, undefined);
+        assert.strictEqual(controller.needs_attention, null);
+        assert.deepEqual(controller.filters.pendingQueryParams, {});
+        assert.strictEqual(controller.page, 1);
+    });
+
     test('goToCompany and openActivity transition with the public id', function (assert) {
         this.controller.goToCompany({ public_id: 'company_1' });
         assert.deepEqual(this.transitions.at(-1), ['console.admin.organizations.details', 'company_1']);

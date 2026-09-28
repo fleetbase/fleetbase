@@ -15,6 +15,15 @@ module('Unit | Route | console/admin/organizations/index | query', function (hoo
             'country',
             'status',
             'owner_email',
+            'owner_name',
+            'owner_phone',
+            'ip_address',
+            'timezone',
+            'type',
+            'created_at_after',
+            'created_at_before',
+            'updated_at_after',
+            'updated_at_before',
             'onboarding_completed',
             'billing_status',
             'created_at',
@@ -38,6 +47,6 @@ module('Unit | Route | console/admin/organizations/index | query', function (hoo
 
         route.model({ page: 2, status: 'active' });
 
-        assert.deepEqual(queries, [{ type: 'company', params: { view: 'admin', page: 2, status: 'active' } }]);
+        assert.deepEqual(queries, [{ type: 'company', params: { view: 'admin', with_count: 'users', page: 2, status: 'active' } }]);
     });
 });
