@@ -2832,8 +2832,11 @@ erDiagram
     VARCHAR public_id
     CHAR user_uuid FK
     VARCHAR platform
+    VARCHAR app_identifier
+    VARCHAR environment
     MEDIUMTEXT token
     VARCHAR status
+    TIMESTAMP last_seen_at
     TIMESTAMP deleted_at
     TIMESTAMP created_at
     TIMESTAMP updated_at
@@ -3217,6 +3220,34 @@ erDiagram
     TIMESTAMP updated_at
   }
 
+  fleetbase_storefront_campaigns {
+    BIGINTUNSIGNED id PK, UK
+    CHAR uuid UK
+    VARCHAR public_id UK
+    CHAR company_uuid FK
+    CHAR created_by_uuid FK
+    CHAR owner_uuid
+    VARCHAR owner_type
+    CHAR segment_uuid FK
+    CHAR promotion_uuid FK
+    JSON recipients
+    VARCHAR name
+    VARCHAR status
+    JSON channels
+    VARCHAR title
+    TEXT body
+    CHAR image_uuid
+    JSON action
+    TIMESTAMP send_at
+    TIMESTAMP started_at
+    TIMESTAMP sent_at
+    JSON stats
+    JSON meta
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
   fleetbase_storefront_carts {
     BIGINTUNSIGNED id PK, UK
     CHAR uuid UK
@@ -3312,6 +3343,23 @@ erDiagram
     TIMESTAMP deleted_at
     TIMESTAMP created_at
     TIMESTAMP updated_at
+  }
+
+  fleetbase_storefront_customer_segments {
+    BIGINTUNSIGNED id PK, UK
+    CHAR uuid UK
+    VARCHAR public_id UK
+    CHAR company_uuid FK
+    CHAR created_by_uuid FK
+    CHAR owner_uuid
+    VARCHAR owner_type
+    VARCHAR name
+    TEXT description
+    JSON rules
+    JSON meta
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
   }
 
   fleetbase_storefront_food_trucks {
@@ -3553,6 +3601,80 @@ erDiagram
     TIMESTAMP updated_at
   }
 
+  fleetbase_storefront_promotion_codes {
+    BIGINTUNSIGNED id PK, UK
+    CHAR uuid UK
+    VARCHAR public_id UK
+    CHAR company_uuid FK, UK
+    CHAR promotion_uuid FK
+    VARCHAR code UK
+    VARCHAR status
+    INTUNSIGNED usage_limit
+    CHAR customer_uuid
+    TIMESTAMP expires_at
+    JSON meta
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fleetbase_storefront_promotion_redemptions {
+    BIGINTUNSIGNED id PK, UK
+    CHAR uuid UK
+    CHAR company_uuid FK
+    CHAR promotion_uuid FK
+    CHAR promotion_code_uuid
+    CHAR customer_uuid
+    CHAR checkout_uuid
+    CHAR order_uuid
+    BIGINTUNSIGNED amount
+    VARCHAR currency
+    VARCHAR status
+    TIMESTAMP redeemed_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fleetbase_storefront_promotions {
+    BIGINTUNSIGNED id PK, UK
+    CHAR uuid UK
+    VARCHAR public_id UK
+    CHAR company_uuid FK
+    CHAR created_by_uuid FK
+    CHAR owner_uuid
+    VARCHAR owner_type
+    VARCHAR name
+    TEXT description
+    VARCHAR status
+    VARCHAR trigger
+    VARCHAR type
+    DECIMAL value
+    BIGINTUNSIGNED max_discount_amount
+    VARCHAR currency
+    BIGINTUNSIGNED min_subtotal
+    INTUNSIGNED min_items
+    JSON applies_to
+    JSON bogo_config
+    BIT first_order_only
+    INTUNSIGNED usage_limit
+    INTUNSIGNED usage_limit_per_customer
+    BIGINTUNSIGNED budget_amount
+    BIT stackable
+    INT priority
+    BIT is_public
+    TIMESTAMP starts_at
+    TIMESTAMP ends_at
+    JSON schedule
+    VARCHAR timezone
+    CHAR image_uuid
+    JSON translations
+    JSON meta
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
   fleetbase_storefront_reviews {
     BIGINTUNSIGNED id PK, UK
     CHAR uuid UK
@@ -3744,16 +3866,21 @@ erDiagram
   fleetbase_companies ||--o{ fleetbase_service_areas : "foreign key"
   fleetbase_companies ||--o{ fleetbase_service_quotes : "foreign key"
   fleetbase_companies ||--o{ fleetbase_service_rates : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_storefront_campaigns : "foreign key"
   fleetbase_companies ||--o{ fleetbase_storefront_carts : "foreign key"
   fleetbase_companies ||--o{ fleetbase_storefront_catalog_subjects : "foreign key"
   fleetbase_companies ||--o{ fleetbase_storefront_catalogs : "foreign key"
   fleetbase_companies ||--o{ fleetbase_storefront_checkouts : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_storefront_customer_segments : "foreign key"
   fleetbase_companies ||--o{ fleetbase_storefront_food_trucks : "foreign key"
   fleetbase_companies ||--o{ fleetbase_storefront_gateways : "foreign key"
   fleetbase_companies ||--o{ fleetbase_storefront_networks : "foreign key"
   fleetbase_companies ||--o{ fleetbase_storefront_notification_channels : "foreign key"
   fleetbase_companies ||--o{ fleetbase_storefront_payment_methods : "foreign key"
   fleetbase_companies ||--o{ fleetbase_storefront_products : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_storefront_promotion_codes : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_storefront_promotion_redemptions : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_storefront_promotions : "foreign key"
   fleetbase_companies ||--o{ fleetbase_storefront_stores : "foreign key"
   fleetbase_companies ||--o{ fleetbase_telematics : "foreign key"
   fleetbase_companies ||--o{ fleetbase_template_queries : "foreign key"
@@ -3879,6 +4006,7 @@ erDiagram
   fleetbase_storefront_catalogs ||--o{ fleetbase_storefront_catalog_hours : "foreign key"
   fleetbase_storefront_catalogs ||--o{ fleetbase_storefront_catalog_subjects : "foreign key"
   fleetbase_storefront_checkouts ||--o{ fleetbase_storefront_carts : "foreign key"
+  fleetbase_storefront_customer_segments ||--o{ fleetbase_storefront_campaigns : "foreign key"
   fleetbase_storefront_gateways ||--o{ fleetbase_storefront_checkouts : "foreign key"
   fleetbase_storefront_gateways ||--o{ fleetbase_storefront_payment_methods : "foreign key"
   fleetbase_storefront_networks ||--o{ fleetbase_storefront_checkouts : "foreign key"
@@ -3889,6 +4017,9 @@ erDiagram
   fleetbase_storefront_products ||--o{ fleetbase_storefront_product_hours : "foreign key"
   fleetbase_storefront_products ||--o{ fleetbase_storefront_product_store_locations : "foreign key"
   fleetbase_storefront_products ||--o{ fleetbase_storefront_product_variants : "foreign key"
+  fleetbase_storefront_promotions ||--o{ fleetbase_storefront_campaigns : "foreign key"
+  fleetbase_storefront_promotions ||--o{ fleetbase_storefront_promotion_codes : "foreign key"
+  fleetbase_storefront_promotions ||--o{ fleetbase_storefront_promotion_redemptions : "foreign key"
   fleetbase_storefront_store_locations ||--o{ fleetbase_storefront_product_store_locations : "foreign key"
   fleetbase_storefront_store_locations ||--o{ fleetbase_storefront_store_hours : "foreign key"
   fleetbase_storefront_stores ||--o{ fleetbase_storefront_catalogs : "foreign key"
@@ -3953,15 +4084,18 @@ erDiagram
   fleetbase_users ||--o{ fleetbase_report_templates : "foreign key"
   fleetbase_users ||--o{ fleetbase_reports : "foreign key"
   fleetbase_users ||--o{ fleetbase_sensors : "foreign key"
+  fleetbase_users ||--o{ fleetbase_storefront_campaigns : "foreign key"
   fleetbase_users ||--o{ fleetbase_storefront_carts : "foreign key"
   fleetbase_users ||--o{ fleetbase_storefront_catalog_subjects : "foreign key"
   fleetbase_users ||--o{ fleetbase_storefront_catalogs : "foreign key"
+  fleetbase_users ||--o{ fleetbase_storefront_customer_segments : "foreign key"
   fleetbase_users ||--o{ fleetbase_storefront_food_trucks : "foreign key"
   fleetbase_users ||--o{ fleetbase_storefront_gateways : "foreign key"
   fleetbase_users ||--o{ fleetbase_storefront_networks : "foreign key"
   fleetbase_users ||--o{ fleetbase_storefront_notification_channels : "foreign key"
   fleetbase_users ||--o{ fleetbase_storefront_product_addons : "foreign key"
   fleetbase_users ||--o{ fleetbase_storefront_products : "foreign key"
+  fleetbase_users ||--o{ fleetbase_storefront_promotions : "foreign key"
   fleetbase_users ||--o{ fleetbase_storefront_reviews : "foreign key"
   fleetbase_users ||--o{ fleetbase_storefront_store_locations : "foreign key"
   fleetbase_users ||--o{ fleetbase_storefront_stores : "foreign key"
