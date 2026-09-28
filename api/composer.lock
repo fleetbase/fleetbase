@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4df50e2c552ef9cb45c6c634e37fa5cc",
+    "content-hash": "17faf44a1de29e590914a962fcdc5d9e",
     "packages": [
         {
             "name": "appstract/laravel-opcache",
@@ -2310,16 +2310,16 @@
         },
         {
             "name": "fleetbase/core-api",
-            "version": "1.6.63",
+            "version": "1.6.65",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/core-api.git",
-                "reference": "3e1e14a5a1fb84629caf2bbdf0fdb44f7dcb2e9d"
+                "reference": "b82d921425d4578ae42aff855077e76445a05315"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/3e1e14a5a1fb84629caf2bbdf0fdb44f7dcb2e9d",
-                "reference": "3e1e14a5a1fb84629caf2bbdf0fdb44f7dcb2e9d",
+                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/b82d921425d4578ae42aff855077e76445a05315",
+                "reference": "b82d921425d4578ae42aff855077e76445a05315",
                 "shasum": ""
             },
             "require": {
@@ -2350,10 +2350,12 @@
                 "lcobucci/clock": "3.3.1",
                 "lcobucci/jwt": "^5.4",
                 "maatwebsite/excel": "^3.1",
+                "milon/barcode": "^10.0",
                 "mossadal/math-parser": "^1.3",
                 "php": "^8.1",
                 "phpoffice/phpspreadsheet": "^1.28",
                 "phrity/websocket": "^1.7",
+                "pragmarx/google2fa": "^8.0",
                 "rlanvin/php-rrule": "^2.4",
                 "sentry/sentry-laravel": "*",
                 "spatie/laravel-activitylog": "^4.7",
@@ -2413,9 +2415,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/core-api/issues",
-                "source": "https://github.com/fleetbase/core-api/tree/v1.6.63"
+                "source": "https://github.com/fleetbase/core-api/tree/v1.6.65"
             },
-            "time": "2026-09-22T16:10:31+00:00"
+            "time": "2026-09-28T09:49:17+00:00"
         },
         {
             "name": "fleetbase/countries",
@@ -2484,20 +2486,20 @@
         },
         {
             "name": "fleetbase/customer-portal-api",
-            "version": "0.0.14",
+            "version": "0.0.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/customer-portal.git",
-                "reference": "dca220ff893f2152effbd56253429cca97614adf"
+                "reference": "8ad0731513fae800f5073fc5f67391f9ee924491"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/customer-portal/zipball/dca220ff893f2152effbd56253429cca97614adf",
-                "reference": "dca220ff893f2152effbd56253429cca97614adf",
+                "url": "https://api.github.com/repos/fleetbase/customer-portal/zipball/8ad0731513fae800f5073fc5f67391f9ee924491",
+                "reference": "8ad0731513fae800f5073fc5f67391f9ee924491",
                 "shasum": ""
             },
             "require": {
-                "fleetbase/core-api": "*",
+                "fleetbase/core-api": ">=1.6.65",
                 "fleetbase/fleetops-api": "*",
                 "fleetbase/ledger-api": "*",
                 "php": "^8.0",
@@ -2547,29 +2549,29 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/customer-portal/issues",
-                "source": "https://github.com/fleetbase/customer-portal/tree/v0.0.14"
+                "source": "https://github.com/fleetbase/customer-portal/tree/v0.0.15"
             },
-            "time": "2026-09-22T16:19:48+00:00"
+            "time": "2026-09-28T10:52:43+00:00"
         },
         {
             "name": "fleetbase/fleetops-api",
-            "version": "0.6.69",
+            "version": "0.6.70",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/fleetops.git",
-                "reference": "a80f78d791d79df7af0825959610f9ff75e00875"
+                "reference": "5f846a9281bd751a4ed7a63bce769ee76e4e4db6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/a80f78d791d79df7af0825959610f9ff75e00875",
-                "reference": "a80f78d791d79df7af0825959610f9ff75e00875",
+                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/5f846a9281bd751a4ed7a63bce769ee76e4e4db6",
+                "reference": "5f846a9281bd751a4ed7a63bce769ee76e4e4db6",
                 "shasum": ""
             },
             "require": {
                 "barryvdh/laravel-dompdf": "^3.1",
                 "brick/geo": "0.7.2",
                 "cknow/laravel-money": "^7.1",
-                "fleetbase/core-api": "*",
+                "fleetbase/core-api": ">=1.6.65",
                 "geocoder-php/google-maps-places-provider": "^1.4",
                 "giggsey/libphonenumber-for-php": "^8.13",
                 "league/geotools": "^1.1.0",
@@ -2640,9 +2642,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/fleetops/issues",
-                "source": "https://github.com/fleetbase/fleetops/tree/v0.6.69"
+                "source": "https://github.com/fleetbase/fleetops/tree/v0.6.70"
             },
-            "time": "2026-09-22T16:34:04+00:00"
+            "time": "2026-09-28T10:52:23+00:00"
         },
         {
             "name": "fleetbase/laravel-mysql-spatial",
@@ -2712,20 +2714,20 @@
         },
         {
             "name": "fleetbase/ledger-api",
-            "version": "0.0.10",
+            "version": "0.0.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/ledger.git",
-                "reference": "d2e5de66bb327d64f561204c1c2bca2adc4a6eda"
+                "reference": "a52fe72d2b10f17af373b8bf4255368f277aef0d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/ledger/zipball/d2e5de66bb327d64f561204c1c2bca2adc4a6eda",
-                "reference": "d2e5de66bb327d64f561204c1c2bca2adc4a6eda",
+                "url": "https://api.github.com/repos/fleetbase/ledger/zipball/a52fe72d2b10f17af373b8bf4255368f277aef0d",
+                "reference": "a52fe72d2b10f17af373b8bf4255368f277aef0d",
                 "shasum": ""
             },
             "require": {
-                "fleetbase/core-api": "*",
+                "fleetbase/core-api": ">=1.6.65",
                 "fleetbase/fleetops-api": "*",
                 "guzzlehttp/guzzle": "^7.0",
                 "php": "^8.0",
@@ -2784,22 +2786,22 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/ledger/issues",
-                "source": "https://github.com/fleetbase/ledger/tree/v0.0.10"
+                "source": "https://github.com/fleetbase/ledger/tree/v0.0.11"
             },
-            "time": "2026-08-17T06:43:11+00:00"
+            "time": "2026-09-28T10:52:28+00:00"
         },
         {
             "name": "fleetbase/registry-bridge",
-            "version": "0.1.9",
+            "version": "0.1.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/registry-bridge.git",
-                "reference": "b09abc3ae8e7615f1d5cf84c3229340d3d6e1e7f"
+                "reference": "4691c426daf9a7bf8c212140264ceb0edd9c92f4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/registry-bridge/zipball/b09abc3ae8e7615f1d5cf84c3229340d3d6e1e7f",
-                "reference": "b09abc3ae8e7615f1d5cf84c3229340d3d6e1e7f",
+                "url": "https://api.github.com/repos/fleetbase/registry-bridge/zipball/4691c426daf9a7bf8c212140264ceb0edd9c92f4",
+                "reference": "4691c426daf9a7bf8c212140264ceb0edd9c92f4",
                 "shasum": ""
             },
             "require": {
@@ -2866,22 +2868,22 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/registry-bridge/issues",
-                "source": "https://github.com/fleetbase/registry-bridge/tree/v0.1.9"
+                "source": "https://github.com/fleetbase/registry-bridge/tree/v0.1.10"
             },
-            "time": "2026-03-28T05:42:18+00:00"
+            "time": "2026-09-28T10:52:37+00:00"
         },
         {
             "name": "fleetbase/storefront-api",
-            "version": "0.4.21",
+            "version": "0.4.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/storefront.git",
-                "reference": "490f9e5a118c19becfc879371fff7f3ff4ea19d7"
+                "reference": "940c5ae35f9e4b3a6bd2dc53b7e89f1bdcc0ae67"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/storefront/zipball/490f9e5a118c19becfc879371fff7f3ff4ea19d7",
-                "reference": "490f9e5a118c19becfc879371fff7f3ff4ea19d7",
+                "url": "https://api.github.com/repos/fleetbase/storefront/zipball/940c5ae35f9e4b3a6bd2dc53b7e89f1bdcc0ae67",
+                "reference": "940c5ae35f9e4b3a6bd2dc53b7e89f1bdcc0ae67",
                 "shasum": ""
             },
             "require": {
@@ -2949,9 +2951,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/storefront/issues",
-                "source": "https://github.com/fleetbase/storefront/tree/v0.4.21"
+                "source": "https://github.com/fleetbase/storefront/tree/v0.4.22"
             },
-            "time": "2026-09-04T12:06:15+00:00"
+            "time": "2026-09-28T10:52:32+00:00"
         },
         {
             "name": "fleetbase/twilio",
@@ -9978,6 +9980,58 @@
                 "source": "https://github.com/antonioribeiro/coollection/tree/v0.8.1"
             },
             "time": "2022-09-07T10:32:23+00:00"
+        },
+        {
+            "name": "pragmarx/google2fa",
+            "version": "v8.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/antonioribeiro/google2fa.git",
+                "reference": "6f8d87ebd5afbf7790bde1ffc7579c7c705e0fad"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/antonioribeiro/google2fa/zipball/6f8d87ebd5afbf7790bde1ffc7579c7c705e0fad",
+                "reference": "6f8d87ebd5afbf7790bde1ffc7579c7c705e0fad",
+                "shasum": ""
+            },
+            "require": {
+                "paragonie/constant_time_encoding": "^1.0|^2.0|^3.0",
+                "php": "^7.1|^8.0"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^1.9",
+                "phpunit/phpunit": "^7.5.15|^8.5|^9.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PragmaRX\\Google2FA\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Antonio Carlos Ribeiro",
+                    "email": "acr@antoniocarlosribeiro.com",
+                    "role": "Creator & Designer"
+                }
+            ],
+            "description": "A One Time Password Authentication package, compatible with Google Authenticator.",
+            "keywords": [
+                "2fa",
+                "Authentication",
+                "Two Factor Authentication",
+                "google2fa"
+            ],
+            "support": {
+                "issues": "https://github.com/antonioribeiro/google2fa/issues",
+                "source": "https://github.com/antonioribeiro/google2fa/tree/v8.0.3"
+            },
+            "time": "2024-09-05T11:56:40+00:00"
         },
         {
             "name": "pragmarx/ia-arr",

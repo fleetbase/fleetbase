@@ -233,7 +233,7 @@ jobs:
       - name: Wait for API health
         run: |
           set -uo pipefail
-          for i in $(seq 1 30); do
+          for _attempt in $(seq 1 30); do
             if curl -fsS --max-time 5 http://localhost:8000/health | grep -q '"status"'; then
               echo "API is healthy"; exit 0
             fi
@@ -252,12 +252,21 @@ jobs:
           token: ${{ secrets._GITHUB_AUTH_TOKEN }}
           path: .overlay
 
-      - name: Overlay branch source over the published package
+      - name: Install branch source and resolve its Composer dependencies
         if: ${{ inputs.overlay-package != '' }}
+        env:
+          OVERLAY_PACKAGE: ${{ inputs.overlay-package }}
+          OVERLAY_PATH: ${{ inputs.overlay-path }}
+          COMPOSER_AUTH: '{"github-oauth":{"github.com":"${{ secrets._GITHUB_AUTH_TOKEN }}"}}'
         run: |
-          set -uo pipefail
-          PKG="${{ inputs.overlay-package }}"
-          SRC=".overlay/${{ inputs.overlay-path }}"
+          set -euo pipefail
+          PKG="$OVERLAY_PACKAGE"
+          SRC=".overlay/${OVERLAY_PATH}"
+
+          if [[ ! "$PKG" =~ ^[a-z0-9]([a-z0-9_.-]*[a-z0-9])?/[a-z0-9]([a-z0-9_.-]*[a-z0-9])?$ ]]; then
+            echo "::error::Invalid Composer overlay package name."
+            exit 1
+          fi
           DEST="/fleetbase/api/vendor/${PKG}"
 
           if [[ ! -f "$SRC/composer.json" ]]; then
@@ -268,16 +277,27 @@ jobs:
           WAS="$(docker compose exec -T application sh -c "cat ${DEST}/composer.json 2>/dev/null" \
                   | python3 -c 'import json,sys; print(json.load(sys.stdin).get("version","unknown"))' 2>/dev/null || echo unknown)"
 
-          # Replace rather than merge, so files deleted on the branch actually disappear.
-          # The branch has no vendor/ of its own (never installed), so nothing to exclude.
-          docker compose exec -T application sh -c "rm -rf ${DEST} && mkdir -p ${DEST}"
-          tar -C "$SRC" -cf - . | docker compose exec -T application sh -c "tar -C ${DEST} -xf -"
-          docker compose exec -T application sh -c "chown -R www-data:www-data ${DEST}"
+          VERSION="$(python3 -c 'import json,sys; package=json.load(open(sys.argv[1])); assert package["name"] == sys.argv[2], "Overlay package name mismatch"; assert isinstance(package.get("version"), str) and package["version"], "Overlay package must declare its version"; print(package["version"])' "$SRC/composer.json" "$PKG")"
 
-          # The image is built with --optimize-autoloader, which freezes a classmap.
-          # Without dumping it, classes added on the branch are simply not found.
-          docker compose exec -T application su www-data -s /bin/sh -c \
-            "cd /fleetbase/api && composer dump-autoload --optimize --no-scripts" 2>&1 | tail -3
+          # A source-only copy leaves dependencies at the image's old versions. Use a
+          # canonical path repository so Composer installs this exact checkout AND
+          # enforces its requirements (including newly released Core API versions).
+          docker compose exec -T application sh -c 'mkdir -p /tmp/fleetbase-contract-package'
+          tar -C "$SRC" --exclude=.git -cf - . | docker compose exec -T application sh -c 'tar -C /tmp/fleetbase-contract-package -xf -'
+          docker compose exec -T application chown -R www-data:www-data /tmp/fleetbase-contract-package
+          docker compose exec -T \
+            -e COMPOSER_AUTH \
+            -e "CI_OVERLAY_PACKAGE=${PKG}" \
+            -e "CI_OVERLAY_VERSION=${VERSION}" \
+            application su www-data -s /bin/sh -c '
+              set -eu
+              cd /fleetbase/api
+              composer config repositories.contract-overlay "{\"type\":\"path\",\"url\":\"/tmp/fleetbase-contract-package\",\"options\":{\"symlink\":false}}"
+              composer require "$CI_OVERLAY_PACKAGE:$CI_OVERLAY_VERSION" --no-update --no-scripts --no-interaction
+              composer update "$CI_OVERLAY_PACKAGE" --with-all-dependencies --minimal-changes --no-dev --no-scripts --no-interaction --prefer-dist --no-progress --optimize-autoloader
+              composer show "fleetbase/*"
+              php artisan package:discover --ansi
+            '
 
           # A branch may ship new migrations, and stale caches would mask new routes/config.
           docker compose exec -T application su www-data -s /bin/sh -c \
@@ -318,25 +338,18 @@ jobs:
             sleep 3
           done
 
-          # New composer requirements on the branch are NOT installed by this overlay.
-          # Surface that rather than letting it fail later as a confusing class-not-found.
-          if ! diff -q <(python3 -c "import json;print(json.dumps(json.load(open('$SRC/composer.json')).get('require',{}),sort_keys=True))") \
-                       <(docker compose exec -T application sh -c "cat ${DEST}/composer.json" \
-                         | python3 -c "import json,sys;print(json.dumps(json.load(sys.stdin).get('require',{}),sort_keys=True))") >/dev/null 2>&1; then
-            echo "::warning::${PKG} changed its composer requires on this branch; the overlay does not install new dependencies."
-          fi
-
           {
             echo "### Package under test"
             echo
             echo "\`${PKG}\` replaced with **${{ github.repository }}@${{ github.sha }}**"
             echo "(image shipped version \`${WAS}\`)."
+            echo "Composer resolved the checkout's required dependencies before discovery and migrations."
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Re-check API health after overlay
         if: ${{ inputs.overlay-package != '' }}
         run: |
-          for i in $(seq 1 20); do
+          for _attempt in $(seq 1 20); do
             if curl -fsS --max-time 5 http://localhost:8000/health | grep -q '"status"'; then
               echo "API healthy after overlay"; exit 0
             fi

@@ -49,38 +49,19 @@ module('Unit | Route | console/admin/organizations/details/activity', function (
 module('Unit | Route | console/admin/organizations/details/extensions', function (hooks) {
     setupTest(hooks);
 
-    hooks.beforeEach(function () {
-        this.response = { extensions: [{ id: 'ext_1' }] };
-        const context = this;
-        class FetchStub extends Service {
-            get(path) {
-                context.requested = path;
-                return Promise.resolve(context.response);
-            }
-        }
-        this.owner.register('service:fetch', FetchStub);
+    test('existing extension URLs redirect to the organization overview', function (assert) {
+        const route = this.owner.lookup('route:console/admin/organizations/details/extensions');
+        let destination;
+        Object.defineProperty(route.router, 'replaceWith', {
+            configurable: true,
+            value: (name) => {
+                destination = name;
+                return 'redirected';
+            },
+        });
 
-        this.build = () => {
-            const route = this.owner.lookup('route:console/admin/organizations/details/extensions');
-            route.modelFor = () => ({ uuid: 'co-uuid-1' });
-            return route;
-        };
-    });
-
-    test('model loads the extensions installed for the organization', async function (assert) {
-        const model = await this.build().model();
-
-        assert.strictEqual(this.requested, 'companies/co-uuid-1/extensions');
-        assert.deepEqual(model.extensions, [{ id: 'ext_1' }]);
-        assert.deepEqual(model.organization, { uuid: 'co-uuid-1' }, 'the organization travels with them');
-    });
-
-    test('a response with no extensions yields an empty list', async function (assert) {
-        this.response = {};
-
-        const model = await this.build().model();
-
-        assert.deepEqual(model.extensions, [], 'the template can iterate safely');
+        assert.strictEqual(route.beforeModel(), 'redirected');
+        assert.strictEqual(destination, 'console.admin.organizations.details.index');
     });
 });
 

@@ -1,6 +1,8 @@
 import { module, test } from 'qunit';
 import { setupTest } from '@fleetbase/console/tests/helpers';
 import Service from '@ember/service';
+import EmberObject from '@ember/object';
+import { A } from '@ember/array';
 import window from 'ember-window-mock';
 
 class IntlStub extends Service {
@@ -78,6 +80,83 @@ module('Unit | Controller | console/admin/organizations/index', function (hooks)
 
         this.controller.search({ target: {} });
         assert.strictEqual(this.controller.query, '', 'a missing value becomes an empty query');
+    });
+
+    test('identity cells, filters and sorts use the API contract', function (assert) {
+        const columns = this.controller.columns;
+        assert.strictEqual(columns[0].cellComponent, 'table/cell/identity');
+        assert.strictEqual(columns[0].resourceType, 'company');
+        assert.strictEqual(columns[0].onClick, this.controller.goToCompany);
+        const owner = columns.find((column) => column.valuePath === 'owner_uuid');
+        assert.strictEqual(owner.cellComponent, 'table/cell/identity');
+        assert.strictEqual(owner.resourcePath, 'owner');
+        assert.strictEqual(owner.emptyText, 'Missing owner');
+        assert.strictEqual(columns.find((column) => column.valuePath === 'createdAt').sortParam, 'created_at');
+        assert.strictEqual(columns.find((column) => column.valuePath === 'updatedAt').sortParam, 'updated_at');
+        assert.true(columns.find((column) => column.valuePath === 'users_count').sortable);
+
+        const filters = this.controller.filterColumns;
+        for (const filter of filters) {
+            const param = filter.filterParam ?? filter.valuePath;
+            assert.ok(filter.filterComponent, `${param} has an input`);
+            assert.true(this.controller.queryParams.includes(param), `${param} is a query parameter`);
+        }
+        for (const param of ['country', 'timezone', 'ip_address', 'owner_name', 'owner_phone', 'created_at_after', 'created_at_before', 'updated_at_after', 'updated_at_before']) {
+            assert.ok(
+                filters.find((column) => column.valuePath === param),
+                `${param} can be filtered`
+            );
+        }
+        assert.strictEqual(filters.find((column) => column.valuePath === 'country').filterComponent, 'filter/country');
+    });
+
+    test('empty-state filtering includes search, saved views and explicit false values', function (assert) {
+        assert.false(this.controller.isFiltered);
+        this.controller.query = '';
+        assert.false(this.controller.isFiltered);
+        this.controller.query = 'owner';
+        assert.true(this.controller.isFiltered);
+        this.controller.query = null;
+        assert.false(this.controller.isFiltered);
+        this.controller.onboarding_completed = false;
+        assert.true(this.controller.isFiltered, 'incomplete onboarding is an active filter');
+        this.controller.onboarding_completed = null;
+        this.controller.missing_owner = 1;
+        assert.true(this.controller.isFiltered);
+    });
+
+    test('sorting resets pagination and column visibility does not remove filters', function (assert) {
+        this.controller.page = 8;
+        this.controller.sortOrganizations('-users_count,created_at');
+        assert.strictEqual(this.controller.sort, '-users_count,created_at');
+        assert.strictEqual(this.controller.page, 1);
+        const columns = this.controller.columns.map((column) => ({ ...column, hidden: true }));
+        this.controller.setColumns(columns);
+        assert.strictEqual(this.controller.columns, columns);
+        assert.ok(this.controller.filterColumns.some((column) => column.valuePath === 'country'));
+    });
+
+    test('clearing search and filters also clears pending changes and saved views', function (assert) {
+        const controller = this.controller;
+        controller.query = 'owner@example.com';
+        controller.country = 'SG';
+        controller.owner_phone = '+65';
+        controller.created_at_after = '2026-01-01';
+        controller.needs_attention = 1;
+        controller.page = 9;
+        controller.limit = 50;
+        controller.sort = '-users_count';
+        controller.filters.pendingQueryParams = { timezone: 'Asia/Singapore' };
+        controller.clearFilters();
+        assert.strictEqual(controller.query, '');
+        assert.strictEqual(controller.country, undefined);
+        assert.strictEqual(controller.owner_phone, undefined);
+        assert.strictEqual(controller.created_at_after, undefined);
+        assert.strictEqual(controller.needs_attention, null);
+        assert.deepEqual(controller.filters.pendingQueryParams, {});
+        assert.strictEqual(controller.page, 1);
+        assert.strictEqual(controller.limit, 50, 'clearing filters preserves the chosen page size');
+        assert.strictEqual(controller.sort, '-users_count', 'clearing filters preserves the chosen sort');
     });
 
     test('goToCompany and openActivity transition with the public id', function (assert) {
@@ -174,11 +253,36 @@ module('Unit | Controller | console/admin/organizations/index', function (hooks)
         });
 
         this.controller.exportOrganization();
-        assert.deepEqual(exported, { type: 'companies', options: { params: { selections: [] } } }, 'no table means no selections');
+        assert.deepEqual(exported, { type: 'companies', options: { params: { selections: [] } } }, 'no model means no selections');
 
-        this.controller.table = { selectedRows: [{ id: 'a' }, { id: 'b' }] };
+        this.controller.set(
+            'model',
+            A([
+                { id: 'a', checked: true },
+                { id: 'b', checked: true },
+                { id: 'c', checked: false },
+            ])
+        );
         this.controller.exportOrganization();
         assert.deepEqual(exported.options.params.selections, ['a', 'b']);
+    });
+
+    test('selection follows checked records and the current route model without a table instance', function (assert) {
+        const first = EmberObject.create({ id: 'first', checked: false });
+        const second = EmberObject.create({ id: 'second', checked: true });
+        this.controller.set('model', A([first, second]));
+
+        assert.deepEqual(this.controller.selectedOrganizations.mapBy('id'), ['second']);
+
+        first.set('checked', true);
+        second.set('checked', false);
+        assert.deepEqual(this.controller.selectedOrganizations.mapBy('id'), ['first'], 'checkbox changes update the header selection');
+
+        this.controller.set('model', A([EmberObject.create({ id: 'reopened', checked: false })]));
+        assert.strictEqual(this.controller.selectedOrganizations.length, 0, 'returning to the route does not retain the former table selection');
+
+        this.controller.set('model', undefined);
+        assert.strictEqual(this.controller.selectedOrganizations.length, 0, 'selection remains safe while the route has no model');
     });
 
     test('applySavedView sets exactly one filter and resets paging', function (assert) {
@@ -445,9 +549,16 @@ module('Unit | Controller | console/admin/organizations/index | actions', functi
         const crud = this.owner.lookup('service:crud');
 
         controller.exportOrganization();
-        assert.deepEqual(crud.exported.at(-1), { type: 'companies', options: { params: { selections: [] } } }, 'no table means no selection');
+        assert.deepEqual(crud.exported.at(-1), { type: 'companies', options: { params: { selections: [] } } }, 'no model means no selection');
 
-        controller.table = { selectedRows: [{ id: 'a' }, { id: 'b' }] };
+        controller.set(
+            'model',
+            A([
+                { id: 'a', checked: true },
+                { id: 'b', checked: true },
+                { id: 'c', checked: false },
+            ])
+        );
         controller.exportOrganization();
         assert.deepEqual(crud.exported.at(-1), { type: 'companies', options: { params: { selections: ['a', 'b'] } } });
     });

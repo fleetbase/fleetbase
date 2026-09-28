@@ -18,7 +18,6 @@ export default class ConsoleAdminOrganizationsDetailsController extends Controll
         const coreTabs = [
             { route: 'console.admin.organizations.details.index', label: 'Overview', icon: 'chart-simple', priority: 0 },
             { route: 'console.admin.organizations.details.users', label: 'Users', icon: 'users', priority: 10 },
-            { route: 'console.admin.organizations.details.extensions', label: 'Extensions', icon: 'puzzle-piece', priority: 20 },
             { route: 'console.admin.organizations.details.activity', label: 'Activity', icon: 'clock-rotate-left', priority: 30 },
             { route: 'console.admin.organizations.details.settings', label: 'Settings', icon: 'gear', priority: 40 },
         ];

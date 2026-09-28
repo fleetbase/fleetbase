@@ -23,7 +23,12 @@ const CONTROLLERS = [
     // are read synchronously — a settled() here would overwrite them with the response.
     {
         name: 'controller:console/account/auth',
-        defaults: { twoFaConfig: {}, isSystemTwoFaEnabled: false, methods: getTwoFaMethods() },
+        defaults: {
+            twoFaConfig: {},
+            isSystemTwoFaEnabled: false,
+            authenticator: { enabled: false, confirmed_at: null, recovery_codes_remaining: 0 },
+            methods: getTwoFaMethods({ includeAuthenticatorApp: true }).map((method) => (method.key === 'authenticator_app' ? { ...method, requiresSetup: true } : method)),
+        },
     },
     {
         name: 'controller:console/admin/two-fa-settings',
