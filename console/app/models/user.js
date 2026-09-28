@@ -34,6 +34,9 @@ export default class UserModel extends Model {
     @attr('boolean') is_online;
     @attr('boolean') is_admin;
     @attr('boolean') company_onboarding_completed;
+    @attr('boolean') two_factor_enabled;
+    @attr('string') two_factor_method;
+    @attr('raw') oauth_providers;
     @attr('raw') meta;
 
     /** @relationships */

@@ -1,0 +1,23 @@
+{{#if (eq @row.two_factor_enabled true)}}
+    <div class="space-y-1" data-test-two-factor-enabled>
+        <span class="inline-flex items-center gap-1.5 text-xs font-medium text-green-700 dark:text-green-300">
+            <FaIcon @icon="shield-halved" />
+            Enabled
+        </span>
+        <div class="text-xs text-gray-500 dark:text-gray-400" data-test-two-factor-method>
+            {{#if (eq @row.two_factor_method "authenticator_app")}}
+                Authenticator app
+            {{else if (eq @row.two_factor_method "sms")}}
+                SMS
+            {{else if (eq @row.two_factor_method "email")}}
+                Email
+            {{else}}
+                {{or @row.two_factor_method "System default"}}
+            {{/if}}
+        </div>
+    </div>
+{{else if (eq @row.two_factor_enabled false)}}
+    <span class="text-xs text-amber-700 dark:text-amber-300" data-test-two-factor-disabled>Disabled</span>
+{{else}}
+    <span class="text-xs text-gray-500 dark:text-gray-400" data-test-two-factor-unavailable>Unavailable</span>
+{{/if}}

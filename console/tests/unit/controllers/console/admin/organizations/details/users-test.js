@@ -97,6 +97,15 @@ module('Unit | Controller | console/admin/organizations/details/users', function
         Object.defineProperty(this.controller.router, 'refresh', { configurable: true, value: () => this.refreshed++ });
     });
 
+    test('member columns use identity cells and expose security metadata', function (assert) {
+        const identity = this.controller.columns.find((column) => column.valuePath === 'name');
+        assert.strictEqual(identity.cellComponent, 'table/cell/identity');
+        assert.strictEqual(identity.resourceType, 'user');
+        assert.strictEqual(identity.mediaPath, 'avatar_url');
+        assert.strictEqual(this.controller.columns.find((column) => column.valuePath === 'two_factor_enabled').cellComponent, 'admin/table/cell/two-factor');
+        assert.strictEqual(this.controller.columns.find((column) => column.valuePath === 'oauth_providers').cellComponent, 'admin/table/cell/oauth-providers');
+    });
+
     test('sort proxies the nested sort query param', function (assert) {
         assert.strictEqual(this.controller.sort, '-created_at');
 

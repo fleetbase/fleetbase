@@ -168,6 +168,8 @@ bash scripts/docker-install.sh --non-interactive
 
 The script expects Docker, Docker Compose v2, git, and OpenSSL to be available. It warns when common Fleetbase ports are already in use but does not treat that as a hard failure.
 
+It runs on Linux, on macOS's stock `/bin/bash` 3.2, and on Windows in Git Bash. It also creates an empty `api/.env` (bind-mounted by `docker-compose.yml`) when one does not exist.
+
 ## Validation
 
 Check the package linker script:

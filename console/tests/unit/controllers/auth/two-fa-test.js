@@ -76,6 +76,13 @@ module('Unit | Controller | auth/two-fa | verification flow', function (hooks) {
         }
         class SessionStub extends Service {
             authenticated = [];
+            persisted = [];
+            store = {
+                persist: (data) => {
+                    this.persisted.push(data);
+                    return Promise.resolve();
+                },
+            };
             authenticate(authenticator, credentials) {
                 this.authenticated.push({ authenticator, credentials });
                 return Promise.resolve();
@@ -151,6 +158,17 @@ module('Unit | Controller | auth/two-fa | verification flow', function (hooks) {
         assert.strictEqual(this.notifications().infos.length, 0);
     });
 
+    test('too many wrong codes sends the user back to sign in again', async function (assert) {
+        this.postRejectsWith = new Error('Too many failed verification attempts. Please sign in again.');
+        const controller = this.build();
+        controller.clientToken = 'client-tok';
+
+        await controller.verifyCode();
+
+        assert.deepEqual(this.notifications().errors, [controller.intl.t('auth.two-fa.verify-code.too-many-attempts-notification')]);
+        assert.strictEqual(this.transitions.at(-1), 'auth.login', 'the dead 2FA session is abandoned');
+    });
+
     test('handleOtpInput stores the code and immediately verifies it', async function (assert) {
         const controller = this.build();
         controller.clientToken = 'client-tok';
@@ -179,6 +197,60 @@ module('Unit | Controller | auth/two-fa | verification flow', function (hooks) {
         assert.true(controller.twoFactorSessionExpiresAfter instanceof Date, 'the new expiry is decoded');
         assert.strictEqual(this.notifications().successes.length, 1);
         assert.ok(expiry instanceof Date);
+    });
+
+    test('asking for a code instead switches an authenticator app user to the code that was sent', async function (assert) {
+        this.postResponse = { clientToken: btoa(`2026-03-01T12:00:00|session`), method: 'email' };
+        const controller = this.build();
+        controller.identity = 'ron@fleetbase.io';
+        controller.token = 'tok';
+        controller.method = 'authenticator_app';
+        controller.useRecoveryCode = true;
+        const event = {
+            defaultPrevented: false,
+            preventDefault() {
+                this.defaultPrevented = true;
+            },
+        };
+
+        await controller.resendCode(event);
+
+        assert.true(event.defaultPrevented, 'the link does not navigate');
+        assert.strictEqual(controller.method, 'email');
+        assert.false(controller.isAuthenticatorApp);
+        assert.false(controller.useRecoveryCode);
+        assert.true(controller.countdownReady, 'a sent code counts down');
+        assert.deepEqual(this.owner.lookup('service:session').persisted, [{ identity: 'ron@fleetbase.io', token: 'tok', clientToken: this.postResponse.clientToken, method: 'email' }]);
+    });
+
+    test('an authenticator app user can switch to a recovery code and back', async function (assert) {
+        const controller = this.build();
+        controller.method = 'authenticator_app';
+        controller.verificationCode = '123';
+
+        assert.true(controller.isAuthenticatorApp);
+
+        controller.toggleRecoveryCode();
+        assert.true(controller.useRecoveryCode);
+        assert.strictEqual(controller.verificationCode, '', 'the half-typed code is cleared');
+
+        controller.toggleRecoveryCode();
+        assert.false(controller.useRecoveryCode);
+    });
+
+    test('a recovery code is verified like any other code', async function (assert) {
+        const controller = this.build();
+        controller.token = 'tok';
+        controller.clientToken = 'client';
+        controller.identity = 'ron@fleetbase.io';
+        controller.method = 'authenticator_app';
+        controller.useRecoveryCode = true;
+        controller.verificationCode = 'k7d2m-9xq4p';
+
+        await controller.verifyCode();
+
+        assert.deepEqual(this.posted, [{ path: 'two-fa/verify', payload: { token: 'tok', code: 'k7d2m-9xq4p', clientToken: 'client', identity: 'ron@fleetbase.io' } }]);
+        assert.deepEqual(this.transitions, ['console']);
     });
 
     test('a resend that returns no client token is reported as a failure', async function (assert) {

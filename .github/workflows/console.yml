@@ -39,7 +39,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: latest
+          version: 11.0.9
 
       - name: Get pnpm Store Directory
         id: pnpm-cache
@@ -75,6 +75,15 @@ jobs:
       # with coverage instrumentation.
       - name: Test (with coverage)
         run: pnpm run test:ember:coverage
+
+      - name: Upload coverage diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: console-coverage
+          path: console/coverage/
+          if-no-files-found: ignore
+          retention-days: 7
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
