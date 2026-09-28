@@ -156,4 +156,123 @@ module('Integration | Component | modals/authenticator-app', function (hooks) {
 
         assert.deepEqual(this.closed, [false, 'done']);
     });
+
+    test('the default setup mode starts empty and the modal confirm handler advances it', async function (assert) {
+        const component = await this.open();
+
+        assert.strictEqual(component.mode, 'setup');
+        assert.strictEqual(component.formattedSecret, '', 'there is no secret before password verification');
+        assert.deepEqual(component.recoveryCodes, [], 'no codes exist before enrollment');
+        component.password = 'secret';
+        await this.options.confirm(this.modal, this.done);
+        await settled();
+
+        assert.strictEqual(component.step, 'scan');
+        assert.deepEqual(this.posted, [{ path: 'users/two-fa/authenticator/setup', payload: { password: 'secret' } }]);
+        assert.deepEqual(this.closed, [], 'confirmation keeps the setup open');
+    });
+
+    test('a response without recovery codes or optional callbacks still completes safely', async function (assert) {
+        const component = await this.open('recovery-codes');
+        this.responses['users/two-fa/recovery-codes'] = { status: { enabled: true } };
+        this.options.onChanged = undefined;
+        this.options.onClosed = undefined;
+        component.password = 'secret';
+
+        await this.next(component);
+
+        assert.true(component.changed);
+        assert.strictEqual(component.password, undefined);
+        assert.deepEqual(component.recoveryCodes, []);
+        assert.strictEqual(component.step, 'recovery-codes');
+        assert.deepEqual(this.changes, []);
+
+        await this.next(component);
+
+        assert.deepEqual(this.closed, ['done'], 'the manager still closes without a listener');
+    });
+
+    test('copying recovery codes writes one code per line and reports success', async function (assert) {
+        const component = await this.open('recovery-codes');
+        component.recoveryCodes = ['aaaaa-bbbbb', 'ccccc-ddddd'];
+        const written = [];
+        const original = Object.getOwnPropertyDescriptor(navigator, 'clipboard');
+        Object.defineProperty(navigator, 'clipboard', {
+            configurable: true,
+            value: { writeText: async (text) => written.push(text) },
+        });
+
+        try {
+            await component.copyRecoveryCodes();
+
+            assert.deepEqual(written, ['aaaaa-bbbbb\nccccc-ddddd']);
+            assert.deepEqual(this.owner.lookup('service:notifications').successes, ['Recovery codes copied.']);
+        } finally {
+            if (original) {
+                Object.defineProperty(navigator, 'clipboard', original);
+            } else {
+                delete navigator.clipboard;
+            }
+        }
+    });
+
+    test('a rejected clipboard write explains how to copy manually', async function (assert) {
+        const component = await this.open('recovery-codes');
+        component.recoveryCodes = ['aaaaa-bbbbb'];
+        const original = Object.getOwnPropertyDescriptor(navigator, 'clipboard');
+        Object.defineProperty(navigator, 'clipboard', {
+            configurable: true,
+            value: {
+                writeText: async () => {
+                    throw new Error('Clipboard permission denied');
+                },
+            },
+        });
+
+        try {
+            await component.copyRecoveryCodes();
+
+            assert.deepEqual(this.owner.lookup('service:notifications').errors, ['Could not copy. Select the codes and copy them instead.']);
+            assert.deepEqual(this.owner.lookup('service:notifications').successes, []);
+            assert.deepEqual(component.recoveryCodes, ['aaaaa-bbbbb'], 'the codes remain available to copy');
+        } finally {
+            if (original) {
+                Object.defineProperty(navigator, 'clipboard', original);
+            } else {
+                delete navigator.clipboard;
+            }
+        }
+    });
+
+    test('downloading recovery codes creates a text file and releases the temporary URL', async function (assert) {
+        const component = await this.open('recovery-codes');
+        component.recoveryCodes = ['aaaaa-bbbbb', 'ccccc-ddddd'];
+        const originalCreate = URL.createObjectURL;
+        const originalRevoke = URL.revokeObjectURL;
+        const originalClick = HTMLAnchorElement.prototype.click;
+        let downloadedBlob;
+        const downloads = [];
+        const revoked = [];
+        URL.createObjectURL = (blob) => {
+            downloadedBlob = blob;
+            return 'blob:recovery-codes-test';
+        };
+        URL.revokeObjectURL = (url) => revoked.push(url);
+        HTMLAnchorElement.prototype.click = function () {
+            downloads.push({ href: this.href, filename: this.download });
+        };
+
+        try {
+            component.downloadRecoveryCodes();
+
+            assert.deepEqual(downloads, [{ href: 'blob:recovery-codes-test', filename: 'recovery-codes.txt' }]);
+            assert.strictEqual(downloadedBlob.type, 'text/plain');
+            assert.strictEqual(await downloadedBlob.text(), 'Recovery codes\n\naaaaa-bbbbb\nccccc-ddddd\n\nEach code can be used once.\n');
+            assert.deepEqual(revoked, ['blob:recovery-codes-test']);
+        } finally {
+            URL.createObjectURL = originalCreate;
+            URL.revokeObjectURL = originalRevoke;
+            HTMLAnchorElement.prototype.click = originalClick;
+        }
+    });
 });

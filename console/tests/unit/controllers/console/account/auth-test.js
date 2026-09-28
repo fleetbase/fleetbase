@@ -178,9 +178,10 @@ module('Unit | Controller | console/account/auth | credentials and 2FA', functio
     test('looking the controller up requests nothing', function (assert) {
         // The router does this before authentication is checked — e.g. when a sign-out
         // reloads the page on this URL — so it must not fire authenticated requests.
-        this.owner.lookup('controller:console/account/auth');
+        const controller = this.owner.lookup('controller:console/account/auth');
 
         assert.deepEqual(this.requests, []);
+        assert.true(controller.canChangePassword, 'password changes remain available until the policy loads');
     });
 
     test('it loads the system config and the user 2FA settings when the route is entered', async function (assert) {
@@ -352,6 +353,36 @@ module('Unit | Controller | console/account/auth | credentials and 2FA', functio
         controller.authenticator = { enabled: true, confirmed_at: '2026-09-27T00:00:00Z', recovery_codes_remaining: 8 };
 
         assert.false(controller.methods[0].requiresSetup);
+    });
+
+    test('loading an existing authenticator makes it available without another setup', async function (assert) {
+        this.responses['users/two-fa/authenticator'] = { enabled: true, confirmed_at: '2026-09-27T00:00:00Z', recovery_codes_remaining: 8 };
+        const controller = await this.build();
+        await controller.loadAuthenticator.last;
+
+        assert.deepEqual(controller.authenticator, this.responses['users/two-fa/authenticator']);
+        assert.false(controller.methods[0].requiresSetup);
+        assert.true(await controller.beforeTwoFaMethodSelected('authenticator_app'));
+        assert.deepEqual(this.owner.lookup('service:modals-manager').shown, [], 'an enrolled user does not need to repeat setup');
+    });
+
+    test('partial authenticator responses preserve unrelated settings', async function (assert) {
+        const controller = await this.build();
+        const settings = controller.twoFaSettings;
+        this.modalResponse = { status: { enabled: true, recovery_codes_remaining: 8 } };
+
+        assert.true(await controller.openAuthenticatorModal(), 'the default setup flow reports a change');
+        assert.strictEqual(this.owner.lookup('service:modals-manager').shown.at(-1).options.mode, 'setup');
+        assert.deepEqual(controller.authenticator, this.modalResponse.status);
+        assert.strictEqual(controller.twoFaSettings, settings, 'a response without settings preserves the selected method');
+
+        const authenticator = controller.authenticator;
+        this.modalResponse = { settings: { enabled: false, method: 'email' } };
+        await controller.openAuthenticatorModal('disable');
+
+        assert.strictEqual(controller.authenticator, authenticator, 'a response without status preserves enrollment metadata');
+        assert.deepEqual(controller.twoFaSettings, this.modalResponse.settings);
+        assert.false(controller.isUserTwoFaEnabled);
     });
 
     test('choosing the authenticator app sets it up first', async function (assert) {

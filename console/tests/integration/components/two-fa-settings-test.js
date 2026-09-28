@@ -167,6 +167,27 @@ module('Integration | Component | two-fa-settings | actions', function (hooks) {
         ]);
     });
 
+    test('re-enabling 2FA falls back to email when no configured method is recommended', async function (assert) {
+        this.set('settings', { enabled: true, method: 'email' });
+        this.set('methods', [
+            { key: 'authenticator_app', name: 'Authenticator App', recommended: true, requiresSetup: true },
+            { key: 'email', name: 'Email' },
+        ]);
+        const component = await this.build();
+
+        component.onTwoFaToggled(false);
+        component.onTwoFaToggled(true);
+
+        assert.true(component.isTwoFaEnabled);
+        assert.strictEqual(component.selectedTwoFaMethod, 'email', 'an unconfigured authenticator is not selected');
+        assert.deepEqual(this.calls, [
+            ['toggled', false],
+            ['method', null],
+            ['toggled', true],
+            ['method', 'email'],
+        ]);
+    });
+
     test('toggling works without any callbacks wired up', async function (assert) {
         const component = await this.buildBare();
 
