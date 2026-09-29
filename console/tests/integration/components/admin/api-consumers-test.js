@@ -14,6 +14,12 @@ function flush() {
 }
 
 const KEY = 'a'.repeat(40);
+// Relative to now: a fixed timestamp reads "in 26 minutes" instead of "... ago" when the
+// suite happens to run before it.
+const LAST_SEEN = new Date(Date.now() - 5 * 60 * 1000);
+// The component's format, built independently so assertions do not depend on the CI
+// browser's locale.
+const FORMAT = { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false, timeZoneName: 'short' };
 const ANON = 'b'.repeat(40);
 
 function metrics(overrides = {}) {
@@ -46,7 +52,7 @@ function metrics(overrides = {}) {
                 share: 90,
                 avg_per_minute: 24,
                 peak_per_minute: 160,
-                last_seen_at: '2026-09-29T10:00:00+00:00',
+                last_seen_at: LAST_SEEN.toISOString(),
             },
             { signature: ANON, type: 'ip', label: '197.0.0.3', scope: 'int', limit: null, hits: 30, throttled: 0, share: 7.5, avg_per_minute: 2, last_seen_at: 'not a date' },
             { signature: 'c'.repeat(40), type: 'webhook', company_id: 'company_def', scope: 'v1', hits: 10, throttled: 0, share: 2.5 },
@@ -149,8 +155,7 @@ module('Integration | Component | admin/api-consumers', function (hooks) {
         assert.deepEqual([key.typeLabel, key.typeIcon, key.isUnlimited, key.isThrottled], ['API key', 'key', false, true]);
         assert.deepEqual(key.organization, { id: 'company-uuid', uuid: 'company-uuid', public_id: 'company_abc', name: 'Acme Pharma' });
         assert.deepEqual([key.scopeLabel, key.hitsLabel, key.avgLabel, key.peakLabel, key.throttledLabel, key.limitLabel], ['/v1', '360', '24', '160', '40', '120 / 1m']);
-        assert.strictEqual(key.lastSeenLabel, component.formatDateTime(new Date('2026-09-29T10:00:00Z')));
-        assert.ok(key.lastSeenLabel.includes('2026'), 'absolute date and time');
+        assert.strictEqual(key.lastSeenLabel, new Intl.DateTimeFormat(undefined, { ...FORMAT, timeZone: 'UTC' }).format(LAST_SEEN), 'absolute date and time in the viewer zone');
         assert.ok(key.lastSeenRelative.endsWith('ago'));
 
         assert.deepEqual([anon.typeLabel, anon.isUnlimited, anon.organization, anon.limitLabel, anon.peakLabel], ['Anonymous', true, null, 'Unlimited', '—']);
@@ -239,10 +244,19 @@ module('Integration | Component | admin/api-consumers', function (hooks) {
         const date = new Date('2026-09-29T10:00:00Z');
 
         Object.defineProperty(component, 'currentUser', { configurable: true, value: { timezone: 'Asia/Singapore' } });
-        assert.ok(component.formatDateTime(date).includes('18:00'), 'converted to the account timezone');
+        let singapore = null;
+        try {
+            singapore = new Intl.DateTimeFormat(undefined, { ...FORMAT, timeZone: 'Asia/Singapore' }).format(date);
+        } catch {
+            // A browser without that zone's data takes the component's fallback path instead.
+        }
+        assert.strictEqual(component.formatDateTime(date), singapore ?? new Intl.DateTimeFormat(undefined, FORMAT).format(date), 'converted to the account timezone');
+        if (singapore) {
+            assert.notStrictEqual(singapore, new Intl.DateTimeFormat(undefined, { ...FORMAT, timeZone: 'UTC' }).format(date), 'and not left in UTC');
+        }
 
         Object.defineProperty(component, 'currentUser', { configurable: true, value: { timezone: 'Not/AZone' } });
-        assert.ok(component.formatDateTime(date).includes('2026'), 'falls back to the browser timezone');
+        assert.strictEqual(component.formatDateTime(date), new Intl.DateTimeFormat(undefined, FORMAT).format(date), 'falls back to the browser timezone');
     });
 
     test('it reports failures', async function (assert) {
