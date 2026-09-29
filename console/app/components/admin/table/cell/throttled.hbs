@@ -1,0 +1,8 @@
+{{#if @row.isThrottled}}
+    <span class="inline-flex items-center gap-1 rounded-lg bg-rose-100 px-1.5 text-xs font-semibold leading-5 text-rose-700 dark:bg-rose-900/40 dark:text-rose-200" data-test-throttled-cell>
+        <FaIcon @icon="ban" @size="xs" />
+        {{@value}}
+    </span>
+{{else}}
+    <span class="text-gray-400 dark:text-gray-500" data-test-throttled-cell>0</span>
+{{/if}}
