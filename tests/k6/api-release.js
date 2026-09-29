@@ -30,6 +30,19 @@ import { buildReports } from './lib/report.js';
  | Configuration
  * ------------------------------------------------------------------------- */
 
+/*
+ * Uniform [0, 1) from the Web Crypto API. None of this randomness is security-sensitive
+ * (it picks records and jitters test coordinates), but using crypto keeps static analysis
+ * quiet without suppressions. Built from explicit bytes: k6 fills a Uint32Array passed to
+ * getRandomValues() one byte per element, so wider views do not give 32 random bits.
+ */
+function rand() {
+    const bytes = crypto.getRandomValues(new Uint8Array(6));
+    let n = 0;
+    for (let i = 0; i < bytes.length; i += 1) n = n * 256 + bytes[i];
+    return n / 281474976710656; // 2^48
+}
+
 function env(name, fallback) {
     const value = __ENV[name];
     return value === undefined || value === '' ? fallback : value;
@@ -110,6 +123,11 @@ const CFG = {
     readP99: num('READ_P99_MS', 0), // 0 = no p99 budget
     writeP99: num('WRITE_P99_MS', 0),
     enforceBudgets: env('ENFORCE_BUDGETS', 'false') === 'true',
+    // Regression gate against the previous release (release PRs). The aggregate read or
+    // write p95 regresses only when it is BOTH this fraction slower AND this many ms
+    // slower, so a small absolute blip on a fast API cannot block a release.
+    maxRegression: num('PERF_MAX_REGRESSION', 0.35),
+    minRegressionMs: num('PERF_MIN_REGRESSION_MS', 150),
     maxErrorRate: num('MAX_ERROR_RATE', 0.01),
 
     // Report metadata
@@ -150,7 +168,7 @@ export const ENDPOINTS = {
  | drops the ones this install cannot serve (missing extension, no records), listing them
  | in the report as skipped rather than failing the run.
  */
-const coords = () => ({ latitude: 1.2966 + (Math.random() - 0.5) * 0.05, longitude: 103.852 + (Math.random() - 0.5) * 0.05 });
+const coords = () => ({ latitude: 1.2966 + (rand() - 0.5) * 0.05, longitude: 103.852 + (rand() - 0.5) * 0.05 });
 
 export const CATALOGUE = [
     // Orders
@@ -167,7 +185,7 @@ export const CATALOGUE = [
     // Contacts
     { op: 'contacts.list', kind: 'read', weight: 4, method: 'GET', name: 'GET /v1/contacts', path: () => '/v1/contacts?limit=25' },
     { op: 'contacts.get', kind: 'read', weight: 3, method: 'GET', name: 'GET /v1/contacts/:id', pool: 'contacts', path: (id) => `/v1/contacts/${id}` },
-    { op: 'contacts.create', kind: 'write', weight: 3, method: 'POST', name: 'POST /v1/contacts', creates: 'contacts', path: () => '/v1/contacts', body: () => JSON.stringify({ name: `k6 contact ${Date.now()}`, email: `k6-${Date.now()}-${Math.floor(Math.random() * 1e6)}@example.test`, type: 'contact' }) },
+    { op: 'contacts.create', kind: 'write', weight: 3, method: 'POST', name: 'POST /v1/contacts', creates: 'contacts', path: () => '/v1/contacts', body: () => JSON.stringify({ name: `k6 contact ${Date.now()}`, email: `k6-${Date.now()}-${Math.floor(rand() * 1e6)}@example.test`, type: 'contact' }) },
     { op: 'contacts.update', kind: 'write', weight: 2, method: 'PUT', name: 'PUT /v1/contacts/:id', pool: 'contacts', path: (id) => `/v1/contacts/${id}`, body: () => JSON.stringify({ name: `k6 contact ${Date.now()}` }) },
     // Fleet and resources
     { op: 'drivers.list', kind: 'read', weight: 4, method: 'GET', name: 'GET /v1/drivers', path: () => '/v1/drivers?limit=25' },
@@ -395,7 +413,7 @@ function orderBody(role) {
     seq += 1;
     // Coordinates (not a street address) so no geocoder is needed. Small jitter keeps the
     // places distinct without depending on an external service.
-    const jitter = () => (Math.random() - 0.5) * 0.02;
+    const jitter = () => (rand() - 0.5) * 0.02;
     return JSON.stringify({
         pickup: {
             name: `k6 pickup ${role}`,
@@ -427,7 +445,7 @@ function parseId(res) {
 }
 
 function pick(list) {
-    return list[Math.floor(Math.random() * list.length)];
+    return list[Math.floor(rand() * list.length)];
 }
 
 // Per-VU pool of orders this VU created, on top of the seed pool from setup().
@@ -638,7 +656,7 @@ function weightedEntry(data) {
         available = CATALOGUE.filter((entry) => (data.available || []).includes(entry.op));
         available.total = available.reduce((sum, entry) => sum + entry.weight, 0);
     }
-    let r = Math.random() * available.total;
+    let r = rand() * available.total;
     for (const entry of available) {
         r -= entry.weight;
         if (r < 0) return entry;
@@ -656,7 +674,7 @@ export function throughput(data) {
 }
 
 export function noisyFlood(data) {
-    const op = Math.random() < 0.5 ? 'create' : 'update';
+    const op = rand() < 0.5 ? 'create' : 'update';
     const res = call('noisy', op, KEYS.noisy, data, { responseCallback: OK_OR_THROTTLED });
     noisyRequests.add(1);
     const throttled = res.status === 429;
@@ -722,5 +740,6 @@ export function handleSummary(data) {
         [`${dir}/report.md`]: reports.markdown,
         [`${dir}/report.html`]: reports.html,
         [`${dir}/metrics.json`]: JSON.stringify(reports.metrics, null, 2),
+        [`${dir}/gate.json`]: JSON.stringify(reports.gate, null, 2),
     };
 }

@@ -23,11 +23,25 @@ name: API Performance
 # comparison baseline. Latency budgets are report-only unless the repository variable
 # K6_ENFORCE_BUDGETS is "true"; error-rate and isolation thresholds fail the job, after the
 # report has been published.
+#
+# Release PRs (release/v* or dev-v* into main) run the same benchmark as a required-check
+# candidate, gated on:
+#   correctness  error rate and rate-limit isolation (k6 thresholds) — always enforced;
+#   latency      aggregate read/write p95 vs the previous release's metrics — fails only
+#                when BOTH more than PERF_MAX_REGRESSION (35%) and PERF_MIN_REGRESSION_MS
+#                (150 ms) slower, and a second throughput run in the same job agrees.
+#                The `perf-regression-accepted` label downgrades a confirmed latency
+#                regression to a warning (read at run time, so re-run the job after
+#                labelling). It never overrides the correctness gate.
 
 on:
   push:
     tags:
       - 'v*'
+  # Release PRs only; the job condition below filters on the head branch.
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
     inputs:
       throughput_peak_rate:
@@ -53,11 +67,13 @@ on:
 
 concurrency:
   group: performance-${{ github.ref }}
-  # Never cancel a release benchmark halfway; a second push of the same ref queues.
-  cancel-in-progress: false
+  # Never cancel a tag benchmark halfway (a second push of the same ref queues); a new push
+  # to a release PR supersedes the run for the previous commit.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 permissions:
   contents: write # attach the report to the GitHub Release
+  pull-requests: write # post the report on the release PR
 
 env:
   K6_VERSION: '1.2.2'
@@ -69,8 +85,13 @@ env:
 jobs:
   performance:
     name: API performance report (k6)
+    # Pull requests: only release branches into main, and not from forks (no secrets).
+    if: >-
+      github.event_name != 'pull_request' ||
+      ((startsWith(github.head_ref, 'release/v') || startsWith(github.head_ref, 'dev-v')) &&
+       github.event.pull_request.head.repo.full_name == github.repository)
     runs-on: ubuntu-latest
-    timeout-minutes: 75
+    timeout-minutes: 90
 
     steps:
       - name: Checkout Code
@@ -293,7 +314,7 @@ jobs:
           K6_NOISY_KEY: ${{ steps.keys.outputs.noisy_key }}
           K6_VICTIM_KEY: ${{ steps.keys.outputs.victim_key }}
           K6_RATE_LIMIT: ${{ steps.keys.outputs.rate_limit }}
-          RELEASE_VERSION: ${{ github.ref_name }}
+          RELEASE_VERSION: ${{ github.head_ref || github.ref_name }}
           GIT_SHA: ${{ github.sha }}
           GIT_REF: ${{ github.ref }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
@@ -329,14 +350,99 @@ jobs:
           # Never fail here: the report steps must run first. The gate step re-raises.
           exit 0
 
+      # Latency regression gate (release PRs). gate.json is written by handleSummary; a
+      # regression is re-measured once before it counts, because one run on a shared runner
+      # can be 20–30% off on its own.
+      - name: Evaluate latency regression
+        id: gate
+        if: steps.auth.outputs.available == 'true' && github.event_name == 'pull_request'
+        run: |
+          set -uo pipefail
+          regressed=false
+          if [[ -s "${K6_REPORT_DIR}/gate.json" ]]; then
+            regressed="$(jq -r '.regressed // false' "${K6_REPORT_DIR}/gate.json")"
+            jq -r '"Regression gate: evaluated=\(.evaluated) regressed=\(.regressed) \(.reason // "")"' "${K6_REPORT_DIR}/gate.json"
+          else
+            echo "No gate.json; the latency gate is not evaluated."
+          fi
+          echo "regressed=${regressed}" >> "$GITHUB_OUTPUT"
+
+      - name: Confirm latency regression
+        id: confirm
+        if: steps.gate.outputs.regressed == 'true'
+        env:
+          K6_LOAD_KEY: ${{ steps.keys.outputs.load_key }}
+          RELEASE_VERSION: ${{ github.head_ref }} (confirmation)
+          GIT_SHA: ${{ github.sha }}
+          GIT_REF: ${{ github.ref }}
+          SCENARIOS: throughput
+          READ_P95_MS: ${{ vars.K6_READ_P95_MS }}
+          WRITE_P95_MS: ${{ vars.K6_WRITE_P95_MS }}
+          MAX_ERROR_RATE: ${{ vars.K6_MAX_ERROR_RATE }}
+          BASELINE_METRICS: ${{ steps.baseline.outputs.path }}
+          K6_REPORT_DIR: k6-confirm
+          K6_NO_USAGE_REPORT: 'true'
+        run: |
+          set -uo pipefail
+          mkdir -p "$K6_REPORT_DIR"
+          k6 run --quiet tests/k6/api-release.js > /dev/null || true
+          confirmed=false
+          if [[ -s "${K6_REPORT_DIR}/gate.json" ]]; then
+            confirmed="$(jq -r '.regressed // false' "${K6_REPORT_DIR}/gate.json")"
+          fi
+          echo "confirmed=${confirmed}" >> "$GITHUB_OUTPUT"
+          echo "Confirmation run regressed: ${confirmed}"
+
       - name: Publish report to job summary
         if: always() && steps.auth.outputs.available == 'true'
         run: |
           if [[ -s "${K6_REPORT_DIR}/report.md" ]]; then
             cat "${K6_REPORT_DIR}/report.md" >> "$GITHUB_STEP_SUMMARY"
+            if [[ -s k6-confirm/report.md ]]; then
+              printf '\n---\n## Confirmation run\n\n' >> "$GITHUB_STEP_SUMMARY"
+              sed -n '/^### Regression gate/,/^_A scope regresses/p' k6-confirm/report.md >> "$GITHUB_STEP_SUMMARY"
+            fi
           else
             echo "### k6 produced no report" >> "$GITHUB_STEP_SUMMARY"
             echo "The run did not reach handleSummary(); see the Run k6 step log." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      # One comment per PR, updated in place on every run.
+      - name: Post report on the release PR
+        if: always() && steps.auth.outputs.available == 'true' && github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR: ${{ github.event.pull_request.number }}
+          CONFIRMED: ${{ steps.confirm.outputs.confirmed }}
+        run: |
+          set -uo pipefail
+          marker='<!-- fleetbase-k6-performance-report -->'
+          {
+            echo "$marker"
+            if [[ -s "${K6_REPORT_DIR}/report.md" ]]; then
+              cat "${K6_REPORT_DIR}/report.md"
+            else
+              echo "### k6 produced no report — see the workflow run."
+            fi
+            if [[ -n "${CONFIRMED:-}" ]]; then
+              echo
+              echo "**Confirmation run:** latency regression $([[ "$CONFIRMED" == "true" ]] && echo "confirmed" || echo "not reproduced — treated as noise")."
+            fi
+            echo
+            echo "[Workflow run](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}) · full HTML report in the \`k6-report\` artifact"
+          } > pr-comment.md
+          # GitHub caps comment bodies at 65536 characters.
+          if [[ "$(wc -c < pr-comment.md)" -gt 65000 ]]; then
+            head -c 64000 pr-comment.md > pr-comment.tmp && printf '\n\n_…truncated; see the workflow run._\n' >> pr-comment.tmp && mv pr-comment.tmp pr-comment.md
+          fi
+          existing="$(gh api "repos/${GITHUB_REPOSITORY}/issues/${PR}/comments?per_page=100" --paginate \
+            --jq "[.[] | select(.user.login == \"github-actions[bot]\") | select(.body | startswith(\"${marker}\")) | .id] | first // empty" 2>/dev/null || true)"
+          # --paginate applies the filter per page; keep the first match.
+          existing="${existing%%$'\n'*}"
+          if [[ -n "$existing" ]]; then
+            gh api --method PATCH "repos/${GITHUB_REPOSITORY}/issues/comments/${existing}" -F body=@pr-comment.md > /dev/null
+          else
+            gh api --method POST "repos/${GITHUB_REPOSITORY}/issues/${PR}/comments" -F body=@pr-comment.md > /dev/null
           fi
 
       - name: Upload k6 report artifact
@@ -344,7 +450,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: k6-report
-          path: ${{ env.K6_REPORT_DIR }}/
+          path: |
+            ${{ env.K6_REPORT_DIR }}/
+            k6-confirm/
           if-no-files-found: warn
           retention-days: 90
 
@@ -434,6 +542,24 @@ jobs:
           fi
           echo "::error::k6 exit code ${K6_EXIT:-missing}: performance or throttling-isolation thresholds failed. See the job summary."
           docker compose logs --no-color --tail=200 application || true
+          exit 1
+
+      # Runs after the correctness gate, so a label can never mask an error-rate or
+      # isolation failure. The label is read from the API, not the event payload, so
+      # adding it and re-running the job takes effect.
+      - name: Enforce latency regression gate
+        if: steps.confirm.outputs.confirmed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          set -uo pipefail
+          labels="$(gh api "repos/${GITHUB_REPOSITORY}/issues/${PR}/labels" --jq '.[].name' 2>/dev/null || true)"
+          if printf '%s\n' "$labels" | grep -qx 'perf-regression-accepted'; then
+            echo "::warning::Latency regression confirmed but accepted via the perf-regression-accepted label."
+            exit 0
+          fi
+          echo "::error::Latency regression confirmed by a second run (see the Regression gate section of the report). If it is intended, add the perf-regression-accepted label and re-run this job."
           exit 1
 
       - name: Tear down

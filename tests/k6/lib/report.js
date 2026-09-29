@@ -55,7 +55,8 @@ function esc(s) {
 }
 
 function mdCell(s) {
-    return String(s).replace(/\|/g, '\\|');
+    // Backslashes first, so an escaped pipe cannot be un-escaped by the input.
+    return String(s).replace(/\\/g, '\\\\').replace(/\|/g, '\\|');
 }
 
 function stats(data, sub, tags, durationSec) {
@@ -108,7 +109,11 @@ function performance(data, ctx) {
         const st = stats(data, sub, tags, sec);
         const key = tags.kind || 'overall';
         const prev = baseline && baseline[key];
-        return Object.assign({ label, key }, st, { p95Change: prev ? change(st.p95, prev.p95) : null, p99Change: prev ? change(st.p99, prev.p99) : null });
+        return Object.assign({ label, key }, st, {
+            baselineP95: prev ? prev.p95 : null,
+            p95Change: prev ? change(st.p95, prev.p95) : null,
+            p99Change: prev ? change(st.p99, prev.p99) : null,
+        });
     };
 
     return {
@@ -120,6 +125,37 @@ function performance(data, ctx) {
         baselineVersion: baseline ? baseline.version : null,
         budgets: { read: cfg.readP95, write: cfg.writeP95, enforced: cfg.enforceBudgets },
     };
+}
+
+// The latency regression gate: aggregate read and write p95 against the previous release.
+// Evaluated here (the baseline is only known at summary time) and handed to the workflow
+// as gate.json; k6 thresholds cannot compare against a previous run.
+function regressionGate(perf, cfg) {
+    const base = { maxRegression: cfg.maxRegression, minRegressionMs: cfg.minRegressionMs };
+    if (!perf) return Object.assign(base, { evaluated: false, regressed: false, reason: 'throughput phase did not run', checks: [] });
+    if (!perf.baselineVersion) return Object.assign(base, { evaluated: false, regressed: false, reason: 'no previous release metrics to compare against', checks: [] });
+
+    const checks = [perf.read, perf.write]
+        .filter((row) => row.count > 0 && row.p95 !== null && row.baselineP95)
+        .map((row) => {
+            const deltaMs = row.p95 - row.baselineP95;
+            return {
+                scope: row.label,
+                p95: row.p95,
+                baselineP95: row.baselineP95,
+                change: row.p95Change,
+                deltaMs,
+                regressed: row.p95Change > cfg.maxRegression && deltaMs > cfg.minRegressionMs,
+            };
+        });
+
+    return Object.assign(base, {
+        evaluated: checks.length > 0,
+        regressed: checks.some((check) => check.regressed),
+        reason: checks.length ? null : 'no comparable read or write traffic',
+        baselineVersion: perf.baselineVersion,
+        checks,
+    });
 }
 
 // Compact per-release metrics: published with the release so the next one can compare.
@@ -204,8 +240,11 @@ function collect(data, ctx) {
     const setup = data.setup_data || {};
     const checks = metric(data, 'checks');
 
+    const perf = performance(data, ctx);
+
     return {
-        perf: performance(data, ctx),
+        perf,
+        gate: regressionGate(perf, cfg),
         meta: {
             version: cfg.version,
             sha: cfg.sha,
@@ -337,6 +376,25 @@ function markdown(r) {
             out.push('**Not measured:** ' + p.skipped.map((row) => `\`${mdCell(row.endpoint)}\` (${row.reason})`).join(', '));
             out.push('');
         }
+    }
+
+    if (r.gate) {
+        const g = r.gate;
+        const limits = `more than ${Math.round(g.maxRegression * 100)}% and more than ${g.minRegressionMs} ms slower p95`;
+        if (!g.evaluated) {
+            out.push(`### Regression gate — not evaluated`);
+            out.push('');
+            out.push(`_${g.reason}._`);
+        } else {
+            out.push(`### Regression gate vs ${g.baselineVersion} — ${g.regressed ? '❌ REGRESSED' : '✅ PASS'}`);
+            out.push('');
+            out.push('| Scope | p95 | Baseline p95 | Change | Result |');
+            out.push('|---|---:|---:|---:|---|');
+            g.checks.forEach((c) => out.push(`| ${c.scope} | ${ms(c.p95)} | ${ms(c.baselineP95)} | ${delta(c.change)} (${c.deltaMs >= 0 ? '+' : ''}${ms(c.deltaMs)}) | ${c.regressed ? '❌ regressed' : '✅ ok'} |`));
+            out.push('');
+            out.push(`_A scope regresses when it is ${limits} than the previous release. On a release PR a regression is re-measured once before it fails the check._`);
+        }
+        out.push('');
     }
 
     const sections = [...new Set(r.endpointRows.map((row) => row.role))];
@@ -555,5 +613,5 @@ ${parts.join('\n')}
 
 export function buildReports(data, ctx) {
     const r = collect(data, ctx);
-    return { markdown: markdown(r), html: html(r), metrics: metricsDocument(r), result: r };
+    return { markdown: markdown(r), html: html(r), metrics: metricsDocument(r), gate: r.gate, result: r };
 }

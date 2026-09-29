@@ -8,6 +8,23 @@ a secondary rate-limit isolation check. CI runs it on every `v*` tag
 `k6-report` artifact, and attaches `performance-report-<tag>.md/.html` and
 `performance-metrics-<tag>.json` to the tag's GitHub Release.
 
+## Release PR gate
+
+Pull requests from `release/v*` (or `dev-v*`) into `main` run the same benchmark, which
+posts the report as a PR comment and can be made a required check. They fail on:
+
+- **Correctness, always:** error rate at or above `MAX_ERROR_RATE`, or a failed rate-limit
+  isolation check.
+- **Latency regression, confirmed:** the aggregate read or write p95 is **more than 35%
+  and more than 150 ms** slower than the previous release's `performance-metrics-<tag>.json`
+  (`PERF_MAX_REGRESSION`, `PERF_MIN_REGRESSION_MS`). A regression is re-measured once in
+  the same job and only fails if the second run agrees. Per-endpoint changes are reported
+  but never gate: with a few hundred requests each they are too noisy.
+
+To ship an intended regression, add the `perf-regression-accepted` label and re-run the
+job. The label never overrides the correctness gate. Tag runs publish the report and do
+not apply the latency gate.
+
 ## What it runs
 
 | Phase | Scenario(s) | Key | What it proves |
