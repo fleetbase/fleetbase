@@ -58,6 +58,93 @@ function mdCell(s) {
     return String(s).replace(/\|/g, '\\|');
 }
 
+function stats(data, sub, tags, durationSec) {
+    const count = value(data, sub('http_reqs', tags), 'count', 0);
+    const duration = sub('http_req_duration', tags);
+    const lat = (stat) => (count ? value(data, duration, stat) : null);
+    return {
+        count,
+        rps: durationSec ? count / durationSec : null,
+        avg: lat('avg'),
+        p50: lat('p(50)'),
+        p90: lat('p(90)'),
+        p95: lat('p(95)'),
+        p99: lat('p(99)'),
+        max: lat('max'),
+        errorRate: count ? value(data, sub('http_req_failed', tags), 'rate', 0) : null,
+    };
+}
+
+function change(current, previous) {
+    if (current === null || current === undefined || !previous) return null;
+    return (current - previous) / previous;
+}
+
+// The throughput phase: overall, reads vs writes, and every catalogue endpoint.
+function performance(data, ctx) {
+    if (!ctx.runThroughput) return null;
+    const { cfg, sub } = ctx;
+    const sec = ctx.throughputSec;
+    const setup = data.setup_data || {};
+    const baseline = ctx.baseline && Array.isArray(ctx.baseline.endpoints) ? ctx.baseline : null;
+    const baselineByEndpoint = {};
+    (baseline ? baseline.endpoints : []).forEach((row) => (baselineByEndpoint[row.endpoint] = row));
+    const budget = (kind) => (kind === 'read' ? cfg.readP95 : cfg.writeP95);
+
+    const endpoints = (ctx.loadRows || [])
+        .map((row) => {
+            const st = stats(data, sub, { role: 'load', endpoint: row.endpoint }, sec);
+            const prev = baselineByEndpoint[row.endpoint];
+            return Object.assign({ op: row.op, kind: row.kind, endpoint: row.endpoint }, st, {
+                skipped: (setup.skipped && setup.skipped[row.op]) || null,
+                overBudget: st.p95 !== null && st.p95 > budget(row.kind),
+                p95Change: prev ? change(st.p95, prev.p95) : null,
+                p99Change: prev ? change(st.p99, prev.p99) : null,
+            });
+        })
+        .sort((a, b) => (b.p95 || -1) - (a.p95 || -1));
+
+    const scope = (label, tags) => {
+        const st = stats(data, sub, tags, sec);
+        const key = tags.kind || 'overall';
+        const prev = baseline && baseline[key];
+        return Object.assign({ label, key }, st, { p95Change: prev ? change(st.p95, prev.p95) : null, p99Change: prev ? change(st.p99, prev.p99) : null });
+    };
+
+    return {
+        overall: scope('All requests', { role: 'load' }),
+        read: scope('Reads', { role: 'load', kind: 'read' }),
+        write: scope('Writes', { role: 'load', kind: 'write' }),
+        endpoints: endpoints.filter((row) => row.count > 0),
+        skipped: endpoints.filter((row) => row.count === 0).map((row) => ({ endpoint: row.endpoint, reason: row.skipped || 'no requests' })),
+        baselineVersion: baseline ? baseline.version : null,
+        budgets: { read: cfg.readP95, write: cfg.writeP95, enforced: cfg.enforceBudgets },
+    };
+}
+
+// Compact per-release metrics: published with the release so the next one can compare.
+function metricsDocument(r) {
+    const strip = (row) => ({ count: row.count, rps: row.rps, avg: row.avg, p50: row.p50, p90: row.p90, p95: row.p95, p99: row.p99, max: row.max, errorRate: row.errorRate });
+    return {
+        version: r.meta.version,
+        sha: r.meta.sha,
+        startedAt: r.meta.startedAt,
+        overall: r.perf ? strip(r.perf.overall) : null,
+        read: r.perf ? strip(r.perf.read) : null,
+        write: r.perf ? strip(r.perf.write) : null,
+        endpoints: r.perf ? r.perf.endpoints.map((row) => Object.assign({ endpoint: row.endpoint, kind: row.kind }, strip(row))) : [],
+    };
+}
+
+function delta(v) {
+    if (v === null || v === undefined || Number.isNaN(v)) return '–';
+    const sign = v > 0 ? '+' : '';
+    const text = `${sign}${(v * 100).toFixed(Math.abs(v) < 0.1 ? 1 : 0)}%`;
+    if (v >= 0.2) return `🔺 ${text}`;
+    if (v <= -0.2) return `🟢 ${text}`;
+    return text;
+}
+
 // Collect everything both renderers need, once.
 function collect(data, ctx) {
     const { cfg, rows, gates, sub } = ctx;
@@ -118,6 +205,7 @@ function collect(data, ctx) {
     const checks = metric(data, 'checks');
 
     return {
+        perf: performance(data, ctx),
         meta: {
             version: cfg.version,
             sha: cfg.sha,
@@ -165,7 +253,7 @@ function configRows(ctx) {
     const rows = [['Base URL', cfg.baseUrl]];
     if (ctx.runThroughput) {
         rows.push(['Throughput', `ramping arrival rate to ${cfg.peakRate} req/s over ${cfg.throughputSec}s (${cfg.throughputVUs}–${cfg.throughputMaxVUs} VUs)`]);
-        rows.push(['Mix', cfg.mix]);
+        rows.push(['Endpoints', 'weighted catalogue across orders, places, contacts, drivers, vehicles, fleets, vendors, service areas/rates, issues and fuel reports']);
         rows.push(['Latency budget (p95)', `reads < ${cfg.readP95} ms, writes < ${cfg.writeP95} ms`]);
     } else {
         rows.push(['Throughput', 'skipped']);
@@ -189,8 +277,14 @@ function markdown(r) {
     out.push(`# Fleetbase API performance — ${r.meta.version}`);
     out.push('');
     const facts = [];
-    facts.push(`**Result:** ${badge(r.allPass)}`);
-    if (r.iso) facts.push(`**Throttling isolation:** ${badge(r.iso.pass)}`);
+    if (r.perf) {
+        facts.push(`**p95:** ${ms(r.perf.overall.p95)}`);
+        facts.push(`**p99:** ${ms(r.perf.overall.p99)}`);
+        facts.push(`**Throughput:** ${fixed(r.perf.overall.rps, 1)} req/s`);
+        facts.push(`**Errors:** ${pct(r.perf.overall.errorRate)}`);
+    }
+    facts.push(`**Thresholds:** ${badge(r.allPass)}`);
+    if (r.iso) facts.push(`**Rate-limit isolation:** ${badge(r.iso.pass)}`);
     out.push(facts.join(' · '));
     out.push('');
     if (!r.meta.setupCompleted) {
@@ -211,9 +305,43 @@ function markdown(r) {
     meta.forEach(([k, v]) => out.push(`| ${k} | ${v} |`));
     out.push('');
 
+    if (r.perf) {
+        const p = r.perf;
+        const vs = p.baselineVersion ? ` vs ${p.baselineVersion}` : '';
+        out.push('## Performance');
+        out.push('');
+        out.push('| Scope | Requests | req/s | avg | p50 | p90 | p95 | p99 | max | Errors |' + (p.baselineVersion ? ` p95${vs} | p99${vs} |` : ''));
+        out.push('|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|' + (p.baselineVersion ? '---:|---:|' : ''));
+        [p.overall, p.read, p.write].forEach((row) => {
+            const cmp = p.baselineVersion ? ` ${delta(row.p95Change)} | ${delta(row.p99Change)} |` : '';
+            out.push(`| **${row.label}** | ${int(row.count)} | ${fixed(row.rps, 2)} | ${ms(row.avg)} | ${ms(row.p50)} | ${ms(row.p90)} | ${ms(row.p95)} | ${ms(row.p99)} | ${ms(row.max)} | ${pct(row.errorRate)} |${cmp}`);
+        });
+        out.push('');
+        out.push(`### Endpoints (slowest p95 first)`);
+        out.push('');
+        out.push('| Endpoint | Requests | req/s | p50 | p90 | p95 | p99 | max | Errors |' + (p.baselineVersion ? ` p95${vs} |` : '') + ' Budget |');
+        out.push('|---|---:|---:|---:|---:|---:|---:|---:|---:|' + (p.baselineVersion ? '---:|' : '') + '---|');
+        p.endpoints.forEach((row) => {
+            const cmp = p.baselineVersion ? ` ${delta(row.p95Change)} |` : '';
+            out.push(
+                `| \`${mdCell(row.endpoint)}\` | ${int(row.count)} | ${fixed(row.rps, 2)} | ${ms(row.p50)} | ${ms(row.p90)} | ${ms(row.p95)} | ${ms(row.p99)} | ${ms(row.max)} | ${pct(row.errorRate)} |${cmp} ${row.overBudget ? '⚠️ over' : '✓'} |`
+            );
+        });
+        out.push('');
+        out.push(
+            `_Budgets (p95): reads < ${p.budgets.read} ms, writes < ${p.budgets.write} ms — ${p.budgets.enforced ? 'enforced: a breach fails the run' : 'report only'}. ` +
+                (p.baselineVersion ? `Changes are against ${p.baselineVersion}; 🔺/🟢 mark a change of 20% or more._` : 'No previous release metrics were available to compare against._')
+        );
+        out.push('');
+        if (p.skipped.length) {
+            out.push('**Not measured:** ' + p.skipped.map((row) => `\`${mdCell(row.endpoint)}\` (${row.reason})`).join(', '));
+            out.push('');
+        }
+    }
+
     const sections = [...new Set(r.endpointRows.map((row) => row.role))];
     if (sections.length) {
-        out.push('## Endpoints');
+        out.push('## Rate-limit isolation traffic');
         out.push('');
     }
     sections.forEach((role) => {
@@ -239,7 +367,7 @@ function markdown(r) {
 
     if (r.iso) {
         const i = r.iso;
-        out.push(`## Throttling isolation — ${badge(i.pass)}`);
+        out.push(`### Isolation result — ${badge(i.pass)}`);
         out.push('');
         out.push('One tenant floods the API far above its per-key limit while a second tenant and an anonymous console visitor keep working. Only the flooding tenant may be throttled.');
         out.push('');
@@ -282,8 +410,13 @@ function html(r) {
 
     parts.push(`<header><p class="eyebrow">Fleetbase API performance</p><h1>${esc(r.meta.version)}</h1>`);
     parts.push('<div class="summary">');
-    parts.push(`<div class="tile"><span>Overall</span>${badge(r.allPass)}</div>`);
-    if (r.iso) parts.push(`<div class="tile"><span>Throttling isolation</span>${badge(r.iso.pass)}</div>`);
+    if (r.perf) {
+        parts.push(`<div class="tile"><span>p95</span><strong>${ms(r.perf.overall.p95)}</strong></div>`);
+        parts.push(`<div class="tile"><span>p99</span><strong>${ms(r.perf.overall.p99)}</strong></div>`);
+        parts.push(`<div class="tile"><span>Throughput</span><strong>${fixed(r.perf.overall.rps, 1)} req/s</strong></div>`);
+    }
+    parts.push(`<div class="tile"><span>Thresholds</span>${badge(r.allPass)}</div>`);
+    if (r.iso) parts.push(`<div class="tile"><span>Rate-limit isolation</span>${badge(r.iso.pass)}</div>`);
     parts.push(`<div class="tile"><span>Requests</span><strong>${int(r.totals.requests)}</strong></div>`);
     parts.push(`<div class="tile"><span>Failed</span><strong>${pct(r.totals.failed)}</strong></div>`);
     if (r.meta.throttleActive === false) parts.push('<div class="tile"><span>Per-key limit</span><strong>inactive</strong></div>');
@@ -298,6 +431,43 @@ function html(r) {
     parts.push(`<p class="meta">${meta.join(' · ')}</p>`);
     if (!r.meta.setupCompleted) parts.push('<p class="alert"><code>setup()</code> did not complete (timed out or aborted), so no scenario traffic was generated. See the k6 log.</p>');
     parts.push('</header>');
+
+    if (r.perf) {
+        const p = r.perf;
+        const vs = p.baselineVersion ? ` vs ${esc(p.baselineVersion)}` : '';
+        const maxP95 = Math.max(1, ...p.endpoints.map((row) => row.p95 || 0));
+        parts.push('<section><h2>Performance</h2><div class="scroll"><table>');
+        parts.push(`<thead><tr><th>Scope</th><th class="n">Requests</th><th class="n">req/s</th><th class="n">avg</th><th class="n">p50</th><th class="n">p90</th><th class="n">p95</th><th class="n">p99</th><th class="n">max</th><th class="n">Errors</th>${p.baselineVersion ? `<th class="n">p95${vs}</th><th class="n">p99${vs}</th>` : ''}</tr></thead><tbody>`);
+        [p.overall, p.read, p.write].forEach((row) => {
+            parts.push(
+                `<tr><th scope="row">${esc(row.label)}</th><td class="n">${int(row.count)}</td><td class="n">${fixed(row.rps, 2)}</td><td class="n">${ms(row.avg)}</td><td class="n">${ms(row.p50)}</td><td class="n">${ms(row.p90)}</td><td class="n">${ms(row.p95)}</td><td class="n">${ms(row.p99)}</td><td class="n">${ms(row.max)}</td><td class="n">${pct(row.errorRate)}</td>` +
+                    (p.baselineVersion ? `<td class="n">${esc(delta(row.p95Change))}</td><td class="n">${esc(delta(row.p99Change))}</td>` : '') +
+                    '</tr>'
+            );
+        });
+        parts.push('</tbody></table></div>');
+        parts.push('<h3>Endpoints (slowest p95 first)</h3><div class="scroll"><table>');
+        parts.push(`<thead><tr><th>Endpoint</th><th class="n">Requests</th><th class="n">req/s</th><th class="n">p50</th><th class="n">p90</th><th class="n">p95</th><th class="n">p99</th><th class="n">max</th><th class="n">Errors</th>${p.baselineVersion ? `<th class="n">p95${vs}</th>` : ''}<th>Budget</th></tr></thead><tbody>`);
+        p.endpoints.forEach((row) => {
+            const width = row.p95 ? Math.max(2, Math.round((row.p95 / maxP95) * 100)) : 0;
+            parts.push(
+                `<tr><td><code>${esc(row.endpoint)}</code></td><td class="n">${int(row.count)}</td><td class="n">${fixed(row.rps, 2)}</td><td class="n">${ms(row.p50)}</td><td class="n">${ms(row.p90)}</td>` +
+                    `<td class="n bar"><span style="--w:${width}%"></span>${ms(row.p95)}</td><td class="n">${ms(row.p99)}</td><td class="n">${ms(row.max)}</td><td class="n${row.errorRate ? ' bad' : ''}">${pct(row.errorRate)}</td>` +
+                    (p.baselineVersion ? `<td class="n">${esc(delta(row.p95Change))}</td>` : '') +
+                    `<td>${row.overBudget ? '<span class="badge warn">OVER</span>' : '<span class="badge pass">OK</span>'}</td></tr>`
+            );
+        });
+        parts.push('</tbody></table></div>');
+        parts.push(
+            `<p class="note">Budgets (p95): reads &lt; ${p.budgets.read} ms, writes &lt; ${p.budgets.write} ms — ${p.budgets.enforced ? 'enforced' : 'report only'}. ` +
+                (p.baselineVersion ? `Changes are against ${esc(p.baselineVersion)}.` : 'No previous release metrics were available to compare against.') +
+                '</p>'
+        );
+        if (p.skipped.length) {
+            parts.push(`<p class="note">Not measured: ${p.skipped.map((row) => `<code>${esc(row.endpoint)}</code> (${esc(row.reason)})`).join(', ')}</p>`);
+        }
+        parts.push('</section>');
+    }
 
     sections.forEach((role) => {
         parts.push(`<section><h2>${esc(ROLE_LABEL[role] || role)}</h2><div class="scroll"><table>`);
@@ -320,7 +490,7 @@ function html(r) {
 
     if (r.iso) {
         const i = r.iso;
-        parts.push(`<section><h2>Throttling isolation ${badge(i.pass)}</h2>`);
+        parts.push(`<section><h2>Rate-limit isolation ${badge(i.pass)}</h2>`);
         parts.push('<p class="note">One tenant floods the API far above its per-key limit while a second tenant and an anonymous console visitor keep working. Only the flooding tenant may be throttled.</p>');
         parts.push('<div class="scroll"><table><thead><tr><th>Check</th><th>Observed</th><th>Result</th></tr></thead><tbody>');
         const rows = [
@@ -358,7 +528,7 @@ function html(r) {
 body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 main{max-width:1040px;margin:0 auto;padding:32px 16px 64px}
 header{margin-bottom:24px}.eyebrow{margin:0;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-size:12px}
-h1{margin:4px 0 16px;font-size:28px}h2{font-size:17px;margin:0 0 12px;display:flex;gap:10px;align-items:center}
+h1{margin:4px 0 16px;font-size:28px}h3{font-size:14px;margin:18px 0 8px}h2{font-size:17px;margin:0 0 12px;display:flex;gap:10px;align-items:center}
 .summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
 .tile{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:6px;align-items:flex-start}
 .tile span{color:var(--muted);font-size:12px}.tile strong{font-size:18px}
@@ -385,5 +555,5 @@ ${parts.join('\n')}
 
 export function buildReports(data, ctx) {
     const r = collect(data, ctx);
-    return { markdown: markdown(r), html: html(r), result: r };
+    return { markdown: markdown(r), html: html(r), metrics: metricsDocument(r), result: r };
 }

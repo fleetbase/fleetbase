@@ -86,8 +86,11 @@ const CFG = {
     throughputSec: seconds('THROUGHPUT_DURATION', '3m30s'),
     throughputVUs: num('THROUGHPUT_VUS', 50),
     throughputMaxVUs: num('THROUGHPUT_MAX_VUS', 300),
-    mix: env('THROUGHPUT_MIX', 'create:20,update:20,list:30,get:30'),
     seedOrders: num('SEED_ORDERS', 10),
+    // Comma-separated catalogue ops to leave out, e.g. "fuel-reports.list,issues.list".
+    exclude: env('EXCLUDE_ENDPOINTS', ''),
+    // Previous release's metrics.json, for the comparison columns (absolute path).
+    baselinePath: env('BASELINE_METRICS', ''),
 
     // Noisy neighbour
     noisyRate: num('NOISY_RATE', 10),
@@ -99,11 +102,14 @@ const CFG = {
     publicProbeEverySec: seconds('PUBLIC_PROBE_EVERY', '2s'),
     gapSec: seconds('PHASE_GAP', '10s'),
 
-    // Latency budgets (ms) for the LOAD key's throughput phase.
+    // Latency budgets (ms) for the throughput phase. The report flags every endpoint over
+    // budget; they only fail the run when ENFORCE_BUDGETS=true, because a shared CI runner
+    // hosting the whole stack is too noisy for latency to gate a release by default.
     readP95: num('READ_P95_MS', 800),
     writeP95: num('WRITE_P95_MS', 1500),
-    readP99: num('READ_P99_MS', 0), // 0 = report only
+    readP99: num('READ_P99_MS', 0), // 0 = no p99 budget
     writeP99: num('WRITE_P99_MS', 0),
+    enforceBudgets: env('ENFORCE_BUDGETS', 'false') === 'true',
     maxErrorRate: num('MAX_ERROR_RATE', 0.01),
 
     // Report metadata
@@ -115,15 +121,6 @@ const CFG = {
     // k6 does not create directories: an explicit K6_REPORT_DIR must already exist.
     reportDir: env('K6_REPORT_DIR', '.').replace(/\/+$/, '') || '.',
 };
-
-const MIX = CFG.mix.split(',').map((part) => {
-    const [op, weight] = part.split(':').map((s) => s.trim());
-    if (!['create', 'update', 'list', 'get'].includes(op) || !(Number(weight) >= 0)) {
-        throw new Error(`THROUGHPUT_MIX entry "${part}" must be create|update|list|get:<weight>`);
-    }
-    return { op, weight: Number(weight) };
-});
-const MIX_TOTAL = MIX.reduce((sum, e) => sum + e.weight, 0);
 
 if (RUN_THROUGHPUT && !KEYS.load) throw new Error('K6_LOAD_KEY is required for the throughput scenario');
 if (RUN_NOISY && (!KEYS.noisy || !KEYS.victim)) {
@@ -145,8 +142,60 @@ export const ENDPOINTS = {
     places: 'GET /v1/places',
     public: `GET ${CFG.publicProbePath}`,
 };
-const READ_OPS = ['list', 'get'];
-const WRITE_OPS = ['create', 'update'];
+/*
+ | The throughput catalogue: a broad, weighted slice of the public API, roughly shaped like
+ | real integration traffic (mostly reads, orders heaviest). `name` is the endpoint tag and
+ | report row; it must not contain braces or commas (reserved by the submetric syntax).
+ | `pool` names the records a :id route draws from. setup() probes every entry once and
+ | drops the ones this install cannot serve (missing extension, no records), listing them
+ | in the report as skipped rather than failing the run.
+ */
+const coords = () => ({ latitude: 1.2966 + (Math.random() - 0.5) * 0.05, longitude: 103.852 + (Math.random() - 0.5) * 0.05 });
+
+export const CATALOGUE = [
+    // Orders
+    { op: 'orders.list', kind: 'read', weight: 12, method: 'GET', name: 'GET /v1/orders', path: () => '/v1/orders?limit=25' },
+    { op: 'orders.filtered', kind: 'read', weight: 5, method: 'GET', name: 'GET /v1/orders filtered', path: () => '/v1/orders?status=created&limit=25&sort=-created_at' },
+    { op: 'orders.get', kind: 'read', weight: 10, method: 'GET', name: 'GET /v1/orders/:id', pool: 'orders', path: (id) => `/v1/orders/${id}` },
+    { op: 'orders.create', kind: 'write', weight: 10, method: 'POST', name: 'POST /v1/orders', creates: 'orders', path: () => '/v1/orders', body: () => orderBody('load') },
+    { op: 'orders.update', kind: 'write', weight: 8, method: 'PUT', name: 'PUT /v1/orders/:id', pool: 'orders', path: (id) => `/v1/orders/${id}`, body: () => updateBody('load') },
+    // Places
+    { op: 'places.list', kind: 'read', weight: 6, method: 'GET', name: 'GET /v1/places', path: () => '/v1/places?limit=25' },
+    { op: 'places.get', kind: 'read', weight: 4, method: 'GET', name: 'GET /v1/places/:id', pool: 'places', path: (id) => `/v1/places/${id}` },
+    { op: 'places.create', kind: 'write', weight: 4, method: 'POST', name: 'POST /v1/places', creates: 'places', path: () => '/v1/places', body: () => JSON.stringify({ name: `k6 place ${Date.now()}`, street1: '3 Benchmark Street', ...coords() }) },
+    { op: 'places.update', kind: 'write', weight: 2, method: 'PUT', name: 'PUT /v1/places/:id', pool: 'places', path: (id) => `/v1/places/${id}`, body: () => JSON.stringify({ name: `k6 place ${Date.now()}` }) },
+    // Contacts
+    { op: 'contacts.list', kind: 'read', weight: 4, method: 'GET', name: 'GET /v1/contacts', path: () => '/v1/contacts?limit=25' },
+    { op: 'contacts.get', kind: 'read', weight: 3, method: 'GET', name: 'GET /v1/contacts/:id', pool: 'contacts', path: (id) => `/v1/contacts/${id}` },
+    { op: 'contacts.create', kind: 'write', weight: 3, method: 'POST', name: 'POST /v1/contacts', creates: 'contacts', path: () => '/v1/contacts', body: () => JSON.stringify({ name: `k6 contact ${Date.now()}`, email: `k6-${Date.now()}-${Math.floor(Math.random() * 1e6)}@example.test`, type: 'contact' }) },
+    { op: 'contacts.update', kind: 'write', weight: 2, method: 'PUT', name: 'PUT /v1/contacts/:id', pool: 'contacts', path: (id) => `/v1/contacts/${id}`, body: () => JSON.stringify({ name: `k6 contact ${Date.now()}` }) },
+    // Fleet and resources
+    { op: 'drivers.list', kind: 'read', weight: 4, method: 'GET', name: 'GET /v1/drivers', path: () => '/v1/drivers?limit=25' },
+    { op: 'drivers.get', kind: 'read', weight: 2, method: 'GET', name: 'GET /v1/drivers/:id', pool: 'drivers', path: (id) => `/v1/drivers/${id}` },
+    { op: 'vehicles.list', kind: 'read', weight: 3, method: 'GET', name: 'GET /v1/vehicles', path: () => '/v1/vehicles?limit=25' },
+    { op: 'vehicles.get', kind: 'read', weight: 2, method: 'GET', name: 'GET /v1/vehicles/:id', pool: 'vehicles', path: (id) => `/v1/vehicles/${id}` },
+    { op: 'fleets.list', kind: 'read', weight: 2, method: 'GET', name: 'GET /v1/fleets', path: () => '/v1/fleets?limit=25' },
+    { op: 'vendors.list', kind: 'read', weight: 2, method: 'GET', name: 'GET /v1/vendors', path: () => '/v1/vendors?limit=25' },
+    { op: 'service-areas.list', kind: 'read', weight: 1, method: 'GET', name: 'GET /v1/service-areas', path: () => '/v1/service-areas?limit=25' },
+    { op: 'service-rates.list', kind: 'read', weight: 1, method: 'GET', name: 'GET /v1/service-rates', path: () => '/v1/service-rates?limit=25' },
+    { op: 'issues.list', kind: 'read', weight: 1, method: 'GET', name: 'GET /v1/issues', path: () => '/v1/issues?limit=25' },
+    { op: 'fuel-reports.list', kind: 'read', weight: 1, method: 'GET', name: 'GET /v1/fuel-reports', path: () => '/v1/fuel-reports?limit=25' },
+].filter((entry) => !CFG.exclude.split(',').map((s) => s.trim()).includes(entry.op));
+const CATALOGUE_BY_OP = Object.fromEntries(CATALOGUE.map((entry) => [entry.op, entry]));
+const POOLS = ['orders', 'places', 'contacts', 'drivers', 'vehicles'];
+
+// The previous release's metrics, for the comparison columns. open() only works in the
+// init context, so this is read here; a missing or unreadable file just drops the columns.
+const BASELINE = (() => {
+    if (!CFG.baselinePath) return null;
+    try {
+        return JSON.parse(open(CFG.baselinePath));
+    } catch (e) {
+        console.warn(`BASELINE_METRICS ${CFG.baselinePath} could not be read: ${e}`);
+        return null;
+    }
+})();
+
 const VICTIM_OPS = ['list', 'get', 'create', 'update', 'places'];
 
 /* ----------------------------------------------------------------------------
@@ -259,14 +308,28 @@ function addRow(role, op) {
 
 GATES.http_req_failed = [`rate<${CFG.maxErrorRate}`];
 
+const LOAD_ROWS = []; // { op, kind, endpoint } — one performance row per catalogue entry
+
 if (RUN_THROUGHPUT) {
-    ['create', 'update', 'list', 'get'].forEach((op) => addRow('load', op));
-    READ_OPS.concat(WRITE_OPS).forEach((op) => {
-        const isRead = READ_OPS.includes(op);
-        const rules = [`p(95)<${isRead ? CFG.readP95 : CFG.writeP95}`];
-        const p99 = isRead ? CFG.readP99 : CFG.writeP99;
+    CATALOGUE.forEach((entry) => {
+        const tags = { role: 'load', endpoint: entry.name };
+        LOAD_ROWS.push({ op: entry.op, kind: entry.kind, endpoint: entry.name });
+        INFO[sub('http_req_duration', tags)] = ['max>=0'];
+        INFO[sub('http_reqs', tags)] = ['count>=0'];
+        INFO[sub('http_req_failed', tags)] = ['rate>=0'];
+    });
+    // Aggregates: all throughput traffic, and reads vs writes.
+    INFO[sub('http_req_duration', { role: 'load' })] = ['max>=0'];
+    INFO[sub('http_reqs', { role: 'load' })] = ['count>=0'];
+    INFO[sub('http_req_failed', { role: 'load' })] = ['rate>=0'];
+    ['read', 'write'].forEach((kind) => {
+        const rules = [`p(95)<${kind === 'read' ? CFG.readP95 : CFG.writeP95}`];
+        const p99 = kind === 'read' ? CFG.readP99 : CFG.writeP99;
         if (p99 > 0) rules.push(`p(99)<${p99}`);
-        GATES[sub('http_req_duration', { role: 'load', op })] = rules;
+        // Budgets are always evaluated and shown; they only gate when enforced.
+        (CFG.enforceBudgets ? GATES : INFO)[sub('http_req_duration', { role: 'load', kind })] = CFG.enforceBudgets ? rules : ['max>=0'];
+        INFO[sub('http_reqs', { role: 'load', kind })] = ['count>=0'];
+        INFO[sub('http_req_failed', { role: 'load', kind })] = ['rate>=0'];
     });
     INFO.dropped_iterations = ['count>=0'];
 }
@@ -379,6 +442,57 @@ function remember(role, id) {
     if (created[role].length > 50) created[role].shift();
 }
 
+// Per-VU pools of records this VU created, on top of the pools setup() collected.
+const loadCreated = { orders: [], places: [], contacts: [], drivers: [], vehicles: [] };
+
+function poolId(pool, data) {
+    const ids = loadCreated[pool].concat((data.pools && data.pools[pool]) || []);
+    return ids.length ? pick(ids) : null;
+}
+
+function loadParams(entry, extra) {
+    return Object.assign(
+        {
+            headers: { Accept: 'application/json', 'Content-Type': 'application/json', Authorization: `Bearer ${KEYS.load}` },
+            timeout: CFG.requestTimeout,
+            responseCallback: OK,
+            tags: { endpoint: entry.name, op: entry.op, kind: entry.kind, name: entry.name },
+        },
+        extra || {}
+    );
+}
+
+// One request for a catalogue entry. Returns null when a :id route has no record to use.
+function callEntry(entry, data, extra) {
+    let id = null;
+    if (entry.pool) {
+        id = poolId(entry.pool, data);
+        if (!id) return null;
+    }
+    const url = `${BASE_URL}${entry.path(id)}`;
+    const p = loadParams(entry, extra);
+    const res = entry.method === 'GET' ? http.get(url, p) : http.request(entry.method, url, entry.body(), p);
+    if (entry.creates && (res.status === 200 || res.status === 201)) {
+        const createdId = parseId(res);
+        if (createdId) {
+            loadCreated[entry.creates].push(createdId);
+            if (loadCreated[entry.creates].length > 50) loadCreated[entry.creates].shift();
+        }
+    }
+    return res;
+}
+
+function listIds(path) {
+    const res = http.get(`${BASE_URL}${path}`, params(KEYS.load, 'list', { tags: { endpoint: 'setup', op: 'setup', name: 'setup' } }));
+    try {
+        const body = res.json();
+        const rows = Array.isArray(body) ? body : body && Array.isArray(body.data) ? body.data : [];
+        return rows.map((row) => row && row.id).filter((id) => typeof id === 'string').slice(0, 25);
+    } catch (e) {
+        return [];
+    }
+}
+
 function call(role, op, key, data, extra) {
     const p = params(key, op, extra);
     let res;
@@ -468,6 +582,41 @@ export function setup() {
             );
         }
         info.seed.load = seed('load', KEYS.load, CFG.seedOrders);
+
+        // Records for the :id routes: the seeded orders, a few created places and contacts,
+        // and whatever drivers and vehicles the install already has.
+        const setupTag = { tags: { endpoint: 'setup', op: 'setup', name: 'setup' } };
+        info.pools = { orders: info.seed.load.slice(), places: [], contacts: [], drivers: [], vehicles: [] };
+        ['places.create', 'contacts.create'].forEach((op) => {
+            const entry = CATALOGUE_BY_OP[op];
+            if (!entry) return;
+            for (let i = 0; i < 3; i += 1) {
+                const res = http.request(entry.method, `${BASE_URL}${entry.path()}`, entry.body(), loadParams(entry, setupTag));
+                const id = res.status === 200 || res.status === 201 ? parseId(res) : null;
+                if (id) info.pools[entry.creates].push(id);
+            }
+        });
+        info.pools.drivers = listIds('/v1/drivers?limit=25');
+        info.pools.vehicles = listIds('/v1/vehicles?limit=25');
+
+        // Probe each endpoint once; benchmark only what this install can serve.
+        info.available = [];
+        info.skipped = {};
+        CATALOGUE.forEach((entry) => {
+            if (entry.pool && !info.pools[entry.pool].length) {
+                info.skipped[entry.op] = `no ${entry.pool} to read`;
+                return;
+            }
+            const res = callEntry(entry, info, setupTag);
+            if (res && res.status >= 200 && res.status < 400) {
+                info.available.push(entry.op);
+            } else {
+                info.skipped[entry.op] = res ? `HTTP ${res.status} on probe` : 'no record';
+            }
+        });
+        if (!info.available.length) {
+            exec.test.abort('setup: no catalogue endpoint answered 2xx; see info.skipped in the report');
+        }
     }
     if (RUN_NOISY) {
         if (!info.throttle.active) {
@@ -483,21 +632,27 @@ export function setup() {
  | Scenario functions
  * ------------------------------------------------------------------------- */
 
-function weightedOp() {
-    let r = Math.random() * MIX_TOTAL;
-    for (const entry of MIX) {
-        r -= entry.weight;
-        if (r < 0) return entry.op;
+let available = null;
+function weightedEntry(data) {
+    if (!available) {
+        available = CATALOGUE.filter((entry) => (data.available || []).includes(entry.op));
+        available.total = available.reduce((sum, entry) => sum + entry.weight, 0);
     }
-    return MIX[MIX.length - 1].op;
+    let r = Math.random() * available.total;
+    for (const entry of available) {
+        r -= entry.weight;
+        if (r < 0) return entry;
+    }
+    return available[available.length - 1];
 }
 
 export function throughput(data) {
-    const op = weightedOp();
-    const res = call('load', op, KEYS.load, data);
+    const entry = weightedEntry(data);
+    const res = callEntry(entry, data);
+    if (!res) return;
     const ok = res.status >= 200 && res.status < 400;
-    unexpectedStatus.add(!ok, { role: 'load', op });
-    check(res, { [`load ${op} 2xx`]: () => ok });
+    unexpectedStatus.add(!ok, { role: 'load', op: entry.op });
+    check(res, { [`${entry.name} 2xx`]: () => ok });
 }
 
 export function noisyFlood(data) {
@@ -551,6 +706,8 @@ export function handleSummary(data) {
     const reports = buildReports(data, {
         cfg: CFG,
         rows: ROWS,
+        loadRows: LOAD_ROWS,
+        baseline: BASELINE,
         gates: Object.keys(GATES),
         runThroughput: RUN_THROUGHPUT,
         runNoisy: RUN_NOISY,
@@ -564,5 +721,6 @@ export function handleSummary(data) {
         [`${dir}/summary.json`]: JSON.stringify(data, null, 2),
         [`${dir}/report.md`]: reports.markdown,
         [`${dir}/report.html`]: reports.html,
+        [`${dir}/metrics.json`]: JSON.stringify(reports.metrics, null, 2),
     };
 }

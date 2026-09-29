@@ -1,22 +1,28 @@
 name: API Performance
 
-# k6 benchmark + rate-limit isolation gate for every release.
+# API performance report for every release (k6).
 #
 # Boots the stack from source exactly like install-smoke.yml, mints three API keys in
 # three organizations (scripts/ci/mint-k6-keys.php), and runs tests/k6/api-release.js:
 #
-#   throughput       ramping arrival rate over order create/update/list/get with a LOAD
-#                    key listed in THROTTLE_UNLIMITED_API_KEYS -> per-endpoint p50/p95/p99
-#   noisy_neighbour  a NOISY key floods create/update far past its per-key limit while a
+#   throughput       the headline: a ramping arrival rate over a weighted catalogue of the
+#                    public API (orders, places, contacts, drivers, vehicles, fleets, ...)
+#                    with a LOAD key listed in THROTTLE_UNLIMITED_API_KEYS. Reports
+#                    avg/p50/p90/p95/p99/max, req/s and error rate overall, for reads vs
+#                    writes and per endpoint, compared against the previous release.
+#   noisy_neighbour  secondary: a NOISY key floods create/update far past its per-key limit while a
 #                    VICTIM key (other org) and an anonymous console route keep working.
 #                    Gate: the victim and the console get ZERO 429s, the noisy key does get
 #                    429s and every one carries Retry-After. This is the regression test for
 #                    the incident where one customer's traffic throttled the whole platform
 #                    because the limiter keyed on the load balancer's IP.
 #
-# The report (report.md / report.html / summary.json) always lands in the job summary and
-# the k6-report artifact; on a tag it is also attached to that tag's GitHub Release.
-# A failed threshold fails the job, after the report has been published.
+# The report (report.md / report.html / metrics.json / summary.json) always lands in the job
+# summary and the k6-report artifact; on a tag the report and metrics.json are attached to
+# that tag's GitHub Release, where the next release's run picks metrics.json up as its
+# comparison baseline. Latency budgets are report-only unless the repository variable
+# K6_ENFORCE_BUDGETS is "true"; error-rate and isolation thresholds fail the job, after the
+# report has been published.
 
 on:
   push:
@@ -62,7 +68,7 @@ env:
 
 jobs:
   performance:
-    name: k6 benchmark and throttling isolation
+    name: API performance report (k6)
     runs-on: ubuntu-latest
     timeout-minutes: 75
 
@@ -253,6 +259,29 @@ jobs:
         with:
           k6-version: ${{ env.K6_VERSION }}
 
+      # The previous release's metrics.json, for the comparison columns. The newest release
+      # other than this tag that has one wins; none (first run, or older releases without
+      # the asset) just leaves the columns out.
+      - name: Fetch previous release metrics
+        id: baseline
+        if: steps.auth.outputs.available == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CURRENT: ${{ github.ref_name }}
+        run: |
+          set -uo pipefail
+          mkdir -p baseline
+          tags="$(gh release list --repo "$GITHUB_REPOSITORY" --limit 30 --exclude-drafts --json tagName --jq '.[].tagName' 2>/dev/null || true)"
+          for tag in $tags; do
+            [[ "$tag" == "$CURRENT" ]] && continue
+            if gh release download "$tag" --repo "$GITHUB_REPOSITORY" --pattern "performance-metrics-${tag}.json" --dir baseline --clobber 2>/dev/null; then
+              echo "path=${GITHUB_WORKSPACE}/baseline/performance-metrics-${tag}.json" >> "$GITHUB_OUTPUT"
+              echo "Comparing against ${tag}"
+              exit 0
+            fi
+          done
+          echo "No previous release metrics found; the report will have no comparison columns."
+
       # Plain `k6 run` (not run-k6-action) so the exit code and output paths are ours.
       # k6 exits 99 when a threshold fails; that is recorded and re-raised by the last
       # step so the report is still published first.
@@ -278,6 +307,8 @@ jobs:
           READ_P95_MS: ${{ vars.K6_READ_P95_MS }}
           WRITE_P95_MS: ${{ vars.K6_WRITE_P95_MS }}
           MAX_ERROR_RATE: ${{ vars.K6_MAX_ERROR_RATE }}
+          ENFORCE_BUDGETS: ${{ vars.K6_ENFORCE_BUDGETS }}
+          BASELINE_METRICS: ${{ steps.baseline.outputs.path }}
           K6_NO_USAGE_REPORT: 'true'
         run: |
           set -uo pipefail
@@ -361,6 +392,10 @@ jobs:
               cp "${K6_REPORT_DIR}/report.${ext}" "release-assets/performance-report-${TAG}.${ext}"
             fi
           done
+          # The next release compares against this.
+          if [[ -s "${K6_REPORT_DIR}/metrics.json" ]]; then
+            cp "${K6_REPORT_DIR}/metrics.json" "release-assets/performance-metrics-${TAG}.json"
+          fi
           ls -la release-assets
 
       # Only tag_name + files: with an existing release softprops keeps its name, body,
@@ -374,6 +409,7 @@ jobs:
           files: |
             release-assets/performance-report-${{ github.ref_name }}.md
             release-assets/performance-report-${{ github.ref_name }}.html
+            release-assets/performance-metrics-${{ github.ref_name }}.json
           fail_on_unmatched_files: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,14 +1,18 @@
 # k6 release benchmark
 
-`api-release.js` measures the public order API and gates on rate-limit isolation. CI runs
-it on every `v*` tag (`.github/workflows/performance.yml`), publishes the report to the job
-summary and the `k6-report` artifact, and attaches it to the tag's GitHub Release.
+`api-release.js` produces the API performance report for every release: throughput and
+avg/p50/p90/p95/p99/max latency overall, for reads vs writes, and per endpoint across a
+weighted catalogue of the public API, compared against the previous release. It also runs
+a secondary rate-limit isolation check. CI runs it on every `v*` tag
+(`.github/workflows/performance.yml`), publishes the report to the job summary and the
+`k6-report` artifact, and attaches `performance-report-<tag>.md/.html` and
+`performance-metrics-<tag>.json` to the tag's GitHub Release.
 
 ## What it runs
 
 | Phase | Scenario(s) | Key | What it proves |
 |---|---|---|---|
-| `throughput` | `throughput` (ramping arrival rate) | LOAD, listed in `THROTTLE_UNLIMITED_API_KEYS` | Per-endpoint p50/p95/p99, rps and error rate for order create 20% / update 20% / list 30% / get 30%. The key is unthrottled so it measures the API, not the limiter. |
+| `throughput` | `throughput` (ramping arrival rate) | LOAD, listed in `THROTTLE_UNLIMITED_API_KEYS` | The performance report. A weighted catalogue (see `CATALOGUE` in the script): order list/filtered/get/create/update, places and contacts list/get/create/update, drivers and vehicles list/get, fleets, vendors, service areas, service rates, issues and fuel reports. `setup()` probes each endpoint once; ones this install cannot serve are listed as "not measured". The key is unthrottled so it measures the API, not the limiter. |
 | `noisy_neighbour` | `noisy_flood`, `victim`, `public_probe` (constant arrival rate) | NOISY and VICTIM, **different organizations** | One tenant floods create/update well above its per-key limit. Another tenant sends ~1 req/s of reads and writes, and an anonymous client loads a public console route (`GET /int/v1/settings/branding`). |
 
 The phases run one after the other (`PHASE_GAP` apart), so the throughput numbers are not
@@ -39,8 +43,8 @@ fails. `X-RateLimit-*` on 429s is reported but only warns.
 | Metric | Default | Override |
 |---|---|---|
 | `http_req_failed` (expected noisy 429s excluded) | `rate<0.01` | `MAX_ERROR_RATE` |
-| `http_req_duration{role:load,op:list\|get}` p95 | `< 800 ms` | `READ_P95_MS` (`READ_P99_MS` adds a p99 gate) |
-| `http_req_duration{role:load,op:create\|update}` p95 | `< 1500 ms` | `WRITE_P95_MS` (`WRITE_P99_MS` adds a p99 gate) |
+| `http_req_duration{role:load,kind:read}` p95 (report-only unless `ENFORCE_BUDGETS=true`) | `< 800 ms` | `READ_P95_MS` (`READ_P99_MS` adds a p99 gate) |
+| `http_req_duration{role:load,kind:write}` p95 (report-only unless `ENFORCE_BUDGETS=true`) | `< 1500 ms` | `WRITE_P95_MS` (`WRITE_P99_MS` adds a p99 gate) |
 
 In CI the budgets can be tuned without a code change through the repository variables
 `K6_READ_P95_MS`, `K6_WRITE_P95_MS` and `K6_MAX_ERROR_RATE`. CI numbers come from a shared
@@ -95,8 +99,10 @@ The report is written to `K6_REPORT_DIR` (default: the current directory). k6 do
 create directories, so `mkdir -p` a custom one first:
 
 - `summary.json`: raw k6 summary data
-- `report.md`: release, commit, run config, a per-endpoint table (count, rps, p50/p95/p99,
-  max, error %), the isolation result and every threshold
+- `report.md`: release, commit, overall / reads / writes and per-endpoint tables (count,
+  req/s, avg, p50, p90, p95, p99, max, error %, change vs the previous release, budget
+  flag), endpoints not measured, the isolation result and every threshold
+- `metrics.json`: the compact per-endpoint numbers; the next release compares against it
 - `report.html`: the same as a self-contained page
 
 The Markdown report is also printed to stdout.
@@ -111,7 +117,9 @@ The Markdown report is also printed to stdout.
 | `THROUGHPUT_PEAK_RATE` | `50` | Peak arrival rate (req/s). Ramp: 15% of the time to 20% of peak, 25% to peak, 50% at peak, 10% down |
 | `THROUGHPUT_DURATION` | `3m30s` | Length of the throughput phase |
 | `THROUGHPUT_VUS` / `THROUGHPUT_MAX_VUS` | `50` / `300` | Pre-allocated and maximum VUs |
-| `THROUGHPUT_MIX` | `create:20,update:20,list:30,get:30` | Operation weights |
+| `EXCLUDE_ENDPOINTS` | – | Catalogue ops to leave out, e.g. `issues.list,fuel-reports.list` |
+| `BASELINE_METRICS` | – | Absolute path to a previous `metrics.json`; adds p95/p99 change columns |
+| `ENFORCE_BUDGETS` | `false` | `true` makes the read/write p95 budgets fail the run (CI: repo variable `K6_ENFORCE_BUDGETS`) |
 | `SEED_ORDERS` | `10` | Orders `setup()` creates for the LOAD key so update/get have targets from the start |
 | `NOISY_RATE` | `10` | Flood rate (req/s); 600/min against the default 120/min limit |
 | `NOISY_DURATION` | `90s` | Length of the flood |
