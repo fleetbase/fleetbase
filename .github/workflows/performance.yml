@@ -1,0 +1,405 @@
+name: API Performance
+
+# k6 benchmark + rate-limit isolation gate for every release.
+#
+# Boots the stack from source exactly like install-smoke.yml, mints three API keys in
+# three organizations (scripts/ci/mint-k6-keys.php), and runs tests/k6/api-release.js:
+#
+#   throughput       ramping arrival rate over order create/update/list/get with a LOAD
+#                    key listed in THROTTLE_UNLIMITED_API_KEYS -> per-endpoint p50/p95/p99
+#   noisy_neighbour  a NOISY key floods create/update far past its per-key limit while a
+#                    VICTIM key (other org) and an anonymous console route keep working.
+#                    Gate: the victim and the console get ZERO 429s, the noisy key does get
+#                    429s and every one carries Retry-After. This is the regression test for
+#                    the incident where one customer's traffic throttled the whole platform
+#                    because the limiter keyed on the load balancer's IP.
+#
+# The report (report.md / report.html / summary.json) always lands in the job summary and
+# the k6-report artifact; on a tag it is also attached to that tag's GitHub Release.
+# A failed threshold fails the job, after the report has been published.
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      throughput_peak_rate:
+        description: Peak arrival rate for the throughput phase (req/s)
+        required: false
+        default: ''
+      throughput_duration:
+        description: Throughput phase duration (e.g. 3m30s)
+        required: false
+        default: ''
+      noisy_rate:
+        description: Noisy tenant flood rate (req/s)
+        required: false
+        default: ''
+      noisy_duration:
+        description: Noisy-neighbour phase duration (e.g. 90s)
+        required: false
+        default: ''
+      scenarios:
+        description: Comma-separated phases to run (throughput,noisy_neighbour)
+        required: false
+        default: 'throughput,noisy_neighbour'
+
+concurrency:
+  group: performance-${{ github.ref }}
+  # Never cancel a release benchmark halfway; a second push of the same ref queues.
+  cancel-in-progress: false
+
+permissions:
+  contents: write # attach the report to the GitHub Release
+
+env:
+  K6_VERSION: '1.2.2'
+  K6_REPORT_DIR: k6-report
+  BASE_URL: http://localhost:8000
+  # Must match THROTTLE_REQUESTS_PER_MINUTE below; the noisy flood is sized against it.
+  THROTTLE_REQUESTS_PER_MINUTE: '120'
+
+jobs:
+  performance:
+    name: k6 benchmark and throttling isolation
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # Same gate as install-smoke.yml: without the token the API image cannot resolve
+      # the private Fleetbase packages, so skip rather than fail on forks.
+      - name: Check composer auth availability
+        id: auth
+        run: |
+          if [[ -n "${{ secrets._GITHUB_AUTH_TOKEN }}" ]]; then
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "available=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::_GITHUB_AUTH_TOKEN is not set; skipping the performance run (the API image cannot be built without it)."
+          fi
+
+      # app-release is the stage the published fleetbase-api image comes from; see the
+      # comment in install-smoke.yml for why not `app`.
+      - name: Build API image from source
+        if: steps.auth.outputs.available == 'true'
+        run: |
+          docker build \
+            --file docker/Dockerfile \
+            --target app-release \
+            --build-arg GITHUB_AUTH_KEY="${{ secrets._GITHUB_AUTH_TOKEN }}" \
+            --tag fleetbase/fleetbase-api:latest \
+            .
+
+      - name: Ensure clean database volume
+        if: steps.auth.outputs.available == 'true'
+        run: |
+          sudo rm -rf docker/database/mysql
+          mkdir -p docker/database/mysql
+
+      # Written BEFORE the stack starts: Laravel parses .env once at boot and deploy.sh
+      # runs config:cache, so values added later need the explicit re-cache done below.
+      #
+      # THROTTLE_ENABLED must be the literal string true/false (see api-contract.yml).
+      # The installer-generated docker-compose.override.yml sets no THROTTLE_* keys, so
+      # these are not shadowed by container environment.
+      - name: Configure throttling and run non-interactive installer
+        if: steps.auth.outputs.available == 'true'
+        run: |
+          set -euo pipefail
+          [ -f api/.env ] || cp api/.env.example api/.env 2>/dev/null || touch api/.env
+          set_env() {
+            if grep -q "^$1=" api/.env; then
+              sed -i "s|^$1=.*|$1=$2|" api/.env
+            else
+              echo "$1=$2" >> api/.env
+            fi
+          }
+          set_env THROTTLE_ENABLED true
+          set_env THROTTLE_REQUESTS_PER_MINUTE "${THROTTLE_REQUESTS_PER_MINUTE}"
+          set_env THROTTLE_DECAY_MINUTES 1
+          # Placeholder so the key exists; the real LOAD key is filled in after minting.
+          set_env THROTTLE_UNLIMITED_API_KEYS ''
+          set_env MAIL_MAILER log
+          set_env MAIL_FROM_ADDRESS ci-k6@fleetbase.local
+          grep '^THROTTLE_' api/.env
+
+          bash scripts/docker-install.sh --non-interactive
+
+      - name: Wait for API health
+        if: steps.auth.outputs.available == 'true'
+        run: |
+          set -uo pipefail
+          for _attempt in $(seq 1 60); do
+            if curl -fsS --max-time 5 "${BASE_URL}/health" | grep -q '"status"'; then
+              echo "API is healthy"; exit 0
+            fi
+            sleep 5
+          done
+          echo "::error::API did not become healthy"; exit 1
+
+      # Same tinker+base64 technique as .github/actions/postman-contract: a <?php tag
+      # piped to tinker is a PsySH parse error, and base64 keeps the shell away from the
+      # snippet's $variables.
+      - name: Mint k6 API keys
+        id: keys
+        if: steps.auth.outputs.available == 'true'
+        run: |
+          set -euo pipefail
+          CODE="$(base64 < scripts/ci/mint-k6-keys.php | tr -d '\n')"
+          OUT="$(docker compose exec -T application php artisan tinker \
+            --execute="eval(base64_decode('${CODE}'));" 2>&1 || true)"
+
+          # Every grep below may legitimately match nothing; under `bash -e` + pipefail
+          # an unguarded non-matching grep would abort the step before the diagnostics.
+          field() { printf '%s\n' "$OUT" | grep -oE "^$1=[^[:space:]]*" | tail -1 | cut -d= -f2- || true; }
+
+          if printf '%s\n' "$OUT" | grep -q 'K6_MINT_ERROR'; then
+            echo "::error::mint-k6-keys.php aborted:"
+            printf '%s\n' "$OUT" | grep -A 2 'K6_MINT_ERROR' || true
+            exit 1
+          fi
+          LOAD="$(field K6_LOAD_KEY)"; NOISY="$(field K6_NOISY_KEY)"; VICTIM="$(field K6_VICTIM_KEY)"
+          for v in LOAD NOISY VICTIM; do
+            if [[ ! "${!v}" =~ ^flb_live_ ]]; then
+              echo "::error::Could not mint the ${v} key. Tinker output (keys redacted):"
+              printf '%s\n' "$OUT" | sed -E 's/flb_(live|test)_[A-Za-z0-9_-]+/flb_\1_***/g'
+              exit 1
+            fi
+            echo "::add-mask::${!v}"
+          done
+          {
+            echo "load_key=${LOAD}"
+            echo "noisy_key=${NOISY}"
+            echo "victim_key=${VICTIM}"
+            echo "rate_limit=$(field K6_RATE_LIMIT)"
+          } >> "$GITHUB_OUTPUT"
+          echo "Minted LOAD/NOISY/VICTIM keys; throttle enabled=$(field K6_THROTTLE_ENABLED), per-key limit=$(field K6_RATE_LIMIT)"
+          if [[ "$(field K6_THROTTLE_ENABLED)" != "true" ]]; then
+            echo "::error::Throttling is not enabled on the stack; the isolation gate would be meaningless."
+            exit 1
+          fi
+
+      # Put the LOAD key on the unlimited list now that it exists.
+      #
+      #  * api/.env is a single-file bind mount. `sed -i` replaces the file (new inode),
+      #    and the container would keep reading the OLD inode — so rewrite it in place
+      #    with `cat tmp > api/.env`, which keeps the inode.
+      #  * deploy.sh ran `config:cache`, so the running app never reads .env again:
+      #    re-cache so bootstrap/cache/config.php carries the new value.
+      #  * Octane workers load the cached config when they boot; octane:reload restarts
+      #    them. If a probe still sees the key throttled, restart the container as the
+      #    heavier fallback (the config cache lives in the container layer and survives).
+      #
+      # The probe: a throttled consumer gets X-RateLimit-Limit on every response; an
+      # unlimited key gets none. k6's setup() repeats this check and aborts if it fails.
+      - name: Exempt the LOAD key from throttling
+        if: steps.auth.outputs.available == 'true'
+        env:
+          LOAD_KEY: ${{ steps.keys.outputs.load_key }}
+        run: |
+          set -euo pipefail
+          tmp="$(mktemp)"
+          grep -v '^THROTTLE_UNLIMITED_API_KEYS=' api/.env > "$tmp" || true
+          echo "THROTTLE_UNLIMITED_API_KEYS=${LOAD_KEY}" >> "$tmp"
+          cat "$tmp" > api/.env
+          rm -f "$tmp"
+
+          docker compose exec -T application php artisan config:cache
+          docker compose exec -T application php artisan octane:reload || true
+
+          bypassed() {
+            local headers
+            headers="$(curl -sS -o /dev/null -D - --max-time 20 \
+              -H "Authorization: Bearer ${LOAD_KEY}" "${BASE_URL}/v1/orders?limit=1" 2>/dev/null || true)"
+            # Only a real 2xx without the header counts; an error page also lacks it.
+            printf '%s\n' "$headers" | grep -qE '^HTTP/[0-9.]+ 2' || return 1
+            ! printf '%s\n' "$headers" | grep -qi '^x-ratelimit-limit:'
+          }
+          wait_bypassed() {
+            for _attempt in $(seq 1 "$1"); do
+              if bypassed; then return 0; fi
+              sleep 3
+            done
+            return 1
+          }
+
+          if wait_bypassed 20; then
+            echo "LOAD key is unthrottled after config:cache + octane:reload"
+            exit 0
+          fi
+          echo "::warning::LOAD key still throttled after octane:reload; restarting the application container"
+          docker compose restart application httpd
+          if wait_bypassed 40; then
+            echo "LOAD key is unthrottled after container restart"
+            exit 0
+          fi
+          echo "::error::THROTTLE_UNLIMITED_API_KEYS did not take effect for the LOAD key"
+          docker compose exec -T application php artisan tinker \
+            --execute="echo count(config('api.throttle.unlimited_keys')) . ' unlimited key(s) configured';" || true
+          exit 1
+
+      - name: Set up k6
+        if: steps.auth.outputs.available == 'true'
+        uses: grafana/setup-k6-action@v1
+        with:
+          k6-version: ${{ env.K6_VERSION }}
+
+      # Plain `k6 run` (not run-k6-action) so the exit code and output paths are ours.
+      # k6 exits 99 when a threshold fails; that is recorded and re-raised by the last
+      # step so the report is still published first.
+      - name: Run k6
+        id: k6
+        if: steps.auth.outputs.available == 'true'
+        env:
+          K6_LOAD_KEY: ${{ steps.keys.outputs.load_key }}
+          K6_NOISY_KEY: ${{ steps.keys.outputs.noisy_key }}
+          K6_VICTIM_KEY: ${{ steps.keys.outputs.victim_key }}
+          K6_RATE_LIMIT: ${{ steps.keys.outputs.rate_limit }}
+          RELEASE_VERSION: ${{ github.ref_name }}
+          GIT_SHA: ${{ github.sha }}
+          GIT_REF: ${{ github.ref }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          SCENARIOS: ${{ inputs.scenarios || 'throughput,noisy_neighbour' }}
+          THROUGHPUT_PEAK_RATE: ${{ inputs.throughput_peak_rate }}
+          THROUGHPUT_DURATION: ${{ inputs.throughput_duration }}
+          NOISY_RATE: ${{ inputs.noisy_rate }}
+          NOISY_DURATION: ${{ inputs.noisy_duration }}
+          # Latency budgets are repository variables so they can be tuned to the runner
+          # without a code change; empty means the script's defaults (800 / 1500 ms).
+          READ_P95_MS: ${{ vars.K6_READ_P95_MS }}
+          WRITE_P95_MS: ${{ vars.K6_WRITE_P95_MS }}
+          MAX_ERROR_RATE: ${{ vars.K6_MAX_ERROR_RATE }}
+          K6_NO_USAGE_REPORT: 'true'
+        run: |
+          set -uo pipefail
+          mkdir -p "$K6_REPORT_DIR"
+          # Empty workflow_dispatch inputs arrive as empty strings; the script treats an
+          # empty value as "use the default", so they can be passed through unconditionally.
+          #
+          # GitHub runs this as `bash -e {0}`, and `set -uo pipefail` does not turn -e off:
+          # a bare `k6 run` exiting 99 would end the step before the exit code is recorded.
+          code=0
+          k6 run --quiet tests/k6/api-release.js || code=$?
+          echo "exit_code=${code}" >> "$GITHUB_OUTPUT"
+          if [[ "$code" -ne 0 && "$code" -ne 99 ]]; then
+            echo "::error::k6 exited with ${code} (not a threshold failure — see the log above)"
+          elif [[ "$code" -eq 99 ]]; then
+            echo "::error::k6 thresholds failed — see the report in the job summary"
+          fi
+          # Never fail here: the report steps must run first. The gate step re-raises.
+          exit 0
+
+      - name: Publish report to job summary
+        if: always() && steps.auth.outputs.available == 'true'
+        run: |
+          if [[ -s "${K6_REPORT_DIR}/report.md" ]]; then
+            cat "${K6_REPORT_DIR}/report.md" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "### k6 produced no report" >> "$GITHUB_STEP_SUMMARY"
+            echo "The run did not reach handleSummary(); see the Run k6 step log." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload k6 report artifact
+        if: always() && steps.auth.outputs.available == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: k6-report
+          path: ${{ env.K6_REPORT_DIR }}/
+          if-no-files-found: warn
+          retention-days: 90
+
+      # Release attachment race: this workflow and create-release.yml both start on the
+      # same tag push. create-release finishes in well under a minute; this job needs an
+      # image build first, so the release almost always exists already — but "almost" is
+      # not a guarantee (queued runners, a create-release re-run). If softprops ran first
+      # it would CREATE the release without RELEASE.md as its body.
+      #
+      # So wait (up to 15 min) for the release create-release.yml publishes, then let
+      # softprops append the files to it. Chosen over `on: workflow_run` because
+      # workflow_run always executes the default branch's copy of this file with the
+      # default branch's context (github.ref_name would be `main`, checkout would need the
+      # tag's sha threaded through by hand), and it would serialise the benchmark behind
+      # release creation for no benefit. If the release never appears, skip the
+      # attachment with a warning; the artifact above still has the report.
+      - name: Wait for the GitHub Release
+        id: release
+        if: always() && steps.auth.outputs.available == 'true' && github.ref_type == 'tag'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          set -uo pipefail
+          for _attempt in $(seq 1 90); do
+            if gh api "repos/${GITHUB_REPOSITORY}/releases/tags/${TAG}" --silent 2>/dev/null; then
+              echo "exists=true" >> "$GITHUB_OUTPUT"
+              echo "Release ${TAG} found"
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "exists=false" >> "$GITHUB_OUTPUT"
+          echo "::warning::No GitHub Release for ${TAG} after 15 minutes; the report was not attached (it is in the k6-report artifact)."
+
+      - name: Prepare release assets
+        if: always() && steps.release.outputs.exists == 'true'
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          set -uo pipefail
+          mkdir -p release-assets
+          for ext in md html; do
+            if [[ -s "${K6_REPORT_DIR}/report.${ext}" ]]; then
+              cp "${K6_REPORT_DIR}/report.${ext}" "release-assets/performance-report-${TAG}.${ext}"
+            fi
+          done
+          ls -la release-assets
+
+      # Only tag_name + files: with an existing release softprops keeps its name, body,
+      # draft and prerelease flags and just uploads (overwriting same-named assets on a
+      # re-run).
+      - name: Attach report to the GitHub Release
+        if: always() && steps.release.outputs.exists == 'true'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          files: |
+            release-assets/performance-report-${{ github.ref_name }}.md
+            release-assets/performance-report-${{ github.ref_name }}.html
+          fail_on_unmatched_files: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Dump logs on failure
+        if: failure() && steps.auth.outputs.available == 'true'
+        run: |
+          echo "===== docker compose ps ====="
+          docker compose ps || true
+          echo "===== docker compose logs ====="
+          docker compose logs --no-color --tail=300 || true
+
+      # The gate. Runs after publishing so a regression still ships its report.
+      - name: Enforce k6 thresholds
+        if: steps.auth.outputs.available == 'true'
+        env:
+          K6_EXIT: ${{ steps.k6.outputs.exit_code }}
+        run: |
+          if [[ "${K6_EXIT:-}" == "0" ]]; then
+            echo "All k6 thresholds passed."
+            exit 0
+          fi
+          echo "::error::k6 exit code ${K6_EXIT:-missing}: performance or throttling-isolation thresholds failed. See the job summary."
+          docker compose logs --no-color --tail=200 application || true
+          exit 1
+
+      - name: Tear down
+        if: always() && steps.auth.outputs.available == 'true'
+        run: docker compose down -v || true
