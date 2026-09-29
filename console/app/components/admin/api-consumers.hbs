@@ -1,0 +1,155 @@
+<div class="p-4 space-y-4" ...attributes>
+    <div class="flex flex-wrap items-center justify-between gap-2">
+        <div class="flex flex-wrap items-center gap-1" data-test-windows>
+            {{#each this.windows as |option|}}
+                <Button
+                    @size="xs"
+                    @type={{if (eq option.value this.window) "primary" "default"}}
+                    @text={{option.label}}
+                    @onClick={{fn this.setWindow option}}
+                    data-test-window={{option.value}}
+                />
+            {{/each}}
+        </div>
+        <div class="flex items-center gap-1">
+            <Button @size="xs" @type={{if (eq this.sort "hits") "primary" "default"}} @text="Most requests" @onClick={{fn this.setSort "hits"}} data-test-sort="hits" />
+            <Button @size="xs" @type={{if (eq this.sort "throttled") "primary" "default"}} @text="Most throttled" @onClick={{fn this.setSort "throttled"}} data-test-sort="throttled" />
+            <Button @size="xs" @icon="arrows-rotate" @text="Refresh" @onClick={{perform this.load}} @isLoading={{this.load.isRunning}} data-test-refresh />
+        </div>
+    </div>
+
+    {{#if this.data}}
+        {{#unless this.data.available}}
+            <div
+                class="flex items-center rounded-md border border-yellow-400 bg-yellow-50 px-3 py-2 text-xs text-yellow-800 dark:border-yellow-700 dark:bg-yellow-900 dark:text-yellow-100"
+                data-test-unavailable
+            >
+                <FaIcon @icon="triangle-exclamation" class="mr-2" />
+                Consumer metrics are unavailable: they are stored in Redis, which could not be reached.
+            </div>
+        {{/unless}}
+        {{#unless this.data.tracking}}
+            <div
+                class="flex items-center rounded-md border border-blue-300 bg-blue-50 px-3 py-2 text-xs text-blue-800 dark:border-blue-700 dark:bg-blue-900 dark:text-blue-100"
+                data-test-not-tracking
+            >
+                <FaIcon @icon="circle-info" class="mr-2" />
+                Consumer tracking is turned off in
+                <LinkTo @route="console.admin.rate-limits" class="mx-1 underline">Rate Limits</LinkTo>, so no new requests are being counted.
+            </div>
+        {{/unless}}
+
+        <div class="grid grid-cols-2 gap-3 md:grid-cols-4">
+            <div class="rounded-md border bg-white p-3 shadow-sm dark:border-gray-700 dark:bg-gray-800" data-test-total-requests>
+                <div class="text-[10px] font-bold uppercase text-gray-500 dark:text-gray-400">Requests</div>
+                <div class="mt-2 text-2xl font-bold leading-none">{{format-number (or this.data.total_requests 0)}}</div>
+                <div class="mt-2 text-[11px] text-gray-500">{{this.selectedWindow.label}}</div>
+            </div>
+            <div class="rounded-md border bg-white p-3 shadow-sm dark:border-gray-700 dark:bg-gray-800" data-test-total-throttled>
+                <div class="text-[10px] font-bold uppercase text-gray-500 dark:text-gray-400">Throttled (429)</div>
+                <div class="mt-2 text-2xl font-bold leading-none {{if this.data.total_throttled 'text-rose-600 dark:text-rose-300'}}">{{format-number (or this.data.total_throttled 0)}}</div>
+                <div class="mt-2 text-[11px] text-gray-500">{{this.throttledRate}}% of requests</div>
+            </div>
+            <div class="rounded-md border bg-white p-3 shadow-sm dark:border-gray-700 dark:bg-gray-800" data-test-consumer-count>
+                <div class="text-[10px] font-bold uppercase text-gray-500 dark:text-gray-400">Active consumers</div>
+                <div class="mt-2 text-2xl font-bold leading-none">{{format-number (or this.data.consumer_count 0)}}</div>
+                <div class="mt-2 text-[11px] text-gray-500">API keys, tokens and addresses</div>
+            </div>
+            <div class="rounded-md border bg-white p-3 shadow-sm dark:border-gray-700 dark:bg-gray-800" data-test-default-limit>
+                <div class="text-[10px] font-bold uppercase text-gray-500 dark:text-gray-400">Default limit</div>
+                <div class="mt-2 text-2xl font-bold leading-none">{{format-number (or this.data.default_limit 0)}}</div>
+                <div class="mt-2 text-[11px] text-gray-500">requests per consumer / {{this.data.decay_minutes}} min</div>
+            </div>
+        </div>
+
+        {{#if this.timeline.length}}
+            <div class="rounded-md border bg-white p-3 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+                <div class="mb-2 flex items-center justify-between text-[10px] font-bold uppercase text-gray-500 dark:text-gray-400">
+                    <span>Requests per {{this.data.granularity}}</span>
+                    <span class="flex items-center gap-3 normal-case font-normal">
+                        <span class="flex items-center gap-1"><span class="inline-block h-2 w-2 rounded-sm bg-blue-500"></span>Requests</span>
+                        <span class="flex items-center gap-1"><span class="inline-block h-2 w-2 rounded-sm bg-rose-500"></span>Throttled</span>
+                    </span>
+                </div>
+                <div class="flex h-24 items-end gap-px" data-test-timeline>
+                    {{#each this.timeline as |point|}}
+                        <div class="relative flex h-full flex-1 items-end" title="{{point.bucket}}: {{point.hits}} requests, {{point.throttled}} throttled">
+                            <div class="w-full rounded-t-sm bg-blue-500" style={{html-safe (concat "height: " point.height "%")}}></div>
+                            {{#if point.throttled}}
+                                <div class="absolute bottom-0 w-full rounded-t-sm bg-rose-500" style={{html-safe (concat "height: " point.throttledHeight "%")}}></div>
+                            {{/if}}
+                        </div>
+                    {{/each}}
+                </div>
+            </div>
+        {{/if}}
+
+        <div class="next-table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Consumer</th>
+                        <th>Organization</th>
+                        <th {{set-width "70px"}}>Scope</th>
+                        <th {{set-width "90px"}} class="text-right">Requests</th>
+                        <th {{set-width "80px"}} class="text-right">Avg/min</th>
+                        <th {{set-width "80px"}} class="text-right">Peak/min</th>
+                        <th {{set-width "90px"}} class="text-right">Throttled</th>
+                        <th {{set-width "80px"}} class="text-right">Limit</th>
+                        <th {{set-width "70px"}} class="text-right">Share</th>
+                        <th>Last seen</th>
+                        <th {{set-width "60px"}}></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each this.consumers as |consumer|}}
+                        <tr class={{if consumer.isThrottled "bg-rose-50 dark:bg-rose-950"}} data-test-consumer={{consumer.signature}}>
+                            <td>
+                                <div class="font-semibold">{{or consumer.label "Unknown"}}</div>
+                                <div class="text-xs text-gray-500">
+                                    {{consumer.typeLabel}}
+                                    {{#if consumer.detail}}· {{consumer.detail}}{{/if}}
+                                    {{#if consumer.test_mode}}· test mode{{/if}}
+                                    {{#if consumer.ip}}· {{consumer.ip}}{{/if}}
+                                </div>
+                            </td>
+                            <td>
+                                {{#if consumer.company_id}}
+                                    <LinkTo @route="console.admin.organizations.details" @model={{consumer.company_id}}>{{or consumer.company_name consumer.company_id}}</LinkTo>
+                                {{else}}
+                                    <span class="text-gray-400">—</span>
+                                {{/if}}
+                            </td>
+                            <td><span class="font-mono text-xs">/{{consumer.scope}}</span></td>
+                            <td class="text-right">{{format-number (or consumer.hits 0)}}</td>
+                            <td class="text-right">{{consumer.avg_per_minute}}</td>
+                            <td class="text-right">{{n-a consumer.peak_per_minute}}</td>
+                            <td class="text-right {{if consumer.isThrottled 'font-semibold text-rose-600 dark:text-rose-300'}}">{{format-number (or consumer.throttled 0)}}</td>
+                            <td class="text-right">{{if consumer.isUnlimited "Unlimited" consumer.limit}}</td>
+                            <td class="text-right">{{consumer.share}}%</td>
+                            <td class="text-xs">{{n-a consumer.last_seen_at}}</td>
+                            <td>
+                                {{#if consumer.isThrottled}}
+                                    <Button
+                                        @size="xs"
+                                        @icon="unlock"
+                                        @helpText="Clear this consumer's current rate-limit window"
+                                        @onClick={{perform this.resetConsumer consumer}}
+                                        @isLoading={{this.resetConsumer.isRunning}}
+                                        data-test-reset-consumer
+                                    />
+                                {{/if}}
+                            </td>
+                        </tr>
+                    {{else}}
+                        <tr>
+                            <td colspan="11" class="text-center text-sm text-gray-500" data-test-empty>No API requests in this window.</td>
+                        </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    {{else}}
+        <div class="flex justify-center py-10"><Spinner /></div>
+    {{/if}}
+</div>

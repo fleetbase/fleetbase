@@ -1,0 +1,145 @@
+<div class="space-y-6" ...attributes>
+    <ContentPanel @title="API Rate Limiting" @open={{true}} @wrapperClass="bordered-classic">
+        <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">
+            Limits apply to each API consumer separately (every API key, access token, or anonymous client address), so a single busy integration is throttled on its own without affecting
+            anyone else.
+        </p>
+
+        <InputGroup @name="Rate limiting" @helpText="When disabled, no API request is ever rejected with 429. Only disable this for load testing.">
+            <Toggle @isToggled={{this.enabled}} @onToggle={{this.toggleEnabled}} @label={{if this.enabled "Enabled" "Disabled"}} @disabled={{this.isBusy}} />
+        </InputGroup>
+
+        {{#unless this.enabled}}
+            <div
+                class="mb-4 flex items-center rounded-md border border-yellow-400 bg-yellow-50 px-3 py-2 text-xs text-yellow-800 dark:border-yellow-700 dark:bg-yellow-900 dark:text-yellow-100"
+                data-test-disabled-warning
+            >
+                <FaIcon @icon="triangle-exclamation" class="mr-2" />
+                Rate limiting is off: any consumer can send unlimited requests.
+            </div>
+        {{/unless}}
+
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <InputGroup
+                @name="Requests per window"
+                @type="number"
+                @value={{this.maxAttempts}}
+                @helpText={{concat "Maximum requests each consumer may send per window. Environment default: " this.defaults.max_attempts}}
+                disabled={{this.isBusy}}
+                data-test-max-attempts
+            />
+            <InputGroup
+                @name="Window (minutes)"
+                @type="number"
+                @value={{this.decayMinutes}}
+                @helpText={{concat "Length of the rate-limit window. Environment default: " this.defaults.decay_minutes}}
+                disabled={{this.isBusy}}
+                data-test-decay-minutes
+            />
+        </div>
+
+        <InputGroup @name="Track API consumers" @helpText="Count requests per consumer for the API Consumers view. Requires Redis.">
+            <Toggle @isToggled={{this.trackConsumers}} @onToggle={{this.toggleTrackConsumers}} @label={{if this.trackConsumers "Tracking" "Not tracking"}} @disabled={{this.isBusy}} />
+        </InputGroup>
+
+        {{#if this.unlimitedKeys}}
+            <p class="text-xs text-gray-500 dark:text-gray-400" data-test-unlimited-keys>
+                {{this.unlimitedKeys}}
+                API key(s) bypass rate limiting via THROTTLE_UNLIMITED_API_KEYS.
+            </p>
+        {{/if}}
+    </ContentPanel>
+
+    <ContentPanel @title="Organization Overrides" @open={{true}} @wrapperClass="bordered-classic">
+        <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">
+            Give an organization's consumers a different limit, or lift the limit entirely, for high-volume integrations.
+        </p>
+
+        {{#if this.overrides.length}}
+            <div class="next-table-wrapper mb-4">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Organization</th>
+                            <th {{set-width "110px"}}>Unlimited</th>
+                            <th {{set-width "150px"}}>Requests / window</th>
+                            <th>Note</th>
+                            <th {{set-width "50px"}}></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each this.overrides as |override|}}
+                            <tr data-test-override={{override.company_uuid}}>
+                                <td>
+                                    <div class="font-semibold">{{or override.company_name override.company_uuid}}</div>
+                                    {{#if override.company_id}}
+                                        <div class="text-xs text-gray-500">{{override.company_id}}</div>
+                                    {{/if}}
+                                </td>
+                                <td>
+                                    <Toggle @isToggled={{override.unlimited}} @onToggle={{fn this.updateOverride override "unlimited"}} @disabled={{this.isBusy}} />
+                                </td>
+                                <td>
+                                    {{#if override.unlimited}}
+                                        <span class="text-xs text-gray-500">No limit</span>
+                                    {{else}}
+                                        <input
+                                            type="number"
+                                            min="1"
+                                            class="form-input form-input-sm w-full"
+                                            value={{override.max_attempts}}
+                                            placeholder={{this.maxAttempts}}
+                                            disabled={{this.isBusy}}
+                                            {{on "input" (fn this.updateOverrideInput override "max_attempts")}}
+                                            data-test-override-max-attempts
+                                        />
+                                    {{/if}}
+                                </td>
+                                <td>
+                                    <input
+                                        type="text"
+                                        class="form-input form-input-sm w-full"
+                                        value={{override.note}}
+                                        placeholder="Why this override exists"
+                                        disabled={{this.isBusy}}
+                                        {{on "input" (fn this.updateOverrideInput override "note")}}
+                                        data-test-override-note
+                                    />
+                                </td>
+                                <td>
+                                    <Button @type="danger" @size="xs" @icon="trash" @onClick={{fn this.removeOverride override}} @disabled={{this.isBusy}} data-test-remove-override />
+                                </td>
+                            </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        {{/if}}
+
+        <InputGroup @name="Add organization">
+            <ModelSelect
+                @modelName="company"
+                @selectedModel={{this.companyToAdd}}
+                @placeholder="Search organizations"
+                @triggerClass="form-select form-input"
+                @infiniteScroll={{false}}
+                @renderInPlace={{true}}
+                @onChange={{this.addOverride}}
+                @query={{hash view="admin" sort="name"}}
+                @disabled={{this.isBusy}}
+                as |company|
+            >
+                {{company.name}}
+            </ModelSelect>
+        </InputGroup>
+    </ContentPanel>
+</div>
+
+<EmberWormhole @to="next-view-section-subheader-actions">
+    <div class="flex items-center space-x-2">
+        {{#if this.differsFromDefaults}}
+            <Button @size="sm" @icon="rotate-left" @text="Reset to Defaults" @onClick={{perform this.reset}} @disabled={{this.isBusy}} @isLoading={{this.reset.isRunning}} data-test-reset />
+        {{/if}}
+        <Button @type="primary" @size="sm" @icon="save" @text="Save Changes" @onClick={{perform this.save}} @disabled={{this.isBusy}} @isLoading={{this.save.isRunning}} data-test-save />
+    </div>
+</EmberWormhole>
