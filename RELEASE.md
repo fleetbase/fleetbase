@@ -5,6 +5,7 @@
 Fleetbase `0.7.67` ships Core API `1.6.67`. It is a security release: upgrade promptly.
 
 - **API keys created in the same second were identical, across organizations.** API keys are now generated randomly.
+- **API requests are about twice as fast in the Docker images**: Xdebug was running in them.
 
 ---
 ## Component Versions
@@ -20,6 +21,10 @@ Fleetbase `0.7.67` ships Core API `1.6.67`. It is a security release: upgrade pr
 ---
 ## Security
 - **API keys created in the same second were identical, across organizations** (core-api #283). An API key was derived from the time it was created and its row id. The id was never loaded when the key was generated, so every key created in the same second, on any organization, got the same value. API authentication resolves a key to the first matching credential, so a key issued to one organization could authenticate as another's. Keys, including rolled keys, are now 32 random characters from a cryptographically secure generator.
+
+---
+## Performance
+- **Xdebug no longer runs in the Docker images.** It was installed for test coverage and left in its default `develop` mode, which roughly doubled every API request's time and disabled the OPcache JIT, in production images too. The images now set `XDEBUG_MODE=off`; coverage runs still set their own mode.
 
 ---
 ## Upgrade Steps

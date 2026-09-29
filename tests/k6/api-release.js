@@ -118,7 +118,13 @@ const CFG = {
     baseUrl: BASE_URL,
     requestTimeout: env('REQUEST_TIMEOUT', '30s'),
 
-    // Throughput
+    // Throughput. "vus" (default) runs a fixed number of concurrent virtual users, each
+    // sending its next request when the last one returns: latency is the API's, and the
+    // request rate is whatever it sustains. "rate" sends at a fixed arrival rate whether
+    // or not earlier requests finished; on a runner slower than the rate the queue grows
+    // without bound and every request times out, so it only suits known-capacity hosts.
+    throughputMode: env('THROUGHPUT_MODE', 'vus') === 'rate' ? 'rate' : 'vus',
+    peakVUs: num('THROUGHPUT_PEAK_VUS', 16),
     peakRate: num('THROUGHPUT_PEAK_RATE', 50),
     throughputSec: seconds('THROUGHPUT_DURATION', '3m30s'),
     throughputVUs: num('THROUGHPUT_VUS', 50),
@@ -130,7 +136,8 @@ const CFG = {
     baselinePath: env('BASELINE_METRICS', ''),
 
     // Noisy neighbour
-    noisyRate: num('NOISY_RATE', 10),
+    // 4 req/s is 240/min: double the default 120/min limit, without swamping a CI runner.
+    noisyRate: num('NOISY_RATE', 4),
     noisySec: seconds('NOISY_DURATION', '90s'),
     noisyWarmupSec: seconds('NOISY_WARMUP', '15s'),
     noisyMaxVUs: num('NOISY_MAX_VUS', 150),
@@ -258,12 +265,15 @@ const unexpectedStatus = new Rate('unexpected_status'); // non-2xx that is not a
  | Scenarios + thresholds
  * ------------------------------------------------------------------------- */
 
-const throughputStages = [
-    { duration: `${Math.round(CFG.throughputSec * 0.15)}s`, target: Math.max(1, Math.round(CFG.peakRate * 0.2)) },
-    { duration: `${Math.round(CFG.throughputSec * 0.25)}s`, target: CFG.peakRate },
-    { duration: `${Math.round(CFG.throughputSec * 0.5)}s`, target: CFG.peakRate },
-    { duration: `${Math.round(CFG.throughputSec * 0.1)}s`, target: 0 },
-];
+// Ramp: 15% of the time to 20% of peak, 25% up to peak, 50% at peak, 10% down.
+function rampTo(peak) {
+    return [
+        { duration: `${Math.round(CFG.throughputSec * 0.15)}s`, target: Math.max(1, Math.round(peak * 0.2)) },
+        { duration: `${Math.round(CFG.throughputSec * 0.25)}s`, target: peak },
+        { duration: `${Math.round(CFG.throughputSec * 0.5)}s`, target: peak },
+        { duration: `${Math.round(CFG.throughputSec * 0.1)}s`, target: 0 },
+    ];
+}
 
 // constant-arrival-rate takes an integer rate per timeUnit; express fractional req/s
 // (e.g. VICTIM_RATE=0.2 on a slow local stack) per minute instead.
@@ -278,16 +288,26 @@ const bystanderSec = Math.max(1, CFG.noisySec - CFG.noisyWarmupSec);
 
 const scenarios = {};
 if (RUN_THROUGHPUT) {
-    scenarios.throughput = {
-        executor: 'ramping-arrival-rate',
-        exec: 'throughput',
-        startRate: 1,
-        timeUnit: '1s',
-        preAllocatedVUs: CFG.throughputVUs,
-        maxVUs: CFG.throughputMaxVUs,
-        stages: throughputStages,
-        tags: { role: 'load' },
-    };
+    scenarios.throughput =
+        CFG.throughputMode === 'rate'
+            ? {
+                  executor: 'ramping-arrival-rate',
+                  exec: 'throughput',
+                  startRate: 1,
+                  timeUnit: '1s',
+                  preAllocatedVUs: CFG.throughputVUs,
+                  maxVUs: CFG.throughputMaxVUs,
+                  stages: rampTo(CFG.peakRate),
+                  tags: { role: 'load' },
+              }
+            : {
+                  executor: 'ramping-vus',
+                  exec: 'throughput',
+                  startVUs: 1,
+                  stages: rampTo(CFG.peakVUs),
+                  gracefulRampDown: '30s',
+                  tags: { role: 'load' },
+              };
 }
 if (RUN_NOISY) {
     scenarios.noisy_flood = {
