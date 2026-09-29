@@ -8,7 +8,14 @@ export default class ConsoleAdminController extends Controller {
     @service intl;
 
     get navigationItems() {
-        return [...this.coreNavigationItems, ...this.registryNavigationItems, ...this.registryPanelItems, this.authConfigNavigationItem, this.systemConfigNavigationItem];
+        return [
+            ...this.coreNavigationItems,
+            ...this.registryNavigationItems,
+            ...this.registryPanelItems,
+            this.apiTrafficNavigationItem,
+            this.authConfigNavigationItem,
+            this.systemConfigNavigationItem,
+        ];
     }
 
     get coreNavigationItems() {
@@ -66,6 +73,35 @@ export default class ConsoleAdminController extends Controller {
                 children: (panel.items ?? []).map((menuItem) => this.buildRegistryItem(menuItem, panel)),
             };
         });
+    }
+
+    /**
+     * Who is calling the public API and how hard, and the limits that keep one busy
+     * consumer from starving the rest of the platform.
+     */
+    get apiTrafficNavigationItem() {
+        return {
+            label: 'API Traffic',
+            description: 'Monitor API consumers and configure rate limiting.',
+            icon: 'gauge-high',
+            keywords: ['api', 'traffic', 'rate limit', 'throttle', 'requests'],
+            children: [
+                {
+                    label: 'API Consumers',
+                    description: 'See which API keys, users and addresses drive traffic or are being throttled.',
+                    icon: 'chart-column',
+                    route: 'console.admin.api-consumers',
+                    keywords: ['api', 'consumers', 'usage', 'requests', 'throttled', '429'],
+                },
+                {
+                    label: 'Rate Limits',
+                    description: 'Configure API rate limits and per-organization overrides.',
+                    icon: 'gauge',
+                    route: 'console.admin.rate-limits',
+                    keywords: ['rate limit', 'throttle', 'requests per minute', '429', 'overrides'],
+                },
+            ],
+        };
     }
 
     /**

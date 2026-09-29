@@ -237,6 +237,20 @@ module('Unit | Controller | console/admin', function (hooks) {
         );
     });
 
+    test('it groups api consumers and rate limits under api traffic, before auth config', function (assert) {
+        const controller = this.owner.lookup('controller:console/admin');
+        const apiTraffic = navItem(controller, 'API Traffic');
+        const labels = controller.navigationItems.map((item) => item.label);
+
+        assert.ok(apiTraffic, 'the group exists');
+        assert.deepEqual(
+            apiTraffic.children.map((item) => item.route),
+            ['console.admin.api-consumers', 'console.admin.rate-limits'],
+            'visibility first, then the limits'
+        );
+        assert.strictEqual(labels.indexOf('API Traffic') + 1, labels.indexOf('Auth Config'), 'api traffic sits just before auth config');
+    });
+
     test('it adds system config as a nested navigator branch', function (assert) {
         const controller = this.owner.lookup('controller:console/admin');
         const systemConfig = navItem(controller, 'System Config');

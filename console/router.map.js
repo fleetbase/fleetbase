@@ -57,6 +57,8 @@ Router.map(function () {
             this.route('two-fa-settings');
             this.route('oauth-settings');
             this.route('platform-api-token');
+            this.route('api-consumers');
+            this.route('rate-limits');
             this.route('virtual', { path: '/:slug' });
             this.route('organizations', function () {
                 this.route('index', { path: '/' });
