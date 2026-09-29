@@ -4,7 +4,7 @@ import { render, click, settled } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import Service from '@ember/service';
 import { captureComponent } from '@fleetbase/console/tests/helpers/capture-component';
-import AdminRateLimitsComponent from '@fleetbase/console/components/admin/rate-limits';
+import AdminRateLimitsComponent, { RateLimitOverride } from '@fleetbase/console/components/admin/rate-limits';
 
 const DEFAULTS = { enabled: true, max_attempts: 120, decay_minutes: 1, track_consumers: true, overrides: [] };
 
@@ -76,7 +76,14 @@ module('Integration | Component | admin/rate-limits', function (hooks) {
                 <Admin::RateLimits />
             `);
             await flush();
-            return captured.instance;
+            const component = captured.instance;
+            // Framework-provided services are patched on the instance, not re-registered.
+            this.transitions = [];
+            Object.defineProperty(component, 'router', {
+                configurable: true,
+                value: { transitionTo: (...args) => this.transitions.push(args) },
+            });
+            return component;
         };
     });
 
@@ -86,8 +93,10 @@ module('Integration | Component | admin/rate-limits', function (hooks) {
         assert.deepEqual(this.requests[0], { method: 'get', path: 'rate-limits/settings', payload: undefined });
         assert.strictEqual(component.maxAttempts, 120);
         assert.strictEqual(component.unlimitedKeys, 2);
-        assert.dom('[data-test-override="company-1"]').containsText('Acme Pharma');
-        assert.dom('[data-test-override="company-1"]').containsText('company_abc');
+        assert.dom('[data-test-overrides-table]').containsText('Acme Pharma', 'overrides render in the table');
+        assert.dom('[data-test-override-input="max_attempts"]').hasValue('600');
+        assert.dom('[data-test-override-input="note"]').hasValue('bulk import');
+        assert.dom('[data-test-override-unlimited]').exists();
         assert.dom('[data-test-unlimited-keys]').containsText('2');
         assert.dom('[data-test-disabled-warning]').doesNotExist();
         assert.dom('#next-view-section-subheader-actions [data-test-save]').exists('save is wormholed to the subheader');
@@ -168,7 +177,7 @@ module('Integration | Component | admin/rate-limits', function (hooks) {
         component.updateOverride(second, 'unlimited', true);
         component.updateOverrideInput(third, 'max_attempts', { target: { value: '' } });
         component.updateOverrideInput(component.overrides[0], 'note', { target: { value: 'renewed' } });
-        component.overrides = [...component.overrides, { company_uuid: 'company-4', unlimited: false, max_attempts: null }];
+        component.overrides = [...component.overrides, new RateLimitOverride({ company_uuid: 'company-4', note: null })];
 
         assert.deepEqual(component.payload().overrides, [
             { company_uuid: 'company-1', unlimited: false, max_attempts: 600, note: 'renewed' },
@@ -176,17 +185,23 @@ module('Integration | Component | admin/rate-limits', function (hooks) {
             { company_uuid: 'company-3', unlimited: false, max_attempts: null, note: '' },
             { company_uuid: 'company-4', unlimited: false, max_attempts: null, note: '' },
         ]);
-        assert.notStrictEqual(component.overrides[0], first, 'edits replace the row so the table re-renders');
+        assert.strictEqual(component.overrides[0], first, 'edits happen in place, so an input keeps focus while typing');
+        assert.deepEqual(component.overrides[3].organization, { id: 'company-4', uuid: 'company-4', public_id: null, name: 'company-4' }, 'an unnamed organization shows its id');
 
-        component.removeOverride(component.overrides[3]);
+        const [view, remove] = component.overrideColumns.at(-1).actions;
+        view.fn(second);
+        view.fn(component.overrides[3]);
+        assert.deepEqual(this.transitions, [['console.admin.organizations.details', 'company_def']], 'no public id, no transition');
+
+        remove.fn(component.overrides[3]);
+        component.removeOverride(first);
         await settled();
 
-        assert.strictEqual(component.overrides.length, 3);
-        await click('[data-test-override="company-1"] [data-test-remove-override]');
         assert.deepEqual(
             component.overrides.map((override) => override.company_uuid),
             ['company-2', 'company-3']
         );
+        assert.dom('[data-test-override-no-limit]').exists('an unlimited override shows no limit input');
     });
 
     test('it only offers a reset when something differs from the environment', async function (assert) {

@@ -50,89 +50,37 @@
         {{/if}}
     </ContentPanel>
 
-    <ContentPanel @title="Organization Overrides" @open={{true}} @wrapperClass="bordered-classic">
-        <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">
+    {{! Flush body: the overrides table spans the panel edge to edge; text and the picker pad themselves. }}
+    <ContentPanel @title="Organization Overrides" @open={{true}} @wrapperClass="bordered-classic" @panelBodyClass="p-0i" @panelBodyWrapperClass="p-0i">
+        <p class="px-4 pt-4 text-sm text-gray-600 dark:text-gray-400">
             Give an organization's consumers a different limit, or lift the limit entirely, for high-volume integrations.
         </p>
 
-        {{#if this.overrides.length}}
-            <div class="next-table-wrapper mb-4">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Organization</th>
-                            <th {{set-width "110px"}}>Unlimited</th>
-                            <th {{set-width "150px"}}>Requests / window</th>
-                            <th>Note</th>
-                            <th {{set-width "50px"}}></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {{#each this.overrides as |override|}}
-                            <tr data-test-override={{override.company_uuid}}>
-                                <td>
-                                    <div class="font-semibold">{{or override.company_name override.company_uuid}}</div>
-                                    {{#if override.company_id}}
-                                        <div class="text-xs text-gray-500">{{override.company_id}}</div>
-                                    {{/if}}
-                                </td>
-                                <td>
-                                    <Toggle @isToggled={{override.unlimited}} @onToggle={{fn this.updateOverride override "unlimited"}} @disabled={{this.isBusy}} />
-                                </td>
-                                <td>
-                                    {{#if override.unlimited}}
-                                        <span class="text-xs text-gray-500">No limit</span>
-                                    {{else}}
-                                        <input
-                                            type="number"
-                                            min="1"
-                                            class="form-input form-input-sm w-full"
-                                            value={{override.max_attempts}}
-                                            placeholder={{this.maxAttempts}}
-                                            disabled={{this.isBusy}}
-                                            {{on "input" (fn this.updateOverrideInput override "max_attempts")}}
-                                            data-test-override-max-attempts
-                                        />
-                                    {{/if}}
-                                </td>
-                                <td>
-                                    <input
-                                        type="text"
-                                        class="form-input form-input-sm w-full"
-                                        value={{override.note}}
-                                        placeholder="Why this override exists"
-                                        disabled={{this.isBusy}}
-                                        {{on "input" (fn this.updateOverrideInput override "note")}}
-                                        data-test-override-note
-                                    />
-                                </td>
-                                <td>
-                                    <Button @type="danger" @size="xs" @icon="trash" @onClick={{fn this.removeOverride override}} @disabled={{this.isBusy}} data-test-remove-override />
-                                </td>
-                            </tr>
-                        {{/each}}
-                    </tbody>
-                </table>
-            </div>
-        {{/if}}
-
         {{! No @disabled: ModelSelect reads it once, in its constructor, so binding it to the
             initial load left the picker disabled for good. }}
-        <InputGroup @name="Add organization">
-            <ModelSelect
-                @modelName="company"
-                @selectedModel={{this.companyToAdd}}
-                @placeholder="Search organizations"
-                @triggerClass="form-select form-input"
-                @infiniteScroll={{false}}
-                @renderInPlace={{true}}
-                @onChange={{this.addOverride}}
-                @query={{hash view="admin" sort="name"}}
-                as |company|
-            >
-                {{company.name}}
-            </ModelSelect>
-        </InputGroup>
+        <div class="px-4 py-4">
+            <InputGroup @name="Add organization" @wrapperClass="mb-0">
+                <ModelSelect
+                    @modelName="company"
+                    @selectedModel={{this.companyToAdd}}
+                    @placeholder="Search organizations"
+                    @triggerClass="form-select form-input"
+                    @infiniteScroll={{false}}
+                    @renderInPlace={{true}}
+                    @onChange={{this.addOverride}}
+                    @query={{hash view="admin" sort="name"}}
+                    as |company|
+                >
+                    <SelectOption::Company @option={{company}} />
+                </ModelSelect>
+            </InputGroup>
+        </div>
+
+        {{#if this.overrides.length}}
+            <div class="border-t border-gray-200 dark:border-gray-700" data-test-overrides-table>
+                <Table @rows={{this.overrides}} @columns={{this.overrideColumns}} />
+            </div>
+        {{/if}}
     </ContentPanel>
 </div>
 

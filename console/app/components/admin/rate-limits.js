@@ -5,6 +5,30 @@ import { action } from '@ember/object';
 import { task } from 'ember-concurrency';
 
 /**
+ * One organization override. Edited in place — its fields are tracked — so typing in the
+ * table's inputs does not replace the row object and re-render (and blur) the input.
+ */
+export class RateLimitOverride {
+    @tracked unlimited;
+    @tracked max_attempts;
+    @tracked note;
+
+    constructor({ company_uuid, company_id = null, company_name = null, unlimited = false, max_attempts = null, note = '' }) {
+        this.company_uuid = company_uuid;
+        this.company_id = company_id;
+        this.company_name = company_name;
+        this.unlimited = unlimited;
+        this.max_attempts = max_attempts;
+        this.note = note;
+    }
+
+    /** The organization, shaped for the table's identity cell. */
+    get organization() {
+        return { id: this.company_uuid, uuid: this.company_uuid, public_id: this.company_id, name: this.company_name ?? this.company_uuid };
+    }
+}
+
+/**
  * System-wide API rate limits and per-organization overrides.
  *
  * Limits apply per API consumer (each API key, access token, or anonymous client IP),
@@ -14,6 +38,7 @@ import { task } from 'ember-concurrency';
 export default class AdminRateLimitsComponent extends Component {
     @service fetch;
     @service notifications;
+    @service router;
 
     @tracked enabled = true;
     @tracked maxAttempts = 120;
@@ -23,6 +48,59 @@ export default class AdminRateLimitsComponent extends Component {
     @tracked defaults = {};
     @tracked unlimitedKeys = 0;
     @tracked companyToAdd = null;
+
+    overrideColumns = [
+        {
+            label: 'Organization',
+            valuePath: 'organization',
+            cellComponent: 'table/cell/identity',
+            resourceType: 'company',
+            resourcePath: 'organization',
+            labelPath: 'name',
+            popover: false,
+            hideBadges: true,
+            onClick: this.openOrganization,
+            width: '240px',
+            resizable: true,
+        },
+        { label: 'Unlimited', valuePath: 'unlimited', cellComponent: 'admin/table/cell/override-unlimited', onToggle: this.updateOverride, width: '100px' },
+        {
+            label: 'Requests / window',
+            valuePath: 'max_attempts',
+            cellComponent: 'admin/table/cell/override-input',
+            inputType: 'number',
+            inputKey: 'max_attempts',
+            onInput: this.updateOverrideInput,
+            width: '150px',
+        },
+        {
+            label: 'Note',
+            valuePath: 'note',
+            cellComponent: 'admin/table/cell/override-input',
+            inputType: 'text',
+            inputKey: 'note',
+            placeholder: 'Why this override exists',
+            onInput: this.updateOverrideInput,
+            width: '260px',
+            resizable: true,
+        },
+        {
+            label: '',
+            cellComponent: 'table/cell/dropdown',
+            ddButtonText: false,
+            ddButtonIcon: 'ellipsis-h',
+            ddButtonIconPrefix: 'fas',
+            ddMenuLabel: 'Override Actions',
+            cellClassNames: 'overflow-visible',
+            wrapperClass: 'flex items-center justify-end mx-2',
+            sticky: 'right',
+            width: 60,
+            actions: [
+                { label: 'View organization', icon: 'building', fn: (override) => this.openOrganization(override.organization) },
+                { label: 'Remove override', icon: 'trash', fn: (override) => this.removeOverride(override) },
+            ],
+        },
+    ];
 
     constructor() {
         super(...arguments);
@@ -81,7 +159,7 @@ export default class AdminRateLimitsComponent extends Component {
         this.maxAttempts = settings.max_attempts ?? 120;
         this.decayMinutes = settings.decay_minutes ?? 1;
         this.trackConsumers = settings.track_consumers ?? true;
-        this.overrides = (settings.overrides ?? []).map((override) => ({ ...override }));
+        this.overrides = (settings.overrides ?? []).map((override) => new RateLimitOverride(override));
         this.defaults = response.defaults ?? {};
         this.unlimitedKeys = response.unlimited_keys ?? 0;
     }
@@ -119,19 +197,17 @@ export default class AdminRateLimitsComponent extends Component {
 
         this.overrides = [
             ...this.overrides,
-            {
+            new RateLimitOverride({
                 company_uuid: companyUuid,
                 company_id: company.public_id,
                 company_name: company.name,
-                unlimited: false,
                 max_attempts: Number(this.maxAttempts) * 2,
-                note: '',
-            },
+            }),
         ];
     }
 
     @action updateOverride(override, key, value) {
-        this.overrides = this.overrides.map((existing) => (existing === override ? { ...existing, [key]: value } : existing));
+        override[key] = value;
     }
 
     @action updateOverrideInput(override, key, event) {
@@ -140,5 +216,10 @@ export default class AdminRateLimitsComponent extends Component {
 
     @action removeOverride(override) {
         this.overrides = this.overrides.filter((existing) => existing !== override);
+    }
+
+    @action openOrganization(organization) {
+        if (!organization?.public_id) return;
+        this.router.transitionTo('console.admin.organizations.details', organization.public_id);
     }
 }
