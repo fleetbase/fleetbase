@@ -31,16 +31,40 @@ import { buildReports } from './lib/report.js';
  * ------------------------------------------------------------------------- */
 
 /*
- * Uniform [0, 1) from the Web Crypto API. None of this randomness is security-sensitive
- * (it picks records and jitters test coordinates), but using crypto keeps static analysis
- * quiet without suppressions. Built from explicit bytes: k6 fills a Uint32Array passed to
- * getRandomValues() one byte per element, so wider views do not give 32 random bits.
+ * Uniform [0, 1) for load-generation choices: which record to read, which endpoint to hit,
+ * coordinate jitter, unique test emails. None of it is security-sensitive, so this is a
+ * small seeded non-cryptographic generator (sfc32) rather than Math.random() or Web Crypto:
+ * static analysis flags the former when its values reach fields like `email`, and scaling
+ * crypto output down to a float as "biased random from a secure source". Each VU seeds its
+ * own stream on first use from the clock and its VU id, so VUs do not repeat each other.
  */
+let prng = null;
+function seedPrng() {
+    let a = (Date.now() >>> 0) ^ 0x9e3779b9;
+    let b = ((exec.vu.idInTest || 0) * 0x85ebca6b) >>> 0;
+    let c = ((exec.vu.idInInstance || 0) * 0xc2b2ae35) >>> 0;
+    let d = 1;
+    return () => {
+        a >>>= 0;
+        b >>>= 0;
+        c >>>= 0;
+        d >>>= 0;
+        const t = (((a + b) | 0) + d) | 0;
+        d = (d + 1) | 0;
+        a = b ^ (b >>> 9);
+        b = (c + (c << 3)) | 0;
+        c = (c << 21) | (c >>> 11);
+        c = (c + t) | 0;
+        return (t >>> 0) / 4294967296;
+    };
+}
 function rand() {
-    const bytes = crypto.getRandomValues(new Uint8Array(6));
-    let n = 0;
-    for (let i = 0; i < bytes.length; i += 1) n = n * 256 + bytes[i];
-    return n / 281474976710656; // 2^48
+    if (!prng) {
+        prng = seedPrng();
+        // Discard the first outputs, which are weakly mixed for small seeds.
+        for (let i = 0; i < 12; i += 1) prng();
+    }
+    return prng();
 }
 
 function env(name, fallback) {

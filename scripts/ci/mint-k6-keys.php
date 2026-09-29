@@ -84,9 +84,16 @@ try {
     // Report what the limiter will actually enforce for the noisy tenant, so the k6 run
     // can size its flood and the report can state the limit it was measured against.
     // Administrator overrides (system.rate-limits) win over the environment.
-    $settings    = \Fleetbase\Support\ApiRateLimits::settings();
-    $noisyOrg    = \Fleetbase\Models\Company::where('name', $roles['noisy']['org'])->value('uuid');
-    $noisyLimit  = \Fleetbase\Support\ApiRateLimits::limitFor($noisyOrg, $settings);
+    // ApiRateLimits arrived in core-api 1.6.66; on an older core-api the limits are
+    // environment-only, so read them from config instead of failing the whole run.
+    if (class_exists(\Fleetbase\Support\ApiRateLimits::class)) {
+        $settings   = \Fleetbase\Support\ApiRateLimits::settings();
+        $noisyOrg   = \Fleetbase\Models\Company::where('name', $roles['noisy']['org'])->value('uuid');
+        $noisyLimit = \Fleetbase\Support\ApiRateLimits::limitFor($noisyOrg, $settings);
+    } else {
+        $settings   = ['enabled' => config('api.throttle.enabled', true) !== false];
+        $noisyLimit = (int) config('api.throttle.max_attempts', 120);
+    }
     echo 'K6_THROTTLE_ENABLED=' . ($settings['enabled'] ? 'true' : 'false') . PHP_EOL;
     echo 'K6_RATE_LIMIT=' . ($noisyLimit === null ? 'unlimited' : $noisyLimit) . PHP_EOL;
 
