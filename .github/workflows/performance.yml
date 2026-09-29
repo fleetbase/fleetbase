@@ -44,8 +44,16 @@ on:
       - main
   workflow_dispatch:
     inputs:
+      throughput_mode:
+        description: Throughput load model, vus (concurrent users, default) or rate (fixed arrival rate)
+        required: false
+        default: ''
+      throughput_peak_vus:
+        description: Peak concurrent virtual users for the throughput phase (vus mode)
+        required: false
+        default: ''
       throughput_peak_rate:
-        description: Peak arrival rate for the throughput phase (req/s)
+        description: Peak arrival rate for the throughput phase (req/s, rate mode)
         required: false
         default: ''
       throughput_duration:
@@ -319,6 +327,8 @@ jobs:
           GIT_REF: ${{ github.ref }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           SCENARIOS: ${{ inputs.scenarios || 'throughput,noisy_neighbour' }}
+          THROUGHPUT_MODE: ${{ inputs.throughput_mode }}
+          THROUGHPUT_PEAK_VUS: ${{ inputs.throughput_peak_vus }}
           THROUGHPUT_PEAK_RATE: ${{ inputs.throughput_peak_rate }}
           THROUGHPUT_DURATION: ${{ inputs.throughput_duration }}
           NOISY_RATE: ${{ inputs.noisy_rate }}

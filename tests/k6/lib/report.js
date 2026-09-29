@@ -291,7 +291,12 @@ function configRows(ctx) {
     const { cfg } = ctx;
     const rows = [['Base URL', cfg.baseUrl]];
     if (ctx.runThroughput) {
-        rows.push(['Throughput', `ramping arrival rate to ${cfg.peakRate} req/s over ${cfg.throughputSec}s (${cfg.throughputVUs}–${cfg.throughputMaxVUs} VUs)`]);
+        rows.push([
+            'Throughput',
+            cfg.throughputMode === 'rate'
+                ? `ramping arrival rate to ${cfg.peakRate} req/s over ${cfg.throughputSec}s (${cfg.throughputVUs}–${cfg.throughputMaxVUs} VUs)`
+                : `ramping to ${cfg.peakVUs} concurrent virtual users over ${cfg.throughputSec}s (request rate is what the API sustains)`,
+        ]);
         rows.push(['Endpoints', 'weighted catalogue across orders, places, contacts, drivers, vehicles, fleets, vendors, service areas/rates, issues and fuel reports']);
         rows.push(['Latency budget (p95)', `reads < ${cfg.readP95} ms, writes < ${cfg.writeP95} ms`]);
     } else {
