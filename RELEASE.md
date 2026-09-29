@@ -2,7 +2,7 @@
 
 ---
 ## Highlights
-Fleetbase `0.7.66` ships Core API `1.6.66`.
+Fleetbase `0.7.66` ships Core API `1.6.66` and Storefront `0.4.23`.
 
 - **Rate limiting is per API consumer.** One integration sending a burst of order requests with a single API key put the entire platform into `429 Too many requests` for every tenant, app and console user. Each API key or token now has its own limit, so only the busy consumer is throttled.
 - **Admins control rate limits from the console.** Admin › API Traffic › Rate Limits sets the per-consumer limit and window, and adds per-organization overrides (a custom limit, or unlimited) for high-volume integrations.
@@ -14,7 +14,7 @@ Fleetbase `0.7.66` ships Core API `1.6.66`.
 - `console`: `0.7.66`
 - `core-api`: `1.6.66`
 - `fleetops`: `0.6.70`
-- `storefront`: `0.4.22`
+- `storefront`: `0.4.23`
 - `ledger`: `0.0.11`
 - `ember-ui`: `0.4.4`
 - `registry-bridge`: `0.1.10`
@@ -23,6 +23,7 @@ Fleetbase `0.7.66` ships Core API `1.6.66`.
 ---
 ## Fixes
 - **One API consumer could rate-limit the whole platform** (core-api #280, fleetbase #689). The rate limiter ran before the API key was authenticated, so it keyed every bucket on the client IP. Behind a load balancer that is the balancer's address, so every tenant, integration, driver app and console visitor shared one bucket of 120 requests a minute. A single customer creating orders over the API returned 429 to everyone, including people trying to sign in. The limiter now keys on the API key or token, and keeps the public API and the console's sign-in routes apart.
+- **One busy store could rate-limit every other store** (storefront #108). The Storefront API limiter had the same IP-keyed bucket, and its key collided with the core API's. It now keys on the store key plus the client IP, so each device of each store has its own limit.
 - **The API sees the real client IP behind proxies** (fleetbase #689). Proxies on private networks are trusted by default, so rate limiting and request logs see the caller's address instead of the load balancer's. Set `TRUSTED_PROXIES` for load balancers that connect from public addresses (e.g. Google Cloud: `35.191.0.0/16,130.211.0.0/22`).
 - **429 responses tell clients when to retry** (core-api #280). `Retry-After` and `X-RateLimit-*` headers were being dropped.
 

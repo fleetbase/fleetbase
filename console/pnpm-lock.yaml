@@ -50,8 +50,8 @@ importers:
         specifier: ^0.1.10
         version: 0.1.10(bffd95f1ee8fa5c6dc085f568b2e0221)
       '@fleetbase/storefront-engine':
-        specifier: ^0.4.22
-        version: 0.4.22(bffd95f1ee8fa5c6dc085f568b2e0221)
+        specifier: ^0.4.23
+        version: 0.4.23(bffd95f1ee8fa5c6dc085f568b2e0221)
       '@fleetbase/valhalla-engine':
         specifier: ^0.0.4
         version: 0.0.4(bffd95f1ee8fa5c6dc085f568b2e0221)
@@ -1617,8 +1617,8 @@ packages:
     peerDependencies:
       ember-engines: ^0.9.0
 
-  '@fleetbase/storefront-engine@0.4.22':
-    resolution: {integrity: sha512-ZsDa1NiN55HEQVSpzbJbKwIHqJWR//sxeZ7TAfDxvcRsKIJOcpOoNjmYxZul/eIPFtQE14EBA/1fE7/U+yjz4w==}
+  '@fleetbase/storefront-engine@0.4.23':
+    resolution: {integrity: sha512-VMYT9GBgypjbahtzrFSoCAmLdaVO4mgJD4tyRLuPoWaS7ULMjmmDWr6nSiZPz+oDh3luMXex+k5NPkLYKuaiMg==}
     engines: {node: '>= 18'}
     peerDependencies:
       ember-engines: ^0.9.0
@@ -11494,7 +11494,7 @@ snapshots:
       - webpack-command
       - yaml
 
-  '@fleetbase/storefront-engine@0.4.22(bffd95f1ee8fa5c6dc085f568b2e0221)':
+  '@fleetbase/storefront-engine@0.4.23(bffd95f1ee8fa5c6dc085f568b2e0221)':
     dependencies:
       '@babel/core': 7.29.7
       '@fleetbase/ember-core': 0.3.24(@ember/string@3.1.1)(@ember/test-helpers@3.3.1(@babel/core@7.29.7)(ember-source@5.4.1(@babel/core@7.29.7)(@glimmer/component@1.1.2(@babel/core@7.29.7))(rsvp@4.8.5)(webpack@5.109.2(postcss@8.5.26)))(webpack@5.109.2(postcss@8.5.26)))(ember-resolver@11.0.1(ember-source@5.4.1(@babel/core@7.29.7)(@glimmer/component@1.1.2(@babel/core@7.29.7))(rsvp@4.8.5)(webpack@5.109.2(postcss@8.5.26))))(ember-source@5.4.1(@babel/core@7.29.7)(@glimmer/component@1.1.2(@babel/core@7.29.7))(rsvp@4.8.5)(webpack@5.109.2(postcss@8.5.26)))(eslint@8.57.1)(webpack@5.109.2(postcss@8.5.26))
