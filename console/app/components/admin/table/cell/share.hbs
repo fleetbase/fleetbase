@@ -1,0 +1,7 @@
+{{! Share of all requests in the window, as a bar and a percentage. }}
+<div class="flex items-center gap-2" data-test-share-cell>
+    <div class="h-1.5 w-14 flex-shrink-0 overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
+        <div class="h-full rounded-full bg-blue-500" style={{html-safe (concat "width: " (or @value 0) "%")}}></div>
+    </div>
+    <span class="text-xs tabular-nums text-gray-700 dark:text-gray-300">{{or @value 0}}%</span>
+</div>

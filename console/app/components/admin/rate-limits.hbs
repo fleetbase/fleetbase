@@ -116,6 +116,8 @@
             </div>
         {{/if}}
 
+        {{! No @disabled: ModelSelect reads it once, in its constructor, so binding it to the
+            initial load left the picker disabled for good. }}
         <InputGroup @name="Add organization">
             <ModelSelect
                 @modelName="company"
@@ -126,7 +128,6 @@
                 @renderInPlace={{true}}
                 @onChange={{this.addOverride}}
                 @query={{hash view="admin" sort="name"}}
-                @disabled={{this.isBusy}}
                 as |company|
             >
                 {{company.name}}

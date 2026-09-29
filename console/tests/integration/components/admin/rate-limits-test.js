@@ -92,6 +92,8 @@ module('Integration | Component | admin/rate-limits', function (hooks) {
         assert.dom('[data-test-disabled-warning]').doesNotExist();
         assert.dom('#next-view-section-subheader-actions [data-test-save]').exists('save is wormholed to the subheader');
         assert.dom('[data-test-reset]').exists('an override differs from the defaults, so reset is offered');
+        // ModelSelect reads @disabled once; the picker must not stay disabled after the load.
+        assert.dom('.ember-power-select-trigger').doesNotHaveAttribute('aria-disabled', 'the organization picker is usable');
     });
 
     test('it saves the settings and overrides as numbers', async function (assert) {

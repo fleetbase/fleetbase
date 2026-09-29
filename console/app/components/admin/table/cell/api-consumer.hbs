@@ -1,0 +1,28 @@
+{{! An identity cell for an API consumer: type icon, name, then the masked key / token and client address. }}
+<div class="flex min-w-0 items-center gap-2 py-0.5" data-test-api-consumer-cell>
+    <div
+        class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full border shadow-sm
+            {{if
+                @row.isThrottled
+                'border-rose-200 bg-rose-50 text-rose-600 dark:border-rose-800 dark:bg-rose-900/40 dark:text-rose-300'
+                'border-gray-200 bg-gray-100 text-gray-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400'
+            }}"
+        title={{@row.typeLabel}}
+    >
+        <FaIcon @icon={{@row.typeIcon}} @size="xs" />
+    </div>
+    <div class="min-w-0">
+        <div class="flex min-w-0 items-center gap-1.5">
+            <span class="truncate text-sm leading-4 text-gray-900 dark:text-gray-100" data-test-api-consumer-label>{{@row.label}}</span>
+            <span class="inline-flex flex-shrink-0 items-center rounded-lg bg-gray-200 px-1 text-[10px] leading-4 text-gray-700 dark:bg-gray-700 dark:text-gray-300">{{@row.typeLabel}}</span>
+            {{#if @row.test_mode}}
+                <span class="inline-flex flex-shrink-0 items-center rounded-lg bg-amber-100 px-1 text-[10px] leading-4 text-amber-800 dark:bg-amber-900/40 dark:text-amber-200">test</span>
+            {{/if}}
+        </div>
+        {{#if (or @row.detail @row.ip)}}
+            <div class="mt-0.5 truncate font-mono text-[11px] leading-4 text-gray-500 dark:text-gray-400" data-test-api-consumer-detail>
+                {{@row.detail}}{{#if (and @row.detail @row.ip)}} · {{/if}}{{@row.ip}}
+            </div>
+        {{/if}}
+    </div>
+</div>
