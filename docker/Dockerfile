@@ -76,7 +76,11 @@ ENV QUEUE_CONNECTION=redis
 ENV CADDYFILE_PATH=/fleetbase/Caddyfile
 ENV CONSOLE_PATH=/fleetbase/console
 ENV OCTANE_SERVER=frankenphp
-ENV FLEETBASE_VERSION=0.7.66
+# Xdebug is installed for coverage runs, which set XDEBUG_MODE=coverage themselves. Left at
+# its "develop" default it roughly doubled every request's time and disabled the OPcache
+# JIT in every image built from here, production included.
+ENV XDEBUG_MODE=off
+ENV FLEETBASE_VERSION=0.7.67
 
 # Set environment
 ARG ENVIRONMENT=production

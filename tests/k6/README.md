@@ -131,14 +131,16 @@ The Markdown report is also printed to stdout.
 | `BASE_URL` | `http://localhost:8000` | API origin |
 | `K6_LOAD_KEY` / `K6_NOISY_KEY` / `K6_VICTIM_KEY` | — | Keys from `mint-k6-keys.php`. NOISY and VICTIM must be different |
 | `SCENARIOS` | `throughput,noisy_neighbour` | Phases to run |
-| `THROUGHPUT_PEAK_RATE` | `50` | Peak arrival rate (req/s). Ramp: 15% of the time to 20% of peak, 25% to peak, 50% at peak, 10% down |
+| `THROUGHPUT_MODE` | `vus` | `vus`: a fixed number of concurrent users, so latency is the API's and the rate is what it sustains. `rate`: a fixed arrival rate, which collapses into timeouts on a host slower than the rate |
+| `THROUGHPUT_PEAK_VUS` | `16` | Peak concurrent virtual users (`vus` mode). Ramp: 15% of the time to 20% of peak, 25% to peak, 50% at peak, 10% down |
+| `THROUGHPUT_PEAK_RATE` | `50` | Peak arrival rate in req/s (`rate` mode), same ramp |
 | `THROUGHPUT_DURATION` | `3m30s` | Length of the throughput phase |
 | `THROUGHPUT_VUS` / `THROUGHPUT_MAX_VUS` | `50` / `300` | Pre-allocated and maximum VUs |
 | `EXCLUDE_ENDPOINTS` | – | Catalogue ops to leave out, e.g. `issues.list,fuel-reports.list` |
 | `BASELINE_METRICS` | – | Absolute path to a previous `metrics.json`; adds p95/p99 change columns |
 | `ENFORCE_BUDGETS` | `false` | `true` makes the read/write p95 budgets fail the run (CI: repo variable `K6_ENFORCE_BUDGETS`) |
 | `SEED_ORDERS` | `10` | Orders `setup()` creates for the LOAD key so update/get have targets from the start |
-| `NOISY_RATE` | `10` | Flood rate (req/s); 600/min against the default 120/min limit |
+| `NOISY_RATE` | `4` | Flood rate (req/s); 240/min against the default 120/min limit |
 | `NOISY_DURATION` | `90s` | Length of the flood |
 | `NOISY_WARMUP` | `15s` | Delay before the victim and the probe start |
 | `VICTIM_RATE` | `1` | Victim rate (req/s), rotating list, get, create, update and `GET /v1/places` |
