@@ -6,7 +6,6 @@ use Illuminate\Database\Connection;
 use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Database\Events\TransactionBeginning;
 use Illuminate\Database\Events\TransactionCommitting;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -80,7 +79,11 @@ class AppServiceProvider extends ServiceProvider
             }
         });
 
-        DB::listen(function (QueryExecuted $query) {
+        // Subscribe through the dispatcher rather than DB::listen(): the facade resolves the default
+        // connection, and the spatial MysqlConnection opens a PDO handle in its constructor, so
+        // DB::listen() would connect to MySQL on every boot - including `artisan package:discover`
+        // during `composer install`, where no database is reachable.
+        Event::listen(QueryExecuted::class, function (QueryExecuted $query) {
             $this->recordStatement($query->sql);
 
             if ($query->connection->transactionLevel() < 1) {
