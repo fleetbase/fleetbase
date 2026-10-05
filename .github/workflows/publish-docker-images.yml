@@ -1,5 +1,8 @@
 name: Fleetbase Docker Images
 
+permissions:
+    contents: read
+
 on:
     push:
         tags:
