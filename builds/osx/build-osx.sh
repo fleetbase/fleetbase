@@ -160,6 +160,13 @@ export SPC_REL_TYPE=source
 export NO_COMPRESS=1
 export SPC_OPT_BUILD_ARGS="--debug"
 export CMAKE_OSX_ARCHITECTURES=arm64
+# The ar shipped with Xcode 26 silently drops every member after a non-Mach-O
+# member. PHP's libtool adds the EXTRA_LIBS static libraries as members of
+# libphp.a (php-src#12082), which left libphp.a with nothing but its symbol
+# index. Wrap ar so .a operands never get added; FrankenPHP links those
+# libraries itself via spc-config. php-src's libtool honours AR from the env.
+chmod +x "$ROOT_DIR/builds/osx/spc/ar-no-nested-archives"
+export AR="$ROOT_DIR/builds/osx/spc/ar-no-nested-archives"
 # CMake 4 (shipped on current macOS runners) refuses projects that declare
 # cmake_minimum_required < 3.5, which several static-php-cli 2.5.2 library
 # sources (e.g. freetype) still do. This env var tells CMake to configure anyway.
@@ -184,6 +191,7 @@ require_file "$ROOT_DIR/builds/osx/spc/libgeos-unix.php"
 require_file "$ROOT_DIR/builds/osx/spc/libgeos-macos.php"
 require_file "$ROOT_DIR/builds/osx/spc/UnixBuilderBase-macos.php"
 require_file "$ROOT_DIR/builds/osx/spc/MacOSBuilder-macos.php"
+require_file "$ROOT_DIR/builds/osx/spc/ar-no-nested-archives"
 require_file "$STATIC_PHP_CLI_DIR/src/SPC/builder/macos/MacOSBuilder.php"
 
 # Inject libgeos support

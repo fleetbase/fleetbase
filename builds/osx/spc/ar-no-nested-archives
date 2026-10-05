@@ -1,0 +1,39 @@
+#!/bin/bash
+# `ar` wrapper for the macOS static binary build (exported as AR by
+# builds/osx/build-osx.sh).
+#
+# PHP's libtool links libphp.la with the static libraries that static-php-cli
+# passes through EXTRA_LIBS as absolute paths, and adds those .a files as
+# *members* of libphp.a (php-src#12082). The ar shipped with Xcode 26 cannot
+# cope with a non-Mach-O member: it silently drops every member after it, which
+# leaves libphp.a holding nothing but its symbol index. Drop .a operands from
+# add/replace operations so they never enter an archive; FrankenPHP links those
+# libraries itself through `spc spc-config --libs`.
+set -e
+real_ar=/usr/bin/ar
+if [ "$#" -lt 2 ]; then
+  exec "$real_ar" "$@"
+fi
+op="$1"
+shift
+case "$op" in
+  *r* | *q*) ;;                    # add / replace: filter members below
+  *) exec "$real_ar" "$op" "$@" ;; # t, x, d, p, m, ...: pass through
+esac
+args=("$op")
+archive_seen=0
+for a in "$@"; do
+  if [ "$archive_seen" -eq 0 ]; then
+    args+=("$a")
+    case "$a" in
+      -*) ;;
+      *) archive_seen=1 ;;
+    esac
+  else
+    case "$a" in
+      *.a) echo "ar-no-nested-archives: not adding nested archive $a" >&2 ;;
+      *) args+=("$a") ;;
+    esac
+  fi
+done
+exec "$real_ar" "${args[@]}"

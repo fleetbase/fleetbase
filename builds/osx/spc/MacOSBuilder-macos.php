@@ -295,10 +295,11 @@ class MacOSBuilder extends UnixBuilderBase
             // Fleetbase patch (see builds/osx/build-osx.sh): static libraries
             // passed through EXTRA_LIBS end up as nested .a members of libphp.a.
             // Upstream 2.5.2 worked around php-src#12082 by extracting the
-            // archive with `ar x` and re-archiving *.o, but on the Xcode 26
-            // toolchain that extraction yields no .o files and the repack fails.
-            // Strip the nested archive members directly instead, as current
-            // upstream static-php-cli does.
+            // archive with `ar x` and re-archiving *.o. The Xcode 26 ar cannot
+            // handle a non-Mach-O member at all (it truncates the archive), so
+            // build-osx.sh exports an AR wrapper that keeps .a operands out of
+            // the archive in the first place, and this step only removes any
+            // stragglers, the way current upstream static-php-cli does.
             ->exec('ar -t ' . BUILD_ROOT_PATH . "/lib/libphp.a | grep '\\.a$' | xargs -n1 ar d " . BUILD_ROOT_PATH . '/lib/libphp.a');
         $this->patchPhpScripts();
     }
