@@ -183,12 +183,17 @@ require_file "$STATIC_PHP_CLI_DIR/config/lib.json"
 require_file "$ROOT_DIR/builds/osx/spc/libgeos-unix.php"
 require_file "$ROOT_DIR/builds/osx/spc/libgeos-macos.php"
 require_file "$ROOT_DIR/builds/osx/spc/UnixBuilderBase-macos.php"
+require_file "$ROOT_DIR/builds/osx/spc/MacOSBuilder-macos.php"
+require_file "$STATIC_PHP_CLI_DIR/src/SPC/builder/macos/MacOSBuilder.php"
 
 # Inject libgeos support
 log "Injecting libgeos patch files for pinned static-php-cli $STATIC_PHP_CLI_VERSION..."
 cp "$ROOT_DIR/builds/osx/spc/libgeos-unix.php" "$STATIC_PHP_CLI_DIR/src/SPC/builder/unix/library/libgeos.php"
 cp "$ROOT_DIR/builds/osx/spc/libgeos-macos.php" "$STATIC_PHP_CLI_DIR/src/SPC/builder/macos/library/libgeos.php"
 cp "$ROOT_DIR/builds/osx/spc/UnixBuilderBase-macos.php" "$STATIC_PHP_CLI_DIR/src/SPC/builder/unix/UnixBuilderBase.php"
+# Strip nested .a members from libphp.a instead of the `ar x` / `ar rcs` repack,
+# which yields no .o files on the Xcode 26 toolchain (see the patched file).
+cp "$ROOT_DIR/builds/osx/spc/MacOSBuilder-macos.php" "$STATIC_PHP_CLI_DIR/src/SPC/builder/macos/MacOSBuilder.php"
 
 # Patch SPC config
 log "Patching SPC config files (source.json, ext.json, lib.json)..."
