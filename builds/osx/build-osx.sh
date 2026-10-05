@@ -30,6 +30,16 @@ BREW_PREFIX="/opt/homebrew"
 STATIC_PHP_CLI_VERSION="2.5.2"
 TARGET_PHP_VERSION="8.2"
 TOOLING_PHP_VERSION="8.4.0"
+# Pin FrankenPHP to the last release this script and the static-php-cli 2.5.2
+# patches were verified against. main has since moved to Go 1.27, Caddy 2.11
+# and a rewritten build-static.sh that the patches below no longer apply to.
+FRANKENPHP_VERSION="v1.9.0"
+# Caddy >= 2.10.2 requires Go 1.25+ and the Mercure/Vulcain plugins that
+# build-static.sh adds by default now require Go 1.27. Pin Caddy to the version
+# FrankenPHP v1.9.0 targets and keep only the pinned cbrotli plugin (Fleetbase
+# does not use Mercure or Vulcain). Mirrors builds/linux/static-build.Dockerfile.
+CADDY_VERSION="v2.10.0"
+XCADDY_ARGS="--with github.com/dunglas/caddy-cbrotli@v1.0.1"
 
 OS="$(uname -s | tr '[:upper:]' '[:lower:]')"
 ARCH="$(uname -m)"
@@ -85,8 +95,10 @@ log "Detected PHP binary: $ORIGINAL_PHP_PATH"
 # ───────────────────────────────────────────────────────────────────────────────
 # If the *current* php is already 8.4.x, we skip the entire asdf install step
 # ───────────────────────────────────────────────────────────────────────────────
-if [[ "$ORIGINAL_PHP_PATH" == "$BREW_PREFIX/bin/php" && "$ORIGINAL_PHP_VERSION" =~ ^8\.4\. ]]; then
-    log "Homebrew PHP $ORIGINAL_PHP_VERSION detected at $ORIGINAL_PHP_PATH — skipping asdf build/install."
+# static-php-cli 2.5.2 only needs PHP >= 8.3 as its tooling runtime, so any
+# PHP 8.3+ already on PATH (e.g. a linked Homebrew php@8.4 on CI) is enough.
+if [[ "$ORIGINAL_PHP_VERSION" =~ ^8\.([3-9]|[1-9][0-9])\. ]]; then
+    log "PHP $ORIGINAL_PHP_VERSION detected at $ORIGINAL_PHP_PATH — skipping asdf build/install."
 else
     # Only install under asdf if we don’t already have 8.4.0 installed
     require_command asdf
@@ -121,10 +133,10 @@ else
     log "Build tooling PHP is now: $(php -r 'echo PHP_VERSION;' 2>/dev/null)"
 fi
 
-# Clone FrankenPHP
+# Clone FrankenPHP (pinned)
 if [ ! -d "$OSX_DIR/frankenphp" ]; then
-    log "Cloning FrankenPHP..."
-    git clone https://github.com/dunglas/frankenphp "$OSX_DIR/frankenphp"
+    log "Cloning FrankenPHP $FRANKENPHP_VERSION..."
+    git clone --depth 1 --branch "$FRANKENPHP_VERSION" https://github.com/dunglas/frankenphp "$OSX_DIR/frankenphp"
 else
     log_warn "FrankenPHP already cloned. Skipping."
 fi
@@ -138,6 +150,9 @@ sed -i '' 's/^[ \t]*git pull/# git pull/' ./build-static.sh
 
 # Set environment variables
 log "Exporting build environment variables..."
+export FRANKENPHP_VERSION
+export CADDY_VERSION
+export XCADDY_ARGS
 export PHP_VERSION="$TARGET_PHP_VERSION"
 export PHP_EXTENSIONS="pdo_mysql,gd,bcmath,redis,intl,zip,gmp,apcu,opcache,imagick,sockets,pcntl,geos,iconv,mbstring,fileinfo,ctype,tokenizer,simplexml,dom,filter,session"
 export PHP_EXTENSION_LIBS="libgeos,libzip,bzip2,libxml2,openssl,zlib"
@@ -205,6 +220,14 @@ if grep -q -- '-framework CoreFoundation -framework SystemConfiguration' "$OSX_D
     sed -i '' 's/-framework CoreFoundation -framework SystemConfiguration/& -framework CoreServices/' "$OSX_DIR/frankenphp/build-static.sh"
 else
     log_error "Unable to patch CoreServices framework: expected Caddy linker flags were not found."
+    exit 1
+fi
+
+# Pin the Caddy version xcaddy builds (see CADDY_VERSION above).
+log "Patching build-static.sh to pin Caddy to $CADDY_VERSION..."
+perl -0pi -e 's/(\$\{XCADDY_COMMAND\} build) \\\n/$1 "\$\{CADDY_VERSION\}" \\\n/' "$OSX_DIR/frankenphp/build-static.sh"
+if ! grep -Fq '${XCADDY_COMMAND} build "${CADDY_VERSION}" \' "$OSX_DIR/frankenphp/build-static.sh"; then
+    log_error "Unable to pin Caddy version: expected xcaddy build line was not found."
     exit 1
 fi
 
