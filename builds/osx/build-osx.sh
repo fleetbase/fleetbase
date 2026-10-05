@@ -160,6 +160,10 @@ export SPC_REL_TYPE=source
 export NO_COMPRESS=1
 export SPC_OPT_BUILD_ARGS="--debug"
 export CMAKE_OSX_ARCHITECTURES=arm64
+# CMake 4 (shipped on current macOS runners) refuses projects that declare
+# cmake_minimum_required < 3.5, which several static-php-cli 2.5.2 library
+# sources (e.g. freetype) still do. This env var tells CMake to configure anyway.
+export CMAKE_POLICY_VERSION_MINIMUM=3.5
 
 # Clone and prepare static-php-cli in dist/
 STATIC_PHP_CLI_DIR="$OSX_DIR/frankenphp/dist/static-php-cli"
