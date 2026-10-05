@@ -35,7 +35,7 @@
 Fleetbase is an open-source, modular operating system for logistics and supply chain operations. It covers dispatch, fleet management, live tracking, commerce, warehousing, and finance in one platform, with a REST API, webhooks, and an extension system for everything else. Run it on your own infrastructure or use [Fleetbase Cloud](https://console.fleetbase.io/onboard).
 
 <p align="center" dir="auto">
-  <img src="https://fleetbase.io/images/screenshots/fleet-ops/fleet-ops-multi-waypoint-order.webp" alt="A multi-waypoint order in Fleet-Ops, showing the route on a map beside the order's activity, driver, and vehicle details" width="1200" style="max-width: 100%;" />
+  <img src="https://fleetbase.io/images/screenshots/fleet-ops/fleet-ops-order-details-multi-stop.webp" alt="A multi-waypoint order in Fleet-Ops, showing the route on a map beside the order's activity, driver, and vehicle details" width="1200" style="max-width: 100%;" />
 </p>
 
 ## Table of Contents
@@ -107,11 +107,11 @@ Fleetbase is made up of modules that install into the console as extensions. Eac
 <table>
   <tr>
     <td width="50%" valign="top">
-      <img src="https://fleetbase.io/images/screenshots/fleet-ops/fleet-ops-orders-kanban.webp" alt="Fleet-Ops order board" width="100%" />
+      <img src="https://fleetbase.io/images/screenshots/fleet-ops/fleet-ops-orders-board.webp" alt="Fleet-Ops order board" width="100%" />
       <p align="center"><strong>Order Board</strong><br>Move orders through each stage on a Kanban board.</p>
     </td>
     <td width="50%" valign="top">
-      <img src="https://fleetbase.io/images/screenshots/fleet-ops/fleet-ops-live-orders-panel.webp" alt="Fleet-Ops live map with active orders" width="100%" />
+      <img src="https://fleetbase.io/images/screenshots/fleet-ops/fleet-ops-orders-map.webp" alt="Fleet-Ops live map with active orders" width="100%" />
       <p align="center"><strong>Live Operations</strong><br>See active and unassigned orders beside your fleet on a live map.</p>
     </td>
   </tr>
@@ -121,13 +121,13 @@ Fleetbase is made up of modules that install into the console as extensions. Eac
       <p align="center"><strong>Order Config</strong><br>Design custom activity flows, fields, and entities for each order type.</p>
     </td>
     <td width="50%" valign="top">
-      <img src="https://fleetbase.io/images/screenshots/fleet-ops/fleet-ops-orchestrator-1.webp" alt="Fleet-Ops orchestrator workbench" width="100%" />
+      <img src="https://fleetbase.io/images/screenshots/fleet-ops/fleet-ops-orchestrator-run.webp" alt="Fleet-Ops orchestrator workbench" width="100%" />
       <p align="center"><strong>Orchestrator</strong><br>Allocate vehicles and drivers, assign orders in batches, and plan and schedule routes before committing.</p>
     </td>
   </tr>
   <tr>
     <td width="50%" valign="top">
-      <img src="https://fleetbase.io/images/screenshots/fleet-ops/fleet-ops-geofences.webp" alt="Fleet-Ops service areas, zones, and geofence events" width="100%" />
+      <img src="https://fleetbase.io/images/screenshots/fleet-ops/fleet-ops-geofences-map.webp" alt="Fleet-Ops service areas, zones, and geofence events" width="100%" />
       <p align="center"><strong>Service Zones & Geofences</strong><br>Define service areas and zones, and watch geofence events as they happen.</p>
     </td>
     <td width="50%" valign="top">
