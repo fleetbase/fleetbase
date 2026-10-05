@@ -1,5 +1,5 @@
-{{page-title "Organizations"}}
-<Layout::Section::Header @title="Organizations" />
+{{page-title (t "console.admin.menu.organizations")}}
+<Layout::Section::Header @title={{t "console.admin.menu.organizations"}} />
 
 <Layout::Section::Body class="overflow-y-scroll h-full">
     <div class="container mx-auto h-screen">
@@ -22,8 +22,8 @@
                                         <Button @size="xs" @icon="shuffle" @text="Switch" @onClick={{fn this.switchOrganization organization}} />
                                     {{/unless}}
                                     {{#if isOwner}}
-                                        <Button @size="xs" @icon="pencil" @text="Edit" @onClick={{fn this.editOrganization organization}} />
-                                        <Button @type="danger" @size="xs" @icon="trash" @text="Delete" @onClick={{fn this.deleteOrganization organization}} />
+                                        <Button @size="xs" @icon="pencil" @text={{t "common.edit"}} @onClick={{fn this.editOrganization organization}} />
+                                        <Button @type="danger" @size="xs" @icon="trash" @text={{t "common.delete"}} @onClick={{fn this.deleteOrganization organization}} />
                                     {{/if}}
                                 {{/let}}
                             </div>
