@@ -13,13 +13,23 @@ development_fleetbase_backup-20260925-000030.sql.gz           20 B
 development_fleetbase_sandbox_backup-20260925-000032.sql.gz   20 B
 ```
 
-- **Writer.** The writer was core-api's `db:backup`, scheduled `daily()` by `fleetbase/internals` and run in the `scheduler` ECS service (cluster `fleetbase-production`, task definition `fleetbase-production-scheduler:217`). There are no EventBridge rules, EventBridge Scheduler schedules or backup Lambda functions.
-- **Why the dumps were empty.** The image (`docker/Dockerfile`) installed `mycli` but no `mysqldump`. The command ran `mysqldump … | gzip > file` without `pipefail`. The shell reported `mysqldump: not found`, and gzip compressed empty input and exited 0. The command treated that as success and uploaded the 20-byte file.
-- **Why it stopped writing.** The scheduler logs show `db:backup` still running every night after 2026-09-25 and logging `DONE`, for example `2026-09-26 00:05:33 … db:backup --no-interaction 12,915ms DONE`. Its output went to `/dev/null`. The command caught upload exceptions and printed them only in verbose mode.
-  - The scheduler's task role `task-92b1ceb` has **no `s3:PutObject` on this bucket**, only `s3:ListBucket` (the inline policy `HotfixForBackups`).
-  - The old config used static `AWS_ACCESS_KEY_ID`/`AWS_SECRET_ACCESS_KEY` credentials whenever `APP_ENV` was `local` or `development`. Production runs with `APP_ENV=development`, as the `development_` file prefix shows. So the two uploads that worked most likely used static keys that later stopped working.
-  - **Not verified:** which keys these were and when they stopped. Reading the decrypted SSM config and IAM access-key usage was out of scope for the read-only investigation.
-- **What to check in production config.** `APP_ENV=development` in production is worth a look on its own: it also changes how `Utils::consoleUrl` and other environment checks behave.
+**Production has never written a backup to this bucket.** Three things show it:
+
+- **The four files came from a local development stack.** The local scheduler container (`fleetbase-dev-scheduler-1`, with the `fleetbase/internals` schedule) logged `2026-09-25 00:00:29 Running ['artisan' db:backup --no-interaction] … DONE`. That matches the object `development_fleetbase_backup-20260925-000030.sql.gz`, written at 00:00:32, to the second.
+  - The `development_` prefix is that stack's `APP_ENV`.
+  - `fleetbase` and `fleetbase_sandbox` are the local default database names.
+  - The stack has no `mysqldump`, which explains the empty dumps.
+  - It could reach the bucket because the old config used static `AWS_ACCESS_KEY_ID`/`AWS_SECRET_ACCESS_KEY` credentials whenever `APP_ENV` was `local` or `development`. **Rotate or scope down whatever keys that dev stack holds**: a laptop shouldn't be able to write to production's backup bucket.
+  - Why it stopped after 2026-09-25 wasn't established; a change in the local credentials or `.env` is the likely cause. It no longer matters once the old code is gone.
+- **Production's scheduler ran too late to be the writer.** The `scheduler` ECS service (cluster `fleetbase-production`, task definition `fleetbase-production-scheduler:217`) runs `db:backup` daily from `fleetbase/internals`. It started at `00:03:57` on 2026-09-24 and `00:04:49` on 2026-09-25, minutes after the objects appeared, and it keeps logging `DONE` every night. It cannot have written anything:
+  - The image (`docker/Dockerfile`) has no `mysqldump`.
+  - The task role `task-92b1ceb` has no `s3:PutObject` on the bucket, only `s3:ListBucket` through the inline policy `HotfixForBackups`.
+  - The old command sent output to `/dev/null`, swallowed upload exceptions, and returned exit code 0 when the dump failed. Every one of these failures was invisible.
+- **QA's scheduler fails the same job.** It runs it too: `2026-09-24 00:02:00 … db:backup … FAIL`.
+- **How the dumps came out empty.** The command ran `mysqldump … | gzip > file` without `pipefail`. `mysqldump: not found`, then gzip compressed empty input into 20 bytes and exited 0.
+- **What's not involved.** There are no EventBridge rules, EventBridge Scheduler schedules or backup Lambda functions.
+
+Off-RDS protection has therefore rested entirely on RDS automated backups (7 days of point-in-time recovery).
 
 ## What the code change does
 
