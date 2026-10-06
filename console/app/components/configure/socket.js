@@ -72,7 +72,7 @@ export default class ConfigureSocketComponent extends Component {
      *
      * @memberof ConfigureSocketComponent
      */
-    @tracked channelName = null;
+    @tracked channelName;
 
     /**
      * The socket client and the subscribed test channel.
