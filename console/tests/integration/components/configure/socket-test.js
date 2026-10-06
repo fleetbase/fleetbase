@@ -184,7 +184,10 @@ module('Integration | Component | configure/socket', function (hooks) {
         assert.deepEqual(subscribed, ['test.user-uuid-1', 'test.user-uuid-2'], 'it subscribes to the returned channel');
         assert.deepEqual(closed.channels, ['test.user-uuid-1'], 'and closes the previous one');
         assert.strictEqual(component.channelName, 'test.user-uuid-2');
-        assert.true(component.events.some((event) => event.content === 'Socket subscribed to test.user-uuid-2 channel'), 'the new subscription is logged');
+        assert.true(
+            component.events.some((event) => event.content === 'Socket subscribed to test.user-uuid-2 channel'),
+            'the new subscription is logged'
+        );
 
         component.testSocketConnection();
         await flush();
