@@ -38,6 +38,14 @@ export default class ConfigureSocketComponent extends Component {
     @service socket;
 
     /**
+     * Inject the `currentUser` service
+     *
+     * @var {Service}
+     * @memberof ConfigureSocketComponent
+     */
+    @service currentUser;
+
+    /**
      * State of the test request.
      *
      * @memberof ConfigureSocketComponent
@@ -57,6 +65,22 @@ export default class ConfigureSocketComponent extends Component {
      * @memberof ConfigureSocketComponent
      */
     @tracked events = [];
+
+    /**
+     * The channel the console is listening on. Test events are published to the current
+     * user's own `test.{user uuid}` channel, which a socket token for that user may subscribe to.
+     *
+     * @memberof ConfigureSocketComponent
+     */
+    @tracked channelName = null;
+
+    /**
+     * The socket client and the subscribed test channel.
+     *
+     * @memberof ConfigureSocketComponent
+     */
+    socketClient = null;
+    channel = null;
 
     /**
      * Date format to use for socket console events.
@@ -84,10 +108,16 @@ export default class ConfigureSocketComponent extends Component {
 
         this.fetch
             .post('settings/test-socket', {
-                channel: 'test',
+                channel: this.channelName,
             })
             .then((response) => {
                 this.testResponse = response;
+
+                // The API reports the channel it actually published to; follow it so the
+                // test message (and every later one) shows up here.
+                if (response.channel && response.channel !== this.channelName) {
+                    this.subscribeToTestChannel(response.channel);
+                }
             })
             .finally(() => {
                 this.isLoading = false;
@@ -102,6 +132,7 @@ export default class ConfigureSocketComponent extends Component {
     @action async listenToTestSocket() {
         // Create SocketClusterClient
         const socket = this.socket.instance();
+        this.socketClient = socket;
 
         // Listen for socket connection errors
         (async () => {
@@ -129,23 +160,65 @@ export default class ConfigureSocketComponent extends Component {
             }
         })();
 
-        // Listed on company channel
-        const channel = socket.subscribe('test');
+        this.subscribeToTestChannel(this.defaultChannelName);
+
+        // disconnect when transitioning
+        this.router.on('routeWillChange', () => {
+            this.channel.close();
+            this.events = [];
+        });
+    }
+
+    /**
+     * The current user's own test channel, `test.{user uuid}`.
+     *
+     * @readonly
+     * @memberof ConfigureSocketComponent
+     */
+    get defaultChannelName() {
+        return `test.${this.currentUser.id}`;
+    }
+
+    /**
+     * Subscribes to a test channel (closing any previous one) and logs its events.
+     *
+     * @param {String} channelName
+     * @memberof ConfigureSocketComponent
+     */
+    subscribeToTestChannel(channelName) {
+        if (this.channel) {
+            this.channel.close();
+        }
+
+        const channel = this.socketClient.subscribe(channelName);
+        this.channel = channel;
+        this.channelName = channelName;
 
         // Listen for channel subscription
         (async () => {
             // eslint-disable-next-line no-unused-vars
             for await (let event of channel.listener('subscribe')) {
-                // Push an event or notification for channel subscription here
                 this.events.pushObject({
                     time: format(new Date(), this.consoleDateFormat),
-                    content: `Socket subscribed to test channel`,
+                    content: `Socket subscribed to ${channelName} channel`,
                     color: 'blue',
                 });
             }
         })();
 
-        // Listen for channel subscription
+        // Listen for a refused subscription (e.g. the socket server's auth denied it)
+        (async () => {
+            for await (let event of channel.listener('subscribeFail')) {
+                const { reason } = event.error;
+                this.events.pushObject({
+                    time: format(new Date(), this.consoleDateFormat),
+                    content: reason ? `Socket subscription to ${channelName} was refused: ${reason}` : `Socket subscription to ${channelName} was refused`,
+                    color: 'red',
+                });
+            }
+        })();
+
+        // Log every message published to the channel
         (async () => {
             for await (let data of channel) {
                 this.events.pushObject({
@@ -155,11 +228,5 @@ export default class ConfigureSocketComponent extends Component {
                 });
             }
         })();
-
-        // disconnect when transitioning
-        this.router.on('routeWillChange', () => {
-            channel.close();
-            this.events = [];
-        });
     }
 }
