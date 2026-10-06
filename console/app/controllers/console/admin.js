@@ -13,6 +13,7 @@ export default class ConsoleAdminController extends Controller {
             ...this.registryNavigationItems,
             ...this.registryPanelItems,
             this.apiTrafficNavigationItem,
+            this.databaseBackupsNavigationItem,
             this.authConfigNavigationItem,
             this.systemConfigNavigationItem,
         ];
@@ -101,6 +102,19 @@ export default class ConsoleAdminController extends Controller {
                     keywords: ['rate limit', 'throttle', 'requests per minute', '429', 'overrides'],
                 },
             ],
+        };
+    }
+
+    /**
+     * Scheduled database dumps to a filesystem disk, with retention and failure alerts.
+     */
+    get databaseBackupsNavigationItem() {
+        return {
+            label: 'Database Backups',
+            description: 'Schedule database backups, choose where they are stored, and review recent runs.',
+            icon: 'database',
+            route: 'console.admin.database-backups',
+            keywords: ['database', 'backup', 'backups', 'dump', 'mysql', 'retention', 's3', 'restore'],
         };
     }
 
