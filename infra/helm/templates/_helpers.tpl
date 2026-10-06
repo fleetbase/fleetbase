@@ -59,6 +59,49 @@ app.kubernetes.io/instance: {{ .Release.Name }}
   value: "80"
 - name: SOCKETCLUSTER_HOST
   value: socketcluster.{{ .Release.Namespace }}.svc.cluster.local
+- name: SOCKETCLUSTER_PUBLISH_URL
+  value: http://socketcluster-internal.{{ .Release.Namespace }}.svc.cluster.local:8001
+{{- end }}
+
+{{/*
+Name of the Secret holding SOCKETCLUSTER_AUTH_KEY: socketcluster.existingSecret, or the one
+this chart creates from socketcluster.authKey. Empty when neither is set (socket auth off,
+unless the key arrives some other way, e.g. infra-provided-secret).
+*/}}
+{{- define "helm.socketAuthSecretName" -}}
+{{- if .Values.socketcluster.existingSecret -}}
+{{- .Values.socketcluster.existingSecret -}}
+{{- else if .Values.socketcluster.authKey -}}
+{{- include "helm.fullname" . }}-socket-auth
+{{- end -}}
+{{- end }}
+
+{{/*
+SOCKETCLUSTER_AUTH_KEY env entry (from the Secret above) for the API and socket containers.
+Renders nothing when no Secret is configured, so an envFrom-provided value still applies.
+Not part of helm.commonVariables: the pre-install deploy hook runs before a chart-created
+Secret exists, and it does not publish or authorize anything.
+*/}}
+{{- define "helm.socketAuthKeyEnv" -}}
+{{- $secret := include "helm.socketAuthSecretName" . -}}
+{{- if $secret }}
+- name: SOCKETCLUSTER_AUTH_KEY
+  valueFrom:
+    secretKeyRef:
+      name: {{ $secret }}
+      key: {{ if .Values.socketcluster.existingSecret }}{{ .Values.socketcluster.existingSecretKey }}{{ else }}SOCKETCLUSTER_AUTH_KEY{{ end }}
+{{- end }}
+{{- end }}
+
+{{/*
+The API authorize endpoint the socket server calls: the API Service (httpd -> octane).
+*/}}
+{{- define "helm.socketAuthorizeUrl" -}}
+{{- if .Values.socketcluster.authorizeUrl -}}
+{{- .Values.socketcluster.authorizeUrl -}}
+{{- else -}}
+http://{{ include "helm.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.service.port }}/int/v1/socket/authorize
+{{- end -}}
 {{- end }}
 {{/*
 Create the name of the service account to use

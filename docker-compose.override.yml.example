@@ -31,6 +31,14 @@ services:
 
   socket:
     environment:
+      # Socket auth. Prefer putting SOCKETCLUSTER_AUTH_KEY in the project .env file (next to
+      # docker-compose.yml) so application, queue, scheduler and socket all read the same
+      # value; scripts/docker-install.sh does this for you. Use at least 32 random
+      # characters, e.g. `openssl rand -hex 32`. Leaving it unset keeps auth off.
+      # Setting it only in api/.env has no effect: compose passes the project value (empty
+      # when unset) to the containers, and that takes precedence over api/.env.
+      # SOCKETCLUSTER_AUTH_MODE: log   # off | log | enforce (default enforce when a key is set)
+
       # DEVELOPMENT: Allow localhost connections (HTTP, HTTPS, and WebSocket protocols)
       SOCKETCLUSTER_OPTIONS: '{"origins":"http://localhost:*,https://localhost:*,ws://localhost:*,wss://localhost:*"}'
       

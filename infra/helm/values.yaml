@@ -83,3 +83,30 @@ tolerations: []
 affinity: {}
 
 gcp: true
+
+# Realtime socket server (fleetbase/fleetbase-socket). The public websocket is served through
+# the ingress at socketcluster_host; the internal publish listener (8001) is a ClusterIP-only
+# Service the API reaches as socketcluster-internal:8001.
+socketcluster:
+  image:
+    repository: fleetbase/fleetbase-socket
+    # Pin this to the release you deploy (e.g. "v0.7.69"); "latest" is re-pulled on every rollout.
+    tag: "latest"
+    pullPolicy: Always
+  replicas: 1
+  # off | log | enforce. Empty: enforce when a key is configured, otherwise off.
+  authMode: ""
+  # Shared socket auth key (>= 32 characters), used by the API and the socket server.
+  # Prefer existingSecret; setting authKey makes the chart create a Secret from it.
+  # With neither set, socket auth stays off unless SOCKETCLUSTER_AUTH_KEY is provided
+  # to the API through infra-provided-secret AND to the socket server via extraEnv.
+  authKey: ""
+  existingSecret: ""
+  existingSecretKey: SOCKETCLUSTER_AUTH_KEY
+  # Override the API authorize endpoint. Default: the API Service's /int/v1/socket/authorize.
+  authorizeUrl: ""
+  # SOCKETCLUSTER_OPTIONS JSON, e.g. '{"origins":"https://console.example.com:*"}'
+  options: ""
+  # Extra env for the socket container (e.g. SCC_STATE_SERVER_HOST for multiple replicas).
+  extraEnv: []
+  resources: {}
