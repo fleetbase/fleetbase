@@ -29,4 +29,14 @@ module('Integration | Component | modals/edit-organization', function (hooks) {
         assert.ok(values.includes('Acme'), 'the organization name is bound');
         assert.ok(values.includes('Movers'), 'the organization description is bound');
     });
+
+    test('it translates the field labels for the active locale', async function (assert) {
+        this.owner.lookup('service:intl').setLocale('de-de');
+        this.set('options', { organization: { name: 'Acme' } });
+
+        await render(hbs`<Modals::EditOrganization @modalIsOpened={{true}} @options={{this.options}} />`);
+
+        assert.dom(this.element).containsText('Name der Organisation');
+        assert.dom(this.element).doesNotContainText('Organization name');
+    });
 });

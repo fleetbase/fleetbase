@@ -29,8 +29,8 @@
                 {{/each}}
             </div>
             <div class="flex flex-row space-x-2">
-                <Button @icon="copy" @text="Copy" @size="sm" @onClick={{this.copyRecoveryCodes}} />
-                <Button @icon="download" @text="Download" @size="sm" @onClick={{this.downloadRecoveryCodes}} />
+                <Button @icon="copy" @text={{t "common.copy"}} @size="sm" @onClick={{this.copyRecoveryCodes}} />
+                <Button @icon="download" @text={{t "common.download"}} @size="sm" @onClick={{this.downloadRecoveryCodes}} />
             </div>
         {{/if}}
     </div>

@@ -32,7 +32,7 @@
                 @buttonType="submit"
                 @type="primary"
                 @size="lg"
-                @text="Verify & Continue"
+                @text={{t "auth.verification.verify-button-text"}}
                 @isLoading={{this.verifyCode.isRunning}}
                 @disabled={{not this.isReadyToSubmit}}
                 @onClick={{perform this.verifyCode}}

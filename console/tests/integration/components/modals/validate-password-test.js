@@ -22,6 +22,7 @@ module('Integration | Component | modals/validate-password', function (hooks) {
         }
         this.owner.register('service:fetch', FetchStub);
         this.owner.register('service:notifications', NotificationsStub);
+        this.owner.lookup('service:intl').setLocale('en-us');
     });
 
     test('it renders the password fields and the supplied body', async function (assert) {
@@ -31,6 +32,16 @@ module('Integration | Component | modals/validate-password', function (hooks) {
 
         assert.dom(this.element).containsText('Validate your current password.');
         assert.dom('input[type="password"]').exists({ count: 2 });
+    });
+
+    test('it translates the password field labels for the active locale', async function (assert) {
+        this.owner.lookup('service:intl').setLocale('de-de');
+        this.set('options', {});
+
+        await render(hbs`<Modals::ValidatePassword @modalIsOpened={{true}} @options={{this.options}} />`);
+
+        assert.dom(this.element).containsText('Passwort bestätigen');
+        assert.dom(this.element).doesNotContainText('Confirm Password');
     });
 
     test('it rewrites the modal options on setup', async function (assert) {
@@ -78,6 +89,7 @@ module('Integration | Component | modals/validate-password | task', function (ho
         }
         this.owner.register('service:fetch', FetchStub);
         this.owner.register('service:notifications', NotificationsStub);
+        this.owner.lookup('service:intl').setLocale('en-us');
 
         const captured = captureComponent(this.owner, 'modals/validate-password', ModalsValidatePasswordComponent);
         this.build = async () => {
