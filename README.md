@@ -131,7 +131,7 @@ Fleetbase is made up of modules that install into the console as extensions. Eac
       <p align="center"><strong>Service Zones & Geofences</strong><br>Define service areas and zones, and watch geofence events as they happen.</p>
     </td>
     <td width="50%" valign="top">
-      <img src="https://fleetbase.io/images/screenshots/storefront/storefront-products-overview.webp" alt="Storefront product catalog" width="100%" />
+      <img src="https://fleetbase.io/images/screenshots/storefront/storefront-products-list.webp" alt="Storefront product catalog" width="100%" />
       <p align="center"><strong>Storefront</strong><br>Manage products, catalogs, and orders for your shop or marketplace.</p>
     </td>
   </tr>
