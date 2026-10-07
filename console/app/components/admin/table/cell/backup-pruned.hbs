@@ -1,0 +1,9 @@
+{{! Whether retention has since deleted this run's backup file. }}
+{{#if @value}}
+    <span class="inline-flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400" title={{@row.prunedLabel}} data-test-backup-pruned-cell>
+        <FaIcon @icon="trash" @size="xs" />
+        Pruned
+    </span>
+{{else}}
+    <span class="text-gray-400">—</span>
+{{/if}}

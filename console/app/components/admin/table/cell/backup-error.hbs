@@ -1,0 +1,6 @@
+{{! A failed run's error, truncated; the full message is in the tooltip. }}
+{{#if @value}}
+    <span class="block truncate text-xs text-red-700 dark:text-red-300" title={{@row.error}} data-test-backup-error-cell>{{@value}}</span>
+{{else}}
+    <span class="text-gray-400">—</span>
+{{/if}}

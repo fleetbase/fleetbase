@@ -1,0 +1,224 @@
+<div class="space-y-6" ...attributes>
+    <ContentPanel @title="Backup Status" @open={{true}} @wrapperClass="bordered-classic">
+        <div class="grid grid-cols-1 gap-4 text-sm md:grid-cols-2">
+            <div data-test-last-success>
+                <div class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Last successful backup</div>
+                <div class="mt-1 font-semibold text-gray-900 dark:text-gray-100">{{or this.lastSuccessLabel "Never"}}</div>
+            </div>
+            <div data-test-last-run>
+                <div class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Last run</div>
+                {{#if this.lastRun}}
+                    <div class="mt-1 flex items-center space-x-2">
+                        <Badge @status={{this.lastRun.status}} data-test-last-run-status={{this.lastRun.status}} />
+                        <span class="text-gray-700 dark:text-gray-300">{{this.lastRunLabel}}</span>
+                    </div>
+                {{else}}
+                    <div class="mt-1 font-semibold text-gray-900 dark:text-gray-100">None yet</div>
+                {{/if}}
+            </div>
+        </div>
+
+        {{#if this.lastRunFailed}}
+            <div
+                class="mt-4 flex items-start rounded-md border border-red-400 bg-red-50 px-3 py-2 text-xs text-red-800 dark:border-red-700 dark:bg-red-900 dark:text-red-100"
+                data-test-failed-warning
+            >
+                <FaIcon @icon="triangle-exclamation" class="mr-2 mt-0.5" />
+                <span>The last backup failed{{if this.lastRun.error (concat ": " this.lastRun.error) "."}}</span>
+            </div>
+        {{/if}}
+
+        {{#if this.isStale}}
+            <div
+                class="mt-4 flex items-center rounded-md border border-yellow-400 bg-yellow-50 px-3 py-2 text-xs text-yellow-800 dark:border-yellow-700 dark:bg-yellow-900 dark:text-yellow-100"
+                data-test-stale-warning
+            >
+                <FaIcon @icon="triangle-exclamation" class="mr-2" />
+                Backups are enabled but none has succeeded in the last 26 hours.
+            </div>
+        {{/if}}
+    </ContentPanel>
+
+    <ContentPanel @title="Backup Schedule" @open={{true}} @wrapperClass="bordered-classic">
+        <InputGroup @name="Scheduled backups" @helpText="When enabled, each selected database is dumped, compressed and uploaded on the schedule below.">
+            <Toggle
+                @isToggled={{this.enabled}}
+                @onToggle={{this.toggleEnabled}}
+                @label={{if this.enabled "Enabled" "Disabled"}}
+                @disabled={{this.isBusy}}
+                data-test-enabled-toggle
+            />
+        </InputGroup>
+
+        {{! No @disabled on the selects: Select reads it once, in its constructor, so binding it
+            to the initial load would leave them disabled for good. }}
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <InputGroup @name="Frequency">
+                <Select
+                    @options={{this.frequencyOptions}}
+                    @optionValue="value"
+                    @optionLabel="label"
+                    @value={{this.frequency}}
+                    @onSelect={{this.setFrequency}}
+                    class="w-full"
+                    data-test-frequency
+                />
+            </InputGroup>
+            <InputGroup
+                @name="Time (UTC)"
+                @type="time"
+                @value={{this.time}}
+                @helpText={{if this.isHourly "Hourly backups use only the minute, e.g. 00:15 runs at a quarter past every hour." "The time of day the backup starts, in UTC."}}
+                disabled={{this.isBusy}}
+                data-test-time
+            />
+        </div>
+
+        {{#if this.isWeekly}}
+            <InputGroup @name="Day of week">
+                <Select
+                    @options={{this.dayOptions}}
+                    @optionValue="value"
+                    @optionLabel="label"
+                    @value={{this.dayOfWeek}}
+                    @onSelect={{this.setDayOfWeek}}
+                    class="w-full"
+                    data-test-day-of-week
+                />
+            </InputGroup>
+        {{/if}}
+
+        <InputGroup @name="Databases" @helpText="The database connections to back up. Each is dumped to its own file.">
+            <div class="space-y-2">
+                {{#each this.connectionOptions as |option|}}
+                    <Checkbox @label={{option.name}} @value={{option.checked}} @onToggle={{fn this.toggleConnection option.name}} data-test-connection={{option.name}} />
+                {{else}}
+                    <p class="text-xs text-gray-500 dark:text-gray-400">No database connections are available.</p>
+                {{/each}}
+            </div>
+        </InputGroup>
+    </ContentPanel>
+
+    <ContentPanel @title="Storage & Retention" @open={{true}} @wrapperClass="bordered-classic">
+        <InputGroup @name="Disk" @helpText="The filesystem disk backups are uploaded to.">
+            <Select
+                @options={{this.diskOptions}}
+                @optionValue="value"
+                @optionLabel="label"
+                @value={{this.disk}}
+                @onSelect={{this.setDisk}}
+                @placeholder="Select a disk"
+                class="w-full"
+                data-test-disk
+            />
+        </InputGroup>
+
+        {{#if this.isS3}}
+            <InputGroup
+                @name="Bucket"
+                @value={{this.bucket}}
+                @placeholder="Leave blank to use the disk's bucket"
+                @helpText="Optional. Upload backups to a different S3 bucket than the disk is configured with."
+                disabled={{this.isBusy}}
+                data-test-bucket
+            />
+        {{/if}}
+
+        <InputGroup
+            @name="Path"
+            @value={{this.path}}
+            @placeholder="e.g. backups/database"
+            @helpText="Folder (or key prefix) backups are written under. Leave blank for the disk's root."
+            disabled={{this.isBusy}}
+            data-test-path
+        />
+
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <InputGroup
+                @name="Keep for (days)"
+                @type="number"
+                @value={{this.retentionDays}}
+                @placeholder="No age limit"
+                @helpText="Backups older than this are deleted. Leave blank to keep them regardless of age."
+                disabled={{this.isBusy}}
+                data-test-retention-days
+            />
+            <InputGroup
+                @name="Keep newest (per database)"
+                @type="number"
+                @value={{this.retentionCount}}
+                @placeholder="No count limit"
+                @helpText="Only this many of the newest backups are kept for each database. Leave blank for no limit."
+                disabled={{this.isBusy}}
+                data-test-retention-count
+            />
+        </div>
+
+        <InputGroup
+            @name="Minimum backup size (bytes)"
+            @type="number"
+            @value={{this.minSizeBytes}}
+            @helpText={{concat "A compressed dump smaller than this fails the run, catching empty or truncated backups. Currently " this.minSizeLabel "."}}
+            disabled={{this.isBusy}}
+            data-test-min-size
+        />
+    </ContentPanel>
+
+    <ContentPanel @title="Failure Notifications" @open={{true}} @wrapperClass="bordered-classic">
+        <InputGroup @name="Notify on failure" @helpText="Email the addresses below whenever a backup run fails.">
+            <Toggle
+                @isToggled={{this.notifyOnFailure}}
+                @onToggle={{this.toggleNotifyOnFailure}}
+                @label={{if this.notifyOnFailure "Notifying" "Not notifying"}}
+                @disabled={{this.isBusy}}
+                data-test-notify-toggle
+            />
+        </InputGroup>
+
+        {{#if this.notifyOnFailure}}
+            <InputGroup
+                @name="Email addresses"
+                @value={{this.notifyEmails}}
+                @placeholder="ops@example.com, admin@example.com"
+                @helpText="Separate multiple addresses with commas."
+                disabled={{this.isBusy}}
+                data-test-notify-emails
+            />
+        {{/if}}
+    </ContentPanel>
+
+    {{! Flush body: the runs table spans the panel edge to edge; the toolbar pads itself. }}
+    <ContentPanel @title="Recent Runs" @open={{true}} @wrapperClass="bordered-classic" @panelBodyClass="p-0i" @panelBodyWrapperClass="p-0i">
+        <div class="flex items-center justify-between px-4 py-4">
+            <p class="text-sm text-gray-600 dark:text-gray-400">The 25 most recent backup runs, newest first.</p>
+            <div class="flex items-center space-x-2">
+                <Button @size="sm" @icon="arrows-rotate" @text="Refresh" @onClick={{perform this.loadRuns}} @isLoading={{this.loadRuns.isRunning}} data-test-refresh-runs />
+                <Button
+                    @type="primary"
+                    @size="sm"
+                    @icon="play"
+                    @text="Run backup now"
+                    @onClick={{perform this.runNow}}
+                    @disabled={{this.runNow.isRunning}}
+                    @isLoading={{this.runNow.isRunning}}
+                    data-test-run-now
+                />
+            </div>
+        </div>
+
+        {{#if this.runRows.length}}
+            <div class="border-t border-gray-200 dark:border-gray-700" data-test-runs-table>
+                <Table @rows={{this.runRows}} @columns={{this.runColumns}} />
+            </div>
+        {{else}}
+            <p class="border-t border-gray-200 px-4 py-4 text-sm text-gray-500 dark:border-gray-700 dark:text-gray-400" data-test-no-runs>No backups have run yet.</p>
+        {{/if}}
+    </ContentPanel>
+</div>
+
+<EmberWormhole @to="next-view-section-subheader-actions">
+    <div class="flex items-center space-x-2">
+        <Button @size="sm" @icon="rotate-left" @text="Reset to Defaults" @onClick={{perform this.reset}} @disabled={{this.isBusy}} @isLoading={{this.reset.isRunning}} data-test-reset />
+        <Button @type="primary" @size="sm" @icon="save" @text="Save Changes" @onClick={{perform this.save}} @disabled={{this.isBusy}} @isLoading={{this.save.isRunning}} data-test-save />
+    </div>
+</EmberWormhole>

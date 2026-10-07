@@ -237,7 +237,7 @@ module('Unit | Controller | console/admin', function (hooks) {
         );
     });
 
-    test('it groups api consumers and rate limits under api traffic, before auth config', function (assert) {
+    test('it groups api consumers and rate limits under api traffic, before database backups', function (assert) {
         const controller = this.owner.lookup('controller:console/admin');
         const apiTraffic = navItem(controller, 'API Traffic');
         const labels = controller.navigationItems.map((item) => item.label);
@@ -248,7 +248,20 @@ module('Unit | Controller | console/admin', function (hooks) {
             ['console.admin.api-consumers', 'console.admin.rate-limits'],
             'visibility first, then the limits'
         );
-        assert.strictEqual(labels.indexOf('API Traffic') + 1, labels.indexOf('Auth Config'), 'api traffic sits just before auth config');
+        assert.strictEqual(labels.indexOf('API Traffic') + 1, labels.indexOf('Database Backups'), 'api traffic sits just before database backups');
+    });
+
+    test('it adds database backups as a top-level item between api traffic and auth config', function (assert) {
+        const controller = this.owner.lookup('controller:console/admin');
+        const backups = navItem(controller, 'Database Backups');
+        const labels = controller.navigationItems.map((item) => item.label);
+
+        assert.ok(backups, 'the item exists');
+        assert.strictEqual(backups.route, 'console.admin.database-backups');
+        assert.strictEqual(backups.icon, 'database');
+        assert.notOk(backups.children, 'a single page, not a group');
+        assert.true(backups.keywords.includes('backup'), 'searchable as backup');
+        assert.strictEqual(labels.indexOf('Database Backups') + 1, labels.indexOf('Auth Config'), 'database backups sits just before auth config');
     });
 
     test('it adds system config as a nested navigator branch', function (assert) {
