@@ -193,6 +193,28 @@ test('off mode (no key): everything is allowed and the API is never asked', asyn
     await publish.text();
 });
 
+test('switched off with a key and enforce requested: everything is allowed, as before socket auth', async (t) => {
+    const env = await startServer({ env: { SOCKETCLUSTER_AUTH_ENABLED: 'false', SOCKETCLUSTER_AUTH_MODE: 'enforce' } });
+    t.after(() => env.close());
+
+    assert.equal(env.config.mode, 'off');
+    assert.equal(env.config.authEnabled, false);
+
+    // Existing clients connect without a token, subscribe anywhere and publish over the
+    // websocket (the API's own publisher does exactly this while the switch is off).
+    const { socket, status } = await env.connect();
+    assert.equal(status.isAuthenticated, false);
+    assert.equal((await trySubscribe(socket, 'order.anything')).ok, true);
+    await socket.invokePublish('order.anything', { x: 1 });
+    assert.equal(env.fake.calls.length, 0);
+    assert.equal(denyLogs(env.logs).length, 0);
+
+    // The signed internal publish endpoint stays closed until the switch is on.
+    const publish = await env.internalRequest('/publish', { body: { channels: ['order.anything'], data: {} } });
+    assert.equal(publish.status, 503);
+    await publish.text();
+});
+
 test('off mode with a key: tokens are verified but nothing is denied', async (t) => {
     const env = await startServer({ env: { SOCKETCLUSTER_AUTH_MODE: 'off' } });
     t.after(() => env.close());

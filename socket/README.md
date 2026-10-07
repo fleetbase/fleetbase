@@ -24,8 +24,9 @@ Image: `fleetbase/fleetbase-socket` (linux/amd64 and linux/arm64).
 
 | Variable | Default | Meaning |
 |---|---|---|
+| `SOCKETCLUSTER_AUTH_ENABLED` | `false` | Switches socket auth on (`true`, `1`, `yes` or `on`). Must match the API's value. While it is off the mode is forced to `off`, the key is not used, and the internal publish and stats endpoints answer `503`, so clients that connect without socket tokens keep working even when a key is provisioned. |
 | `SOCKETCLUSTER_AUTH_KEY` | unset | Shared secret, at least 32 characters. Must be identical on the API (application, queue and scheduler) and the socket server. Unset disables the feature: the mode is forced to `off` and a warning is logged at startup. A key shorter than 32 characters stops the server from starting. |
-| `SOCKETCLUSTER_AUTH_MODE` | `enforce` when a key is set, else `off` | `off`, `log` or `enforce` (see below). |
+| `SOCKETCLUSTER_AUTH_MODE` | `enforce` when switched on with a key, else `off` | `off`, `log` or `enforce` (see below). |
 | `SOCKETCLUSTER_AUTHORIZE_URL` | `http://application:8000/int/v1/socket/authorize` | The API's authorize endpoint, reached over the private network. |
 | `SOCKETCLUSTER_PORT` | `8000` | Public listener port. |
 | `SOCKETCLUSTER_INTERNAL_PORT` | `8001` | Internal listener port. |
@@ -34,7 +35,7 @@ Image: `fleetbase/fleetbase-socket` (linux/amd64 and linux/arm64).
 | `SOCKETCLUSTER_LOG_LEVEL` | `2` | `0` silent, `1` errors, `2` errors, info and warnings, `3` debug. |
 | `SCC_STATE_SERVER_HOST`, `SCC_STATE_SERVER_PORT`, `SCC_AUTH_KEY`, `SCC_INSTANCE_IP`, `SCC_INSTANCE_IP_FAMILY`, `SCC_MAPPING_ENGINE`, `SCC_CLIENT_POOL_SIZE`, `SCC_STATE_SERVER_CONNECT_TIMEOUT`, `SCC_STATE_SERVER_ACK_TIMEOUT`, `SCC_STATE_SERVER_RECONNECT_RANDOMNESS`, `SCC_PUB_SUB_BATCH_DURATION`, `SCC_BROKER_RETRY_DELAY` | unset | SocketCluster Cluster (SCC) for running several instances, the same as the stock image: SCC is enabled when `SCC_STATE_SERVER_HOST` is set. |
 
-The API side reads `SOCKETCLUSTER_AUTH_KEY`, `SOCKETCLUSTER_PUBLISH_URL` (default
+The API side reads `SOCKETCLUSTER_AUTH_ENABLED`, `SOCKETCLUSTER_AUTH_KEY`, `SOCKETCLUSTER_PUBLISH_URL` (default
 `http://{SOCKETCLUSTER_HOST}:8001`) and `SOCKETCLUSTER_TOKEN_TTL` (default `900` seconds).
 
 Generate a key with, for example, `openssl rand -hex 32`.
@@ -47,10 +48,19 @@ Generate a key with, for example, `openssl rand -hex 32`.
 | `log` | Yes | Decided and allowed; each would-deny is logged | Allowed, logged | Logged only |
 | `enforce` | Yes | Denied unless authorized | Refused | Yes |
 
-Recommended rollout for an existing deployment: set the same key on the API and the
-socket server with `SOCKETCLUSTER_AUTH_MODE=log`, upgrade the clients, watch the deny log
-until it only shows traffic you expect to lose, then switch to `enforce`. Fresh installs
-made with `scripts/docker-install.sh` start in `enforce` with a generated key.
+Recommended rollout:
+1. Deploy with `SOCKETCLUSTER_AUTH_ENABLED=false` (the default). The key can already be set
+   on the API and the socket server; nothing is authenticated and every existing client
+   keeps working.
+2. Ship clients that request a socket token and connect without one when the token route
+   answers `404` (auth off).
+3. Once they are out, set `SOCKETCLUSTER_AUTH_ENABLED=true` on the API (application, queue
+   and scheduler) and the socket server, with `SOCKETCLUSTER_AUTH_MODE=log`.
+4. Watch the deny log until it only shows traffic you expect to lose, then switch to
+   `enforce`.
+
+Fresh installs made with `scripts/docker-install.sh` get a generated key, the switch off
+and `log` mode, ready for step 3.
 
 ### Deny log
 

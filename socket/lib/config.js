@@ -72,20 +72,39 @@ function parsePositiveInt(name, raw, fallback) {
 }
 
 /**
+ * Whether SOCKETCLUSTER_AUTH_ENABLED switches socket auth on: true, 1, yes or on.
+ */
+function parseSwitch(raw) {
+    return !isBlank(raw) && ['true', '1', 'yes', 'on'].includes(String(raw).trim().toLowerCase());
+}
+
+/**
  * Resolves the effective auth mode.
  *
+ * - Switch off (SOCKETCLUSTER_AUTH_ENABLED not true): always `off`, whatever the key and
+ *   mode. The key can be provisioned ahead of time while existing socket clients, which
+ *   connect without tokens, keep working.
  * - No key: always `off`. A requested `log`/`enforce` is reported as a warning, because
  *   without a key there is nothing to verify tokens with.
- * - Key set: SOCKETCLUSTER_AUTH_MODE, defaulting to `enforce`.
+ * - Switch on and key set: SOCKETCLUSTER_AUTH_MODE, defaulting to `enforce`.
  *
  * @returns {{ mode: string, warnings: string[] }}
  */
-function resolveMode(authKeySet, rawMode) {
+function resolveMode(authKeySet, rawMode, switchedOn = true) {
     const warnings = [];
     const requested = isBlank(rawMode) ? null : String(rawMode).trim().toLowerCase();
 
     if (requested !== null && !MODES.includes(requested)) {
         throw new ConfigError(`SOCKETCLUSTER_AUTH_MODE must be one of ${MODES.join(', ')} (got "${rawMode}")`);
+    }
+
+    if (!switchedOn) {
+        warnings.push(
+            requested && requested !== 'off'
+                ? `SOCKETCLUSTER_AUTH_MODE=${requested} was requested but SOCKETCLUSTER_AUTH_ENABLED is not true; socket auth is OFF and every subscription is allowed.`
+                : 'SOCKETCLUSTER_AUTH_ENABLED is not true; socket auth is OFF and every subscription is allowed. Set it to true on the API and the socket server once every client fetches socket tokens.'
+        );
+        return { mode: 'off', warnings };
     }
 
     if (!authKeySet) {
@@ -161,7 +180,8 @@ function loadConfig(env = process.env) {
         throw new ConfigError(`SOCKETCLUSTER_AUTH_KEY must be at least ${MIN_AUTH_KEY_LENGTH} characters long`);
     }
 
-    const { mode, warnings: modeWarnings } = resolveMode(authKey !== null, env.SOCKETCLUSTER_AUTH_MODE);
+    const switchedOn = parseSwitch(env.SOCKETCLUSTER_AUTH_ENABLED);
+    const { mode, warnings: modeWarnings } = resolveMode(authKey !== null, env.SOCKETCLUSTER_AUTH_MODE, switchedOn);
     const { options, warnings: optionWarnings } = parseOptions(env.SOCKETCLUSTER_OPTIONS);
 
     const port = parsePort('SOCKETCLUSTER_PORT', env.SOCKETCLUSTER_PORT, DEFAULT_PORT);
@@ -174,7 +194,7 @@ function loadConfig(env = process.env) {
         port,
         internalPort,
         authKey,
-        authEnabled: authKey !== null,
+        authEnabled: switchedOn && authKey !== null,
         mode,
         authorizeUrl: parseAuthorizeUrl(env.SOCKETCLUSTER_AUTHORIZE_URL),
         options,
@@ -212,7 +232,7 @@ function buildServerOptions(config) {
         authVerifyAlgorithms: ['HS256'],
         allowClientPublish: config.mode !== 'enforce',
     };
-    if (config.authKey !== null) {
+    if (config.authEnabled) {
         options.authKey = config.authKey;
     }
     return options;
@@ -220,6 +240,7 @@ function buildServerOptions(config) {
 
 module.exports = {
     ConfigError,
+    parseSwitch,
     MODES,
     MIN_AUTH_KEY_LENGTH,
     DEFAULT_AUTHORIZE_URL,

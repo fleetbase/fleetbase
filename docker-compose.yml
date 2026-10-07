@@ -39,11 +39,14 @@ services:
     ports:
       - "38000:8000"
     environment:
-      # Socket auth. SOCKETCLUSTER_AUTH_KEY comes from the project .env file that
-      # scripts/docker-install.sh writes (or from docker-compose.override.yml) and must be
-      # the same for socket, application, queue and scheduler. Unset = auth off (warned).
+      # Socket auth. SOCKETCLUSTER_AUTH_ENABLED and SOCKETCLUSTER_AUTH_KEY come from the
+      # project .env file that scripts/docker-install.sh writes (or from
+      # docker-compose.override.yml) and must be the same for socket, application, queue and
+      # scheduler. Auth stays off until SOCKETCLUSTER_AUTH_ENABLED=true, so clients that
+      # connect without socket tokens keep working; see socket/README.md for the rollout.
+      SOCKETCLUSTER_AUTH_ENABLED: ${SOCKETCLUSTER_AUTH_ENABLED:-false}
       SOCKETCLUSTER_AUTH_KEY: ${SOCKETCLUSTER_AUTH_KEY:-}
-      # off | log | enforce. Empty = enforce when a key is set.
+      # off | log | enforce. Empty = enforce once switched on with a key.
       SOCKETCLUSTER_AUTH_MODE: ${SOCKETCLUSTER_AUTH_MODE:-}
       # The API's authorize endpoint, served by the application container's octane server.
       SOCKETCLUSTER_AUTHORIZE_URL: http://application:8000/int/v1/socket/authorize
@@ -62,6 +65,7 @@ services:
       CACHE_PATH: /fleetbase/api/storage/framework/cache
       CACHE_URL: tcp://cache
       REDIS_URL: tcp://cache
+      SOCKETCLUSTER_AUTH_ENABLED: ${SOCKETCLUSTER_AUTH_ENABLED:-false}
       SOCKETCLUSTER_AUTH_KEY: ${SOCKETCLUSTER_AUTH_KEY:-}
       SOCKETCLUSTER_PUBLISH_URL: http://socket:8001
     depends_on:
@@ -84,6 +88,7 @@ services:
       CACHE_PATH: /fleetbase/api/storage/framework/cache
       CACHE_URL: tcp://cache
       REDIS_URL: tcp://cache
+      SOCKETCLUSTER_AUTH_ENABLED: ${SOCKETCLUSTER_AUTH_ENABLED:-false}
       SOCKETCLUSTER_AUTH_KEY: ${SOCKETCLUSTER_AUTH_KEY:-}
       SOCKETCLUSTER_PUBLISH_URL: http://socket:8001
     depends_on:
@@ -124,6 +129,7 @@ services:
       REGISTRY_HOST: https://registry.fleetbase.io
       REGISTRY_PREINSTALLED_EXTENSIONS: "true"
       OSRM_HOST: https://router.project-osrm.org
+      SOCKETCLUSTER_AUTH_ENABLED: ${SOCKETCLUSTER_AUTH_ENABLED:-false}
       SOCKETCLUSTER_AUTH_KEY: ${SOCKETCLUSTER_AUTH_KEY:-}
       SOCKETCLUSTER_PUBLISH_URL: http://socket:8001
     depends_on:

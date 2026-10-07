@@ -77,13 +77,16 @@ unless the key arrives some other way, e.g. infra-provided-secret).
 {{- end }}
 
 {{/*
-SOCKETCLUSTER_AUTH_KEY env entry (from the Secret above) for the API and socket containers.
-Renders nothing when no Secret is configured, so an envFrom-provided value still applies.
+SOCKETCLUSTER_AUTH_ENABLED (socketcluster.authEnabled) and the SOCKETCLUSTER_AUTH_KEY env entry
+(from the Secret above) for the API and socket containers. The key entry is left out when no
+Secret is configured, so an envFrom-provided value still applies.
 Not part of helm.commonVariables: the pre-install deploy hook runs before a chart-created
 Secret exists, and it does not publish or authorize anything.
 */}}
 {{- define "helm.socketAuthKeyEnv" -}}
 {{- $secret := include "helm.socketAuthSecretName" . -}}
+- name: SOCKETCLUSTER_AUTH_ENABLED
+  value: {{ ternary "true" "false" (eq (toString .Values.socketcluster.authEnabled) "true") | quote }}
 {{- if $secret }}
 - name: SOCKETCLUSTER_AUTH_KEY
   valueFrom:

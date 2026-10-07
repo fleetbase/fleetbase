@@ -94,7 +94,11 @@ socketcluster:
     tag: "latest"
     pullPolicy: Always
   replicas: 1
-  # off | log | enforce. Empty: enforce when a key is configured, otherwise off.
+  # Switches socket auth on for the API and the socket server. Keep it false until every
+  # socket client (mobile apps, console, integrations) fetches socket tokens; with it off,
+  # nothing is authenticated and existing clients keep working, even with a key set.
+  authEnabled: false
+  # off | log | enforce, once switched on. Empty: enforce when a key is configured.
   authMode: ""
   # Shared socket auth key (>= 32 characters), used by the API and the socket server.
   # Prefer existingSecret; setting authKey makes the chart create a Secret from it.

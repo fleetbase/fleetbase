@@ -357,10 +357,13 @@ success "APP_KEY generated"
 ###############################################################################
 section "Socket Authentication"
 
-# docker-compose.yml reads SOCKETCLUSTER_AUTH_KEY and SOCKETCLUSTER_AUTH_MODE from the
-# project .env file (Compose loads it automatically) and hands the same key to the
-# application, queue, scheduler and socket containers. The key is kept across re-runs:
-# changing it would invalidate every socket token already handed out.
+# docker-compose.yml reads SOCKETCLUSTER_AUTH_ENABLED, SOCKETCLUSTER_AUTH_KEY and
+# SOCKETCLUSTER_AUTH_MODE from the project .env file (Compose loads it automatically) and
+# hands the same values to the application, queue, scheduler and socket containers. The key
+# is generated now and kept across re-runs (changing it would invalidate every socket token
+# already handed out), but auth stays switched off: mobile apps and other socket clients
+# that don't fetch socket tokens yet would otherwise be refused. Switch it on with
+# SOCKETCLUSTER_AUTH_ENABLED=true once they all do; it starts in log mode.
 PROJECT_ENV_FILE=".env"
 
 # read_env_value FILE KEY → prints the last KEY=value in FILE, unquoted ("" if absent)
@@ -398,13 +401,21 @@ else
   success "Socket auth key generated"
 fi
 
+SOCKETCLUSTER_AUTH_ENABLED_VALUE="$(read_env_value "$PROJECT_ENV_FILE" SOCKETCLUSTER_AUTH_ENABLED)"
+SOCKETCLUSTER_AUTH_ENABLED_VALUE="${SOCKETCLUSTER_AUTH_ENABLED_VALUE:-false}"
 SOCKETCLUSTER_AUTH_MODE_VALUE="$(read_env_value "$PROJECT_ENV_FILE" SOCKETCLUSTER_AUTH_MODE)"
-SOCKETCLUSTER_AUTH_MODE_VALUE="${SOCKETCLUSTER_AUTH_MODE_VALUE:-enforce}"
+SOCKETCLUSTER_AUTH_MODE_VALUE="${SOCKETCLUSTER_AUTH_MODE_VALUE:-log}"
 
-set_env_value "$PROJECT_ENV_FILE" SOCKETCLUSTER_AUTH_KEY  "$SOCKETCLUSTER_AUTH_KEY_VALUE"
-set_env_value "$PROJECT_ENV_FILE" SOCKETCLUSTER_AUTH_MODE "$SOCKETCLUSTER_AUTH_MODE_VALUE"
+set_env_value "$PROJECT_ENV_FILE" SOCKETCLUSTER_AUTH_ENABLED "$SOCKETCLUSTER_AUTH_ENABLED_VALUE"
+set_env_value "$PROJECT_ENV_FILE" SOCKETCLUSTER_AUTH_KEY     "$SOCKETCLUSTER_AUTH_KEY_VALUE"
+set_env_value "$PROJECT_ENV_FILE" SOCKETCLUSTER_AUTH_MODE    "$SOCKETCLUSTER_AUTH_MODE_VALUE"
 chmod 600 "$PROJECT_ENV_FILE" 2>/dev/null || true
-success "Socket auth written to $PROJECT_ENV_FILE (mode: $SOCKETCLUSTER_AUTH_MODE_VALUE)"
+if [[ "$SOCKETCLUSTER_AUTH_ENABLED_VALUE" == "true" ]]; then
+  SOCKETCLUSTER_AUTH_SUMMARY="on, mode: $SOCKETCLUSTER_AUTH_MODE_VALUE"
+else
+  SOCKETCLUSTER_AUTH_SUMMARY="off until SOCKETCLUSTER_AUTH_ENABLED=true"
+fi
+success "Socket auth written to $PROJECT_ENV_FILE ($SOCKETCLUSTER_AUTH_SUMMARY)"
 
 ###############################################################################
 # STEP 9 — Write docker-compose.override.yml
@@ -652,7 +663,7 @@ $CONFIG_MAIL \
   || SKIPPED_ITEMS+=("File storage (local disk — not suitable for production)")
 
 CONFIGURED_ITEMS+=("WebSocket security (origins restricted to ${HOST})")
-CONFIGURED_ITEMS+=("Socket authentication (${SOCKETCLUSTER_AUTH_MODE_VALUE}; key in ${PROJECT_ENV_FILE})")
+CONFIGURED_ITEMS+=("Socket authentication (${SOCKETCLUSTER_AUTH_SUMMARY}; key in ${PROJECT_ENV_FILE})")
 
 $CONFIG_3P \
   && CONFIGURED_ITEMS+=("Third-party APIs (Maps, Geolocation, SMS)") \

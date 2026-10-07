@@ -37,7 +37,9 @@ services:
       # characters, e.g. `openssl rand -hex 32`. Leaving it unset keeps auth off.
       # Setting it only in api/.env has no effect: compose passes the project value (empty
       # when unset) to the containers, and that takes precedence over api/.env.
-      # SOCKETCLUSTER_AUTH_MODE: log   # off | log | enforce (default enforce when a key is set)
+      # Auth stays off until SOCKETCLUSTER_AUTH_ENABLED=true (also set in the project .env
+      # file, so the API containers get the same value).
+      # SOCKETCLUSTER_AUTH_MODE: log   # off | log | enforce (default enforce once switched on)
 
       # DEVELOPMENT: Allow localhost connections (HTTP, HTTPS, and WebSocket protocols)
       SOCKETCLUSTER_OPTIONS: '{"origins":"http://localhost:*,https://localhost:*,ws://localhost:*,wss://localhost:*"}'

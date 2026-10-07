@@ -157,6 +157,7 @@ async function startServer({ env = {}, decide = denyEverything, authorizeTimeout
     const config = loadConfig({
         SOCKETCLUSTER_PORT: '0',
         SOCKETCLUSTER_INTERNAL_PORT: '0',
+        SOCKETCLUSTER_AUTH_ENABLED: 'true',
         SOCKETCLUSTER_AUTH_KEY: AUTH_KEY,
         SOCKETCLUSTER_AUTHORIZE_URL: fake.url,
         ...env,
