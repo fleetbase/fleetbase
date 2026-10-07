@@ -1,0 +1,91 @@
+name: Socket CI
+
+# Tests the Fleetbase socket server in socket/ (SocketCluster with JWT subscription auth and
+# the signed internal publish endpoint) and checks that its Docker image builds. The image
+# itself is published by publish-docker-images.yml on release tags.
+
+on:
+    push:
+        branches: [main]
+        paths:
+            - 'socket/**'
+            - '.github/workflows/socket.yml'
+    pull_request:
+        branches: [main]
+        paths:
+            - 'socket/**'
+            - '.github/workflows/socket.yml'
+    workflow_dispatch:
+
+concurrency:
+    group: socket-ci-${{ github.ref }}
+    cancel-in-progress: true
+
+permissions:
+    contents: read
+
+defaults:
+    run:
+        working-directory: socket
+
+jobs:
+    test:
+        name: Unit + Integration Tests
+        runs-on: ubuntu-latest
+        timeout-minutes: 15
+
+        steps:
+            - name: Checkout Code
+              uses: actions/checkout@v4
+
+            - name: Setup Node.js 22
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 22.x
+                  cache: npm
+                  cache-dependency-path: socket/package-lock.json
+
+            - name: Install Dependencies
+              run: npm ci --no-audit --no-fund
+
+            - name: Run Tests
+              run: npm test
+
+    docker:
+        name: Docker Image Builds
+        runs-on: ubuntu-latest
+        timeout-minutes: 15
+
+        steps:
+            - name: Checkout Code
+              uses: actions/checkout@v4
+
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v3
+
+            - name: Build Image
+              uses: docker/build-push-action@v6
+              with:
+                  context: ./socket
+                  file: ./socket/Dockerfile
+                  platforms: linux/amd64
+                  push: false
+                  load: true
+                  tags: fleetbase/fleetbase-socket:ci
+
+            - name: Smoke Test Image
+              working-directory: .
+              run: |
+                  set -euo pipefail
+                  docker run -d --name socket-ci -p 18000:8000 fleetbase/fleetbase-socket:ci
+                  for _ in $(seq 1 30); do
+                    if curl -fsS http://127.0.0.1:18000/health-check | grep -q OK; then
+                      echo "health-check OK"
+                      docker logs socket-ci
+                      exit 0
+                    fi
+                    sleep 1
+                  done
+                  echo "::error::socket image did not answer /health-check"
+                  docker logs socket-ci || true
+                  exit 1
