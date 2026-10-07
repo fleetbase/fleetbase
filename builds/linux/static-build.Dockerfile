@@ -33,12 +33,18 @@ RUN apk add --no-cache geos geos-dev gettext-dev
 COPY ./builds/linux/spc/libgeos-linux.php ./dist/static-php-cli/src/SPC/builder/linux/library/libgeos.php
 COPY ./builds/linux/spc/libgeos-unix.php ./dist/static-php-cli/src/SPC/builder/unix/library/libgeos.php
 
-# Patch source.json to add geos extension source
-RUN jq '. + {"php-geos": {"type": "url", "url": "https://github.com/libgeos/php-geos/archive/dfe1ab17b0f155cc315bc13c75689371676e02e1.zip", "license": [{"type": "file", "path": "php-geos-dfe1ab17b0f155cc315bc13c75689371676e02e1/MIT-LICENSE"}, {"type": "file", "path": "php-geos-dfe1ab17b0f155cc315bc13c75689371676e02e1/LGPL-2"}]}}' \
+# Inject the geos extension handler: points php-geos' configure at the
+# geos-config SPC installs and makes its link probes work against static libs.
+COPY ./builds/linux/spc/geos-ext.php ./dist/static-php-cli/src/SPC/builder/extension/geos.php
+
+# Patch source.json to add geos extension source. External extensions must land
+# in php-src/ext/<name> ("path"); SPC strips the top-level directory of tarballs
+# but not of zip archives, hence the .tar.gz.
+RUN jq '. + {"php-geos": {"type": "url", "url": "https://github.com/libgeos/php-geos/archive/dfe1ab17b0f155cc315bc13c75689371676e02e1.tar.gz", "filename": "php-geos-dfe1ab17b0f155cc315bc13c75689371676e02e1.tar.gz", "path": "php-src/ext/geos", "license": [{"type": "file", "path": "MIT-LICENSE"}, {"type": "file", "path": "LGPL-2"}]}}' \
   ./dist/static-php-cli/config/source.json > ./dist/static-php-cli/config/source.tmp.json && \
   mv ./dist/static-php-cli/config/source.tmp.json ./dist/static-php-cli/config/source.json
 
-# Pathc source.json to add libgeos library
+# Patch source.json to add libgeos library
 RUN jq '. + {"libgeos": {"type": "url", "url": "https://download.osgeo.org/geos/geos-3.12.1.tar.bz2", "filename": "geos-3.12.1.tar.bz2", "extract": "geos-3.12.1", "build-dir": "build", "license": [{"type": "file", "path": "COPYING"}]}}' \
   ./dist/static-php-cli/config/source.json > ./dist/static-php-cli/config/source.tmp.json && \
   mv ./dist/static-php-cli/config/source.tmp.json ./dist/static-php-cli/config/source.json
@@ -48,8 +54,9 @@ RUN jq '. + {"geos": {"type": "external", "arg-type": "enable", "source": "php-g
   ./dist/static-php-cli/config/ext.json > ./dist/static-php-cli/config/ext.tmp.json && \
   mv ./dist/static-php-cli/config/ext.tmp.json ./dist/static-php-cli/config/ext.json
 
-# Patch lib.json to add libgeos
-RUN jq '. + {"libgeos": {"source": "libgeos", "static-libs-unix": ["libgeos.a", "libgeos_c.a"]}}' \
+# Patch lib.json to add libgeos (dependents first: libgeos_c.a needs libgeos.a,
+# and libgeos is C++, so the C++ runtime has to be linked in).
+RUN jq '. + {"libgeos": {"source": "libgeos", "static-libs-unix": ["libgeos_c.a", "libgeos.a"], "cpp-library": true}}' \
   ./dist/static-php-cli/config/lib.json > ./dist/static-php-cli/config/lib.tmp.json && \
   mv ./dist/static-php-cli/config/lib.tmp.json ./dist/static-php-cli/config/lib.json
 

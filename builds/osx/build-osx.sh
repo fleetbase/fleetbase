@@ -189,6 +189,7 @@ require_file "$STATIC_PHP_CLI_DIR/config/ext.json"
 require_file "$STATIC_PHP_CLI_DIR/config/lib.json"
 require_file "$ROOT_DIR/builds/osx/spc/libgeos-unix.php"
 require_file "$ROOT_DIR/builds/osx/spc/libgeos-macos.php"
+require_file "$ROOT_DIR/builds/osx/spc/geos-ext.php"
 require_file "$ROOT_DIR/builds/osx/spc/UnixBuilderBase-macos.php"
 require_file "$ROOT_DIR/builds/osx/spc/MacOSBuilder-macos.php"
 require_file "$ROOT_DIR/builds/osx/spc/ar-no-nested-archives"
@@ -198,6 +199,9 @@ require_file "$STATIC_PHP_CLI_DIR/src/SPC/builder/macos/MacOSBuilder.php"
 log "Injecting libgeos patch files for pinned static-php-cli $STATIC_PHP_CLI_VERSION..."
 cp "$ROOT_DIR/builds/osx/spc/libgeos-unix.php" "$STATIC_PHP_CLI_DIR/src/SPC/builder/unix/library/libgeos.php"
 cp "$ROOT_DIR/builds/osx/spc/libgeos-macos.php" "$STATIC_PHP_CLI_DIR/src/SPC/builder/macos/library/libgeos.php"
+# geos extension handler: points php-geos' configure at the geos-config SPC
+# installs and makes its link probes work against the static libraries.
+cp "$ROOT_DIR/builds/osx/spc/geos-ext.php" "$STATIC_PHP_CLI_DIR/src/SPC/builder/extension/geos.php"
 cp "$ROOT_DIR/builds/osx/spc/UnixBuilderBase-macos.php" "$STATIC_PHP_CLI_DIR/src/SPC/builder/unix/UnixBuilderBase.php"
 # Strip nested .a members from libphp.a instead of the `ar x` / `ar rcs` repack,
 # which yields no .o files on the Xcode 26 toolchain (see the patched file).
@@ -205,7 +209,9 @@ cp "$ROOT_DIR/builds/osx/spc/MacOSBuilder-macos.php" "$STATIC_PHP_CLI_DIR/src/SP
 
 # Patch SPC config
 log "Patching SPC config files (source.json, ext.json, lib.json)..."
-jq '. + {"php-geos": {"type": "url", "url": "https://github.com/libgeos/php-geos/archive/dfe1ab17b0f155cc315bc13c75689371676e02e1.zip", "license": [{"type": "file", "path": "php-geos-dfe1ab17b0f155cc315bc13c75689371676e02e1/MIT-LICENSE"}, {"type": "file", "path": "php-geos-dfe1ab17b0f155cc315bc13c75689371676e02e1/LGPL-2"}]}}' \
+# External extensions must land in php-src/ext/<name> ("path"); SPC strips the
+# top-level directory of tarballs but not of zip archives, hence the .tar.gz.
+jq '. + {"php-geos": {"type": "url", "url": "https://github.com/libgeos/php-geos/archive/dfe1ab17b0f155cc315bc13c75689371676e02e1.tar.gz", "filename": "php-geos-dfe1ab17b0f155cc315bc13c75689371676e02e1.tar.gz", "path": "php-src/ext/geos", "license": [{"type": "file", "path": "MIT-LICENSE"}, {"type": "file", "path": "LGPL-2"}]}}' \
   "$STATIC_PHP_CLI_DIR/config/source.json" > "$STATIC_PHP_CLI_DIR/config/source.tmp.json" && \
   mv "$STATIC_PHP_CLI_DIR/config/source.tmp.json" "$STATIC_PHP_CLI_DIR/config/source.json"
 
@@ -213,7 +219,8 @@ jq '. + {"libgeos": {"type": "url", "url": "https://download.osgeo.org/geos/geos
   "$STATIC_PHP_CLI_DIR/config/source.json" > "$STATIC_PHP_CLI_DIR/config/source.tmp.json" && \
   mv "$STATIC_PHP_CLI_DIR/config/source.tmp.json" "$STATIC_PHP_CLI_DIR/config/source.json"
 
-jq '. + {"libgeos": {"source": "libgeos", "static-libs-unix": ["libgeos.a", "libgeos_c.a"]}}' \
+# Dependents first: libgeos_c.a needs libgeos.a, and libgeos is C++.
+jq '. + {"libgeos": {"source": "libgeos", "static-libs-unix": ["libgeos_c.a", "libgeos.a"], "cpp-library": true}}' \
   "$STATIC_PHP_CLI_DIR/config/lib.json" > "$STATIC_PHP_CLI_DIR/config/lib.tmp.json" && \
   mv "$STATIC_PHP_CLI_DIR/config/lib.tmp.json" "$STATIC_PHP_CLI_DIR/config/lib.json"
 
