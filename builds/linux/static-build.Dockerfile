@@ -81,6 +81,12 @@ ENV PHP_VERSION=8.2
 # Caddy >= 2.10.2 now requires Go 1.25+.
 ENV CADDY_VERSION=v2.10.0
 
+# build-static.sh defaults XCADDY_ARGS to the Mercure and Vulcain Caddy plugins
+# at their latest versions, which now require Go 1.27 and Caddy >= 2.11 and
+# break the Go 1.24.1 toolchain in the pinned builder image. Fleetbase does not
+# use either plugin, so keep only cbrotli, pinned so nothing resolves to latest.
+ENV XCADDY_ARGS="--with github.com/dunglas/caddy-cbrotli@v1.0.1"
+
 # Move to the app directory
 WORKDIR /go/src/app
 
@@ -101,6 +107,7 @@ RUN sed -i 's/[[:space:]]--prefer-pre-built//g' ./build-static.sh
 RUN grep -Fq '${XCADDY_COMMAND} build \' ./build-static.sh && \
     awk 'index($0, "${XCADDY_COMMAND} build \\") { print "\t${XCADDY_COMMAND} build \"${CADDY_VERSION}\" \\"; patched=1; next } { print } END { exit patched ? 0 : 1 }' ./build-static.sh > ./build-static.sh.tmp && \
     mv ./build-static.sh.tmp ./build-static.sh && \
+    chmod +x ./build-static.sh && \
     grep -Fq '${XCADDY_COMMAND} build "${CADDY_VERSION}" \' ./build-static.sh
 
 # Stabilize SPC/curl downloads on networks where HTTP/2 streams are reset.
