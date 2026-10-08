@@ -59,6 +59,7 @@ Router.map(function () {
             this.route('platform-api-token');
             this.route('api-consumers');
             this.route('rate-limits');
+            this.route('database-backups');
             this.route('virtual', { path: '/:slug' });
             this.route('organizations', function () {
                 this.route('index', { path: '/' });
