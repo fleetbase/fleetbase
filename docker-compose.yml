@@ -68,6 +68,9 @@ services:
       SOCKETCLUSTER_AUTH_ENABLED: ${SOCKETCLUSTER_AUTH_ENABLED:-false}
       SOCKETCLUSTER_AUTH_KEY: ${SOCKETCLUSTER_AUTH_KEY:-}
       SOCKETCLUSTER_PUBLISH_URL: http://socket:8001
+      # Origin header for the API's websocket publisher; must be allowed by the socket
+      # server's SOCKETCLUSTER_OPTIONS origins (scripts/docker-install.sh writes it to .env).
+      SOCKETCLUSTER_ORIGIN: ${SOCKETCLUSTER_ORIGIN:-}
     depends_on:
       - database
       - cache
@@ -91,6 +94,9 @@ services:
       SOCKETCLUSTER_AUTH_ENABLED: ${SOCKETCLUSTER_AUTH_ENABLED:-false}
       SOCKETCLUSTER_AUTH_KEY: ${SOCKETCLUSTER_AUTH_KEY:-}
       SOCKETCLUSTER_PUBLISH_URL: http://socket:8001
+      # Origin header for the API's websocket publisher; must be allowed by the socket
+      # server's SOCKETCLUSTER_OPTIONS origins (scripts/docker-install.sh writes it to .env).
+      SOCKETCLUSTER_ORIGIN: ${SOCKETCLUSTER_ORIGIN:-}
     depends_on:
       - database
       - cache
@@ -132,6 +138,9 @@ services:
       SOCKETCLUSTER_AUTH_ENABLED: ${SOCKETCLUSTER_AUTH_ENABLED:-false}
       SOCKETCLUSTER_AUTH_KEY: ${SOCKETCLUSTER_AUTH_KEY:-}
       SOCKETCLUSTER_PUBLISH_URL: http://socket:8001
+      # Origin header for the API's websocket publisher; must be allowed by the socket
+      # server's SOCKETCLUSTER_OPTIONS origins (scripts/docker-install.sh writes it to .env).
+      SOCKETCLUSTER_ORIGIN: ${SOCKETCLUSTER_ORIGIN:-}
     depends_on:
       - database
       - cache

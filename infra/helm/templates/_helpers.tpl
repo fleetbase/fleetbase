@@ -97,6 +97,16 @@ Secret exists, and it does not publish or authorize anything.
 {{- end }}
 
 {{/*
+SOCKETCLUSTER_ORIGIN (socketcluster.origin) for the API containers, left out when empty.
+*/}}
+{{- define "helm.socketOriginEnv" -}}
+{{- with .Values.socketcluster.origin }}
+- name: SOCKETCLUSTER_ORIGIN
+  value: {{ . | quote }}
+{{- end }}
+{{- end }}
+
+{{/*
 The API authorize endpoint the socket server calls: the API Service (httpd -> octane).
 */}}
 {{- define "helm.socketAuthorizeUrl" -}}

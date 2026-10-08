@@ -409,6 +409,21 @@ SOCKETCLUSTER_AUTH_MODE_VALUE="${SOCKETCLUSTER_AUTH_MODE_VALUE:-log}"
 set_env_value "$PROJECT_ENV_FILE" SOCKETCLUSTER_AUTH_ENABLED "$SOCKETCLUSTER_AUTH_ENABLED_VALUE"
 set_env_value "$PROJECT_ENV_FILE" SOCKETCLUSTER_AUTH_KEY     "$SOCKETCLUSTER_AUTH_KEY_VALUE"
 set_env_value "$PROJECT_ENV_FILE" SOCKETCLUSTER_AUTH_MODE    "$SOCKETCLUSTER_AUTH_MODE_VALUE"
+
+# SOCKETCLUSTER_ORIGIN is the Origin header the API sends when it publishes over the
+# websocket (the path used while socket auth is off). Without it the socket server treats
+# the publisher's origin as "*" and, because the origins are restricted above, refuses every
+# broadcast with "Invalid origin: *". It has to be an origin SOCKET_ORIGINS allows: the
+# server matches hostname + port against entries such as "${HOST}:*". Kept on re-runs.
+SOCKETCLUSTER_ORIGIN_VALUE="$(read_env_value "$PROJECT_ENV_FILE" SOCKETCLUSTER_ORIGIN)"
+if [[ -z "$SOCKETCLUSTER_ORIGIN_VALUE" ]]; then
+  if $IS_LOCALHOST; then
+    SOCKETCLUSTER_ORIGIN_VALUE="http://localhost:4200"
+  else
+    SOCKETCLUSTER_ORIGIN_VALUE="${SCHEME_CONSOLE}://${HOST}"
+  fi
+fi
+set_env_value "$PROJECT_ENV_FILE" SOCKETCLUSTER_ORIGIN       "$SOCKETCLUSTER_ORIGIN_VALUE"
 chmod 600 "$PROJECT_ENV_FILE" 2>/dev/null || true
 if [[ "$SOCKETCLUSTER_AUTH_ENABLED_VALUE" == "true" ]]; then
   SOCKETCLUSTER_AUTH_SUMMARY="on, mode: $SOCKETCLUSTER_AUTH_MODE_VALUE"
@@ -416,6 +431,7 @@ else
   SOCKETCLUSTER_AUTH_SUMMARY="off until SOCKETCLUSTER_AUTH_ENABLED=true"
 fi
 success "Socket auth written to $PROJECT_ENV_FILE ($SOCKETCLUSTER_AUTH_SUMMARY)"
+success "API publisher origin: $SOCKETCLUSTER_ORIGIN_VALUE"
 
 ###############################################################################
 # STEP 9 — Write docker-compose.override.yml
