@@ -44,5 +44,10 @@ services:
       # DEVELOPMENT: Allow localhost connections (HTTP, HTTPS, and WebSocket protocols)
       SOCKETCLUSTER_OPTIONS: '{"origins":"http://localhost:*,https://localhost:*,ws://localhost:*,wss://localhost:*"}'
       
+      # The API publishes broadcasts with the Origin header from SOCKETCLUSTER_ORIGIN (set it in
+      # the project .env file, e.g. SOCKETCLUSTER_ORIGIN=https://yourdomain.com). While socket
+      # auth is off it must be one of the origins allowed here, or every broadcast is refused
+      # with "Invalid origin: *".
+
       # PRODUCTION: Replace with your actual domain(s) - include all protocols
       # SOCKETCLUSTER_OPTIONS: '{"origins":"https://yourdomain.com:*,wss://yourdomain.com:*,https://app.yourdomain.com:*,wss://app.yourdomain.com:*"}'

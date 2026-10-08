@@ -111,6 +111,11 @@ socketcluster:
   authorizeUrl: ""
   # SOCKETCLUSTER_OPTIONS JSON, e.g. '{"origins":"https://console.example.com:*"}'
   options: ""
+  # SOCKETCLUSTER_ORIGIN for the API: the Origin header its websocket publisher sends (used
+  # while authEnabled is false). Needed once options restricts origins, otherwise every
+  # broadcast is refused with "Invalid origin: *". Must be an allowed origin, e.g.
+  # "https://console.example.com" for '{"origins":"https://console.example.com:*"}'.
+  origin: ""
   # Extra env for the socket container (e.g. SCC_STATE_SERVER_HOST for multiple replicas).
   extraEnv: []
   resources: {}

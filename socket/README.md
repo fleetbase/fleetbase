@@ -37,6 +37,8 @@ Image: `fleetbase/fleetbase-socket` (linux/amd64 and linux/arm64).
 
 The API side reads `SOCKETCLUSTER_AUTH_ENABLED`, `SOCKETCLUSTER_AUTH_KEY`, `SOCKETCLUSTER_PUBLISH_URL` (default
 `http://{SOCKETCLUSTER_HOST}:8001`) and `SOCKETCLUSTER_TOKEN_TTL` (default `900` seconds).
+When `SOCKETCLUSTER_OPTIONS` restricts `origins` and auth is off, the API also needs `SOCKETCLUSTER_ORIGIN`, an allowed origin
+such as `https://console.example.com`, which it sends as the `Origin` header when publishing; without it every broadcast is refused with `Invalid origin: *`.
 
 Generate a key with, for example, `openssl rand -hex 32`.
 
