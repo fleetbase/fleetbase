@@ -46,6 +46,8 @@ spec:
                 name: infra-provided-secret
           env:
           {{- include "helm.commonVariables" . | nindent 12 }}
+          {{- include "helm.socketAuthKeyEnv" . | nindent 12 }}
+          {{- include "helm.socketOriginEnv" . | nindent 12 }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
@@ -108,6 +110,8 @@ spec:
                 name: infra-provided-secret
           env:
           {{- include "helm.commonVariables" . | nindent 12 }}
+          {{- include "helm.socketAuthKeyEnv" . | nindent 12 }}
+          {{- include "helm.socketOriginEnv" . | nindent 12 }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}

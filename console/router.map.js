@@ -7,7 +7,11 @@ export default class Router extends EmberRouter {
 }
 
 Router.map(function () {
-    this.route('virtual', { path: '/~/:slug' });
+    // A public page can carry more of its own path, e.g. /~/t/{company}/{tracking number}:
+    // the `virtual` route still renders it, and the page reads the rest from the URL.
+    this.route('virtual', { path: '/~/:slug' }, function () {
+        this.route('path', { path: '/*path' });
+    });
     this.route('install');
     this.route('onboard', function () {
         this.route('index', { path: '/' });
@@ -59,6 +63,7 @@ Router.map(function () {
             this.route('platform-api-token');
             this.route('api-consumers');
             this.route('rate-limits');
+            this.route('database-backups');
             this.route('virtual', { path: '/:slug' });
             this.route('organizations', function () {
                 this.route('index', { path: '/' });

@@ -1,93 +1,67 @@
-> v0.7.68 ~ "Extensible tables and details views, order types with their own lifecycle, and resource transformers"
+> v0.7.69 ~ "Fleetbase socket server, database backups, private media buckets and verified storefront reviews"
 
 ---
 ## Highlights
-Fleetbase `0.7.68` ships Core API `1.6.68`, Fleet-Ops `0.6.71`, Storefront `0.4.24`, Ledger `0.0.12`, IAM `0.1.13`, Developers `0.2.17`, Ember Core `0.3.25` and Ember UI `0.4.5`.
+Fleetbase `0.7.69` ships Core API `1.6.69`, Storefront `0.4.25` and Customer Portal `0.0.16`.
 
-- **Extensions can add to any table and details view.** Columns, row actions, bulk actions and toolbar buttons on tables; header buttons, "…" menu items and tabs on details views. This works across Fleet-Ops, Storefront, Ledger, IAM and Developers, through resource view registries named `<extension>:<resource>:<surface>:<slot>`, such as `fleet-ops:driver:table:columns`. Guide: [Resource Views](https://fleetbase.io/docs/extension-development/resource-views).
-- **Order types with their own lifecycle and presentation.** An order config can define its own lifecycle: its starting activity, its completed, canceled and terminal activities, whether its orders are dispatched, and whether they may only move along the flow. Extensions can give an order type its own order form, details view and actions with an order presentation profile. Guides: [Order Lifecycles](https://fleetbase.io/docs/extension-development/order-lifecycles) and [Order Presentation](https://fleetbase.io/docs/extension-development/order-presentation).
-- **Resource transformers for every API resource.** Extensions can add to or reshape any API resource, in HTTP responses, webhooks and broadcasts, without the resource opting in.
-- **`composer install` no longer needs a database.** `artisan package:discover` used to fail during `composer install` when MySQL wasn't reachable.
+- **Fleetbase socket server.** The stock SocketCluster image is replaced by `fleetbase/fleetbase-socket`, which can authenticate realtime channels with short-lived tokens, and the API publishes through a signed internal endpoint. **Socket auth is off by default** and stays off until `SOCKETCLUSTER_AUTH_ENABLED=true`, so every existing socket client keeps working. Turn it on once your clients fetch socket tokens.
+- **Database backups that fail loudly.** A new Admin → Database Backups page with status, schedule, retention and recent runs. Failed backups email the configured addresses, and the image now includes `mysqldump`.
+- **Private media buckets.** Stored file links are signed on read, so the S3 media bucket can be fully private.
+- **Storefront:** verified-purchase reviews, order chat with the driver, richer public promotions and faster store listings.
 
 ---
 ## Component Versions
-- `console`: `0.7.68`
-- `core-api`: `1.6.68`
+- `console`: `0.7.69`
+- `core-api`: `1.6.69`
 - `fleetops`: `0.6.71`
-- `storefront`: `0.4.24`
+- `storefront`: `0.4.25`
 - `ledger`: `0.0.12`
 - `iam-engine`: `0.1.13`
 - `dev-engine`: `0.2.17`
 - `ember-core`: `0.3.25`
 - `ember-ui`: `0.4.5`
 - `registry-bridge`: `0.1.10`
-- `customer-portal`: `0.0.15`
+- `customer-portal`: `0.0.16`
 
 ---
 ## New Features
-### Resource View Registries
-- **Tables:** registered columns (with their own cells and filters), row actions, bulk actions and toolbar buttons appear alongside the built-in ones, placed `before` or `after` built-in items by id (ember-core #95, ember-ui #186).
-- **Details views:** registered header buttons and "…" menu items appear in details panels, side panels, IAM edit dialogs and Developers details pages. Details tabs can be registered as `<extension>:<resource>:details:tabs`.
-- **Every built-in engine declares its registries:** Fleet-Ops (fleetops #347), Storefront (storefront #110), Ledger (ledger #28), IAM (iam-engine #39) and Developers (dev-engine #49). Built-in columns and actions have stable ids. The [Registry Catalogue](https://fleetbase.io/docs/extension-development/resource-views/catalogue) lists every registry and id.
-- **Filterable registered columns:** a registered column's filter param is added to the table's query params, and extensions apply it on the API with a Filter expansion.
+### Socket server and channel authentication (#704, core-api #290, storefront #113)
+- **`fleetbase/fleetbase-socket`** replaces `socketcluster/socketcluster` in compose, the installer, Helm and the image build (amd64 and arm64).
+- **Channel authentication** with `off`, `log` and `enforce` modes. With it on, clients present a token, the socket server asks the API whether that token may follow a channel, and the API publishes through a signed internal endpoint on port 8001.
+- **Off until switched on:** auth needs `SOCKETCLUSTER_AUTH_ENABLED=true` on the API and the socket server. The installer generates a key but leaves the switch off and the mode at `log`.
+- **Console socket test** listens on the admin's own `test.{user}` channel and reports refused subscriptions.
 
-### Configured Order Lifecycles (Fleet-Ops)
-- **`meta.lifecycle` on an order config** (fleetops #346): `initial`, `completed`, `canceled`, `terminal`, `dispatch` and `strict_transitions`. The internal API starts new orders at the initial activity, refuses to dispatch when `dispatch` is false, accepts only the flow's transitions when `strict_transitions` is on, and cancels to the configured activity. Configs without a lifecycle behave exactly as before.
-- **Lifecycle tab in Order Configuration** (fleetops #350): view and edit a config's lifecycle from the console.
-- **The board follows a configured lifecycle:** its columns are the flow's activities, and cards move only to an order's next activities.
-- **Status badges** for lifecycle statuses such as Requested, Handed Over, Extended and Returned.
+### Database backups (#703, core-api #288)
+- **Admin → Database Backups:** last success and last run, with a warning when the last run failed or nothing succeeded in 26 hours. Frequency, time and day; disk, bucket and path; databases; retention by days or count; minimum dump size; failure emails; and recent runs with "Run backup now".
+- **`mysqldump` in the image.** Before, the backup bucket only ever received empty gzip files.
 
-### Order Presentation Profiles (Fleet-Ops)
-- **An extension can give its order type its own presentation** (fleetops #346): order form sections (Fleet-Ops' own and the extension's), extra and hidden fields, details view sections, and hidden actions in the orders table and details menu. **Edit details** opens the profiled form. Other order types are unchanged.
-
-### Resource Transformers (Core API)
-- **Transformers apply to every resource** (core-api #285), including nested resources, collections, paginated responses, webhooks and broadcasts. They can target a resource class, model class, interface or `'*'`, be scoped to HTTP, webhook or broadcast output and to internal or public requests, and batch-load data once per collection. Extensions register them with `registerTransformersFrom()` in their service provider.
+### Storefront `0.4.25`
+- **Verified-purchase reviews**, an eligibility endpoint and deleting your own review. Public reviews no longer show the reviewer's email or phone.
+- **Order chat** between the customer and the driver delivering their order.
+- **Public promotions** include the store, the shareable code and availability.
+- **Product add-on limits** (`is_required`, `max_selectable`) on public product payloads.
 
 ---
 ## Improvements
-- **Ember Core and Ember UI are fully tested**, with 100% statement, branch, function and line coverage enforced in CI (ember-core #90).
-- **Header shortcuts keep their permission** (ember-core #94), so the header hides shortcuts a user can't open.
-- **The Order Configuration manager lists every config** (fleetops #350), including configs created while the console is open.
-- **An order's activity timeline follows status changes made on the server** (fleetops #350), without reloading.
-- **Tabular reacts to column changes after its first render**, and the column picker's choices survive them (ember-ui #186).
-- **DatePicker accepts typed dates** and follows later value changes.
+- **Faster lookups:** the country lookup is cached and `files.subject_uuid` is indexed (core-api #291). Network and Console store listings are faster (storefront #114).
+- **Hashed one-time codes** with attempt counting (core-api #289).
 
 ---
 ## Fixes
-- **Activity Flow crashed on a flow with a cycle** (fleetops #351), such as an activity that returns to an earlier one.
-- **Order details now load the assigned vehicle with the order.**
-- **Registered details tabs broke after opening a driver, vehicle or trailer side panel**, and side panels left out tabs they could render.
-- **The sensor details view showed the tabs registered for places.**
-- **A required file custom field rejected a file uploaded in the same session** (ember-core #92).
-- **The order form failed when its custom fields couldn't load.**
-- **DatePicker reported a calendar pick twice** when the field lost focus.
-- **Tabular's bulk actions ignored `permission`.**
-- **Fixes found while bringing Ember Core to full coverage:**
-  - `crud`: bulk-action messages printed the count twice, the import dialog refused files, and a `modelName` option didn't override the model's own name.
-  - `fetch`: a bare `Content-Type` such as `text/csv` was misread, the `content-disposition` filename beat the caller's, and `cachedGet` never expired a month-old cache.
-  - The organization and user account menus showed each other's items.
-  - Reopening a chat closed the other open chats.
-  - Menu items registered by title replaced each other.
-  - The universe registry facade (`getRegistry`, `registerInRegistry`, `lookupFromRegistry`, `getMenuItemsFromRegistry`, `getMenuPanelsFromRegistry`) passed the wrong arguments and returned nothing.
-- **`composer install` failed without a reachable database** (#695). The transaction tripwire resolved a database connection while providers booted; it now listens through the event dispatcher. `fleetbase/laravel-mysql-spatial` `^1.0.3` no longer connects when a connection is built.
-
----
-## Breaking Changes
-- **Core API resource transformers** (core-api #285): duck-typed transformers (a `$target` property and a static `output($model, $data)`), `ResourceTransformerRegistry::transform()`, `resolveByTarget()`, `fixClassName()` and the static `$transformers` array are removed. Rewrite transformers against the new registry; see the core-api README's "Resource transformers" section.
-- **`FleetbaseResourceCollection` resolves its items** rather than calling `toArray()` on them.
-- **Ember Core:** `MenuItem`'s chaining click setter is now `withOnClick()`, and `loadSubjectCustomFields` rejects when loading fails, rather than resolving with nothing.
+- **Build Fleetbase Binaries** passes again on Linux, and the macOS job runs on GitHub-hosted runners (#701).
+- **The static binaries include the `geos` PHP extension** (#702), which FleetOps uses for geometry such as service-area centroids.
+- **Review photos upload without a public ACL** (storefront #112).
+- **Portal customers can no longer open organization settings** (customer-portal #22).
 
 ---
 ## Upgrade Steps
-```bash
-# Pull latest version
-git pull origin main --no-rebase
-# Update docker
-docker compose pull
-docker compose down && docker compose up -d
-# Run deploy script
-docker compose exec application bash -c "./deploy.sh"
-```
+- Run migrations: `database_backups` and the `files.subject_uuid` index (core-api), and the `reviews` index and `order_uuid` column (storefront).
+- Socket auth: nothing changes until you set `SOCKETCLUSTER_AUTH_ENABLED=true`. Roll it out in this order:
+  1. Ship clients that request a socket token and fall back to connecting without one when the token route answers 404.
+  2. Switch it on for the API (application, queue, scheduler) and the socket server, with `SOCKETCLUSTER_AUTH_MODE=log`.
+  3. Check the deny log, then switch to `enforce`.
+- Database backups replace the old S3 backup settings. Configure them in Admin → Database Backups or with `DB_BACKUP_*`.
+- To make the media bucket private, remove any public `s3:GetObject` statement from the bucket policy and turn on Block Public Access.
 
 ---
 ## Need help?

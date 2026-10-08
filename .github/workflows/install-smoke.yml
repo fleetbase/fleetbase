@@ -70,6 +70,13 @@ jobs:
             --tag fleetbase/fleetbase-api:latest \
             .
 
+      # docker-compose.yml points the socket service at fleetbase/fleetbase-socket:latest
+      # (with a build fallback). Build that tag from THIS checkout so the installer boots
+      # the socket server under test, not the last published image.
+      - name: Build socket image from source
+        if: steps.auth.outputs.available == 'true'
+        run: docker build --tag fleetbase/fleetbase-socket:latest socket
+
       # The repo currently commits a live MySQL datadir at docker/database/mysql
       # (mounted into the db container). Start from a clean volume so the installer's
       # freshly generated credentials initialize a fresh database instead of colliding

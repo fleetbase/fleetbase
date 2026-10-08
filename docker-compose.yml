@@ -30,14 +30,26 @@ services:
       retries: 5
 
   socket:
-    image: socketcluster/socketcluster:v17.4.0
-    platform: linux/amd64
+    image: fleetbase/fleetbase-socket:latest
+    build:
+      context: ./socket
     restart: unless-stopped
+    # Only the public websocket port is published. The internal publish/stats listener
+    # (8001) stays on the compose network, where the API reaches it as http://socket:8001.
     ports:
       - "38000:8000"
     environment:
-      SOCKETCLUSTER_WORKERS: 10
-      SOCKETCLUSTER_BROKERS: 10
+      # Socket auth. SOCKETCLUSTER_AUTH_ENABLED and SOCKETCLUSTER_AUTH_KEY come from the
+      # project .env file that scripts/docker-install.sh writes (or from
+      # docker-compose.override.yml) and must be the same for socket, application, queue and
+      # scheduler. Auth stays off until SOCKETCLUSTER_AUTH_ENABLED=true, so clients that
+      # connect without socket tokens keep working; see socket/README.md for the rollout.
+      SOCKETCLUSTER_AUTH_ENABLED: ${SOCKETCLUSTER_AUTH_ENABLED:-false}
+      SOCKETCLUSTER_AUTH_KEY: ${SOCKETCLUSTER_AUTH_KEY:-}
+      # off | log | enforce. Empty = enforce once switched on with a key.
+      SOCKETCLUSTER_AUTH_MODE: ${SOCKETCLUSTER_AUTH_MODE:-}
+      # The API's authorize endpoint, served by the application container's octane server.
+      SOCKETCLUSTER_AUTHORIZE_URL: http://application:8000/int/v1/socket/authorize
       # SOCKETCLUSTER_OPTIONS can be set via docker-compose.override.yml for specific environments
       # For production, use: SOCKETCLUSTER_OPTIONS: '{"origins":"https://yourdomain.com:*"}'
       # For development, use: SOCKETCLUSTER_OPTIONS: '{"origins":"http://localhost:*"}'
@@ -53,6 +65,12 @@ services:
       CACHE_PATH: /fleetbase/api/storage/framework/cache
       CACHE_URL: tcp://cache
       REDIS_URL: tcp://cache
+      SOCKETCLUSTER_AUTH_ENABLED: ${SOCKETCLUSTER_AUTH_ENABLED:-false}
+      SOCKETCLUSTER_AUTH_KEY: ${SOCKETCLUSTER_AUTH_KEY:-}
+      SOCKETCLUSTER_PUBLISH_URL: http://socket:8001
+      # Origin header for the API's websocket publisher; must be allowed by the socket
+      # server's SOCKETCLUSTER_OPTIONS origins (scripts/docker-install.sh writes it to .env).
+      SOCKETCLUSTER_ORIGIN: ${SOCKETCLUSTER_ORIGIN:-}
     depends_on:
       - database
       - cache
@@ -73,6 +91,12 @@ services:
       CACHE_PATH: /fleetbase/api/storage/framework/cache
       CACHE_URL: tcp://cache
       REDIS_URL: tcp://cache
+      SOCKETCLUSTER_AUTH_ENABLED: ${SOCKETCLUSTER_AUTH_ENABLED:-false}
+      SOCKETCLUSTER_AUTH_KEY: ${SOCKETCLUSTER_AUTH_KEY:-}
+      SOCKETCLUSTER_PUBLISH_URL: http://socket:8001
+      # Origin header for the API's websocket publisher; must be allowed by the socket
+      # server's SOCKETCLUSTER_OPTIONS origins (scripts/docker-install.sh writes it to .env).
+      SOCKETCLUSTER_ORIGIN: ${SOCKETCLUSTER_ORIGIN:-}
     depends_on:
       - database
       - cache
@@ -111,6 +135,12 @@ services:
       REGISTRY_HOST: https://registry.fleetbase.io
       REGISTRY_PREINSTALLED_EXTENSIONS: "true"
       OSRM_HOST: https://router.project-osrm.org
+      SOCKETCLUSTER_AUTH_ENABLED: ${SOCKETCLUSTER_AUTH_ENABLED:-false}
+      SOCKETCLUSTER_AUTH_KEY: ${SOCKETCLUSTER_AUTH_KEY:-}
+      SOCKETCLUSTER_PUBLISH_URL: http://socket:8001
+      # Origin header for the API's websocket publisher; must be allowed by the socket
+      # server's SOCKETCLUSTER_OPTIONS origins (scripts/docker-install.sh writes it to .env).
+      SOCKETCLUSTER_ORIGIN: ${SOCKETCLUSTER_ORIGIN:-}
     depends_on:
       - database
       - cache

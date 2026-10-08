@@ -353,6 +353,87 @@ APP_KEY="base64:$(openssl rand -base64 32 | tr -d '\n')"
 success "APP_KEY generated"
 
 ###############################################################################
+# STEP 8b — Socket authentication key
+###############################################################################
+section "Socket Authentication"
+
+# docker-compose.yml reads SOCKETCLUSTER_AUTH_ENABLED, SOCKETCLUSTER_AUTH_KEY and
+# SOCKETCLUSTER_AUTH_MODE from the project .env file (Compose loads it automatically) and
+# hands the same values to the application, queue, scheduler and socket containers. The key
+# is generated now and kept across re-runs (changing it would invalidate every socket token
+# already handed out), but auth stays switched off: mobile apps and other socket clients
+# that don't fetch socket tokens yet would otherwise be refused. Switch it on with
+# SOCKETCLUSTER_AUTH_ENABLED=true once they all do; it starts in log mode.
+PROJECT_ENV_FILE=".env"
+
+# read_env_value FILE KEY → prints the last KEY=value in FILE, unquoted ("" if absent)
+read_env_value() {
+  local file="$1" key="$2" line
+  [[ -f "$file" ]] || return 0
+  line="$(grep -E "^[[:space:]]*${key}=" "$file" | tail -n 1 || true)"
+  line="${line#*=}"
+  line="${line%\"}"; line="${line#\"}"
+  line="${line%\'}"; line="${line#\'}"
+  printf '%s' "$line"
+}
+
+# set_env_value FILE KEY VALUE → replaces (or appends) KEY=VALUE; no sed -i for portability
+set_env_value() {
+  local file="$1" key="$2" value="$3" tmp
+  tmp="${file}.tmp.$$"
+  if [[ -f "$file" ]]; then
+    grep -vE "^[[:space:]]*${key}=" "$file" > "$tmp" || true
+  else
+    : > "$tmp"
+  fi
+  printf '%s=%s\n' "$key" "$value" >> "$tmp"
+  mv -f "$tmp" "$file"
+}
+
+SOCKETCLUSTER_AUTH_KEY_VALUE="$(read_env_value "$PROJECT_ENV_FILE" SOCKETCLUSTER_AUTH_KEY)"
+if [[ -n "$SOCKETCLUSTER_AUTH_KEY_VALUE" && ${#SOCKETCLUSTER_AUTH_KEY_VALUE} -ge 32 ]]; then
+  success "Keeping the existing socket auth key from $PROJECT_ENV_FILE"
+else
+  if [[ -n "$SOCKETCLUSTER_AUTH_KEY_VALUE" ]]; then
+    warn "The socket auth key in $PROJECT_ENV_FILE is shorter than 32 characters; generating a new one."
+  fi
+  SOCKETCLUSTER_AUTH_KEY_VALUE="$(gen_secret 32)"   # 64 hex characters
+  success "Socket auth key generated"
+fi
+
+SOCKETCLUSTER_AUTH_ENABLED_VALUE="$(read_env_value "$PROJECT_ENV_FILE" SOCKETCLUSTER_AUTH_ENABLED)"
+SOCKETCLUSTER_AUTH_ENABLED_VALUE="${SOCKETCLUSTER_AUTH_ENABLED_VALUE:-false}"
+SOCKETCLUSTER_AUTH_MODE_VALUE="$(read_env_value "$PROJECT_ENV_FILE" SOCKETCLUSTER_AUTH_MODE)"
+SOCKETCLUSTER_AUTH_MODE_VALUE="${SOCKETCLUSTER_AUTH_MODE_VALUE:-log}"
+
+set_env_value "$PROJECT_ENV_FILE" SOCKETCLUSTER_AUTH_ENABLED "$SOCKETCLUSTER_AUTH_ENABLED_VALUE"
+set_env_value "$PROJECT_ENV_FILE" SOCKETCLUSTER_AUTH_KEY     "$SOCKETCLUSTER_AUTH_KEY_VALUE"
+set_env_value "$PROJECT_ENV_FILE" SOCKETCLUSTER_AUTH_MODE    "$SOCKETCLUSTER_AUTH_MODE_VALUE"
+
+# SOCKETCLUSTER_ORIGIN is the Origin header the API sends when it publishes over the
+# websocket (the path used while socket auth is off). Without it the socket server treats
+# the publisher's origin as "*" and, because the origins are restricted above, refuses every
+# broadcast with "Invalid origin: *". It has to be an origin SOCKET_ORIGINS allows: the
+# server matches hostname + port against entries such as "${HOST}:*". Kept on re-runs.
+SOCKETCLUSTER_ORIGIN_VALUE="$(read_env_value "$PROJECT_ENV_FILE" SOCKETCLUSTER_ORIGIN)"
+if [[ -z "$SOCKETCLUSTER_ORIGIN_VALUE" ]]; then
+  if $IS_LOCALHOST; then
+    SOCKETCLUSTER_ORIGIN_VALUE="http://localhost:4200"
+  else
+    SOCKETCLUSTER_ORIGIN_VALUE="${SCHEME_CONSOLE}://${HOST}"
+  fi
+fi
+set_env_value "$PROJECT_ENV_FILE" SOCKETCLUSTER_ORIGIN       "$SOCKETCLUSTER_ORIGIN_VALUE"
+chmod 600 "$PROJECT_ENV_FILE" 2>/dev/null || true
+if [[ "$SOCKETCLUSTER_AUTH_ENABLED_VALUE" == "true" ]]; then
+  SOCKETCLUSTER_AUTH_SUMMARY="on, mode: $SOCKETCLUSTER_AUTH_MODE_VALUE"
+else
+  SOCKETCLUSTER_AUTH_SUMMARY="off until SOCKETCLUSTER_AUTH_ENABLED=true"
+fi
+success "Socket auth written to $PROJECT_ENV_FILE ($SOCKETCLUSTER_AUTH_SUMMARY)"
+success "API publisher origin: $SOCKETCLUSTER_ORIGIN_VALUE"
+
+###############################################################################
 # STEP 9 — Write docker-compose.override.yml
 ###############################################################################
 section "Writing docker-compose.override.yml"
@@ -598,6 +679,7 @@ $CONFIG_MAIL \
   || SKIPPED_ITEMS+=("File storage (local disk — not suitable for production)")
 
 CONFIGURED_ITEMS+=("WebSocket security (origins restricted to ${HOST})")
+CONFIGURED_ITEMS+=("Socket authentication (${SOCKETCLUSTER_AUTH_SUMMARY}; key in ${PROJECT_ENV_FILE})")
 
 $CONFIG_3P \
   && CONFIGURED_ITEMS+=("Third-party APIs (Maps, Geolocation, SMS)") \
