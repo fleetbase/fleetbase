@@ -34,4 +34,23 @@ module('Unit | Router', function (hooks) {
             assert.true(hasRoute(this.owner, name), `${name} is in router.map.js`);
         });
     });
+
+    test('a public page can carry more of its own path', function (assert) {
+        const router = this.owner.lookup('router:main');
+        router.setupRouter();
+        // eslint-disable-next-line ember/no-private-routing-service
+        const recognize = (url) => router._routerMicrolib.recognizer.recognize(url);
+
+        const nested = recognize('/~/t/northwind/NOR1000000001US');
+        assert.deepEqual(
+            nested.slice(-2).map((handler) => handler.handler),
+            ['virtual', 'virtual.path'],
+            'the virtual route still renders a nested public path'
+        );
+        assert.strictEqual(nested[nested.length - 2].params.slug, 't');
+        assert.strictEqual(nested[nested.length - 1].params.path, 'northwind/NOR1000000001US');
+
+        const bare = recognize('/~/track');
+        assert.strictEqual(bare[bare.length - 1].handler, 'virtual.index', 'a single segment is unchanged');
+    });
 });
