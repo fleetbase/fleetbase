@@ -269,6 +269,9 @@ module('Integration | Component | admin/sms-guard', function (hooks) {
         this.fail = { get: true, post: true, delete: true };
         const component = await this.build();
 
+        assert.deepEqual(component.defaults, {}, 'the environment defaults stay unknown until the policy loads');
+        assert.deepEqual([component.usage, component.pauses, component.overrides], [[], [], []], 'nothing is listed until something loads');
+
         await component.save.perform();
         await component.reset.perform();
         component.selectPauseTarget({ uuid: 'company-3' });
@@ -426,6 +429,7 @@ module('Integration | Component | admin/sms-guard', function (hooks) {
         component.pauses = component.pauseRows(undefined);
         component.changeMode({ target: { value: 'monitor' } });
         assert.deepEqual(component.pauses, []);
+        assert.deepEqual(component.pauseRows(null), [], 'a null pause list reads as no pauses');
         assert.true(component.isMonitoring);
         assert.deepEqual(toList(null), []);
         assert.deepEqual(toList([' GB ', '']), ['GB']);
