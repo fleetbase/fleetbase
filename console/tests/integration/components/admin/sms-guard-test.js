@@ -270,6 +270,7 @@ module('Integration | Component | admin/sms-guard', function (hooks) {
         const component = await this.build();
 
         assert.deepEqual(component.defaults, {}, 'the environment defaults stay unknown until the policy loads');
+        assert.deepEqual([component.usage, component.pauses, component.overrides], [[], [], []], 'nothing is listed until something loads');
 
         await component.save.perform();
         await component.reset.perform();
