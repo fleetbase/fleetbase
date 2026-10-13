@@ -101,6 +101,13 @@ export default class ConsoleAdminController extends Controller {
                     route: 'console.admin.rate-limits',
                     keywords: ['rate limit', 'throttle', 'requests per minute', '429', 'overrides'],
                 },
+                {
+                    label: 'SMS Guard',
+                    description: 'Budgets, pauses and the send ledger that keep SMS pumping in check.',
+                    icon: 'comment-sms',
+                    route: 'console.admin.sms-guard',
+                    keywords: ['sms', 'text message', 'pumping', 'toll fraud', 'budget', 'pause', 'ledger', 'twilio'],
+                },
             ],
         };
     }
