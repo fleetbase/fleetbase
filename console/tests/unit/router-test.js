@@ -36,6 +36,7 @@ module('Unit | Router', function (hooks) {
     });
 
     test('a public page can carry more of its own path', function (assert) {
+        // eslint-disable-next-line ember/no-private-routing-service
         const router = this.owner.lookup('router:main');
         router.setupRouter();
         // eslint-disable-next-line ember/no-private-routing-service

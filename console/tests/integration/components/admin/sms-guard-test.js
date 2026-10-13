@@ -310,11 +310,7 @@ module('Integration | Component | admin/sms-guard', function (hooks) {
             { company_uuid: 'company-4', unlimited: false, per_day: null, allowed_countries: ['US'], note: '' },
         ]);
         assert.strictEqual(component.overrides[0], first, 'edits happen in place, so an input keeps focus while typing');
-        assert.deepEqual(
-            component.overrides[3].organization,
-            { id: 'company-4', uuid: 'company-4', public_id: null, name: 'company-4' },
-            'an unnamed organization shows its id'
-        );
+        assert.deepEqual(component.overrides[3].organization, { id: 'company-4', uuid: 'company-4', public_id: null, name: 'company-4' }, 'an unnamed organization shows its id');
 
         const [view, remove] = component.overrideColumns.at(-1).actions;
         view.fn(second);
