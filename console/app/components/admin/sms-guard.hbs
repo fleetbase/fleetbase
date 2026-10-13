@@ -1,0 +1,229 @@
+<div class="space-y-6" ...attributes>
+    <ContentPanel @title="SMS Guard" @open={{true}} @wrapperClass="bordered-classic">
+        <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">
+            Every text message passes the guard before a provider is called.
+            It refuses numbers that cannot receive a text, enforces a budget per organization and for the platform as a whole,
+            and pauses an organization automatically when its traffic looks like SMS pumping. Changes here apply within a minute, without a deployment.
+        </p>
+
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <InputGroup @name="Guard" @helpText="When disabled no text message is ever refused or counted. Only disable this to diagnose a delivery problem.">
+                <Toggle @isToggled={{this.enabled}} @onToggle={{this.toggleEnabled}} @label={{if this.enabled "Enabled" "Disabled"}} @disabled={{this.isBusy}} />
+            </InputGroup>
+            <InputGroup @name="Mode" @helpText="Monitor lets every message through and logs what would have been refused; use it right after a deployment, then switch to enforce.">
+                <select class="form-select form-input w-full" disabled={{this.isBusy}} {{on "change" this.changeMode}} data-test-mode>
+                    <option value="enforce" selected={{eq this.mode "enforce"}}>Enforce</option>
+                    <option value="monitor" selected={{eq this.mode "monitor"}}>Monitor</option>
+                </select>
+            </InputGroup>
+        </div>
+
+        {{#unless this.enabled}}
+            <div
+                class="mb-4 flex items-center rounded-md border border-red-400 bg-red-50 px-3 py-2 text-xs text-red-800 dark:border-red-700 dark:bg-red-900 dark:text-red-100"
+                data-test-disabled-warning
+            >
+                <FaIcon @icon="triangle-exclamation" class="mr-2" />
+                The guard is off: a leaked storefront key can send an unlimited number of text messages.
+            </div>
+        {{/unless}}
+
+        {{#if this.isMonitoring}}
+            <div
+                
+                class="mb-4 flex items-center rounded-md border border-yellow-400 bg-yellow-50 px-3 py-2 text-xs text-yellow-800 dark:border-yellow-700 dark:bg-yellow-900 dark:text-yellow-100"
+                data-test-monitor-warning
+            >
+                <FaIcon @icon="eye" class="mr-2" />
+                Monitor mode: nothing is refused or paused. Watch the sms.would_block log entries, then switch to enforce.
+            </div>
+        {{/if}}
+    </ContentPanel>
+
+    <ContentPanel @title="Budgets" @open={{true}} @wrapperClass="bordered-classic">
+        <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">
+            Messages, not money. A blank field means no limit for that window. The organization budget is the default for every organization; add an exception below for one that needs more.
+        </p>
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+            <InputGroup @name="Organization / minute" @type="number" @value={{this.companyPerMinute}} disabled={{this.isBusy}} data-test-company-per-minute />
+            <InputGroup @name="Organization / hour" @type="number" @value={{this.companyPerHour}} disabled={{this.isBusy}} data-test-company-per-hour />
+            <InputGroup
+                @name="Organization / day"
+                @type="number"
+                @value={{this.companyPerDay}}
+                @helpText={{concat "Environment default: " this.defaults.companyPerDay}}
+                disabled={{this.isBusy}}
+                data-test-company-per-day
+            />
+            <InputGroup @name="Same number: cooldown (s)" @type="number" @value={{this.destinationCooldown}} disabled={{this.isBusy}} data-test-destination-cooldown />
+            <InputGroup @name="Same number / hour" @type="number" @value={{this.destinationPerHour}} disabled={{this.isBusy}} data-test-destination-per-hour />
+            <InputGroup @name="Same number / day" @type="number" @value={{this.destinationPerDay}} disabled={{this.isBusy}} data-test-destination-per-day />
+            <InputGroup @name="New organizations: probation days" @type="number" @value={{this.probationDays}} disabled={{this.isBusy}} data-test-probation-days />
+            <InputGroup @name="New organizations / day" @type="number" @value={{this.probationPerDay}} disabled={{this.isBusy}} data-test-probation-per-day />
+            <InputGroup @name="Whole platform / hour" @type="number" @value={{this.platformPerHour}} disabled={{this.isBusy}} data-test-platform-per-hour />
+            <InputGroup
+                @name="Whole platform / day"
+                @type="number"
+                @value={{this.platformPerDay}}
+                @helpText={{concat "Environment default: " this.defaults.platformPerDay}}
+                disabled={{this.isBusy}}
+                data-test-platform-per-day
+            />
+        </div>
+    </ContentPanel>
+
+    <ContentPanel @title="Circuit Breaker and Destinations" @open={{true}} @wrapperClass="bordered-classic">
+        <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">
+            An organization is paused for the pause length when it uses up its daily budget, hits its hourly budget twice, texts a burst of distinct new numbers, texts a country it never has
+            before, or has codes going unverified. Administrators are alerted each time.
+        </p>
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+            <InputGroup @name="Pause length (minutes)" @type="number" @value={{this.pauseMinutes}} disabled={{this.isBusy}} data-test-pause-minutes />
+            <InputGroup
+                @name="Distinct new numbers in 10 min"
+                @type="number"
+                @value={{this.distinctDestinations}}
+                disabled={{this.isBusy}}
+                data-test-distinct-destinations
+            />
+            <InputGroup @name="Sends to a new country in 10 min" @type="number" @value={{this.newCountryMinSends}} disabled={{this.isBusy}} data-test-new-country />
+            <InputGroup
+                @name="Codes / hour before conversion counts"
+                @type="number"
+                @value={{this.conversionMinIssued}}
+                disabled={{this.isBusy}}
+                data-test-conversion-issued
+            />
+            <InputGroup @name="Minimum verified (%)" @type="number" @value={{this.conversionMinPercent}} disabled={{this.isBusy}} data-test-conversion-percent />
+        </div>
+        <div class="mt-4 grid grid-cols-1 gap-4 md:grid-cols-3">
+            <InputGroup
+                @name="Blocked countries"
+                @value={{this.blockedCountries}}
+                @helpText="Two-letter codes, comma separated."
+                placeholder="e.g. KP, IR"
+                disabled={{this.isBusy}}
+                data-test-blocked-countries
+            />
+            <InputGroup
+                @name="Blocked prefixes"
+                @value={{this.blockedPrefixes}}
+                @helpText="Premium, satellite and similar ranges."
+                placeholder="+881, +882"
+                disabled={{this.isBusy}}
+                data-test-blocked-prefixes
+            />
+            <InputGroup
+                @name="Alert emails"
+                @value={{this.alertEmails}}
+                @helpText="Comma separated. Every system administrator is alerted as well."
+                placeholder="ops@example.com"
+                disabled={{this.isBusy}}
+                data-test-alert-emails
+            />
+        </div>
+    </ContentPanel>
+
+    <ContentPanel @title="Organization Exceptions" @open={{true}} @wrapperClass="bordered-classic" @panelBodyClass="p-0i" @panelBodyWrapperClass="p-0i">
+        <p class="px-4 pt-4 text-sm text-gray-600 dark:text-gray-400">
+            Give an organization a larger (or smaller) daily budget, lift it entirely, or restrict the countries it may text.
+        </p>
+        <div class="px-4 py-4">
+            <InputGroup @name="Add organization" @wrapperClass="mb-0">
+                <ModelSelect
+                    @modelName="company"
+                    @selectedModel={{this.companyToAdd}}
+                    @placeholder="Search organizations"
+                    @triggerClass="form-select form-input"
+                    @infiniteScroll={{false}}
+                    @renderInPlace={{true}}
+                    @onChange={{this.addOverride}}
+                    @query={{hash view="admin" sort="name"}}
+                    as |company|
+                >
+                    <SelectOption::Company @option={{company}} />
+                </ModelSelect>
+            </InputGroup>
+        </div>
+        {{#if this.overrides.length}}
+            <div class="border-t border-gray-200 dark:border-gray-700" data-test-overrides-table>
+                <Table @rows={{this.overrides}} @columns={{this.overrideColumns}} />
+            </div>
+        {{/if}}
+    </ContentPanel>
+
+    <ContentPanel @title="Pauses" @open={{true}} @wrapperClass="bordered-classic" @panelBodyClass="p-0i" @panelBodyWrapperClass="p-0i">
+        <p class="px-4 pt-4 text-sm text-gray-600 dark:text-gray-400">
+            A paused organization sends no text messages; flows with an email fallback keep working by email. Pauses the breaker set expire on their own; lift one early here.
+        </p>
+        <div class="grid grid-cols-1 gap-4 px-4 py-4 md:grid-cols-4">
+            <InputGroup @name="Organization" @wrapperClass="mb-0">
+                <ModelSelect
+                    @modelName="company"
+                    @selectedModel={{this.pauseTarget}}
+                    @placeholder="Search organizations"
+                    @triggerClass="form-select form-input"
+                    @infiniteScroll={{false}}
+                    @renderInPlace={{true}}
+                    @onChange={{this.selectPauseTarget}}
+                    @query={{hash view="admin" sort="name"}}
+                    as |company|
+                >
+                    <SelectOption::Company @option={{company}} />
+                </ModelSelect>
+            </InputGroup>
+            <InputGroup
+                @name="Minutes"
+                @type="number"
+                @value={{this.pauseLength}}
+                @helpText="Blank pauses until lifted."
+                @wrapperClass="mb-0"
+                disabled={{this.isBusy}}
+                data-test-pause-length
+            />
+            <InputGroup @name="Reason" @value={{this.pauseReason}} @wrapperClass="mb-0" placeholder="incident 42" disabled={{this.isBusy}} data-test-pause-reason />
+            <div class="flex items-end">
+                <Button
+                    @type="danger"
+                    @size="sm"
+                    @icon="pause"
+                    @text="Pause SMS"
+                    @onClick={{perform this.pause}}
+                    @disabled={{this.isBusy}}
+                    @isLoading={{this.pause.isRunning}}
+                    data-test-pause
+                />
+            </div>
+        </div>
+        {{#if this.pauses.length}}
+            <div class="border-t border-gray-200 dark:border-gray-700" data-test-pauses-table>
+                <Table @rows={{this.pauses}} @columns={{this.pauseColumns}} />
+            </div>
+        {{else}}
+            <p class="px-4 pb-4 text-xs text-gray-500 dark:text-gray-400" data-test-no-pauses>Nothing is paused.</p>
+        {{/if}}
+    </ContentPanel>
+
+    <ContentPanel @title={{concat "Usage, last " this.usageHours " hours"}} @open={{true}} @wrapperClass="bordered-classic" @panelBodyClass="p-0i" @panelBodyWrapperClass="p-0i">
+        {{#if this.ledgerAvailable}}
+            {{#if this.usage.length}}
+                <div data-test-usage-table>
+                    <Table @rows={{this.usage}} @columns={{this.usageColumns}} />
+                </div>
+            {{else}}
+                <p class="px-4 py-4 text-xs text-gray-500 dark:text-gray-400" data-test-no-usage>No text messages were sent in this window.</p>
+            {{/if}}
+        {{else}}
+            <p class="px-4 py-4 text-xs text-gray-500 dark:text-gray-400" data-test-no-ledger>The send ledger is not available: run the pending migrations.</p>
+        {{/if}}
+    </ContentPanel>
+</div>
+
+<EmberWormhole @to="next-view-section-subheader-actions">
+    <div class="flex items-center space-x-2">
+        {{#if this.differsFromDefaults}}
+            <Button @size="sm" @icon="rotate-left" @text="Reset to Defaults" @onClick={{perform this.reset}} @disabled={{this.isBusy}} @isLoading={{this.reset.isRunning}} data-test-reset />
+        {{/if}}
+        <Button @type="primary" @size="sm" @icon="save" @text="Save Changes" @onClick={{perform this.save}} @disabled={{this.isBusy}} @isLoading={{this.save.isRunning}} data-test-save />
+    </div>
+</EmberWormhole>
