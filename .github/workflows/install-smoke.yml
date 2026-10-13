@@ -12,7 +12,7 @@ on:
     tags:
       - 'v*'
   pull_request:
-    branches: [main]
+    branches: [main, 'dev-v*', 'release/v*']
   workflow_dispatch:
 
 concurrency:

@@ -11,7 +11,7 @@ on:
             - 'socket/**'
             - '.github/workflows/socket.yml'
     pull_request:
-        branches: [main]
+        branches: [main, 'dev-v*', 'release/v*']
         paths:
             - 'socket/**'
             - '.github/workflows/socket.yml'
