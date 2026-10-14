@@ -1,9 +1,26 @@
+{{- $sc := .Values.socketcluster }}
+{{- if and $sc.authKey (lt (len $sc.authKey) 32) }}
+{{- fail "socketcluster.authKey must be at least 32 characters" }}
+{{- end }}
+{{- if and $sc.authKey (not $sc.existingSecret) }}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ include "helm.socketAuthSecretName" . }}
+  labels:
+    {{- include "helm.labels" . | nindent 4 }}
+type: Opaque
+stringData:
+  SOCKETCLUSTER_AUTH_KEY: {{ $sc.authKey | quote }}
+---
+{{- end }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: socketcluster
 spec:
-  replicas: 1
+  # More than one replica needs SCC (SCC_STATE_SERVER_HOST via socketcluster.extraEnv).
+  replicas: {{ $sc.replicas }}
   selector:
     matchLabels:
       app: socketcluster
@@ -14,12 +31,42 @@ spec:
     spec:
       containers:
         - name: socketcluster
-          image: socketcluster/socketcluster:v19.1.2
+          image: "{{ $sc.image.repository }}:{{ $sc.image.tag }}"
+          imagePullPolicy: {{ $sc.image.pullPolicy }}
           ports:
-            - containerPort: 8000
+            - name: websocket
+              containerPort: 8000
+            - name: internal
+              containerPort: 8001
           env:
             - name: SOCKETCLUSTER_PORT
               value: "8000"
+            - name: SOCKETCLUSTER_INTERNAL_PORT
+              value: "8001"
+            - name: SOCKETCLUSTER_AUTHORIZE_URL
+              value: {{ include "helm.socketAuthorizeUrl" . | quote }}
+            {{- if $sc.authMode }}
+            - name: SOCKETCLUSTER_AUTH_MODE
+              value: {{ $sc.authMode | quote }}
+            {{- end }}
+            {{- if $sc.options }}
+            - name: SOCKETCLUSTER_OPTIONS
+              value: {{ $sc.options | quote }}
+            {{- end }}
+            {{- include "helm.socketAuthKeyEnv" . | nindent 12 }}
+            {{- with $sc.extraEnv }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          livenessProbe:
+            httpGet:
+              path: /health-check
+              port: websocket
+          readinessProbe:
+            httpGet:
+              path: /health-check
+              port: websocket
+          resources:
+            {{- toYaml $sc.resources | nindent 12 }}
 ---
 apiVersion: v1
 kind: Service
@@ -29,7 +76,24 @@ spec:
   selector:
     app: socketcluster
   ports:
-    - protocol: TCP
+    - name: websocket
+      protocol: TCP
       port: 80
       targetPort: 8000
   type: {{ .Values.service.type }}
+---
+# The internal publish/stats listener. ClusterIP only, and deliberately a separate Service so
+# a NodePort/LoadBalancer type on the public one never exposes it. Not referenced by ingress.
+apiVersion: v1
+kind: Service
+metadata:
+  name: socketcluster-internal
+spec:
+  type: ClusterIP
+  selector:
+    app: socketcluster
+  ports:
+    - name: internal
+      protocol: TCP
+      port: 8001
+      targetPort: 8001

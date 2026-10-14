@@ -33,7 +33,7 @@ jobs:
           path: build-linux.log
           if-no-files-found: ignore
       - name: Upload Linux binary
-        if: github.event_name == 'workflow_run'  
+        if: github.event_name == 'workflow_run'
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.event.workflow_run.head_branch }}
@@ -50,17 +50,27 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      # Go is not on PATH on the macOS runner image. Pin to the same Go line as
+      # the Linux builder image (FrankenPHP v1.9.0 and Caddy v2.10.0 need 1.24).
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.24'
+          cache: false
       - name: Install build dependencies
         run: |
-          brew update
-          brew install autoconf automake coreutils asdf php@8.4
-          source "$(brew --prefix asdf)/libexec/asdf.sh"
-          asdf plugin add php https://github.com/asdf-community/asdf-php.git
+          # static-php-cli 2.5.2 needs PHP >= 8.3 as its tooling runtime. php@8.4
+          # is keg-only, so link it onto PATH so build-osx.sh picks it up instead
+          # of falling back to compiling PHP with asdf.
+          brew install autoconf automake coreutils jq composer php@8.4
+          brew link --overwrite --force php@8.4
+          php -v
+          composer --version
+          go version
       - name: Build macOS binary
         run: |
           chmod +x ./builds/osx/build-osx.sh
           ./builds/osx/build-osx.sh
-      - name: Upload Linux binary
+      - name: Upload macOS binary
         if: github.event_name == 'workflow_run'
         uses: softprops/action-gh-release@v2
         with:

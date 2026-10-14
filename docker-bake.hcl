@@ -10,7 +10,7 @@ group "default" {
 }
 
 group "release" {
-  targets = ["fleetbase-console", "fleetbase-api"]
+  targets = ["fleetbase-console", "fleetbase-api", "fleetbase-socket"]
 }
 
 target "app" {
@@ -79,6 +79,17 @@ target "fleetbase-api" {
 
   tags = notequal("", REGISTRY) ? formatlist(
     "${REGISTRY}/fleetbase-api:%s",
+    compact(["latest", VERSION])
+  ) : []
+}
+
+target "fleetbase-socket" {
+  context    = "./socket"
+  dockerfile = "Dockerfile"
+  platforms  = ["linux/amd64", "linux/arm64"]
+
+  tags = notequal("", REGISTRY) ? formatlist(
+    "${REGISTRY}/fleetbase-socket:%s",
     compact(["latest", VERSION])
   ) : []
 }

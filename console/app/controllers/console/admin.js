@@ -13,6 +13,7 @@ export default class ConsoleAdminController extends Controller {
             ...this.registryNavigationItems,
             ...this.registryPanelItems,
             this.apiTrafficNavigationItem,
+            this.databaseBackupsNavigationItem,
             this.authConfigNavigationItem,
             this.systemConfigNavigationItem,
         ];
@@ -100,7 +101,27 @@ export default class ConsoleAdminController extends Controller {
                     route: 'console.admin.rate-limits',
                     keywords: ['rate limit', 'throttle', 'requests per minute', '429', 'overrides'],
                 },
+                {
+                    label: 'SMS Guard',
+                    description: 'Budgets, pauses and the send ledger that keep SMS pumping in check.',
+                    icon: 'comment-sms',
+                    route: 'console.admin.sms-guard',
+                    keywords: ['sms', 'text message', 'pumping', 'toll fraud', 'budget', 'pause', 'ledger', 'twilio'],
+                },
             ],
+        };
+    }
+
+    /**
+     * Scheduled database dumps to a filesystem disk, with retention and failure alerts.
+     */
+    get databaseBackupsNavigationItem() {
+        return {
+            label: 'Database Backups',
+            description: 'Schedule database backups, choose where they are stored, and review recent runs.',
+            icon: 'database',
+            route: 'console.admin.database-backups',
+            keywords: ['database', 'backup', 'backups', 'dump', 'mysql', 'retention', 's3', 'restore'],
         };
     }
 

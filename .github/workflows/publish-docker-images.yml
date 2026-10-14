@@ -42,20 +42,21 @@ jobs:
                   username: ${{ secrets.DOCKER_HUB_USERNAME }}
                   password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
-            - name: Build and Push Console & API Images
+            - name: Build and Push Console, API & Socket Images
               uses: docker/bake-action@v2
               with:
                   push: true
                   targets: |
                       fleetbase-console
                       fleetbase-api
+                      fleetbase-socket
                   files: |
                       ./docker-bake.hcl
 
     # Tell fleetbase/showcase that this tag's images exist, so it can screenshot the release.
     #
     # A job with `needs:` rather than a workflow_run trigger in the other repo: needs gives a real
-    # success dependency, so the event fires only after BOTH images are actually pushed, and the
+    # success dependency, so the event fires only after ALL images are actually pushed, and the
     # tag comes straight from this run instead of workflow_run's indirection. (The existing
     # workflow_run consumers of this workflow do not gate on conclusion and fire on failure too.)
     #

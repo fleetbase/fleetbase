@@ -3,7 +3,9 @@
 FROM dunglas/frankenphp:1.12.4-php8.2-bookworm AS base
 
 # Install packages
-RUN apt-get update && apt-get install -y git bind9-utils mycli nodejs npm nano uuid-runtime \
+# default-mysql-client provides mysqldump (MariaDB's), which db:backup runs. Without it every
+# backup failed; the old command hid that and uploaded empty 20-byte gzip files.
+RUN apt-get update && apt-get install -y git bind9-utils mycli default-mysql-client nodejs npm nano uuid-runtime \
   && mkdir -p /root/.ssh \
   && ssh-keyscan github.com >> /root/.ssh/known_hosts
 
@@ -80,7 +82,7 @@ ENV OCTANE_SERVER=frankenphp
 # its "develop" default it roughly doubled every request's time and disabled the OPcache
 # JIT in every image built from here, production included.
 ENV XDEBUG_MODE=off
-ENV FLEETBASE_VERSION=0.7.68
+ENV FLEETBASE_VERSION=0.7.69
 
 # Set environment
 ARG ENVIRONMENT=production
