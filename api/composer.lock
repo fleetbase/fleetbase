@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "11b5b80145b299b8d039f8ba922459af",
+    "content-hash": "1a7feb03ab908457ae3eea2b68fc5a5e",
     "packages": [
         {
             "name": "appstract/laravel-opcache",
@@ -2310,16 +2310,16 @@
         },
         {
             "name": "fleetbase/core-api",
-            "version": "1.6.68",
+            "version": "1.6.70",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/core-api.git",
-                "reference": "bab4daa5b6fa17a77a5183ef08aff973684ed154"
+                "reference": "7ccac1413beb71041133a4ef4f1bb6e54076c964"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/bab4daa5b6fa17a77a5183ef08aff973684ed154",
-                "reference": "bab4daa5b6fa17a77a5183ef08aff973684ed154",
+                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/7ccac1413beb71041133a4ef4f1bb6e54076c964",
+                "reference": "7ccac1413beb71041133a4ef4f1bb6e54076c964",
                 "shasum": ""
             },
             "require": {
@@ -2415,9 +2415,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/core-api/issues",
-                "source": "https://github.com/fleetbase/core-api/tree/v1.6.68"
+                "source": "https://github.com/fleetbase/core-api/tree/v1.6.70"
             },
-            "time": "2026-10-05T08:02:12+00:00"
+            "time": "2026-10-14T08:47:48+00:00"
         },
         {
             "name": "fleetbase/countries",
@@ -2486,16 +2486,16 @@
         },
         {
             "name": "fleetbase/customer-portal-api",
-            "version": "0.0.15",
+            "version": "0.0.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/customer-portal.git",
-                "reference": "8ad0731513fae800f5073fc5f67391f9ee924491"
+                "reference": "f153923f1f925665cc5c2433e296eabd5756582b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/customer-portal/zipball/8ad0731513fae800f5073fc5f67391f9ee924491",
-                "reference": "8ad0731513fae800f5073fc5f67391f9ee924491",
+                "url": "https://api.github.com/repos/fleetbase/customer-portal/zipball/f153923f1f925665cc5c2433e296eabd5756582b",
+                "reference": "f153923f1f925665cc5c2433e296eabd5756582b",
                 "shasum": ""
             },
             "require": {
@@ -2549,29 +2549,29 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/customer-portal/issues",
-                "source": "https://github.com/fleetbase/customer-portal/tree/v0.0.15"
+                "source": "https://github.com/fleetbase/customer-portal/tree/v0.0.16"
             },
-            "time": "2026-09-28T10:52:43+00:00"
+            "time": "2026-10-14T07:30:17+00:00"
         },
         {
             "name": "fleetbase/fleetops-api",
-            "version": "0.6.71",
+            "version": "0.6.72",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/fleetops.git",
-                "reference": "84dcc15cdc1c1169a6cc8ec7840d1a34074fa5b0"
+                "reference": "4a4ce41a85cb272e8c431fd8a68422c301ddbb7c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/84dcc15cdc1c1169a6cc8ec7840d1a34074fa5b0",
-                "reference": "84dcc15cdc1c1169a6cc8ec7840d1a34074fa5b0",
+                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/4a4ce41a85cb272e8c431fd8a68422c301ddbb7c",
+                "reference": "4a4ce41a85cb272e8c431fd8a68422c301ddbb7c",
                 "shasum": ""
             },
             "require": {
                 "barryvdh/laravel-dompdf": "^3.1",
                 "brick/geo": "0.7.2",
                 "cknow/laravel-money": "^7.1",
-                "fleetbase/core-api": ">=1.6.65",
+                "fleetbase/core-api": "^1.6.69",
                 "geocoder-php/google-maps-places-provider": "^1.4",
                 "giggsey/libphonenumber-for-php": "^8.13",
                 "league/geotools": "^1.1.0",
@@ -2642,9 +2642,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/fleetops/issues",
-                "source": "https://github.com/fleetbase/fleetops/tree/v0.6.71"
+                "source": "https://github.com/fleetbase/fleetops/tree/v0.6.72"
             },
-            "time": "2026-10-05T08:28:56+00:00"
+            "time": "2026-10-14T09:20:39+00:00"
         },
         {
             "name": "fleetbase/laravel-mysql-spatial",
@@ -2714,16 +2714,16 @@
         },
         {
             "name": "fleetbase/ledger-api",
-            "version": "0.0.12",
+            "version": "0.0.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/ledger.git",
-                "reference": "8b8d77fcb4a877e1cedef2b863c9b30d7417e42a"
+                "reference": "e93eadc2d8b6a67a241b63ec30c21e6003c66663"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/ledger/zipball/8b8d77fcb4a877e1cedef2b863c9b30d7417e42a",
-                "reference": "8b8d77fcb4a877e1cedef2b863c9b30d7417e42a",
+                "url": "https://api.github.com/repos/fleetbase/ledger/zipball/e93eadc2d8b6a67a241b63ec30c21e6003c66663",
+                "reference": "e93eadc2d8b6a67a241b63ec30c21e6003c66663",
                 "shasum": ""
             },
             "require": {
@@ -2786,9 +2786,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/ledger/issues",
-                "source": "https://github.com/fleetbase/ledger/tree/v0.0.12"
+                "source": "https://github.com/fleetbase/ledger/tree/v0.0.13"
             },
-            "time": "2026-10-05T08:15:53+00:00"
+            "time": "2026-10-14T07:30:39+00:00"
         },
         {
             "name": "fleetbase/registry-bridge",
@@ -2874,20 +2874,20 @@
         },
         {
             "name": "fleetbase/storefront-api",
-            "version": "0.4.24",
+            "version": "0.4.25",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/storefront.git",
-                "reference": "6cc5dda93afa45caa605100450d02b853406d893"
+                "reference": "90c89ab5c576d130e2a5c7e7c63bd9b8edfdd740"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/storefront/zipball/6cc5dda93afa45caa605100450d02b853406d893",
-                "reference": "6cc5dda93afa45caa605100450d02b853406d893",
+                "url": "https://api.github.com/repos/fleetbase/storefront/zipball/90c89ab5c576d130e2a5c7e7c63bd9b8edfdd740",
+                "reference": "90c89ab5c576d130e2a5c7e7c63bd9b8edfdd740",
                 "shasum": ""
             },
             "require": {
-                "fleetbase/core-api": "*",
+                "fleetbase/core-api": "^1.6.70",
                 "fleetbase/fleetops-api": "*",
                 "geocoder-php/google-maps-places-provider": "^1.4",
                 "laravel-notification-channels/apn": "^5.0",
@@ -2902,6 +2902,7 @@
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.34.1",
+                "illuminate/validation": "^10.0",
                 "nunomaduro/collision": "^7.0",
                 "pestphp/pest": "^2.33.2",
                 "phpstan/phpstan": "^1.10.38",
@@ -2951,9 +2952,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/storefront/issues",
-                "source": "https://github.com/fleetbase/storefront/tree/v0.4.24"
+                "source": "https://github.com/fleetbase/storefront/tree/v0.4.25"
             },
-            "time": "2026-10-05T08:16:01+00:00"
+            "time": "2026-10-14T09:31:37+00:00"
         },
         {
             "name": "fleetbase/twilio",
