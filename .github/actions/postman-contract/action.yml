@@ -389,6 +389,11 @@ runs:
         #     Update Authenticated Customer is a no-op rename rather than a surprise.
         # verification_code must equal what mint-api-key.php seeded — both read the same
         # action input, so they cannot drift.
+        # creation_code_identity is a THIRD identity, for Storefront's request-creation-code:
+        # it must have no account, and it cannot be new_customer_identity because the
+        # newest live code for an identity is the one that counts, and the code
+        # mint-api-key.php seeded for that identity has to stay the newest for Create a
+        # Customer. Nothing reads the code this request sends.
         # driver_password_reset_code is the same seeded value, but it is a SEPARATE
         # variable because it stands for a different row: DriverController::resetPassword
         # matches `for=driver_password_reset`, which a driver login code does not satisfy.
@@ -424,6 +429,7 @@ runs:
           '  --env-var "customer_password=${CUSTOMER_PASSWORD}" \' \
           '  --env-var "customer_phone=${CUSTOMER_PHONE}" \' \
           '  --env-var "new_customer_identity=ci-new-customer@fleetbase.local" \' \
+          '  --env-var "creation_code_identity=ci-creation-code@fleetbase.local" \' \
           '  --env-var "verification_code=${VERIFICATION_CODE}" \' \
           '  --env-var "driver_identity=${DRIVER_IDENTITY}" \' \
           '  --env-var "driver_password=${DRIVER_PASSWORD}" \' \
