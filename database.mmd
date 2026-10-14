@@ -434,6 +434,7 @@ erDiagram
     CHAR company_uuid FK
     CHAR sender_uuid FK
     CHAR chat_channel_uuid FK
+    JSON meta
     MEDIUMTEXT content
     TIMESTAMP created_at
     TIMESTAMP updated_at
@@ -447,6 +448,7 @@ erDiagram
     CHAR company_uuid FK
     CHAR user_uuid FK
     CHAR chat_channel_uuid FK
+    JSON meta
     TIMESTAMP created_at
     TIMESTAMP updated_at
     TIMESTAMP deleted_at
@@ -618,6 +620,24 @@ erDiagram
     JSON options
     JSON meta
     TIMESTAMP deleted_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  fleetbase_database_backups {
+    CHAR uuid PK, UK
+    VARCHAR connection_name
+    VARCHAR database
+    VARCHAR status
+    VARCHAR trigger
+    VARCHAR disk
+    VARCHAR path
+    BIGINTUNSIGNED size_bytes
+    BIGINTUNSIGNED duration_ms
+    TEXT error
+    TIMESTAMP started_at
+    TIMESTAMP completed_at
+    TIMESTAMP pruned_at
     TIMESTAMP created_at
     TIMESTAMP updated_at
   }
@@ -2564,6 +2584,32 @@ erDiagram
     JSON value
   }
 
+  fleetbase_sms_sends {
+    CHAR uuid PK, UK
+    CHAR company_uuid
+    VARCHAR tenant_type
+    CHAR tenant_uuid
+    VARCHAR purpose
+    VARCHAR source
+    VARCHAR destination
+    VARCHAR destination_hash
+    CHAR destination_country
+    VARCHAR destination_type
+    VARCHAR status
+    VARCHAR block_reason
+    VARCHAR provider
+    VARCHAR provider_message_id
+    TEXT error
+    VARCHAR subject_type
+    CHAR subject_uuid
+    CHAR verification_code_uuid
+    VARCHAR ip_address
+    VARCHAR user_agent
+    JSON meta
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
   fleetbase_telematic_deliveries {
     CHAR uuid PK, UK
     CHAR telematic_uuid
@@ -2699,6 +2745,35 @@ erDiagram
     TIMESTAMP deleted_at
     TIMESTAMP created_at
     TIMESTAMP updated_at
+  }
+
+  fleetbase_tracking_session_grants {
+    INTUNSIGNED id PK, UK
+    CHAR uuid UK
+    CHAR tracking_session_uuid
+    CHAR company_uuid
+    CHAR order_uuid
+    VARCHAR customer_type
+    CHAR customer_uuid
+    VARCHAR channel
+    TIMESTAMP expires_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fleetbase_tracking_sessions {
+    INTUNSIGNED id PK, UK
+    CHAR uuid UK
+    VARCHAR token_hash UK
+    VARCHAR ip
+    VARCHAR user_agent
+    TIMESTAMP last_seen_at
+    TIMESTAMP expires_at
+    TIMESTAMP revoked_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
   }
 
   fleetbase_tracking_statuses {
@@ -3046,10 +3121,17 @@ erDiagram
     CHAR uuid UK
     CHAR subject_uuid
     VARCHAR subject_type
+    CHAR company_uuid
+    VARCHAR identity
+    VARCHAR channel
+    VARCHAR ip_address
+    VARCHAR user_agent
+    CHAR sms_send_uuid
     VARCHAR code
     VARCHAR for
     JSON meta
     DATETIME expires_at
+    DATETIME consumed_at
     VARCHAR status
     TIMESTAMP deleted_at
     TIMESTAMP created_at
@@ -3255,6 +3337,7 @@ erDiagram
     CHAR company_uuid FK
     CHAR user_uuid FK
     CHAR checkout_uuid FK
+    VARCHAR status
     VARCHAR customer_id
     VARCHAR unique_identifier
     VARCHAR currency
@@ -3272,6 +3355,8 @@ erDiagram
     CHAR uuid UK
     CHAR catalog_category_uuid FK
     CHAR product_uuid FK
+    INT price
+    BIT is_available
     TIMESTAMP created_at
     TIMESTAMP updated_at
     TIMESTAMP deleted_at
@@ -3370,6 +3455,7 @@ erDiagram
     CHAR service_area_uuid FK
     CHAR zone_uuid FK
     CHAR store_uuid FK
+    CHAR network_uuid
     CHAR company_uuid FK
     CHAR created_by_uuid FK
     VARCHAR status
@@ -3401,12 +3487,46 @@ erDiagram
     TIMESTAMP updated_at
   }
 
+  fleetbase_storefront_inventory_movements {
+    INTUNSIGNED id PK, UK
+    CHAR uuid UK
+    CHAR company_uuid
+    CHAR inventory_uuid
+    VARCHAR type
+    INT quantity
+    INT quantity_after
+    CHAR reference_uuid
+    VARCHAR reference_type
+    CHAR actor_uuid
+    VARCHAR note
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
+  fleetbase_storefront_inventory_reservations {
+    INTUNSIGNED id PK, UK
+    CHAR uuid UK
+    CHAR company_uuid
+    CHAR inventory_uuid
+    CHAR checkout_uuid
+    CHAR order_uuid
+    VARCHAR cart_item_id
+    INT quantity
+    TIMESTAMP expires_at
+    VARCHAR status
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
   fleetbase_storefront_network_stores {
     BIGINTUNSIGNED id PK, UK
     CHAR uuid UK
     VARCHAR network_uuid FK
     VARCHAR store_uuid FK
     CHAR category_uuid FK
+    VARCHAR status
     TIMESTAMP deleted_at
     TIMESTAMP created_at
     TIMESTAMP updated_at
@@ -3524,6 +3644,24 @@ erDiagram
     TIMESTAMP updated_at
   }
 
+  fleetbase_storefront_product_inventories {
+    INTUNSIGNED id PK, UK
+    CHAR uuid UK
+    VARCHAR public_id UK
+    CHAR company_uuid
+    CHAR product_uuid UK
+    CHAR location_uuid UK
+    VARCHAR location_type
+    INT quantity
+    INT reserved
+    INT low_stock_threshold
+    BIT allow_backorder
+    JSON meta
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
   fleetbase_storefront_product_store_locations {
     BIGINTUNSIGNED id PK, UK
     VARCHAR product_uuid FK
@@ -3591,6 +3729,7 @@ erDiagram
     BIT is_service
     BIT is_bookable
     BIT is_available
+    BIT track_inventory
     BIT is_recommended
     BIT can_pickup
     VARCHAR currency
@@ -3681,6 +3820,7 @@ erDiagram
     VARCHAR public_id UK
     VARCHAR created_by_uuid FK
     CHAR customer_uuid FK
+    CHAR order_uuid
     CHAR subject_uuid
     VARCHAR subject_type
     MEDIUMINT rating
