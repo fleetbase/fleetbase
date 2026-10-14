@@ -231,31 +231,11 @@ jobs:
           set_env MAIL_FROM_ADDRESS ci-contract@fleetbase.local
           echo "Mail transport: log (from ci-contract@fleetbase.local)"
 
-          # Socket auth on, so the socket-token endpoints are exercised rather than
-          # answering their "not configured" 404 (Storefront's Create Customer Socket
-          # Token). SocketToken::enabled() needs BOTH the switch and a key of at least 32
-          # characters, read from the API's own .env like the mail settings above: the
-          # overlaid core (1.6.69+) reads them from config, and the compose file this
-          # branch boots passes no SOCKETCLUSTER_AUTH_* environment into the container.
-          # The key is a per-run secret for a throwaway stack.
-          #
-          # The switch is ALSO written to the project .env, which Compose loads. Once the
-          # socket-auth release (fleetbase/fleetbase#710) is on main, the installer reads
-          # it from there, generates the shared key, passes both to the socket server and
-          # the API (container env wins over api/.env), and starts the socket server in
-          # log mode — so this keeps working unchanged.
-          #
-          # With auth on the API publishes events over the socket server's signed HTTP
-          # endpoint; a socket image without it drops them, and no request in the run
-          # depends on a delivered event.
-          set_env SOCKETCLUSTER_AUTH_ENABLED true
-          set_env SOCKETCLUSTER_AUTH_KEY "$(openssl rand -hex 32)"
-          if grep -q '^SOCKETCLUSTER_AUTH_ENABLED=' .env 2>/dev/null; then
-            sed -i 's|^SOCKETCLUSTER_AUTH_ENABLED=.*|SOCKETCLUSTER_AUTH_ENABLED=true|' .env
-          else
-            echo 'SOCKETCLUSTER_AUTH_ENABLED=true' >> .env
-          fi
-          echo "Socket auth: on (log mode)"
+          # Socket auth stays OFF, as it is in production until the rollout in
+          # fleetbase/fleetbase#710 reaches it. The socket-token endpoints answer 404
+          # while it is off, and the collections assert exactly that (Storefront's Create
+          # Customer Socket Token sets expected_status 404 unless the environment declares
+          # socket_auth_enabled). Switch it on here only once production has.
 
           bash scripts/docker-install.sh --non-interactive
 
