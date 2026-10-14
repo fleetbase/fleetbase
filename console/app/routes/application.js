@@ -45,6 +45,10 @@ export default class ApplicationRoute extends Route {
      */
     @action loading(transition) {
         this.hookService.execute('application:loading', this.session, this.router, transition);
+
+        // Bubble so Ember's default handler can enter a route's `loading` substate; without
+        // this no extension's loading template ever renders.
+        return true;
     }
 
     /**
