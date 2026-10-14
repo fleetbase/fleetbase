@@ -85,12 +85,14 @@ EXCLUDED = {
 # complete), so `times` is well above the stop count rather than equal to it.
 #
 # A surplus cycle used to be a counted failure: once the flow is exhausted updateActivity
-# answers "Order is already completed." with a 400. The collection now ends the cycle
+# answers "Order is already completed." with a 400. The collection now absorbs that
 # itself — Get Order Next Activity records an empty answer as `order_flow_exhausted`, and
-# both requests skip (pm.execution.skipRequest) from then on, which is neither a pass nor
-# a failure. So `times` only has to be an upper bound: a flow that needs more passes than
-# this fails at Complete an Order with "Not all waypoints completed", and the fix is to
-# raise it, not to treat it as an API problem. Six stops took eight to twelve passes.
+# Update Order Activity then asserts the documented 400 (`expected_status`) instead of a
+# 2xx. (Skipping the surplus passes with pm.execution.skipRequest looked cleaner, but the
+# Postman CLI counts a skipped request as "Request could not be completed" and exits 1.)
+# So `times` only has to be an upper bound: a flow that needs more passes than this fails
+# at Complete an Order with "Not all waypoints completed", and the fix is to raise it, not
+# to treat it as an API problem. Six stops took eleven passes.
 #
 # `then` runs after the cycle, which is the only way Complete an Order can see every
 # waypoint COMPLETED.
