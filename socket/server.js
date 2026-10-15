@@ -6,6 +6,9 @@
  * Public listener (SOCKETCLUSTER_PORT, default 8000):   GET /health-check, WebSocket at /socketcluster/
  * Internal listener (SOCKETCLUSTER_INTERNAL_PORT, 8001): signed POST /publish, signed GET /stats
  *
+ * With SOCKETCLUSTER_AUTH_KEY set, the server polls the API's socket config endpoint and
+ * applies enabled/mode/origins changes made in the console without a restart.
+ *
  * See README.md for every environment variable and the auth modes.
  */
 
@@ -52,7 +55,9 @@ async function main() {
         mode: config.mode,
         auth_enabled: config.authEnabled,
         client_publish: config.mode !== 'enforce',
-        authorize_url: config.authEnabled ? redactUrl(config.authorizeUrl) : null,
+        authorize_url: config.authKey !== null ? redactUrl(config.authorizeUrl) : null,
+        config_url: server.poller ? redactUrl(config.configUrl) : null,
+        config_poll_seconds: server.poller ? config.configPollSeconds : 0,
         scc: Boolean(config.scc.stateServerHost),
     });
 

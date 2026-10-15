@@ -16,6 +16,8 @@ const DEFAULT_INTERNAL_PORT = 8001;
 const DEFAULT_AUTHORIZE_URL = 'http://application:8000/int/v1/socket/authorize';
 const DEFAULT_SOCKET_CHANNEL_LIMIT = 1000;
 const DEFAULT_LOG_LEVEL = 2;
+const DEFAULT_CONFIG_POLL_SECONDS = 30;
+const DEFAULT_ORIGINS = '*:*';
 
 /**
  * Server options that this process controls itself. They are stripped from
@@ -144,17 +146,43 @@ function parseOptions(raw) {
 }
 
 function parseAuthorizeUrl(raw) {
-    const value = isBlank(raw) ? DEFAULT_AUTHORIZE_URL : String(raw).trim();
+    return parseHttpUrl('SOCKETCLUSTER_AUTHORIZE_URL', isBlank(raw) ? DEFAULT_AUTHORIZE_URL : String(raw).trim());
+}
+
+function parseHttpUrl(name, value) {
     let url;
     try {
         url = new URL(value);
     } catch (error) {
-        throw new ConfigError(`SOCKETCLUSTER_AUTHORIZE_URL is not a valid URL (got "${value}")`);
+        throw new ConfigError(`${name} is not a valid URL (got "${value}")`);
     }
     if (url.protocol !== 'http:' && url.protocol !== 'https:') {
-        throw new ConfigError(`SOCKETCLUSTER_AUTHORIZE_URL must be http(s) (got "${value}")`);
+        throw new ConfigError(`${name} must be http(s) (got "${value}")`);
     }
     return url.toString();
+}
+
+/**
+ * The API's socket config endpoint. Defaults to the authorize URL with its trailing
+ * `/authorize` replaced by `/config`; an authorize URL with another shape needs an explicit
+ * SOCKETCLUSTER_CONFIG_URL, and without one config polling stays off (with a warning).
+ *
+ * @returns {{ configUrl: string|null, warnings: string[] }}
+ */
+function resolveConfigUrl(raw, authorizeUrl) {
+    if (!isBlank(raw)) {
+        return { configUrl: parseHttpUrl('SOCKETCLUSTER_CONFIG_URL', String(raw).trim()), warnings: [] };
+    }
+    const url = new URL(authorizeUrl);
+    if (!/\/authorize\/?$/.test(url.pathname)) {
+        return {
+            configUrl: null,
+            warnings: ['SOCKETCLUSTER_AUTHORIZE_URL does not end in /authorize, so the config URL cannot be derived; set SOCKETCLUSTER_CONFIG_URL to manage socket auth from the console.'],
+        };
+    }
+    url.pathname = url.pathname.replace(/\/authorize\/?$/, '/config');
+    url.search = '';
+    return { configUrl: url.toString(), warnings: [] };
 }
 
 function nullableString(raw) {
@@ -184,6 +212,10 @@ function loadConfig(env = process.env) {
     const { mode, warnings: modeWarnings } = resolveMode(authKey !== null, env.SOCKETCLUSTER_AUTH_MODE, switchedOn);
     const { options, warnings: optionWarnings } = parseOptions(env.SOCKETCLUSTER_OPTIONS);
 
+    const authorizeUrl = parseAuthorizeUrl(env.SOCKETCLUSTER_AUTHORIZE_URL);
+    const { configUrl, warnings: configUrlWarnings } = resolveConfigUrl(env.SOCKETCLUSTER_CONFIG_URL, authorizeUrl);
+    const requestedMode = isBlank(env.SOCKETCLUSTER_AUTH_MODE) ? null : String(env.SOCKETCLUSTER_AUTH_MODE).trim().toLowerCase();
+
     const port = parsePort('SOCKETCLUSTER_PORT', env.SOCKETCLUSTER_PORT, DEFAULT_PORT);
     const internalPort = parsePort('SOCKETCLUSTER_INTERNAL_PORT', env.SOCKETCLUSTER_INTERNAL_PORT, DEFAULT_INTERNAL_PORT);
     if (port !== 0 && port === internalPort) {
@@ -196,7 +228,12 @@ function loadConfig(env = process.env) {
         authKey,
         authEnabled: switchedOn && authKey !== null,
         mode,
-        authorizeUrl: parseAuthorizeUrl(env.SOCKETCLUSTER_AUTHORIZE_URL),
+        // The mode asked for in the environment, used when the API's config switches auth on
+        // without naming a mode. Already validated by resolveMode.
+        requestedMode,
+        authorizeUrl,
+        configUrl,
+        configPollSeconds: parsePositiveInt('SOCKETCLUSTER_CONFIG_POLL_SECONDS', env.SOCKETCLUSTER_CONFIG_POLL_SECONDS, DEFAULT_CONFIG_POLL_SECONDS),
         options,
         socketChannelLimit: parsePositiveInt('SOCKETCLUSTER_SOCKET_CHANNEL_LIMIT', env.SOCKETCLUSTER_SOCKET_CHANNEL_LIMIT, DEFAULT_SOCKET_CHANNEL_LIMIT),
         logLevel: parsePositiveInt('SOCKETCLUSTER_LOG_LEVEL', env.SOCKETCLUSTER_LOG_LEVEL, DEFAULT_LOG_LEVEL),
@@ -214,13 +251,25 @@ function loadConfig(env = process.env) {
             pubSubBatchDuration: nullableNumber(env.SCC_PUB_SUB_BATCH_DURATION),
             brokerRetryDelay: nullableNumber(env.SCC_BROKER_RETRY_DELAY),
         }),
-        warnings: Object.freeze([...modeWarnings, ...optionWarnings]),
+        warnings: Object.freeze([...modeWarnings, ...optionWarnings, ...(authKey !== null ? configUrlWarnings : [])]),
     });
+}
+
+/**
+ * The origins SocketCluster starts with: SOCKETCLUSTER_OPTIONS.origins, else its own default.
+ */
+function envOrigins(config) {
+    const origins = config.options.origins;
+    return typeof origins === 'string' || Array.isArray(origins) ? origins : DEFAULT_ORIGINS;
 }
 
 /**
  * Builds the options passed to socketcluster-server's attach(). The auth settings are
  * applied last so SOCKETCLUSTER_OPTIONS can never override them.
+ *
+ * The key is passed whenever one is configured, even while auth is switched off, so that
+ * tokens can be verified as soon as the API's config switches auth on at runtime. What the
+ * server does with a verified token is decided by the runtime mode (see lib/runtime.js).
  */
 function buildServerOptions(config) {
     const options = {
@@ -232,7 +281,7 @@ function buildServerOptions(config) {
         authVerifyAlgorithms: ['HS256'],
         allowClientPublish: config.mode !== 'enforce',
     };
-    if (config.authEnabled) {
+    if (config.authKey !== null) {
         options.authKey = config.authKey;
     }
     return options;
@@ -244,7 +293,11 @@ module.exports = {
     MODES,
     MIN_AUTH_KEY_LENGTH,
     DEFAULT_AUTHORIZE_URL,
+    DEFAULT_CONFIG_POLL_SECONDS,
+    DEFAULT_ORIGINS,
     loadConfig,
+    resolveConfigUrl,
+    envOrigins,
     resolveMode,
     buildServerOptions,
 };
