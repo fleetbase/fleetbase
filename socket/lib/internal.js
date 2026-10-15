@@ -8,7 +8,12 @@
  *        body {"channels": ["order.x", "company.y"], "data": {...}}
  *          or {"channel": "order.x", "data": {...}}
  *        202 {"published": n} | 400 bad body | 401 bad signature | 413 body over 2 MB
- *   GET  /stats    signed with the publish key (empty body) -> counters JSON
+ *   GET  /stats    signed with the publish key (empty body) -> counters, the runtime config
+ *                  and aggregated denials as JSON
+ *
+ * Both answer 503 when no SOCKETCLUSTER_AUTH_KEY is configured. With a key they work whether
+ * or not socket auth is switched on, so the API can read /stats and switch publishing to
+ * this endpoint the moment its own switch flips, before the socket server's next config poll.
  */
 
 const { verifyRequest } = require('./signing');
@@ -115,7 +120,7 @@ function parsePublishBody(raw) {
  * @param {object} options
  * @param {object} options.config
  * @param {object} options.agServer
- * @param {string|null} options.publishKey null when auth is disabled
+ * @param {string|null} options.publishKey null when no auth key is configured
  * @param {import('./stats').Stats} options.stats
  * @param {object} options.logger
  * @param {() => object} options.gauges live values merged into /stats
@@ -133,7 +138,7 @@ function createInternalHandler({ agServer, publishKey, stats, logger, gauges = (
             return null;
         }
         if (!publishKey) {
-            sendJson(res, 503, { error: 'auth_disabled' });
+            sendJson(res, 503, { error: 'auth_key_missing' });
             return null;
         }
         const verdict = verifyRequest(publishKey, {

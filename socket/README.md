@@ -10,6 +10,9 @@ The realtime server behind the Fleetbase console, Navigator and Storefront apps.
   Only the API publishes.
 - **Signed internal publish.** The API publishes with a signed `POST /publish` to a second,
   internal-only listener instead of opening a websocket for every event.
+- **Runtime config from the console.** With a key configured, the server polls the API for
+  the settings an admin makes under Admin → Configure → Socket (on/off, mode, origins) and
+  applies them without a restart. See [Runtime config](#runtime-config).
 
 Image: `fleetbase/fleetbase-socket` (linux/amd64 and linux/arm64).
 
@@ -24,13 +27,15 @@ Image: `fleetbase/fleetbase-socket` (linux/amd64 and linux/arm64).
 
 | Variable | Default | Meaning |
 |---|---|---|
-| `SOCKETCLUSTER_AUTH_ENABLED` | `false` | Switches socket auth on (`true`, `1`, `yes` or `on`). Must match the API's value. While it is off the mode is forced to `off`, the key is not used, and the internal publish and stats endpoints answer `503`, so clients that connect without socket tokens keep working even when a key is provisioned. |
-| `SOCKETCLUSTER_AUTH_KEY` | unset | Shared secret, at least 32 characters. Must be identical on the API (application, queue and scheduler) and the socket server. Unset disables the feature: the mode is forced to `off` and a warning is logged at startup. A key shorter than 32 characters stops the server from starting. |
-| `SOCKETCLUSTER_AUTH_MODE` | `enforce` when switched on with a key, else `off` | `off`, `log` or `enforce` (see below). |
+| `SOCKETCLUSTER_AUTH_ENABLED` | `false` | Switches socket auth on (`true`, `1`, `yes` or `on`). Must match the API's value. While it is off the mode is forced to `off`, so clients that connect without socket tokens keep working even when a key is provisioned. This is the starting value: the console setting, when one is saved, overrides it at runtime. |
+| `SOCKETCLUSTER_AUTH_KEY` | unset | Shared secret, at least 32 characters. Must be identical on the API (application, queue and scheduler) and the socket server. Unset disables the feature: the mode is forced to `off`, the internal endpoints answer `503`, there is no config polling, and a warning is logged at startup. A key shorter than 32 characters stops the server from starting. The key is only ever read from the environment; the console cannot see or change it. |
+| `SOCKETCLUSTER_AUTH_MODE` | `enforce` when switched on with a key, else `off` | `off`, `log` or `enforce` (see below). Also the mode used when the console switches auth on without choosing one. |
 | `SOCKETCLUSTER_AUTHORIZE_URL` | `http://application:8000/int/v1/socket/authorize` | The API's authorize endpoint, reached over the private network. |
+| `SOCKETCLUSTER_CONFIG_URL` | the authorize URL with `/authorize` replaced by `/config` | The API's socket config endpoint, polled when a key is set. Only needed when the authorize URL does not end in `/authorize`. |
+| `SOCKETCLUSTER_CONFIG_POLL_SECONDS` | `30` | How often to poll the config endpoint. `0` disables polling (environment config only). |
 | `SOCKETCLUSTER_PORT` | `8000` | Public listener port. |
 | `SOCKETCLUSTER_INTERNAL_PORT` | `8001` | Internal listener port. |
-| `SOCKETCLUSTER_OPTIONS` | `{}` | JSON merged into the SocketCluster server options, e.g. `{"origins":"https://console.example.com:*"}`. The auth settings (`authKey`, `authVerifyAlgorithms`, `allowClientPublish`, ...) are owned by the server and are ignored here, with a warning. |
+| `SOCKETCLUSTER_OPTIONS` | `{}` | JSON merged into the SocketCluster server options, e.g. `{"origins":"console.example.com:*"}`. Its `origins` is the starting value; an origins setting saved in the console overrides it at runtime. The auth settings (`authKey`, `authVerifyAlgorithms`, `allowClientPublish`, ...) are owned by the server and are ignored here, with a warning. |
 | `SOCKETCLUSTER_SOCKET_CHANNEL_LIMIT` | `1000` | Maximum channels per socket. |
 | `SOCKETCLUSTER_LOG_LEVEL` | `2` | `0` silent, `1` errors, `2` errors, info and warnings, `3` debug. |
 | `SCC_STATE_SERVER_HOST`, `SCC_STATE_SERVER_PORT`, `SCC_AUTH_KEY`, `SCC_INSTANCE_IP`, `SCC_INSTANCE_IP_FAMILY`, `SCC_MAPPING_ENGINE`, `SCC_CLIENT_POOL_SIZE`, `SCC_STATE_SERVER_CONNECT_TIMEOUT`, `SCC_STATE_SERVER_ACK_TIMEOUT`, `SCC_STATE_SERVER_RECONNECT_RANDOMNESS`, `SCC_PUB_SUB_BATCH_DURATION`, `SCC_BROKER_RETRY_DELAY` | unset | SocketCluster Cluster (SCC) for running several instances, the same as the stock image: SCC is enabled when `SCC_STATE_SERVER_HOST` is set. |
@@ -41,6 +46,47 @@ When `SOCKETCLUSTER_OPTIONS` restricts `origins` and auth is off, the API also n
 such as `https://console.example.com`, which it sends as the `Origin` header when publishing; without it every broadcast is refused with `Invalid origin: *`.
 
 Generate a key with, for example, `openssl rand -hex 32`.
+
+To rotate the key, set the new value on the API (application, queue and scheduler) and the
+socket server and restart both. Tokens signed with the old key stop verifying, and clients
+fetch new ones on reconnect.
+
+## Runtime config
+
+When `SOCKETCLUSTER_AUTH_KEY` is set, the server polls `GET SOCKETCLUSTER_CONFIG_URL` every
+`SOCKETCLUSTER_CONFIG_POLL_SECONDS` (first poll at startup). The request is signed with the
+authorize key (see [Internal endpoints](#internal-endpoints), `msg = "fleetbase-socket:authorize"`,
+empty body) and times out after 2 seconds. The API answers with the effective values, saved
+console settings first, then the API's environment:
+
+```json
+{"enabled": true, "mode": "log", "origins": "console.example.com:*", "updated_at": "2026-10-15T09:30:00Z"}
+```
+
+- `enabled`, `mode` and `origins` replace the environment values. `mode: null` falls back
+  to `SOCKETCLUSTER_AUTH_MODE`, then `enforce`; `origins: null` falls back to
+  `SOCKETCLUSTER_OPTIONS.origins`, then `*:*`.
+- Until the first good answer the environment config is in force. When the API cannot be
+  reached, times out, or answers with something malformed, the last good config stays in
+  force and the reason is reported on `/stats` (`config.last_sync_error`) and logged once.
+- Changes apply within one poll interval, without a restart:
+  - the mode (and the switch) takes effect on the next action on every socket;
+  - client publish is refused from the moment the mode becomes `enforce`, and allowed again
+    when it leaves it;
+  - origins apply to new websocket handshakes; open connections are not re-checked.
+- Entering `enforce` at runtime disconnects every socket once (close code `4100`, reason
+  `auth_enforced`). Clients reconnect on their own after their reconnect delay and every
+  subscription made while auth was looser is authorized again.
+- Because the key is passed to SocketCluster whenever one is set, tokens are verified even
+  while auth is off, so switching on needs no restart. With a key, the internal endpoints
+  also work while auth is off.
+- While a change propagates (up to one interval) the API and the socket server can briefly
+  disagree. Switching on is safe because `/publish` is already open. Switching off from
+  `enforce` can refuse the API's websocket publishes until the next poll; switch to `log`
+  first, or lower the interval, if that matters.
+
+Without a key, or with `SOCKETCLUSTER_CONFIG_POLL_SECONDS=0`, the server never polls and
+uses the environment only.
 
 ## Modes
 
@@ -118,7 +164,8 @@ X-Fleetbase-Signature: hex(HMAC_SHA256(key = publishKey, msg = timestamp + "." +
 ```
 
 Requests more than 60 seconds away from the server clock, or with a bad signature, get
-`401`. Without `SOCKETCLUSTER_AUTH_KEY` both endpoints answer `503`.
+`401`. Without `SOCKETCLUSTER_AUTH_KEY` both endpoints answer `503`; with a key they work
+whether or not auth is switched on.
 
 - `POST /publish` with `{"channels": ["order.x", "company.y"], "data": {...}}` (or
   `{"channel": "order.x", "data": {...}}`). Each channel is a non-empty string of at most
@@ -126,7 +173,15 @@ Requests more than 60 seconds away from the server clock, or with a bad signatur
   most 2 MB. Responses: `202 {"published": n}`, `400` for a bad body, `401`, `413`.
 - `GET /stats` (empty body, signed) returns uptime, mode, connected clients, cache size
   and counters (allowed and denied subscriptions, authorize calls, cache hits, timeouts,
-  kick-outs, publish requests).
+  kick-outs, publish requests, config polls), plus:
+  - `config`: `{enabled, mode, origins, source, last_sync_at, last_sync_error}`, where
+    `source` is `env` until the first good config poll and `api` after it;
+  - `denials`: the top 50 (would-)denials since start by count, as
+    `{client, prefix, reason, count, last_at}`. `prefix` is the channel up to its first `.`
+    (`other` when that does not look like a channel family, `null` for token rejections).
+    Tokens, subjects, company ids and full channel names are never included.
+
+  The console's Socket page shows this through the API.
 
 ## Development
 
