@@ -391,7 +391,10 @@ module('Integration | Component | configure/socket settings', function (hooks) {
     });
 
     test('it exports the modes and fields the API accepts', function (assert) {
-        assert.deepEqual(MODES.map((mode) => mode.value), ['off', 'log', 'enforce']);
+        assert.deepEqual(
+            MODES.map((mode) => mode.value),
+            ['off', 'log', 'enforce']
+        );
         assert.deepEqual(FIELDS, ['enabled', 'mode', 'token_ttl', 'origins', 'publisher_origin']);
     });
 
@@ -494,7 +497,9 @@ module('Integration | Component | configure/socket settings', function (hooks) {
     });
 
     test('it flags a socket server that runs other settings or failed to sync', async function (assert) {
-        this.getResponse = socketResponse({ status: { ...STATUS, config: { ...STATUS.config, enabled: false, mode: 'off', source: 'env', last_sync_at: null, last_sync_error: 'http_401' } } });
+        this.getResponse = socketResponse({
+            status: { ...STATUS, config: { ...STATUS.config, enabled: false, mode: 'off', source: 'env', last_sync_at: null, last_sync_error: 'http_401' } },
+        });
         const component = await this.build();
 
         assert.dom('[data-test-socket-out-of-sync]').exists();
@@ -601,7 +606,10 @@ module('Integration | Component | configure/socket settings', function (hooks) {
     test('it reports failed loads and saves', async function (assert) {
         this.getError = new Error('load failed');
         const component = await this.build();
-        assert.deepEqual(this.notifications().serverErrors.map((error) => error.message), ['load failed']);
+        assert.deepEqual(
+            this.notifications().serverErrors.map((error) => error.message),
+            ['load failed']
+        );
 
         this.saveError = { errors: ['Socket authentication cannot be switched on.'], code: 'key_missing' };
         await component.saveSettings.perform({ enabled: true });
