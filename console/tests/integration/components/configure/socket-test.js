@@ -455,7 +455,7 @@ module('Integration | Component | configure/socket settings', function (hooks) {
         assert.dom('[data-test-socket-last-sync]').containsText('—');
         assert.dom('[data-test-socket-no-denials]').exists();
         assert.dom('[data-test-socket-key-missing]').exists();
-        assert.dom('[data-test-socket-enabled]').hasAttribute('data-disabled', 'true', 'cannot switch on without a key');
+        assert.dom('[data-test-socket-enabled]').hasAttribute('data-disabled', '', 'cannot switch on without a key');
         assert.strictEqual(component.mode, 'log', 'a null mode starts the select on log');
         assert.deepEqual(component.denials, []);
         assert.false(component.isOutOfSync);
