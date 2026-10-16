@@ -45,6 +45,14 @@ spec:
               value: "8001"
             - name: SOCKETCLUSTER_AUTHORIZE_URL
               value: {{ include "helm.socketAuthorizeUrl" . | quote }}
+            {{- if $sc.configUrl }}
+            - name: SOCKETCLUSTER_CONFIG_URL
+              value: {{ $sc.configUrl | quote }}
+            {{- end }}
+            {{- if and (not (kindIs "invalid" $sc.configPollSeconds)) (ne (toString $sc.configPollSeconds) "") }}
+            - name: SOCKETCLUSTER_CONFIG_POLL_SECONDS
+              value: {{ $sc.configPollSeconds | toString | quote }}
+            {{- end }}
             {{- if $sc.authMode }}
             - name: SOCKETCLUSTER_AUTH_MODE
               value: {{ $sc.authMode | quote }}

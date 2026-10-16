@@ -71,15 +71,32 @@ class SocketAuthPolicy {
      * @param {import('./authorizer').Authorizer|null} options.authorizer null when auth is disabled
      * @param {object} options.logger
      * @param {import('./stats').Stats} options.stats
+     * @param {import('./denials').Denials} [options.denials] aggregated for /stats
      */
-    constructor({ config, authorizer, logger, stats }) {
+    constructor({ config, authorizer, logger, stats, denials = null }) {
         this.mode = config.mode;
         this.authEnabled = config.authEnabled;
         this.authorizer = authorizer;
         this.logger = logger;
         this.stats = stats;
+        this.denials = denials;
         this.clientTags = new WeakMap();
         this.identities = new WeakMap();
+    }
+
+    /**
+     * Applies a runtime config change (see lib/runtime.js). Takes effect for the next
+     * action on every socket.
+     */
+    update({ mode, enabled }) {
+        this.mode = mode;
+        this.authEnabled = enabled;
+    }
+
+    recordDenial(socket, channel, reason) {
+        if (this.denials) {
+            this.denials.record({ client: this.clientOf(socket), channel, reason });
+        }
     }
 
     clientOf(socket) {
@@ -97,6 +114,7 @@ class SocketAuthPolicy {
      */
     logDeny({ socket, claims, channel = null, reason, action }) {
         this.stats.increment(this.mode === 'enforce' ? 'denied' : 'would_deny');
+        this.recordDenial(socket, channel, reason);
         this.logger.info({
             event: 'socket_auth_deny',
             kind: claims ? claims.kind || null : null,
@@ -170,6 +188,7 @@ class SocketAuthPolicy {
             return settle(action, 'allow');
         }
         this.stats.increment('tokens_rejected');
+        this.recordDenial(action.socket, null, reason);
         this.logger.info({
             event: 'socket_auth_deny',
             kind: claims ? claims.kind || null : null,

@@ -8,7 +8,8 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const http = require('http');
-const { startServer, signJwt, userClaims, nowSeconds, trySubscribe, withTimeout, delay, AUTH_KEY } = require('./helpers');
+const { startServer, signJwt, userClaims, nowSeconds, trySubscribe, withTimeout, delay, waitFor, handshakeStatus, AUTH_KEY } = require('./helpers');
+const { ENFORCE_RECONNECT_CODE } = require('../lib/app');
 const { deriveKey, PURPOSE_AUTHORIZE } = require('../lib/signing');
 
 const allowOrders = (body) =>
@@ -209,10 +210,26 @@ test('switched off with a key and enforce requested: everything is allowed, as b
     assert.equal(env.fake.calls.length, 0);
     assert.equal(denyLogs(env.logs).length, 0);
 
-    // The signed internal publish endpoint stays closed until the switch is on.
+    // With a key the signed internal publish endpoint is open even while the switch is off,
+    // so the API can publish through it as soon as its own switch flips, before this
+    // server's next config poll. Unsigned requests are still refused.
     const publish = await env.internalRequest('/publish', { body: { channels: ['order.anything'], data: {} } });
-    assert.equal(publish.status, 503);
+    assert.equal(publish.status, 202);
     await publish.text();
+    const unsigned = await env.internalRequest('/publish', { body: { channels: ['order.anything'], data: {} }, key: null });
+    assert.equal(unsigned.status, 401);
+    await unsigned.text();
+});
+
+test('switched off with a key: tokens are verified, so auth can be switched on at runtime', async (t) => {
+    const env = await startServer({ env: { SOCKETCLUSTER_AUTH_ENABLED: 'false' } });
+    t.after(() => env.close());
+
+    const { socket, status } = await env.connect({ token: signJwt(userClaims()) });
+    assert.equal(status.isAuthenticated, true, 'the key reaches SocketCluster whenever one is configured');
+    assert.equal((await trySubscribe(socket, 'order.not_mine')).ok, true);
+    assert.equal(env.fake.calls.length, 0);
+    assert.equal(env.server.poller, null, 'polling is off in this test');
 });
 
 test('off mode with a key: tokens are verified but nothing is denied', async (t) => {
@@ -448,6 +465,8 @@ test('GET /stats is signed and reports counters', async (t) => {
     assert.equal(stats.counters.publish_requests, 1);
     assert.equal(stats.counters.internal_unauthorized, 1);
     assert.equal(typeof stats.uptime_seconds, 'number');
+    assert.deepEqual(stats.config, { enabled: true, mode: 'enforce', origins: '*:*', source: 'env', last_sync_at: null, last_sync_error: null });
+    assert.deepEqual(stats.denials, []);
 
     const wrongMethod = await env.internalRequest('/stats', { method: 'POST' });
     assert.equal(wrongMethod.status, 405);
@@ -464,4 +483,233 @@ test('the internal endpoints are not served on the public port', async (t) => {
     const response = await fetch(`http://127.0.0.1:${env.port}/publish`, { method: 'POST', body: '{}' });
     assert.equal(response.status, 404);
     await response.text();
+});
+
+/*
+ * Runtime config: the server polls the fake API's GET .../config every 50 ms.
+ */
+
+/** A mutable remote config the fake API serves; `set()` changes what the next poll sees. */
+function remote(initial) {
+    let current = initial;
+    const fn = () => current;
+    fn.set = (next) => {
+        current = next;
+    };
+    return fn;
+}
+
+async function syncedAfter(env, count) {
+    await waitFor(() => env.fake.configCalls.length > count && env.server.poller.current === null, 3000, 'a config poll');
+}
+
+test('config poll: changes from the API are applied without a restart', async (t) => {
+    const config = remote({ enabled: true, mode: 'log', origins: null, updated_at: '2026-10-15T00:00:00Z' });
+    const env = await startServer({ env: { SOCKETCLUSTER_AUTH_ENABLED: 'false' }, remoteConfig: config, decide: allowOrders });
+    t.after(() => env.close());
+
+    await waitFor(() => env.server.runtime.mode === 'log', 3000, 'log mode from the API');
+    assert.ok(env.fake.configCalls.every((call) => call.method === 'GET' && call.signatureOk), 'polls are signed with the authorize key');
+
+    let stats = await env.stats();
+    assert.equal(stats.mode, 'log');
+    assert.equal(stats.auth_enabled, true);
+    assert.equal(stats.config.source, 'api');
+    assert.equal(stats.config.enabled, true);
+    assert.equal(stats.config.mode, 'log');
+    assert.equal(stats.config.last_sync_error, null);
+    assert.ok(Date.parse(stats.config.last_sync_at) > 0);
+    assert.ok(env.logs.some((record) => record.event === 'socket_config_applied' && record.mode === 'log' && record.previous_mode === 'off'));
+
+    // Switched off again from the console: everything is allowed and nothing is logged.
+    config.set({ enabled: false, mode: 'enforce', origins: null, updated_at: null });
+    await waitFor(() => env.server.runtime.mode === 'off', 3000, 'off from the API');
+    stats = await env.stats();
+    assert.equal(stats.auth_enabled, false);
+    const { socket } = await env.connect();
+    assert.equal((await trySubscribe(socket, 'order.anything')).ok, true);
+    assert.equal(denyLogs(env.logs).length, 0);
+});
+
+test('config poll: an API mode of null falls back to SOCKETCLUSTER_AUTH_MODE', async (t) => {
+    const env = await startServer({
+        env: { SOCKETCLUSTER_AUTH_ENABLED: 'false', SOCKETCLUSTER_AUTH_MODE: 'log' },
+        remoteConfig: remote({ enabled: true, mode: null, origins: null, updated_at: null }),
+    });
+    t.after(() => env.close());
+
+    await waitFor(() => env.server.runtime.enabled, 3000, 'enabled from the API');
+    assert.equal(env.server.runtime.mode, 'log');
+});
+
+test('config poll: an unreachable API keeps the last good config', async (t) => {
+    const config = remote({ enabled: true, mode: 'log', origins: null, updated_at: null });
+    const env = await startServer({ env: { SOCKETCLUSTER_AUTH_ENABLED: 'false' }, remoteConfig: config });
+    t.after(() => env.close());
+
+    await waitFor(() => env.server.runtime.mode === 'log', 3000, 'log mode from the API');
+
+    config.set({ status: 503, body: { error: 'down' } });
+    await waitFor(() => env.server.runtime.lastSyncError === 'http_503', 3000, 'a failed poll');
+    let stats = await env.stats();
+    assert.equal(stats.config.mode, 'log');
+    assert.equal(stats.config.enabled, true);
+    assert.equal(stats.config.source, 'api');
+    assert.equal(stats.config.last_sync_error, 'http_503');
+
+    config.set('hangup');
+    await waitFor(() => env.server.runtime.lastSyncError === 'unreachable', 3000, 'an unreachable API');
+    config.set({ enabled: 'yes', mode: 'sideways' });
+    await waitFor(() => env.server.runtime.lastSyncError === 'bad_response', 3000, 'a malformed answer');
+    assert.equal(env.server.runtime.mode, 'log', 'a malformed answer changes nothing');
+    assert.equal(env.logs.filter((record) => record.event === 'socket_config_sync_failed').length, 3, 'one warning per distinct failure');
+
+    // Recovery clears the error.
+    config.set({ enabled: true, mode: 'log', origins: null, updated_at: null });
+    await waitFor(() => env.server.runtime.lastSyncError === null, 3000, 'recovery');
+    stats = await env.stats();
+    assert.equal(stats.config.last_sync_error, null);
+    assert.ok(stats.counters.config_poll_errors >= 3);
+});
+
+test('config poll: an API that never answered leaves the environment config in force', async (t) => {
+    const env = await startServer({ env: { SOCKETCLUSTER_AUTH_MODE: 'log' }, remoteConfig: remote('hangup') });
+    t.after(() => env.close());
+
+    await waitFor(() => env.server.runtime.lastSyncError === 'unreachable', 3000, 'a failed poll');
+    const stats = await env.stats();
+    assert.deepEqual(
+        { enabled: stats.config.enabled, mode: stats.config.mode, source: stats.config.source, last_sync_at: stats.config.last_sync_at },
+        { enabled: true, mode: 'log', source: 'env', last_sync_at: null }
+    );
+});
+
+test('config poll: without a key there is no polling, as before', async (t) => {
+    const env = await startServer({ env: { SOCKETCLUSTER_AUTH_KEY: '' }, remoteConfig: remote({ enabled: true, mode: 'enforce', origins: null }) });
+    t.after(() => env.close());
+
+    assert.equal(env.server.poller, null);
+    await delay(300);
+    assert.equal(env.fake.configCalls.length, 0);
+    assert.equal(env.server.runtime.mode, 'off');
+    const stats = await env.internalRequest('/stats', { method: 'GET' });
+    assert.equal(stats.status, 503);
+    await stats.text();
+});
+
+test('config poll: enabling at runtime starts verifying and authorizing subscriptions', async (t) => {
+    const config = remote({ enabled: false, mode: null, origins: null, updated_at: null });
+    const env = await startServer({ env: { SOCKETCLUSTER_AUTH_ENABLED: 'false' }, remoteConfig: config, decide: allowOrders });
+    t.after(() => env.close());
+
+    await syncedAfter(env, 0);
+    const token = signJwt(userClaims());
+    const before = await env.connect({ token });
+    assert.equal((await trySubscribe(before.socket, 'order.someone_else')).ok, true, 'off: allowed without asking');
+    assert.equal(env.fake.calls.length, 0);
+
+    // Switch on (mode null -> enforce). Sockets are disconnected once so their old
+    // subscriptions are authorized again on reconnect.
+    const closed = before.socket.listener('close').once();
+    config.set({ enabled: true, mode: null, origins: null, updated_at: null });
+    await waitFor(() => env.server.runtime.mode === 'enforce', 3000, 'enforce from the API');
+    const { code } = await withTimeout(closed, 3000, 'disconnect on entering enforce');
+    assert.equal(code, ENFORCE_RECONNECT_CODE);
+    assert.ok(env.logs.some((record) => record.event === 'socket_reconnect_all' && record.reason === 'auth_enforced'));
+
+    const after = await env.connect({ token });
+    assert.equal(after.status.isAuthenticated, true);
+    const denied = await trySubscribe(after.socket, 'order.someone_else');
+    assert.equal(denied.ok, false);
+    assert.equal(denied.error.reason, 'not_found');
+    assert.equal((await trySubscribe(after.socket, 'order.allowed_1')).ok, true);
+    assert.equal(env.fake.calls.length, 2, 'the API is asked once enabled');
+    assert.ok(env.fake.calls.every((call) => call.signatureOk));
+
+    const anonymous = await env.connect();
+    assert.equal((await trySubscribe(anonymous.socket, 'company.company-uuid-1')).ok, false);
+
+    const stats = await env.stats();
+    assert.equal(stats.counters.runtime_reconnects, 1);
+});
+
+test('config poll: switching to enforce blocks client publish', async (t) => {
+    const config = remote({ enabled: true, mode: 'log', origins: null, updated_at: null });
+    const env = await startServer({ env: { SOCKETCLUSTER_AUTH_MODE: 'log' }, remoteConfig: config });
+    t.after(() => env.close());
+
+    await syncedAfter(env, 0);
+    const first = await env.connect({ token: signJwt(userClaims()) });
+    await first.socket.invokePublish('user.user-uuid-1', { x: 1 });
+    assert.equal(env.server.agServer.allowClientPublish, true);
+
+    config.set({ enabled: true, mode: 'enforce', origins: null, updated_at: null });
+    await waitFor(() => env.server.runtime.mode === 'enforce', 3000, 'enforce from the API');
+    assert.equal(env.server.agServer.allowClientPublish, false);
+
+    const second = await env.connect({ token: signJwt(userClaims()) });
+    await assert.rejects(second.socket.invokePublish('user.user-uuid-1', { x: 1 }), /Client publish feature is disabled/);
+
+    // And back to log: client publish works again.
+    config.set({ enabled: true, mode: 'log', origins: null, updated_at: null });
+    await waitFor(() => env.server.runtime.mode === 'log', 3000, 'log from the API');
+    assert.equal(env.server.agServer.allowClientPublish, true);
+    await second.socket.invokePublish('user.user-uuid-1', { x: 2 });
+});
+
+test('config poll: an origins change applies to new handshakes, and null restores the environment value', async (t) => {
+    const config = remote({ enabled: false, mode: null, origins: null, updated_at: null });
+    const env = await startServer({
+        env: { SOCKETCLUSTER_AUTH_ENABLED: 'false', SOCKETCLUSTER_OPTIONS: JSON.stringify({ origins: 'env.example.com:*' }) },
+        remoteConfig: config,
+    });
+    t.after(() => env.close());
+
+    await syncedAfter(env, 0);
+    assert.equal(await handshakeStatus(env.port, 'https://env.example.com'), 101);
+    assert.equal(await handshakeStatus(env.port, 'https://console.example.com'), 403);
+
+    config.set({ enabled: false, mode: null, origins: 'console.example.com:*', updated_at: null });
+    await waitFor(() => env.server.runtime.origins === 'console.example.com:*', 3000, 'origins from the API');
+    assert.equal(await handshakeStatus(env.port, 'https://console.example.com'), 101);
+    assert.equal(await handshakeStatus(env.port, 'https://env.example.com'), 403);
+    assert.equal((await env.stats()).config.origins, 'console.example.com:*');
+
+    config.set({ enabled: false, mode: null, origins: '*:*', updated_at: null });
+    await waitFor(() => env.server.runtime.origins === '*:*', 3000, 'all origins from the API');
+    assert.equal(await handshakeStatus(env.port, 'https://anything.example.org'), 101);
+
+    config.set({ enabled: false, mode: null, origins: null, updated_at: null });
+    await waitFor(() => env.server.runtime.origins === 'env.example.com:*', 3000, 'env origins restored');
+    assert.equal(await handshakeStatus(env.port, 'https://anything.example.org'), 403);
+});
+
+test('GET /stats aggregates denials without tokens, subjects or channel ids', async (t) => {
+    const env = await startServer({ env: { SOCKETCLUSTER_AUTH_MODE: 'log' }, decide: allowOrders });
+    t.after(() => env.close());
+
+    const token = signJwt(userClaims());
+    const anonymous = await env.connect({ query: { client: 'navigator/2.1.0' } });
+    await trySubscribe(anonymous.socket, 'order.order_secret_1');
+    await trySubscribe(anonymous.socket, 'order.order_secret_2');
+    await trySubscribe(anonymous.socket, 'nodotchannelid123');
+    const user = await env.connect({ token });
+    await trySubscribe(user.socket, 'order.someone_else_42');
+    await user.socket.invokePublish('company.company-uuid-1', { x: 1 });
+    await env.connect({ token: signJwt(userClaims({ iss: 'someone-else' })) });
+
+    const stats = await env.stats();
+    const rows = Object.fromEntries(stats.denials.map((row) => [`${row.client}|${row.prefix}|${row.reason}`, row]));
+    assert.equal(rows['navigator/2.1.0|order|no_token'].count, 2);
+    assert.equal(rows['navigator/2.1.0|other|no_token'].count, 1);
+    assert.equal(rows['test/1.0|order|not_found'].count, 1);
+    assert.equal(rows['test/1.0|company|client_publish_disabled'].count, 1);
+    assert.equal(rows['test/1.0|null|bad_iss'].count, 1);
+    assert.deepEqual(Object.keys(stats.denials[0]).sort(), ['client', 'count', 'last_at', 'prefix', 'reason']);
+    assert.equal(stats.denials[0].count, 2, 'sorted by count');
+
+    const raw = JSON.stringify(stats);
+    for (const secret of [token, 'order_secret_1', 'someone_else_42', 'nodotchannelid123', 'user-uuid-1', 'company-uuid-1', 'company_abc123', AUTH_KEY]) {
+        assert.equal(raw.includes(secret), false, `/stats leaks ${secret}`);
+    }
 });
