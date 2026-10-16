@@ -109,6 +109,12 @@ socketcluster:
   existingSecretKey: SOCKETCLUSTER_AUTH_KEY
   # Override the API authorize endpoint. Default: the API Service's /int/v1/socket/authorize.
   authorizeUrl: ""
+  # With a key set, the socket server polls the API for the settings saved under
+  # Admin > Configure > Socket (on/off, mode, origins) and applies them without a restart.
+  # configUrl overrides the polled endpoint (default: authorizeUrl with /authorize replaced
+  # by /config); configPollSeconds sets the interval (socket server default 30, "0" = off).
+  configUrl: ""
+  configPollSeconds: ""
   # SOCKETCLUSTER_OPTIONS JSON, e.g. '{"origins":"https://console.example.com:*"}'
   options: ""
   # SOCKETCLUSTER_ORIGIN for the API: the Origin header its websocket publisher sends (used

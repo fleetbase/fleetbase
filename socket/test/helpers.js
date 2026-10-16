@@ -90,14 +90,41 @@ function memoryAuthEngine(initialToken = null) {
     };
 }
 
+const DEFAULT_REMOTE_CONFIG = () => ({ enabled: true, mode: null, origins: null, updated_at: null });
+
 /**
- * A stand-in for the API authorize endpoint. `decide(body)` returns the JSON response
- * (or { status, body } for a non-200); it may be async to simulate a slow API.
+ * A stand-in for the API's socket endpoints, both signed with the authorize key:
+ * - POST .../authorize: `decide(body)` returns the JSON response (or { status, body } for a
+ *   non-200); it may be async to simulate a slow API. Calls are recorded in `calls`.
+ * - GET .../config: `remoteConfig()` returns the JSON response, { status, body }, or
+ *   'hangup' to drop the connection. Calls are recorded in `configCalls`.
  */
-async function startFakeAuthorizer(decide) {
+async function startFakeAuthorizer(decide, remoteConfig = DEFAULT_REMOTE_CONFIG) {
     const calls = [];
+    const configCalls = [];
     const authorizeKey = deriveKey(AUTH_KEY, PURPOSE_AUTHORIZE);
     const server = http.createServer((req, res) => {
+        if (req.url.split('?')[0].endsWith('/config')) {
+            req.resume();
+            req.on('end', () => {
+                const verdict = verifyRequest(authorizeKey, {
+                    timestamp: req.headers['x-fleetbase-timestamp'],
+                    signature: req.headers['x-fleetbase-signature'],
+                    rawBody: '',
+                });
+                configCalls.push({ method: req.method, signatureOk: verdict.ok });
+                const result = verdict.ok ? remoteConfig() : { status: 401, body: { error: 'invalid_signature' } };
+                if (result === 'hangup') {
+                    res.destroy();
+                    return;
+                }
+                const status = result && result.status ? result.status : 200;
+                const payload = result && result.status ? result.body : result;
+                res.writeHead(status, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify(payload));
+            });
+            return;
+        }
         const chunks = [];
         req.on('data', (chunk) => chunks.push(chunk));
         req.on('end', async () => {
@@ -139,6 +166,7 @@ async function startFakeAuthorizer(decide) {
     return {
         url: `http://127.0.0.1:${port}/int/v1/socket/authorize`,
         calls,
+        configCalls,
         close: () =>
             new Promise((resolve) => {
                 server.close(() => resolve());
@@ -151,9 +179,12 @@ const denyEverything = () => ({ allow: false, ttl: 30, reason: 'not_allowed' });
 
 /**
  * Starts a real socket server on ephemeral ports with a fake authorize endpoint.
+ *
+ * Config polling is off unless `remoteConfig` is given: then the server polls the fake
+ * config endpoint every `pollIntervalMs` (default 50 ms).
  */
-async function startServer({ env = {}, decide = denyEverything, authorizeTimeoutMs } = {}) {
-    const fake = await startFakeAuthorizer(decide);
+async function startServer({ env = {}, decide = denyEverything, authorizeTimeoutMs, remoteConfig, pollIntervalMs = 50 } = {}) {
+    const fake = await startFakeAuthorizer(decide, remoteConfig);
     const config = loadConfig({
         SOCKETCLUSTER_PORT: '0',
         SOCKETCLUSTER_INTERNAL_PORT: '0',
@@ -163,16 +194,16 @@ async function startServer({ env = {}, decide = denyEverything, authorizeTimeout
         ...env,
     });
     const { records, logger } = captureLogger();
-    const server = createSocketServer(config, { logger, authorizeTimeoutMs });
+    const server = createSocketServer(config, { logger, authorizeTimeoutMs, configPollIntervalMs: remoteConfig ? pollIntervalMs : 0 });
     const { port, internalPort } = await server.start();
     const clients = [];
 
-    async function connect({ token = null, query = {} } = {}) {
+    async function connect({ token = null, query = {}, autoReconnect = false } = {}) {
         const socket = socketClusterClient.create({
             hostname: '127.0.0.1',
             port,
             path: '/socketcluster/',
-            autoReconnect: false,
+            autoReconnect,
             ackTimeout: 5000,
             authEngine: memoryAuthEngine(token),
             query: { client: 'test/1.0', ...query },
@@ -206,7 +237,63 @@ async function startServer({ env = {}, decide = denyEverything, authorizeTimeout
         await fake.close();
     }
 
-    return { port, internalPort, config, server, logs: records, fake, connect, internalRequest, close };
+    async function stats() {
+        const response = await internalRequest('/stats', { method: 'GET' });
+        assertOk(response.status === 200, `GET /stats answered ${response.status}`);
+        return response.json();
+    }
+
+    return { port, internalPort, config, server, logs: records, fake, connect, internalRequest, stats, close };
+}
+
+function assertOk(condition, message) {
+    if (!condition) {
+        throw new Error(message);
+    }
+}
+
+/** Resolves once `predicate()` is truthy, polling every 10 ms. */
+function waitFor(predicate, ms = 3000, label = 'condition') {
+    return withTimeout(
+        (async () => {
+            while (!(await predicate())) {
+                await delay(10);
+            }
+        })(),
+        ms,
+        label
+    );
+}
+
+/**
+ * Attempts a raw websocket handshake with the given Origin header and resolves with the
+ * HTTP status: 101 when SocketCluster accepts the origin, 403 when it refuses it.
+ */
+function handshakeStatus(port, origin) {
+    return new Promise((resolve, reject) => {
+        const req = http.request({
+            host: '127.0.0.1',
+            port,
+            path: '/socketcluster/',
+            headers: {
+                Connection: 'Upgrade',
+                Upgrade: 'websocket',
+                'Sec-WebSocket-Version': '13',
+                'Sec-WebSocket-Key': crypto.randomBytes(16).toString('base64'),
+                Origin: origin,
+            },
+        });
+        req.on('upgrade', (res, socket) => {
+            socket.destroy();
+            resolve(res.statusCode);
+        });
+        req.on('response', (res) => {
+            res.resume();
+            resolve(res.statusCode);
+        });
+        req.on('error', reject);
+        req.end();
+    });
 }
 
 /**
@@ -232,6 +319,8 @@ module.exports = {
     nowSeconds,
     withTimeout,
     delay,
+    waitFor,
+    handshakeStatus,
     captureLogger,
     memoryAuthEngine,
     startFakeAuthorizer,

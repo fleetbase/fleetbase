@@ -2,7 +2,7 @@
 
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { loadConfig, resolveMode, buildServerOptions, parseSwitch, ConfigError, DEFAULT_AUTHORIZE_URL } = require('../lib/config');
+const { loadConfig, resolveMode, buildServerOptions, parseSwitch, ConfigError, DEFAULT_AUTHORIZE_URL, envOrigins } = require('../lib/config');
 
 const KEY = 'k'.repeat(32);
 
@@ -53,9 +53,10 @@ test('the switch keeps auth off by default, even with a key and a mode', () => {
     // An unknown mode is still a configuration error while switched off.
     assert.throws(() => loadConfig({ SOCKETCLUSTER_AUTH_MODE: 'strict' }), ConfigError);
 
-    // The key is not handed to SocketCluster while auth is off, and clients may publish.
+    // The key is handed to SocketCluster even while auth is off, so tokens verify as soon as
+    // the API's config switches auth on at runtime. Clients may publish while off.
     const options = buildServerOptions(keyed);
-    assert.equal(options.authKey, undefined);
+    assert.equal(options.authKey, KEY);
     assert.equal(options.allowClientPublish, true);
 });
 
@@ -154,4 +155,43 @@ test('SCC settings are read from the environment', () => {
     assert.equal(config.scc.stateServerHost, 'scc-state');
     assert.equal(config.scc.stateServerPort, 7777);
     assert.equal(config.scc.clientPoolSize, null);
+});
+
+test('the config URL defaults to the authorize URL with /authorize replaced by /config', () => {
+    assert.equal(loadConfig({}).configUrl, 'http://application:8000/int/v1/socket/config');
+    assert.equal(loadConfig({ SOCKETCLUSTER_AUTHORIZE_URL: 'https://api.internal/int/v1/socket/authorize/?x=1' }).configUrl, 'https://api.internal/int/v1/socket/config');
+    assert.equal(loadConfig({ SOCKETCLUSTER_CONFIG_URL: ' https://api.internal/custom/config ' }).configUrl, 'https://api.internal/custom/config');
+    assert.throws(() => loadConfig({ SOCKETCLUSTER_CONFIG_URL: 'not a url' }), ConfigError);
+    assert.throws(() => loadConfig({ SOCKETCLUSTER_CONFIG_URL: 'ftp://x/config' }), ConfigError);
+});
+
+test('an authorize URL that does not end in /authorize leaves the config URL unset', () => {
+    const keyed = loadConfig({ SOCKETCLUSTER_AUTH_KEY: KEY, SOCKETCLUSTER_AUTHORIZE_URL: 'https://api.internal/socket-auth' });
+    assert.equal(keyed.configUrl, null);
+    assert.ok(keyed.warnings.some((w) => w.includes('SOCKETCLUSTER_CONFIG_URL')));
+
+    // Without a key there is no polling, so no warning about it either.
+    const keyless = loadConfig({ SOCKETCLUSTER_AUTHORIZE_URL: 'https://api.internal/socket-auth' });
+    assert.equal(keyless.configUrl, null);
+    assert.equal(keyless.warnings.some((w) => w.includes('SOCKETCLUSTER_CONFIG_URL')), false);
+});
+
+test('the config poll interval defaults to 30 seconds; 0 disables polling', () => {
+    assert.equal(loadConfig({}).configPollSeconds, 30);
+    assert.equal(loadConfig({ SOCKETCLUSTER_CONFIG_POLL_SECONDS: '0' }).configPollSeconds, 0);
+    assert.equal(loadConfig({ SOCKETCLUSTER_CONFIG_POLL_SECONDS: '5' }).configPollSeconds, 5);
+    assert.throws(() => loadConfig({ SOCKETCLUSTER_CONFIG_POLL_SECONDS: '-1' }), ConfigError);
+    assert.throws(() => loadConfig({ SOCKETCLUSTER_CONFIG_POLL_SECONDS: 'often' }), ConfigError);
+});
+
+test('the requested mode is kept for runtime use, even while switched off', () => {
+    assert.equal(loadConfig({}).requestedMode, null);
+    assert.equal(loadConfig({ SOCKETCLUSTER_AUTH_KEY: KEY, SOCKETCLUSTER_AUTH_MODE: ' LOG ' }).requestedMode, 'log');
+});
+
+test('envOrigins reads SOCKETCLUSTER_OPTIONS.origins, else the SocketCluster default', () => {
+    assert.equal(envOrigins(loadConfig({})), '*:*');
+    assert.equal(envOrigins(loadConfig({ SOCKETCLUSTER_OPTIONS: '{"origins":"a.example:*"}' })), 'a.example:*');
+    assert.deepEqual(envOrigins(loadConfig({ SOCKETCLUSTER_OPTIONS: '{"origins":["a.example:*"]}' })), ['a.example:*']);
+    assert.equal(envOrigins(loadConfig({ SOCKETCLUSTER_OPTIONS: '{"origins":42}' })), '*:*');
 });

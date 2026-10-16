@@ -3,7 +3,16 @@
 /**
  * Assembles the socket server: the public HTTP/WebSocket listener (health check plus
  * SocketCluster at /socketcluster/), the auth middleware, the internal publish/stats
- * listener and, when SCC_STATE_SERVER_HOST is set, the SCC broker client.
+ * listener, the config poller (when a key is configured) and, when SCC_STATE_SERVER_HOST
+ * is set, the SCC broker client.
+ *
+ * Runtime config (enabled, mode, origins) is applied without a restart:
+ * - the auth policy reads its mode per action;
+ * - `agServer.allowClientPublish` is read by SocketCluster on every inbound #publish;
+ * - `agServer.origins` / `agServer._allowAllOrigins` are read on every websocket handshake,
+ *   so an origins change applies to new connections (open ones are not re-checked).
+ * Entering `enforce` at runtime disconnects every socket once, so clients reconnect and
+ * every subscription made while auth was looser goes through the authorizer again.
  */
 
 const http = require('http');
@@ -14,6 +23,9 @@ const { Authorizer } = require('./authorizer');
 const { SocketAuthPolicy } = require('./middleware');
 const { createInternalHandler } = require('./internal');
 const { Stats } = require('./stats');
+const { Denials } = require('./denials');
+const { RuntimeConfig } = require('./runtime');
+const { ConfigPoller } = require('./config-poller');
 const { createLogger, describeError } = require('./logger');
 
 function publicHandler(req, res) {
@@ -58,20 +70,39 @@ function closeHttpServer(server) {
 }
 
 /**
+ * Points SocketCluster's handshake origin check at a new origins value. These are plain
+ * instance fields in socketcluster-server 17, read by verifyHandshake on every handshake.
+ */
+function applyOrigins(agServer, origins) {
+    agServer.origins = origins;
+    agServer._allowAllOrigins = origins.indexOf('*:*') !== -1;
+}
+
+/** Close code sent to sockets when the server switches to enforce at runtime. */
+const ENFORCE_RECONNECT_CODE = 4100;
+
+/**
  * @param {ReturnType<import('./config').loadConfig>} config
  * @param {object} [deps]
  * @param {object} [deps.logger]
- * @param {typeof fetch} [deps.fetch] used for the authorize call
+ * @param {typeof fetch} [deps.fetch] used for the authorize and config calls
  * @param {number} [deps.authorizeTimeoutMs]
+ * @param {number} [deps.configPollIntervalMs] overrides SOCKETCLUSTER_CONFIG_POLL_SECONDS (tests)
  */
 function createSocketServer(config, deps = {}) {
     const logger = deps.logger || createLogger({ level: config.logLevel });
     const stats = new Stats();
+    const denials = new Denials();
+    const runtime = new RuntimeConfig(config);
+    const keyConfigured = config.authKey !== null;
 
     const httpServer = http.createServer(publicHandler);
     const agServer = socketClusterServer.attach(httpServer, buildServerOptions(config));
+    applyOrigins(agServer, runtime.origins);
 
-    const authorizer = config.authEnabled
+    // With a key the authorizer always exists; whether it is consulted depends on the
+    // runtime mode, so switching auth on from the console needs no restart.
+    const authorizer = keyConfigured
         ? new Authorizer({
               url: config.authorizeUrl,
               authorizeKey: deriveKey(config.authKey, PURPOSE_AUTHORIZE),
@@ -81,23 +112,61 @@ function createSocketServer(config, deps = {}) {
           })
         : null;
 
-    const policy = new SocketAuthPolicy({ config, authorizer, logger, stats });
+    const policy = new SocketAuthPolicy({ config, authorizer, logger, stats, denials });
     agServer.setMiddleware(agServer.MIDDLEWARE_INBOUND, policy.inboundMiddleware());
     policy.attach(agServer);
 
+    runtime.onChange((next, previous) => {
+        policy.update(next);
+        agServer.allowClientPublish = next.mode !== 'enforce';
+        applyOrigins(agServer, next.origins);
+        if (next.mode === 'enforce' && previous.mode !== 'enforce') {
+            disconnectAll('auth_enforced');
+        }
+    });
+
+    function disconnectAll(reason) {
+        const sockets = Object.values(agServer.clients);
+        stats.increment('runtime_reconnects', sockets.length);
+        logger.info({ event: 'socket_reconnect_all', reason, clients: sockets.length });
+        for (const socket of sockets) {
+            try {
+                socket.disconnect(ENFORCE_RECONNECT_CODE, reason);
+            } catch (error) {
+                logger.debug({ event: 'socket_disconnect_failed', error: describeError(error) });
+            }
+        }
+    }
+
+    const pollIntervalMs = deps.configPollIntervalMs !== undefined ? deps.configPollIntervalMs : config.configPollSeconds * 1000;
+    const poller =
+        keyConfigured && config.configUrl && pollIntervalMs > 0
+            ? new ConfigPoller({
+                  url: config.configUrl,
+                  authorizeKey: deriveKey(config.authKey, PURPOSE_AUTHORIZE),
+                  intervalMs: pollIntervalMs,
+                  runtime,
+                  logger,
+                  fetch: deps.fetch,
+                  stats,
+              })
+            : null;
+
     const gauges = () => ({
-        mode: config.mode,
-        auth_enabled: config.authEnabled,
+        mode: runtime.mode,
+        auth_enabled: runtime.enabled,
         clients: agServer.clientsCount,
         pending_clients: agServer.pendingClientsCount,
         authorize_cache_size: authorizer ? authorizer.cache.size : 0,
         authorize_inflight: authorizer ? authorizer.inflight.size : 0,
+        config: runtime.snapshot(),
+        denials: denials.top(),
     });
 
     const internalServer = http.createServer(
         createInternalHandler({
             agServer,
-            publishKey: config.authEnabled ? deriveKey(config.authKey, PURPOSE_PUBLISH) : null,
+            publishKey: keyConfigured ? deriveKey(config.authKey, PURPOSE_PUBLISH) : null,
             stats,
             logger,
             gauges,
@@ -123,6 +192,10 @@ function createSocketServer(config, deps = {}) {
         const port = await listen(httpServer, config.port);
         const internalPort = await listen(internalServer, config.internalPort);
         ports = { port, internalPort };
+
+        if (poller) {
+            poller.start();
+        }
 
         if (config.scc.stateServerHost) {
             // Lazily required: only multi-instance deployments need it.
@@ -155,6 +228,9 @@ function createSocketServer(config, deps = {}) {
     }
 
     async function stop() {
+        if (poller) {
+            await poller.stop();
+        }
         try {
             await agServer.close();
         } catch (error) {
@@ -173,6 +249,9 @@ function createSocketServer(config, deps = {}) {
         internalServer,
         authorizer,
         policy,
+        runtime,
+        poller,
+        denials,
         stats,
         logger,
         start,
@@ -183,4 +262,4 @@ function createSocketServer(config, deps = {}) {
     };
 }
 
-module.exports = { createSocketServer, publicHandler };
+module.exports = { createSocketServer, publicHandler, applyOrigins, ENFORCE_RECONNECT_CODE };
