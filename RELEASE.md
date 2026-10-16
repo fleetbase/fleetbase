@@ -13,7 +13,7 @@
 - `console`: `0.7.70`
 - `core-api`: `1.6.71`
 - `fleetops`: `0.6.73`
-- `storefront`: `0.4.26`
+- `storefront`: `0.4.27`
 - `registry-bridge`: `0.1.11`
 - `ledger`: `0.0.13`
 - `customer-portal`: `0.0.16`
@@ -36,7 +36,8 @@
 - **Fix: manifest lookups are scoped to the caller's organization** (#403).
 - **Fix: the proof-of-delivery dashboard widget loads** (#407): it requested a path that did not exist.
 
-## Storefront `0.4.26`
+## Storefront `0.4.27` (`0.4.26` + `0.4.27`)
+- **QPay orders keep the customer's note** (#159): the app saves the note on the checkout before paying (`PUT storefront/v1/checkouts/notes`), and every way an order is created takes it from there when none comes with the capture. Notes are trimmed and capped at 2,000 characters. **The customer's note leads the order panel** in a highlighted box, with line breaks kept and callable phone numbers; staff notes stay in the Notes section. **Opening a network order no longer swaps the list for its loading skeleton.** (#159)
 - **Nested categories** up to three levels for products and catalogs, with parent and depth on the public API and product rollup into parent categories (#156). **Catalog categories have icons** (#155). Category icon uploads no longer write the file record into `icon` (#157).
 - **QPay orders complete in the published app again** (#158): a status request without `verify` checks with QPay and creates the order straight away.
 - **New stores and networks show straight away** in the switcher (#148). **Network orders open at their own URL** and the in-place order panel scrolls (#149). **Settings save after a toggle** (#152). A network's saved gateways and notification channels show after a refresh (#154).
@@ -49,7 +50,7 @@
 ---
 ## Upgrade Steps
 - Run `composer update` / pull the images as usual. No migrations in this release.
-- Storefront `0.4.26` requires Core API `1.6.71`.
+- Storefront `0.4.27` requires Core API `1.6.71`. The Storefront app sends the checkout note from v0.1.0 on; older apps keep sending it with the capture (Stripe) as before.
 - Socket settings: nothing changes until an administrator saves one under Configure → Socket; environment values stay the defaults. Older socket server images keep reading their environment.
 - Storefront trucks: a truck is on sale only while its Storefront status is **Active**; check your trucks' status after upgrading.
 
