@@ -1,6 +1,8 @@
 # syntax = docker/dockerfile:1.2
 # Base stage
-FROM dunglas/frankenphp:1.12.4-php8.2-bookworm AS base
+# laravel/octane sets a minimum FrankenPHP version and enforces it at startup, so this tag and the
+# Octane range in api/composer.json move together. The build fails below when they don't match.
+FROM dunglas/frankenphp:1.13.1-php8.2-bookworm AS base
 
 # Install packages
 # default-mysql-client provides mysqldump (MariaDB's), which db:backup runs. Without it every
@@ -118,6 +120,12 @@ COPY --chown=www-data:www-data ./api/composer.json ./api/composer.lock /fleetbas
 
 # Pre-install Composer dependencies
 RUN su www-data -s /bin/sh -c "composer install --no-scripts --optimize-autoloader --no-dev --no-cache"
+
+# Fail the build if this image's FrankenPHP is older than the installed Octane requires. Octane would
+# otherwise delete the binary on startup and every app container would exit 127.
+# See docker/scripts/assert-frankenphp-version.php.
+RUN --mount=type=bind,source=docker/scripts/assert-frankenphp-version.php,target=/tmp/assert-frankenphp-version.php \
+  php /tmp/assert-frankenphp-version.php /fleetbase/api/vendor/autoload.php
 
 # Setup application
 COPY --chown=www-data:www-data ./api /fleetbase/api
