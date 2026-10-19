@@ -1,18 +1,20 @@
-> v0.7.70 ~ "Manage realtime socket authentication from the console"
+> v0.7.71 ~ "API containers start again on FrankenPHP 1.13"
+
+<!-- RELEASE_NOTES_PLACEHOLDER: bump core-api to 1.6.72 and fleetops to 0.6.74 (composer, pnpm, gitlinks) once both are tagged, then remove this line. -->
 
 ---
 ## Highlights
 
-- **Socket settings in the admin console.** Configure → Socket now shows the socket server's status and recent authorization denials. It lets system administrators turn socket authentication on and choose the mode (`off`, `log`, `enforce`) without restarting anything. The shared auth key stays in the environment and is never shown.
-
-- **The socket server applies settings at runtime.** With `SOCKETCLUSTER_AUTH_KEY` set, `fleetbase/fleetbase-socket` polls the API's signed `GET int/v1/socket/config` (every `SOCKETCLUSTER_CONFIG_POLL_SECONDS`, default 30) and applies the switch, mode and origins without a restart. Entering `enforce` disconnects every client once so their subscriptions are re-authorized. `/stats` reports the effective config and the top channel-authorization denials, which the console shows. Helm gains `socketcluster.configUrl` and `configPollSeconds`; docker-compose needs nothing new. (#722, core-api #314)
-- **Fix: the socket test console escapes event content** instead of rendering it as HTML. (#722)
+- **Fix: API containers exited 127 on startup with Octane 2.22.** Octane 2.22.0 requires FrankenPHP 1.13.0 and checks the binary every time `octane:frankenphp` starts. On the old 1.12.4 base image it moved `/usr/local/bin/frankenphp` aside, downloaded a generic build to a different path, deleted the original and then ran the path it had emptied (`exec: /usr/local/bin/frankenphp: not found`). The image now builds on `dunglas/frankenphp:1.13.1-php8.2-bookworm` and locks Octane `2.22.0`.
+- **The API image build fails if Octane and FrankenPHP disagree.** `docker/scripts/assert-frankenphp-version.php` runs after `composer install` and compares Octane's required FrankenPHP version with the binary in the image. A mismatch now fails the build and names both versions, instead of crash-looping containers after deploy. Octane is held to a minor range (`~2.22.0`), so a new Octane minor version arrives only with a deliberate bump, together with the base image.
+- **Fleet-Ops: geocoding uses the Google Maps key from settings** (fleetops #408, #409; fixes #723).
+- **Core API: extensions can add searchable columns at runtime** (core-api #317).
 
 ---
 ## Component Versions
-- `console`: `0.7.70`
-- `core-api`: `1.6.71`
-- `fleetops`: `0.6.73`
+- `console`: `0.7.71`
+- `core-api`: `1.6.72`
+- `fleetops`: `0.6.74`
 - `storefront`: `0.4.27`
 - `registry-bridge`: `0.1.11`
 - `ledger`: `0.0.13`
@@ -24,35 +26,16 @@
 - `iam-engine`: `0.1.13`
 
 ---
-## Core API `1.6.71`
-- **Socket settings from the console** (#314): `GET`/`POST int/v1/settings/socket` and the signed `GET int/v1/socket/config` the socket server polls. The key stays in the environment.
-- **A controller's filter is used for every query it serves** (#315): under Octane the first controller to list a model decided the filter for every other, so a Storefront network's Orders page listed every order in the company.
-- **Live and test-mode data no longer share API cache entries** (#312): cache keys carry the database connection.
-- **Driver-assigned lifecycle events reach `driver.{public_id}` and `driver.{uuid}`** (#311); `driverAssigned.*` is still published and deprecated.
-- Internal Category responses include `parent_uuid` (#316), which Storefront's nested categories build their tree from.
+## Core API `1.6.72`
+- **Searchable columns registered at runtime** (#317): `Searchable::addSearchableColumns([...])` (static, per model class) merges extra columns into a model's search, so an extension can make its own data findable through a core or Fleet-Ops model's search without editing the model. `relation.column` dot notation works as before, including relations added with `resolveRelationUsing()`.
 
-## FleetOps `0.6.73`
-- **Fix: creating a driver or contact with a test API key returned 500** (#404): only the columns the sandbox tables have are copied.
-- **Fix: manifest lookups are scoped to the caller's organization** (#403).
-- **Fix: the proof-of-delivery dashboard widget loads** (#407): it requested a path that did not exist.
-
-## Storefront `0.4.27` (`0.4.26` + `0.4.27`)
-- **QPay orders keep the customer's note** (#159): the app saves the note on the checkout before paying (`PUT storefront/v1/checkouts/notes`), and every way an order is created takes it from there when none comes with the capture. Notes are trimmed and capped at 2,000 characters. **The customer's note leads the order panel** in a highlighted box, with line breaks kept and callable phone numbers; staff notes stay in the Notes section. **Opening a network order no longer swaps the list for its loading skeleton.** (#159)
-- **Nested categories** up to three levels for products and catalogs, with parent and depth on the public API and product rollup into parent categories (#156). **Catalog categories have icons** (#155). Category icon uploads no longer write the file record into `icon` (#157).
-- **QPay orders complete in the published app again** (#158): a status request without `verify` checks with QPay and creates the order straight away.
-- **New stores and networks show straight away** in the switcher (#148). **Network orders open at their own URL** and the in-place order panel scrolls (#149). **Settings save after a toggle** (#152). A network's saved gateways and notification channels show after a refresh (#154).
-- **A truck's status decides whether it takes orders**; new trucks start inactive (#153). **Truck orders are marked** with `meta.food_truck` (#150).
-
-## Registry Bridge `0.1.11`
-- **Fix: registry endpoints returned 500 in console test mode** (#41): registry data always reads the live connection.
-- **Fix: the Purchased extensions page showed blank cards** (#40).
+## FleetOps `0.6.74`
+- **Fix: the geocoder endpoints and every other geocoding path use the Google Maps API key from settings** (#408, #409; fixes fleetbase/fleetbase#723).
 
 ---
 ## Upgrade Steps
-- Run `composer update` / pull the images as usual. No migrations in this release.
-- Storefront `0.4.27` requires Core API `1.6.71`. The Storefront app sends the checkout note from v0.1.0 on; older apps keep sending it with the capture (Stripe) as before.
-- Socket settings: nothing changes until an administrator saves one under Configure → Socket; environment values stay the defaults. Older socket server images keep reading their environment.
-- Storefront trucks: a truck is on sale only while its Storefront status is **Active**; check your trucks' status after upgrading.
+- Pull the images as usual. No migrations in this release.
+- If you build your own API image from `docker/Dockerfile`, rebuild it: the base image moves to FrankenPHP 1.13.1. If you have raised `laravel/octane` yourself, keep the base image at or above the FrankenPHP version that Octane requires, or the build stops with a message naming both.
 
 ---
 ## Need help?
