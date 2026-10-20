@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2eecf7f81f3eca2f498bf6f40158879e",
+    "content-hash": "ed23e5d0f56d5e82150a1b1d0b80985d",
     "packages": [
         {
             "name": "appstract/laravel-opcache",
@@ -124,16 +124,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.401.2",
+            "version": "3.401.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "b1af9196bd0f94bcebdb6588a150dd85dc240758"
+                "reference": "7b8541e8a4f09cf4375eeef4de6c638dfb2dadbb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/b1af9196bd0f94bcebdb6588a150dd85dc240758",
-                "reference": "b1af9196bd0f94bcebdb6588a150dd85dc240758",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/7b8541e8a4f09cf4375eeef4de6c638dfb2dadbb",
+                "reference": "7b8541e8a4f09cf4375eeef4de6c638dfb2dadbb",
                 "shasum": ""
             },
             "require": {
@@ -215,9 +215,9 @@
             "support": {
                 "forum": "https://github.com/aws/aws-sdk-php/discussions",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.401.2"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.401.3"
             },
-            "time": "2026-10-14T18:09:34+00:00"
+            "time": "2026-10-19T18:11:47+00:00"
         },
         {
             "name": "aws/aws-sdk-php-laravel",
@@ -1863,16 +1863,16 @@
         },
         {
             "name": "dragonmantank/cron-expression",
-            "version": "v3.6.0",
+            "version": "v3.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dragonmantank/cron-expression.git",
-                "reference": "d61a8a9604ec1f8c3d150d09db6ce98b32675013"
+                "reference": "4189372ffeff09bf14f731f67a9de90c7b413ebe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dragonmantank/cron-expression/zipball/d61a8a9604ec1f8c3d150d09db6ce98b32675013",
-                "reference": "d61a8a9604ec1f8c3d150d09db6ce98b32675013",
+                "url": "https://api.github.com/repos/dragonmantank/cron-expression/zipball/4189372ffeff09bf14f731f67a9de90c7b413ebe",
+                "reference": "4189372ffeff09bf14f731f67a9de90c7b413ebe",
                 "shasum": ""
             },
             "require": {
@@ -1883,8 +1883,8 @@
             },
             "require-dev": {
                 "phpstan/extension-installer": "^1.4.3",
-                "phpstan/phpstan": "^1.12.32|^2.1.31",
-                "phpunit/phpunit": "^8.5.48|^9.0"
+                "phpstan/phpstan": "^2.1.31",
+                "phpunit/phpunit": "^11.5.43 || ^12.4"
             },
             "type": "library",
             "extra": {
@@ -1915,7 +1915,7 @@
             ],
             "support": {
                 "issues": "https://github.com/dragonmantank/cron-expression/issues",
-                "source": "https://github.com/dragonmantank/cron-expression/tree/v3.6.0"
+                "source": "https://github.com/dragonmantank/cron-expression/tree/v3.6.1"
             },
             "funding": [
                 {
@@ -1923,7 +1923,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-10-31T18:51:33+00:00"
+            "time": "2026-10-19T17:53:57+00:00"
         },
         {
             "name": "easyrdf/easyrdf",
@@ -2862,7 +2862,7 @@
             "version": "0.1.16",
             "dist": {
                 "type": "tar",
-                "url": "https://s3.ap-southeast-1.amazonaws.com/fleetbase-registry-production/flb/%40fleetbase/flespi-engine/flespi-engine-0.1.16.tgz?AWSAccessKeyId=ASIA26E6KG6WDCF4RP5G&Expires=1792394638&Signature=Sj%2FLtJryg6crOmBC3jYg4h%2Bjyrk%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEFsaDmFwLXNvdXRoZWFzdC0xIkYwRAIgKDQG7IhbHMU%2BejC8gpEBDTMuOInHVoIsRoCxaHHE%2BV4CIDZxVhHmQUl60NLmOjUOCP2CdL59Fuqny9tDULbu9JUSKpYECCQQABoMNzUxOTUxMjk2NDI4IgzzMFZLwUDrH0UBrtIq8wMi96xWLCS4fS5TJPBnVLUjsC6qf3CNtYt2AKQEXxbJ8k9kgTgr5oIsLtOvTkQJqOAe0LCUH7w6zbMwd7vzcE3zVNHLOQD5tkToRJVH5ym5iaNcxCG%2BDH%2B2N5TEoiRL%2FYsLLmN2ValiU8e%2FTBNryEfRQZtxV1tzAsQyU2u5gbh3umF%2BpKMCfgEdSucUu2xXe%2FJYiXOvTkTNTWQZ2cCE%2FAjK5aUNJ4FgXDsxeuydFPDmSFWl1tRU3ti1SFS%2FIcy%2FunHjW2sI5ggCgCqjsvhbyc%2Bye%2BhxVGBTqvO4Y%2BzETQejBkoFsxZ80l1y6ozizNmdk0FY2j4n6rn5XDdCuz0FyTjP2MgJT4r9ZMOLZb2YeY%2B8MzbWvv6KecU1KgqCNT%2FDsek%2BFkkacJ3Xsd4T9eKM6QyyXLnjhnlU%2BLGcVLVqQ7w3WM1H4Oq3GKRF4i%2BHXzMrXrIkIP5vRBWmEJOhxuADjB5PQ45SzxCVaC9kO9g1RnE12Ve9ipuFN9aEPJMAM6z72el25Mlw4bzvM1srSS%2BXmAiGIfIYNUxOKC%2BrkIjc%2BmJlWviK0azlH8PkEmMybrBPglYyEw9HIEcjV5Jrz65bgxHx6pcQMTTAPRUEwV4fP5kN7aRPiJulJQbqxiSoc3PFokhzHcKJKVr%2Bta8HyyBnToH3xqh2MKuS1tYGOqcB5QRuU4phL8sjywaYxu9hMaqaiMB9JoRbZpHHyehGojTkSlAaORMYk1Dk01ChCAYrV05Qd3311bhpHKV%2BEOEL6h0wjNl%2Bbv%2F0ocQx4n2TDk46dm4gHybvplyVMBZU2hwB9taaqiltfeaIbdFQHGv1Dlesz5pWr5qDtyZclmyVl6jTRhyujIDl9qOh0vfI1FYaK1OwLY5YASeCNNVK%2BEIJj65i%2FRf9O8Y%3D"
+                "url": "https://s3.ap-southeast-1.amazonaws.com/fleetbase-registry-production/flb/%40fleetbase/flespi-engine/flespi-engine-0.1.16.tgz?AWSAccessKeyId=ASIA26E6KG6WMPYULCPK&Expires=1792476266&Signature=4ZQRjJTyPI%2BY8h8iW7oAN57eYDc%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEHUaDmFwLXNvdXRoZWFzdC0xIkcwRQIhAKxcLmpf00MjH%2Bi0n3c1egz6OR7YxLc%2BkQUfDaiBEgyFAiBRjb8WmbXR79bCvMJBWMeX8rxh%2BUmMUoI6dNGIXx9kJSqWBAg%2BEAAaDDc1MTk1MTI5NjQyOCIMSvZQCwh9aRFVGvT5KvMDLiJrihGLqA%2FBBujWCFET2g4i%2B1u7rmuR0Yz2bCF5NTBMVAwuR6fJU2pyM3EfaXEh9L0d80gegayXyTHVQhbS6lSqmmfG32CtgDOTc97dBzZ%2FQQkPjolBJP4pi2zsswlLfv%2BAb3NHkUfE2yq5WYj%2FzoMBYT%2FWQHwH84QUgH%2B941AZOqZwysQhE1AXKFfYMsD75J2dd%2Bol25e8g7xDn00C0bAhn8d%2F%2BWewQew7GJOjPufM%2F0USdquMYx%2F3L2zl%2F37c%2B0FERvwA9xrRq3nrbDE32ZQGqBqOB2RTkeRy%2BmNfjO599mkcSUbiAzW5LWrawk1%2FUa1Qr9XLHnsyrjdYjxQcqv%2BrwBlKaScScK9BD%2B2sjiVA7LE8h2cUrxHhzs%2FBvYlRfyjPaGi2hWZV0hV9u4vf4hL%2BR3pVPEvqcOg%2Bdi9JqCiewwWmlMw%2FSWb%2FL7GjzWCczr14d5f%2B2tuYoTX0o2eG%2BGcxAjSKmkUA3EqKoNw0JRIHjLoKgvJ6BUUrFCREJmaEPzuTYEdiCnEHNpcCesuRpkQy5c%2BjOkx%2Bxs6FCjyQNznATwtpwFE5KSE7drcLyVGhlwW8nW3CWBcSAlVkzNxzTGujOHc6%2FzW8y741Qt54oACP8xbCU6UgJPBpSWY3IA8zPYOeWJoS8JJrhTQ45tn8JXICUDCs8dvWBjqmAYLlBwgLIaEFcvcWjXLMo7wYK8tsqJBZmljSpcR%2F91Y3hey9oS9wZ9fGa5J%2BYdms%2FgqqZ6wwbGsOi6kjD04WyTUTbFUVTR19FiTZ2tkgrqjTcgLzSn6UobqtwVIMyiGab1p%2B71%2BIOgpbr6fUgK6FLdefnSiStnsReUExLV1lgZbpZwRw%2F7wnlWIAYG%2BqAO841S2t9xJlo%2FvK4Cg5TbtPkUZ67dZX6RQ%3D"
             },
             "require": {
                 "fleetbase/core-api": "*",
@@ -3292,7 +3292,7 @@
             "version": "0.0.3",
             "dist": {
                 "type": "tar",
-                "url": "https://s3.ap-southeast-1.amazonaws.com/fleetbase-registry-production/flb/%40fleetbase/samsara-engine/samsara-engine-0.0.3.tgz?AWSAccessKeyId=ASIA26E6KG6WDCF4RP5G&Expires=1792394638&Signature=HsZAIq4Cj8mfiNRlz9EsnUruDmQ%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEFsaDmFwLXNvdXRoZWFzdC0xIkYwRAIgKDQG7IhbHMU%2BejC8gpEBDTMuOInHVoIsRoCxaHHE%2BV4CIDZxVhHmQUl60NLmOjUOCP2CdL59Fuqny9tDULbu9JUSKpYECCQQABoMNzUxOTUxMjk2NDI4IgzzMFZLwUDrH0UBrtIq8wMi96xWLCS4fS5TJPBnVLUjsC6qf3CNtYt2AKQEXxbJ8k9kgTgr5oIsLtOvTkQJqOAe0LCUH7w6zbMwd7vzcE3zVNHLOQD5tkToRJVH5ym5iaNcxCG%2BDH%2B2N5TEoiRL%2FYsLLmN2ValiU8e%2FTBNryEfRQZtxV1tzAsQyU2u5gbh3umF%2BpKMCfgEdSucUu2xXe%2FJYiXOvTkTNTWQZ2cCE%2FAjK5aUNJ4FgXDsxeuydFPDmSFWl1tRU3ti1SFS%2FIcy%2FunHjW2sI5ggCgCqjsvhbyc%2Bye%2BhxVGBTqvO4Y%2BzETQejBkoFsxZ80l1y6ozizNmdk0FY2j4n6rn5XDdCuz0FyTjP2MgJT4r9ZMOLZb2YeY%2B8MzbWvv6KecU1KgqCNT%2FDsek%2BFkkacJ3Xsd4T9eKM6QyyXLnjhnlU%2BLGcVLVqQ7w3WM1H4Oq3GKRF4i%2BHXzMrXrIkIP5vRBWmEJOhxuADjB5PQ45SzxCVaC9kO9g1RnE12Ve9ipuFN9aEPJMAM6z72el25Mlw4bzvM1srSS%2BXmAiGIfIYNUxOKC%2BrkIjc%2BmJlWviK0azlH8PkEmMybrBPglYyEw9HIEcjV5Jrz65bgxHx6pcQMTTAPRUEwV4fP5kN7aRPiJulJQbqxiSoc3PFokhzHcKJKVr%2Bta8HyyBnToH3xqh2MKuS1tYGOqcB5QRuU4phL8sjywaYxu9hMaqaiMB9JoRbZpHHyehGojTkSlAaORMYk1Dk01ChCAYrV05Qd3311bhpHKV%2BEOEL6h0wjNl%2Bbv%2F0ocQx4n2TDk46dm4gHybvplyVMBZU2hwB9taaqiltfeaIbdFQHGv1Dlesz5pWr5qDtyZclmyVl6jTRhyujIDl9qOh0vfI1FYaK1OwLY5YASeCNNVK%2BEIJj65i%2FRf9O8Y%3D"
+                "url": "https://s3.ap-southeast-1.amazonaws.com/fleetbase-registry-production/flb/%40fleetbase/samsara-engine/samsara-engine-0.0.3.tgz?AWSAccessKeyId=ASIA26E6KG6WMPYULCPK&Expires=1792476266&Signature=0FK%2B1V8Qa5Nyc3uX8n0O7m8p4F0%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEHUaDmFwLXNvdXRoZWFzdC0xIkcwRQIhAKxcLmpf00MjH%2Bi0n3c1egz6OR7YxLc%2BkQUfDaiBEgyFAiBRjb8WmbXR79bCvMJBWMeX8rxh%2BUmMUoI6dNGIXx9kJSqWBAg%2BEAAaDDc1MTk1MTI5NjQyOCIMSvZQCwh9aRFVGvT5KvMDLiJrihGLqA%2FBBujWCFET2g4i%2B1u7rmuR0Yz2bCF5NTBMVAwuR6fJU2pyM3EfaXEh9L0d80gegayXyTHVQhbS6lSqmmfG32CtgDOTc97dBzZ%2FQQkPjolBJP4pi2zsswlLfv%2BAb3NHkUfE2yq5WYj%2FzoMBYT%2FWQHwH84QUgH%2B941AZOqZwysQhE1AXKFfYMsD75J2dd%2Bol25e8g7xDn00C0bAhn8d%2F%2BWewQew7GJOjPufM%2F0USdquMYx%2F3L2zl%2F37c%2B0FERvwA9xrRq3nrbDE32ZQGqBqOB2RTkeRy%2BmNfjO599mkcSUbiAzW5LWrawk1%2FUa1Qr9XLHnsyrjdYjxQcqv%2BrwBlKaScScK9BD%2B2sjiVA7LE8h2cUrxHhzs%2FBvYlRfyjPaGi2hWZV0hV9u4vf4hL%2BR3pVPEvqcOg%2Bdi9JqCiewwWmlMw%2FSWb%2FL7GjzWCczr14d5f%2B2tuYoTX0o2eG%2BGcxAjSKmkUA3EqKoNw0JRIHjLoKgvJ6BUUrFCREJmaEPzuTYEdiCnEHNpcCesuRpkQy5c%2BjOkx%2Bxs6FCjyQNznATwtpwFE5KSE7drcLyVGhlwW8nW3CWBcSAlVkzNxzTGujOHc6%2FzW8y741Qt54oACP8xbCU6UgJPBpSWY3IA8zPYOeWJoS8JJrhTQ45tn8JXICUDCs8dvWBjqmAYLlBwgLIaEFcvcWjXLMo7wYK8tsqJBZmljSpcR%2F91Y3hey9oS9wZ9fGa5J%2BYdms%2FgqqZ6wwbGsOi6kjD04WyTUTbFUVTR19FiTZ2tkgrqjTcgLzSn6UobqtwVIMyiGab1p%2B71%2BIOgpbr6fUgK6FLdefnSiStnsReUExLV1lgZbpZwRw%2F7wnlWIAYG%2BqAO841S2t9xJlo%2FvK4Cg5TbtPkUZ67dZX6RQ%3D"
             },
             "require": {
                 "fleetbase/core-api": "*",
@@ -3370,7 +3370,7 @@
             "version": "0.0.8",
             "dist": {
                 "type": "tar",
-                "url": "https://s3.ap-southeast-1.amazonaws.com/fleetbase-registry-production/flb/%40fleetbase/solid-engine/solid-engine-0.0.8.tgz?AWSAccessKeyId=ASIA26E6KG6WDCF4RP5G&Expires=1792394638&Signature=F3vg%2BulFEul3eIUsERLaLmssksY%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEFsaDmFwLXNvdXRoZWFzdC0xIkYwRAIgKDQG7IhbHMU%2BejC8gpEBDTMuOInHVoIsRoCxaHHE%2BV4CIDZxVhHmQUl60NLmOjUOCP2CdL59Fuqny9tDULbu9JUSKpYECCQQABoMNzUxOTUxMjk2NDI4IgzzMFZLwUDrH0UBrtIq8wMi96xWLCS4fS5TJPBnVLUjsC6qf3CNtYt2AKQEXxbJ8k9kgTgr5oIsLtOvTkQJqOAe0LCUH7w6zbMwd7vzcE3zVNHLOQD5tkToRJVH5ym5iaNcxCG%2BDH%2B2N5TEoiRL%2FYsLLmN2ValiU8e%2FTBNryEfRQZtxV1tzAsQyU2u5gbh3umF%2BpKMCfgEdSucUu2xXe%2FJYiXOvTkTNTWQZ2cCE%2FAjK5aUNJ4FgXDsxeuydFPDmSFWl1tRU3ti1SFS%2FIcy%2FunHjW2sI5ggCgCqjsvhbyc%2Bye%2BhxVGBTqvO4Y%2BzETQejBkoFsxZ80l1y6ozizNmdk0FY2j4n6rn5XDdCuz0FyTjP2MgJT4r9ZMOLZb2YeY%2B8MzbWvv6KecU1KgqCNT%2FDsek%2BFkkacJ3Xsd4T9eKM6QyyXLnjhnlU%2BLGcVLVqQ7w3WM1H4Oq3GKRF4i%2BHXzMrXrIkIP5vRBWmEJOhxuADjB5PQ45SzxCVaC9kO9g1RnE12Ve9ipuFN9aEPJMAM6z72el25Mlw4bzvM1srSS%2BXmAiGIfIYNUxOKC%2BrkIjc%2BmJlWviK0azlH8PkEmMybrBPglYyEw9HIEcjV5Jrz65bgxHx6pcQMTTAPRUEwV4fP5kN7aRPiJulJQbqxiSoc3PFokhzHcKJKVr%2Bta8HyyBnToH3xqh2MKuS1tYGOqcB5QRuU4phL8sjywaYxu9hMaqaiMB9JoRbZpHHyehGojTkSlAaORMYk1Dk01ChCAYrV05Qd3311bhpHKV%2BEOEL6h0wjNl%2Bbv%2F0ocQx4n2TDk46dm4gHybvplyVMBZU2hwB9taaqiltfeaIbdFQHGv1Dlesz5pWr5qDtyZclmyVl6jTRhyujIDl9qOh0vfI1FYaK1OwLY5YASeCNNVK%2BEIJj65i%2FRf9O8Y%3D"
+                "url": "https://s3.ap-southeast-1.amazonaws.com/fleetbase-registry-production/flb/%40fleetbase/solid-engine/solid-engine-0.0.8.tgz?AWSAccessKeyId=ASIA26E6KG6WMPYULCPK&Expires=1792476266&Signature=kw7hd6%2B6tFhCsZ0XIuajVzwuyd0%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEHUaDmFwLXNvdXRoZWFzdC0xIkcwRQIhAKxcLmpf00MjH%2Bi0n3c1egz6OR7YxLc%2BkQUfDaiBEgyFAiBRjb8WmbXR79bCvMJBWMeX8rxh%2BUmMUoI6dNGIXx9kJSqWBAg%2BEAAaDDc1MTk1MTI5NjQyOCIMSvZQCwh9aRFVGvT5KvMDLiJrihGLqA%2FBBujWCFET2g4i%2B1u7rmuR0Yz2bCF5NTBMVAwuR6fJU2pyM3EfaXEh9L0d80gegayXyTHVQhbS6lSqmmfG32CtgDOTc97dBzZ%2FQQkPjolBJP4pi2zsswlLfv%2BAb3NHkUfE2yq5WYj%2FzoMBYT%2FWQHwH84QUgH%2B941AZOqZwysQhE1AXKFfYMsD75J2dd%2Bol25e8g7xDn00C0bAhn8d%2F%2BWewQew7GJOjPufM%2F0USdquMYx%2F3L2zl%2F37c%2B0FERvwA9xrRq3nrbDE32ZQGqBqOB2RTkeRy%2BmNfjO599mkcSUbiAzW5LWrawk1%2FUa1Qr9XLHnsyrjdYjxQcqv%2BrwBlKaScScK9BD%2B2sjiVA7LE8h2cUrxHhzs%2FBvYlRfyjPaGi2hWZV0hV9u4vf4hL%2BR3pVPEvqcOg%2Bdi9JqCiewwWmlMw%2FSWb%2FL7GjzWCczr14d5f%2B2tuYoTX0o2eG%2BGcxAjSKmkUA3EqKoNw0JRIHjLoKgvJ6BUUrFCREJmaEPzuTYEdiCnEHNpcCesuRpkQy5c%2BjOkx%2Bxs6FCjyQNznATwtpwFE5KSE7drcLyVGhlwW8nW3CWBcSAlVkzNxzTGujOHc6%2FzW8y741Qt54oACP8xbCU6UgJPBpSWY3IA8zPYOeWJoS8JJrhTQ45tn8JXICUDCs8dvWBjqmAYLlBwgLIaEFcvcWjXLMo7wYK8tsqJBZmljSpcR%2F91Y3hey9oS9wZ9fGa5J%2BYdms%2FgqqZ6wwbGsOi6kjD04WyTUTbFUVTR19FiTZ2tkgrqjTcgLzSn6UobqtwVIMyiGab1p%2B71%2BIOgpbr6fUgK6FLdefnSiStnsReUExLV1lgZbpZwRw%2F7wnlWIAYG%2BqAO841S2t9xJlo%2FvK4Cg5TbtPkUZ67dZX6RQ%3D"
             },
             "require": {
                 "easyrdf/easyrdf": "^1.1",
@@ -3473,16 +3473,16 @@
         },
         {
             "name": "fleetbase/storefront-api",
-            "version": "0.4.27",
+            "version": "0.4.28",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/storefront.git",
-                "reference": "dc22cf37f7a31a1574326aa1c9d5d4edc2bea4fc"
+                "reference": "24bef9e72c19a01efd8e374984152dc0bf847338"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/storefront/zipball/dc22cf37f7a31a1574326aa1c9d5d4edc2bea4fc",
-                "reference": "dc22cf37f7a31a1574326aa1c9d5d4edc2bea4fc",
+                "url": "https://api.github.com/repos/fleetbase/storefront/zipball/24bef9e72c19a01efd8e374984152dc0bf847338",
+                "reference": "24bef9e72c19a01efd8e374984152dc0bf847338",
                 "shasum": ""
             },
             "require": {
@@ -3551,9 +3551,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/storefront/issues",
-                "source": "https://github.com/fleetbase/storefront/tree/v0.4.27"
+                "source": "https://github.com/fleetbase/storefront/tree/v0.4.28"
             },
-            "time": "2026-10-16T09:24:16+00:00"
+            "time": "2026-10-20T04:57:25+00:00"
         },
         {
             "name": "fleetbase/twilio",
@@ -12418,16 +12418,16 @@
         },
         {
             "name": "spatie/browsershot",
-            "version": "5.4.0",
+            "version": "5.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/browsershot.git",
-                "reference": "dcf7a65fd1d0fc8fd113739b84982377728d0b2f"
+                "reference": "ac49e212c5ef4b9725589dd95bff7a5f0f92a0b3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/browsershot/zipball/dcf7a65fd1d0fc8fd113739b84982377728d0b2f",
-                "reference": "dcf7a65fd1d0fc8fd113739b84982377728d0b2f",
+                "url": "https://api.github.com/repos/spatie/browsershot/zipball/ac49e212c5ef4b9725589dd95bff7a5f0f92a0b3",
+                "reference": "ac49e212c5ef4b9725589dd95bff7a5f0f92a0b3",
                 "shasum": ""
             },
             "require": {
@@ -12438,7 +12438,7 @@
                 "symfony/process": "^6.0|^7.0|^8.0"
             },
             "require-dev": {
-                "pestphp/pest": "^3.0|^4.0",
+                "pestphp/pest": "^3.0|^4.0|^5.0",
                 "spatie/image": "^3.6",
                 "spatie/pdf-to-text": "^1.52",
                 "spatie/phpunit-snapshot-assertions": "^5.0"
@@ -12474,7 +12474,7 @@
                 "webpage"
             ],
             "support": {
-                "source": "https://github.com/spatie/browsershot/tree/5.4.0"
+                "source": "https://github.com/spatie/browsershot/tree/5.4.1"
             },
             "funding": [
                 {
@@ -12482,7 +12482,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-05-26T13:13:33+00:00"
+            "time": "2026-10-19T07:49:39+00:00"
         },
         {
             "name": "spatie/enum",

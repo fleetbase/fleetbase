@@ -65,8 +65,8 @@ importers:
         specifier: ^0.0.8
         version: 0.0.8(d11deb3060ee1e2363914572deec78bd)
       '@fleetbase/storefront-engine':
-        specifier: ^0.4.27
-        version: 0.4.27(d11deb3060ee1e2363914572deec78bd)
+        specifier: ^0.4.28
+        version: 0.4.28(d11deb3060ee1e2363914572deec78bd)
       '@fleetbase/valhalla-engine':
         specifier: ^0.0.4
         version: 0.0.4(d11deb3060ee1e2363914572deec78bd)
@@ -1666,8 +1666,8 @@ packages:
     peerDependencies:
       ember-engines: ^0.9.0
 
-  '@fleetbase/storefront-engine@0.4.27':
-    resolution: {integrity: sha512-HwmHaqAcw50vTkhnow1FJqDG9voP87ACF9wyTBbSlJHmmInCiUEtqpNWrAPIimzkl16DxJ8oDOOHHYOlfEFgcw==, tarball: https://npm.pkg.github.com/download/@fleetbase/storefront-engine/0.4.27/e1faaf452bc4db480fd838698ea0a5b464fbc9ba}
+  '@fleetbase/storefront-engine@0.4.28':
+    resolution: {integrity: sha512-4jpbq+BBo9Fo3SudRBvuJ6mSIu9JvG7ykdaQEIrrKC1k7JgEMG1xFaeRpE9MJEUUCOtVlreaEEVcelcm7/Kfgg==, tarball: https://npm.pkg.github.com/download/@fleetbase/storefront-engine/0.4.28/8d81be7b7a7d3af67d330c1fd18c670e9015f7c3}
     engines: {node: '>= 18'}
     peerDependencies:
       ember-engines: ^0.9.0
@@ -11946,7 +11946,7 @@ snapshots:
       - webpack-command
       - yaml
 
-  '@fleetbase/storefront-engine@0.4.27(d11deb3060ee1e2363914572deec78bd)':
+  '@fleetbase/storefront-engine@0.4.28(d11deb3060ee1e2363914572deec78bd)':
     dependencies:
       '@babel/core': 7.29.7
       '@fleetbase/ember-core': 0.3.26(@ember/string@3.1.1)(@ember/test-helpers@3.3.1(@babel/core@7.29.7)(ember-source@5.4.1(@babel/core@7.29.7)(@glimmer/component@1.1.2(@babel/core@7.29.7))(rsvp@4.8.5)(webpack@5.111.1(postcss@8.5.28)))(webpack@5.111.1(postcss@8.5.28)))(ember-resolver@11.0.1(ember-source@5.4.1(@babel/core@7.29.7)(@glimmer/component@1.1.2(@babel/core@7.29.7))(rsvp@4.8.5)(webpack@5.111.1(postcss@8.5.28))))(ember-source@5.4.1(@babel/core@7.29.7)(@glimmer/component@1.1.2(@babel/core@7.29.7))(rsvp@4.8.5)(webpack@5.111.1(postcss@8.5.28)))(eslint@8.57.1)(webpack@5.111.1(postcss@8.5.28))
