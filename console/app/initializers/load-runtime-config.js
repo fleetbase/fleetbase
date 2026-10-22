@@ -16,9 +16,11 @@ export function initialize(application) {
     const startTime = performance.now();
     debug('[Runtime Config] Loading runtime configuration...');
 
-    // Defer readiness until config is loaded
+    // Defer readiness until config is loaded. The promise is kept on the
+    // application for initializers that need the runtime config (API host)
+    // before boot, such as load-runtime-engines.
     application.deferReadiness();
-    (async () => {
+    application.runtimeConfigLoaded = (async () => {
         try {
             await loadRuntimeConfig();
             const endTime = performance.now();
