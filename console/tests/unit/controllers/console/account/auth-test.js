@@ -88,43 +88,10 @@ module('Unit | Controller | console/account/auth', function (hooks) {
         assert.strictEqual(controller.newEmail, 'new@fleetbase.io', 'form is not cleared on failure');
     });
 
-    test('changePassword aborts and clears the fields when the current password is not validated', async function (assert) {
-        const { posts } = stubServices(this.owner);
-
-        class ModalsManagerStub extends Service {
-            show(_name, options) {
-                options.onValidated(false);
-                return Promise.resolve();
-            }
-        }
-        this.owner.register('service:modals-manager', ModalsManagerStub);
-
-        const controller = this.owner.lookup('controller:console/account/auth');
-        controller.newPassword = 'a-new-password';
-        controller.newConfirmPassword = 'a-new-password';
-
-        await controller.changePassword.perform();
-
-        assert.notOk(
-            posts.some((p) => p.path === 'users/change-password'),
-            'the password is never submitted'
-        );
-        assert.strictEqual(controller.newPassword, undefined);
-        assert.strictEqual(controller.newConfirmPassword, undefined);
-    });
-
-    test('changePassword submits once the current password is validated', async function (assert) {
+    test('changePassword submits current credentials in the same request and clears sensitive fields', async function (assert) {
         const { posts, notified } = stubServices(this.owner);
-
-        class ModalsManagerStub extends Service {
-            show(_name, options) {
-                options.onValidated(true);
-                return Promise.resolve();
-            }
-        }
-        this.owner.register('service:modals-manager', ModalsManagerStub);
-
         const controller = this.owner.lookup('controller:console/account/auth');
+        controller.changePasswordCurrentPassword = 'current-secret';
         controller.newPassword = 'a-new-password';
         controller.newConfirmPassword = 'a-new-password';
 
@@ -132,10 +99,12 @@ module('Unit | Controller | console/account/auth', function (hooks) {
 
         assert.deepEqual(posts.at(-1), {
             path: 'users/change-password',
-            payload: { password: 'a-new-password', password_confirmation: 'a-new-password' },
+            payload: { current_password: 'current-secret', password: 'a-new-password', password_confirmation: 'a-new-password' },
         });
-        assert.strictEqual(notified.success.length, 1);
-        assert.strictEqual(controller.newPassword, undefined, 'fields are cleared after submitting');
+        assert.deepEqual(notified.success, ['Password changed successfully.']);
+        assert.strictEqual(controller.changePasswordCurrentPassword, undefined);
+        assert.strictEqual(controller.newPassword, undefined);
+        assert.strictEqual(controller.newConfirmPassword, undefined);
     });
 
     test('saveTwoFactorAuthSettings posts the current 2FA settings', async function (assert) {
@@ -157,7 +126,6 @@ module('Unit | Controller | console/account/auth | credentials and 2FA', functio
         this.responses = { 'two-fa/config': { enabled: true }, 'users/two-fa': { enabled: true, method: 'sms' } };
         this.getRejectsWith = null;
         this.postRejectsWith = null;
-        this.passwordIsValid = true;
         const context = this;
 
         class FetchStub extends Service {
@@ -180,11 +148,16 @@ module('Unit | Controller | console/account/auth | credentials and 2FA', functio
                 this.serverErrors.push([error, fallback]);
             }
         }
+        this.modalResponse = null;
         class ModalsManagerStub extends Service {
             shown = [];
             show(name, options) {
                 this.shown.push({ name, options });
-                options.onValidated?.(context.passwordIsValid);
+                // The authenticator modal reports a change, then closes
+                if (context.modalResponse) {
+                    options.onChanged?.(context.modalResponse);
+                }
+                options.onClosed?.(Boolean(context.modalResponse));
                 return Promise.resolve();
             }
         }
@@ -205,15 +178,16 @@ module('Unit | Controller | console/account/auth | credentials and 2FA', functio
     test('looking the controller up requests nothing', function (assert) {
         // The router does this before authentication is checked — e.g. when a sign-out
         // reloads the page on this URL — so it must not fire authenticated requests.
-        this.owner.lookup('controller:console/account/auth');
+        const controller = this.owner.lookup('controller:console/account/auth');
 
         assert.deepEqual(this.requests, []);
+        assert.true(controller.canChangePassword, 'password changes remain available until the policy loads');
     });
 
     test('it loads the system config and the user 2FA settings when the route is entered', async function (assert) {
         const controller = await this.build();
 
-        assert.deepEqual(this.requests.map((request) => request.path).sort(), ['two-fa/config', 'users/two-fa']);
+        assert.deepEqual(this.requests.map((request) => request.path).sort(), ['two-fa/config', 'users/password-policy', 'users/two-fa', 'users/two-fa/authenticator']);
         assert.true(controller.isSystemTwoFaEnabled);
         assert.deepEqual(controller.twoFaSettings, this.responses['users/two-fa']);
     });
@@ -261,37 +235,53 @@ module('Unit | Controller | console/account/auth | credentials and 2FA', functio
         assert.deepEqual(this.notifications().serverErrors.at(-1), [failure, 'Failed to request email change.']);
     });
 
-    test('changePassword validates the current password before changing it', async function (assert) {
+    test('changePassword submits the current and new passwords together', async function (assert) {
         const controller = await this.build();
+        controller.changePasswordCurrentPassword = 'current-secret';
         controller.newPassword = 'new-secret';
         controller.newConfirmPassword = 'new-secret';
 
         await controller.changePassword.perform();
 
-        assert.strictEqual(this.owner.lookup('service:modals-manager').shown[0].name, 'modals/validate-password');
+        assert.deepEqual(this.owner.lookup('service:modals-manager').shown, [], 'password authorization is handled by the server');
         assert.deepEqual(this.requests.at(-1), {
             method: 'post',
             path: 'users/change-password',
-            payload: { password: 'new-secret', password_confirmation: 'new-secret' },
+            payload: { current_password: 'current-secret', password: 'new-secret', password_confirmation: 'new-secret' },
         });
-        assert.deepEqual(this.notifications().successes, ['Password change successfully.']);
+        assert.deepEqual(this.notifications().successes, ['Password changed successfully.']);
         assert.strictEqual(controller.newPassword, undefined, 'the form is cleared');
     });
 
-    test('a failed password validation abandons the change', async function (assert) {
-        this.passwordIsValid = false;
+    test('a rejected current password is reported and sensitive fields are cleared', async function (assert) {
+        const failure = new Error('current password is incorrect');
+        this.postRejectsWith = failure;
         const controller = await this.build();
+        controller.changePasswordCurrentPassword = 'incorrect';
         controller.newPassword = 'new-secret';
         controller.newConfirmPassword = 'new-secret';
 
         await controller.changePassword.perform();
 
-        assert.notOk(
-            this.requests.some((request) => request.path === 'users/change-password'),
-            'nothing is submitted'
-        );
-        assert.strictEqual(controller.newPassword, undefined, 'the form is cleared anyway');
+        assert.deepEqual(this.requests.at(-1).payload, { current_password: 'incorrect', password: 'new-secret', password_confirmation: 'new-secret' });
+        assert.deepEqual(this.notifications().serverErrors.at(-1), [failure, 'Failed to change password.']);
+        assert.strictEqual(controller.changePasswordCurrentPassword, undefined);
+        assert.strictEqual(controller.newPassword, undefined);
+        assert.strictEqual(controller.newConfirmPassword, undefined);
         assert.deepEqual(this.notifications().successes, []);
+    });
+
+    test('password policy disables changes only when the server explicitly disallows them', async function (assert) {
+        const controller = await this.build();
+        for (const policy of [{ can_change_password: false }, { can_change_password: true }, {}, null]) {
+            this.responses['users/password-policy'] = policy;
+            await controller.loadPasswordPolicy.perform();
+            assert.strictEqual(controller.canChangePassword, policy?.can_change_password !== false);
+        }
+        this.getRejectsWith = new Error('endpoint unavailable');
+        controller.canChangePassword = false;
+        await controller.loadPasswordPolicy.perform();
+        assert.true(controller.canChangePassword, 'older servers retain the password form');
     });
 
     test('a failed password change is reported with its own fallback message', async function (assert) {
@@ -347,27 +337,99 @@ module('Unit | Controller | console/account/auth | credentials and 2FA', functio
             'nothing is applied from an empty response'
         );
     });
+
+    test('the authenticator app is offered, marked as needing setup until it is set up', async function (assert) {
+        const controller = await this.build();
+
+        assert.deepEqual(
+            controller.methods.map(({ key, requiresSetup }) => [key, requiresSetup]),
+            [
+                ['authenticator_app', true],
+                ['sms', undefined],
+                ['email', undefined],
+            ]
+        );
+
+        controller.authenticator = { enabled: true, confirmed_at: '2026-09-27T00:00:00Z', recovery_codes_remaining: 8 };
+
+        assert.false(controller.methods[0].requiresSetup);
+    });
+
+    test('loading an existing authenticator makes it available without another setup', async function (assert) {
+        this.responses['users/two-fa/authenticator'] = { enabled: true, confirmed_at: '2026-09-27T00:00:00Z', recovery_codes_remaining: 8 };
+        const controller = await this.build();
+        await controller.loadAuthenticator.last;
+
+        assert.deepEqual(controller.authenticator, this.responses['users/two-fa/authenticator']);
+        assert.false(controller.methods[0].requiresSetup);
+        assert.true(await controller.beforeTwoFaMethodSelected('authenticator_app'));
+        assert.deepEqual(this.owner.lookup('service:modals-manager').shown, [], 'an enrolled user does not need to repeat setup');
+    });
+
+    test('partial authenticator responses preserve unrelated settings', async function (assert) {
+        const controller = await this.build();
+        const settings = controller.twoFaSettings;
+        this.modalResponse = { status: { enabled: true, recovery_codes_remaining: 8 } };
+
+        assert.true(await controller.openAuthenticatorModal(), 'the default setup flow reports a change');
+        assert.strictEqual(this.owner.lookup('service:modals-manager').shown.at(-1).options.mode, 'setup');
+        assert.deepEqual(controller.authenticator, this.modalResponse.status);
+        assert.strictEqual(controller.twoFaSettings, settings, 'a response without settings preserves the selected method');
+
+        const authenticator = controller.authenticator;
+        this.modalResponse = { settings: { enabled: false, method: 'email' } };
+        await controller.openAuthenticatorModal('disable');
+
+        assert.strictEqual(controller.authenticator, authenticator, 'a response without status preserves enrollment metadata');
+        assert.deepEqual(controller.twoFaSettings, this.modalResponse.settings);
+        assert.false(controller.isUserTwoFaEnabled);
+    });
+
+    test('choosing the authenticator app sets it up first', async function (assert) {
+        const controller = await this.build();
+        const modals = this.owner.lookup('service:modals-manager');
+
+        assert.true(await controller.beforeTwoFaMethodSelected('sms'), 'other methods need nothing');
+        assert.strictEqual(modals.shown.length, 0);
+
+        assert.false(await controller.beforeTwoFaMethodSelected('authenticator_app'), 'a cancelled setup keeps the previous choice');
+        assert.strictEqual(modals.shown[0].name, 'modals/authenticator-app');
+        assert.strictEqual(modals.shown[0].options.mode, 'setup');
+
+        this.modalResponse = {
+            status: { enabled: true, confirmed_at: '2026-09-27T00:00:00Z', recovery_codes_remaining: 8 },
+            settings: { enabled: true, method: 'authenticator_app' },
+        };
+
+        assert.true(await controller.beforeTwoFaMethodSelected('authenticator_app'), 'a finished setup allows the choice');
+        assert.true(controller.authenticator.enabled);
+        assert.deepEqual(controller.twoFaSettings, { enabled: true, method: 'authenticator_app' });
+        assert.true(await controller.beforeTwoFaMethodSelected('authenticator_app'), 'once set up, no modal is needed');
+        assert.strictEqual(modals.shown.length, 2);
+    });
+
+    test('changes from the authenticator panel redraw the 2FA settings', async function (assert) {
+        const controller = await this.build();
+
+        await controller.manageAuthenticator('recovery-codes');
+        assert.strictEqual(controller.twoFaSettingsRevision, 0, 'nothing changed');
+
+        this.modalResponse = { status: { enabled: false, confirmed_at: null, recovery_codes_remaining: 0 }, settings: { enabled: false, method: 'email' } };
+        await controller.manageAuthenticator('disable');
+
+        assert.strictEqual(controller.twoFaSettingsRevision, 1);
+        assert.strictEqual(this.owner.lookup('service:modals-manager').shown.at(-1).options.mode, 'disable');
+        assert.deepEqual(controller.twoFaSettings, { enabled: false, method: 'email' });
+    });
 });
 
 module('Unit | Controller | console/account/auth | form submission', function (hooks) {
     setupTest(hooks);
 
-    // changePassword waits on the validate-password modal, which never resolves on its own.
-    function stubModals(owner, isValid) {
-        class ModalsManagerStub extends Service {
-            show(name, options) {
-                options.onValidated(isValid);
-                return Promise.resolve();
-            }
-        }
-
-        owner.register('service:modals-manager', ModalsManagerStub);
-    }
-
     test('changePassword stops the form submitting the page away', async function (assert) {
         const { posts, notified } = stubServices(this.owner, { post: () => Promise.resolve({ status: 'ok' }) });
-        stubModals(this.owner, true);
         const controller = this.owner.lookup('controller:console/account/auth');
+        controller.changePasswordCurrentPassword = 'current-password';
         controller.newPassword = 'new-password';
         controller.newConfirmPassword = 'new-password';
 
@@ -377,24 +439,10 @@ module('Unit | Controller | console/account/auth | form submission', function (h
         assert.true(event.defaultPrevented, 'the native submit is cancelled');
         assert.deepEqual(posts.at(-1), {
             path: 'users/change-password',
-            payload: { password: 'new-password', password_confirmation: 'new-password' },
+            payload: { current_password: 'current-password', password: 'new-password', password_confirmation: 'new-password' },
         });
-        assert.deepEqual(notified.success, ['Password change successfully.']);
+        assert.deepEqual(notified.success, ['Password changed successfully.']);
         assert.strictEqual(controller.newPassword, undefined, 'the form is cleared afterwards');
-    });
-
-    test('a password that fails validation clears the form without changing anything', async function (assert) {
-        const { posts } = stubServices(this.owner);
-        stubModals(this.owner, false);
-        const controller = this.owner.lookup('controller:console/account/auth');
-        controller.newPassword = 'new-password';
-        controller.newConfirmPassword = 'new-password';
-
-        await controller.changePassword.perform();
-
-        assert.deepEqual(posts, [], 'nothing is sent');
-        assert.strictEqual(controller.newPassword, undefined);
-        assert.strictEqual(controller.newConfirmPassword, undefined);
     });
 
     test('saving 2FA settings with nothing selected posts an empty settings object', async function (assert) {

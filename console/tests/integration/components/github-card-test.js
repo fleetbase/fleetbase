@@ -54,6 +54,32 @@ module('Integration | Component | github-card', function (hooks) {
 
         assert.dom(this.element).containsText('v0.7.53');
     });
+
+    test('repository counters show compact values with exact totals and matching links', async function (assert) {
+        const cache = JSON.parse(window.localStorage.getItem(LOCAL_CACHE_KEY));
+        Object.assign(cache['fleetbase-github-data'], {
+            stargazers_count: 3900,
+            subscribers_count: 42,
+            forks_count: 1250,
+            open_issues_count: 0,
+        });
+        window.localStorage.setItem(LOCAL_CACHE_KEY, JSON.stringify(cache));
+
+        await render(hbs`<GithubCard />`);
+
+        const counters = [
+            { path: 'stargazers', value: '3.9K', count: 3900, label: 'stars' },
+            { path: 'watchers', value: '42', count: 42, label: 'watchers' },
+            { path: 'forks', value: '1.3K', count: 1250, label: 'forks' },
+            { path: 'issues', value: '0', count: 0, label: 'issues' },
+        ];
+
+        for (const counter of counters) {
+            const selector = `a[href="https://github.com/fleetbase/fleetbase/${counter.path}"]`;
+            assert.dom(selector).containsText(counter.value);
+            assert.dom(selector).hasAttribute('title', `${counter.count.toLocaleString()} ${counter.label}`, 'the tooltip preserves the exact total, including zero');
+        }
+    });
 });
 
 /**

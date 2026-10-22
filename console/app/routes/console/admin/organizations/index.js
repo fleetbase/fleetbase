@@ -13,6 +13,15 @@ export default class ConsoleAdminOrganizationsRoute extends Route {
         country: { refreshModel: true },
         status: { refreshModel: true },
         owner_email: { refreshModel: true },
+        owner_name: { refreshModel: true },
+        owner_phone: { refreshModel: true },
+        ip_address: { refreshModel: true },
+        timezone: { refreshModel: true },
+        type: { refreshModel: true },
+        created_at_after: { refreshModel: true },
+        created_at_before: { refreshModel: true },
+        updated_at_after: { refreshModel: true },
+        updated_at_before: { refreshModel: true },
         onboarding_completed: { refreshModel: true },
         billing_status: { refreshModel: true },
         created_at: { refreshModel: true },
@@ -22,6 +31,6 @@ export default class ConsoleAdminOrganizationsRoute extends Route {
     };
 
     model(params) {
-        return this.store.query('company', { view: 'admin', ...params });
+        return this.store.query('company', { ...params, view: 'admin', with_count: 'users' });
     }
 }

@@ -1,0 +1,14 @@
+{{! An editable override field. The row object is edited in place, so the input keeps focus. }}
+{{#if (and (eq @column.inputKey "max_attempts") @row.unlimited)}}
+    <span class="text-xs text-gray-500 dark:text-gray-400" data-test-override-no-limit>No limit</span>
+{{else}}
+    <input
+        type={{@column.inputType}}
+        min={{if (eq @column.inputType "number") "1"}}
+        class="form-input form-input-sm w-full"
+        value={{get @row @column.inputKey}}
+        placeholder={{@column.placeholder}}
+        {{on "input" (fn @column.onInput @row @column.inputKey)}}
+        data-test-override-input={{@column.inputKey}}
+    />
+{{/if}}

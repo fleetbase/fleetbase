@@ -12,6 +12,16 @@ module('Unit | Utility | get-two-fa-methods', function () {
         );
     });
 
+    test('offers the authenticator app, recommended, only when asked', function (assert) {
+        const methods = getTwoFaMethods({ includeAuthenticatorApp: true });
+
+        assert.deepEqual(
+            methods.map((m) => m.key),
+            ['authenticator_app', 'sms', 'email']
+        );
+        assert.true(methods[0].recommended);
+    });
+
     test('each method exposes key, name, and description', function (assert) {
         for (const method of getTwoFaMethods()) {
             assert.strictEqual(typeof method.key, 'string');

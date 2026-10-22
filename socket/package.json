@@ -1,0 +1,23 @@
+{
+    "name": "fleetbase-socket",
+    "version": "0.0.0",
+    "private": true,
+    "description": "Fleetbase realtime socket server: SocketCluster with JWT subscription auth and a signed internal publish endpoint.",
+    "license": "AGPL-3.0-or-later",
+    "main": "server.js",
+    "engines": {
+        "node": ">=22"
+    },
+    "scripts": {
+        "start": "node server.js",
+        "test": "node --test"
+    },
+    "dependencies": {
+        "scc-broker-client": "9.0.1",
+        "sc-errors": "^2.0.3",
+        "socketcluster-server": "^17.4.1"
+    },
+    "devDependencies": {
+        "socketcluster-client": "^17.2.2"
+    }
+}

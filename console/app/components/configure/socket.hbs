@@ -1,46 +1,290 @@
-<ContentPanel @title="SocketCluster Connection" @open={{true}} @wrapperClass="bordered-classic">
-    <p class="mb-4">The SocketCluster configuration cannot be changed at this time.</p>
-    <div id="output" class="font-mono rounded-lg max-h-full px-6 py-4 overflow-y-scroll bg-black shadow-inner dark:shadow-none">
-        <div class="flex items-center justify-between mb-4">
-            <div class="block w-1/2 font-mono text-sm font-semibold text-green-300">
-                Output
+<div class="space-y-6" ...attributes>
+    {{#if this.settings}}
+        <ContentPanel @title="Socket Server Status" @open={{true}} @wrapperClass="bordered-classic">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center text-sm font-semibold" data-test-socket-reachable={{if this.status "yes" "no"}}>
+                    {{#if this.status}}
+                        <FaIcon @icon="circle-check" class="mr-2 text-green-500" />
+                        <span class="text-gray-900 dark:text-gray-100">The socket server is reachable from the API</span>
+                    {{else}}
+                        <FaIcon @icon="triangle-exclamation" class="mr-2 text-red-500" />
+                        <span class="text-gray-900 dark:text-gray-100">The socket server is not reachable from the API</span>
+                    {{/if}}
+                </div>
+                <Button @size="sm" @icon="arrows-rotate" @text="Refresh" @onClick={{this.refresh}} @isLoading={{this.load.isRunning}} data-test-socket-refresh />
             </div>
-            {{#if this.events.length}}
-                <div class="flex items-center justify-end w-1/2 text-sm text-green-300">
-                    <Spinner @iconClass="green-loader" />
 
-                    <span class="ml-2 text-sm font-mono">
-                        Awaiting events...
-                    </span>
+            {{#unless this.status}}
+                <p class="mb-4 text-xs text-gray-600 dark:text-gray-400" data-test-socket-status-error>
+                    {{or this.statusError "No status was returned."}}
+                    The internal stats endpoint needs SOCKETCLUSTER_AUTH_KEY on the API and the socket server, and the API must reach the socket server's internal port.
+                </p>
+            {{/unless}}
+
+            <div class="grid grid-cols-1 gap-4 text-sm md:grid-cols-2">
+                <div data-test-socket-effective-enabled>
+                    <div class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Socket authentication</div>
+                    <div class="mt-1 flex items-center space-x-2">
+                        <span class="font-semibold text-gray-900 dark:text-gray-100">{{if this.settings.enabled "On" "Off"}}</span>
+                        <Badge @status={{if (eq this.settings.sources.enabled "setting") "info" "default"}} @text={{if (eq this.settings.sources.enabled "setting") "Console setting" "Environment"}} @hideStatusDot={{true}} @disableHumanize={{true}} />
+                    </div>
+                </div>
+                <div data-test-socket-effective-mode>
+                    <div class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Mode</div>
+                    <div class="mt-1 flex items-center space-x-2">
+                        <span class="font-semibold text-gray-900 dark:text-gray-100">{{or this.settings.mode "Socket server default (env)"}}</span>
+                        <Badge @status={{if (eq this.settings.sources.mode "setting") "info" "default"}} @text={{if (eq this.settings.sources.mode "setting") "Console setting" "Environment"}} @hideStatusDot={{true}} @disableHumanize={{true}} />
+                    </div>
+                </div>
+                <div data-test-socket-key>
+                    <div class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Auth key</div>
+                    <div class="mt-1 font-semibold {{if this.keyConfigured 'text-green-600 dark:text-green-300' 'text-yellow-600 dark:text-yellow-300'}}">
+                        {{if this.keyConfigured "Configured" "Not configured"}}
+                    </div>
+                </div>
+                <div data-test-socket-connections>
+                    <div class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Connections</div>
+                    <div class="mt-1 font-semibold text-gray-900 dark:text-gray-100">
+                        {{#if this.status}}
+                            {{or this.status.clients 0}}
+                            {{#if this.status.pending_clients}}<span class="text-xs font-normal text-gray-500">(+{{this.status.pending_clients}} connecting)</span>{{/if}}
+                        {{else}}
+                            —
+                        {{/if}}
+                    </div>
+                </div>
+                <div data-test-socket-running>
+                    <div class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Socket server is running</div>
+                    <div class="mt-1 font-semibold text-gray-900 dark:text-gray-100">
+                        {{#if this.serverConfig}}
+                            {{if this.serverConfig.enabled "On" "Off"}}, {{this.serverConfig.mode}}
+                            <span class="text-xs font-normal text-gray-500">(from {{if (eq this.serverConfig.source "api") "the API" "its environment"}})</span>
+                        {{else}}
+                            —
+                        {{/if}}
+                    </div>
+                </div>
+                <div data-test-socket-last-sync>
+                    <div class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Last config sync</div>
+                    <div class="mt-1 font-semibold text-gray-900 dark:text-gray-100">
+                        {{#if this.serverConfig}}
+                            {{or this.lastSyncLabel "Never"}}
+                        {{else if this.status}}
+                            Not reported by this socket server version
+                        {{else}}
+                            —
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+
+            {{#if this.serverConfig.last_sync_error}}
+                <div
+                    class="mt-4 flex items-start rounded-md border border-red-400 bg-red-50 px-3 py-2 text-xs text-red-800 dark:border-red-700 dark:bg-red-900 dark:text-red-100"
+                    data-test-socket-sync-error
+                >
+                    <FaIcon @icon="triangle-exclamation" class="mr-2 mt-0.5" />
+                    <span>The socket server's last config poll failed ({{this.serverConfig.last_sync_error}}). It keeps running its last good config.</span>
                 </div>
             {{/if}}
-        </div>
 
-        <div>
-            {{#each this.events as |event|}}
-                <div class="mb-3 text-sm font-mono rounded-lg shadow-sm flex flex-row">
-                    <div class="text-{{event.color}}-300 uppercase text-sm font-mono pr-2 flex-shrink-0">
-                        [{{event.time}}]:
-                    </div>
-                    <div class="text-{{event.color}}-300 text-sm font-mono">
-                        {{html-safe event.content}}
-                    </div>
+            {{#if this.isOutOfSync}}
+                <div
+                    class="mt-4 flex items-start rounded-md border border-yellow-400 bg-yellow-50 px-3 py-2 text-xs text-yellow-800 dark:border-yellow-700 dark:bg-yellow-900 dark:text-yellow-100"
+                    data-test-socket-out-of-sync
+                >
+                    <FaIcon @icon="clock" class="mr-2 mt-0.5" />
+                    <span>The socket server is not running these settings yet. It polls the API every 30 seconds; refresh to check again.</span>
+                </div>
+            {{/if}}
+        </ContentPanel>
+
+        <ContentPanel @title="Recent Denials" @open={{true}} @wrapperClass="bordered-classic" @panelBodyClass="p-0i" @panelBodyWrapperClass="p-0i">
+            <p class="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">
+                Subscriptions and client publishes the socket server refused (in enforce mode) or would have refused (in log mode) since it started, grouped by client, channel
+                prefix and reason. The 50 most frequent are shown. Tokens and ids are never included.
+            </p>
+            {{#if this.denials.length}}
+                <div class="overflow-x-auto border-t border-gray-200 dark:border-gray-700" data-test-socket-denials>
+                    <table class="min-w-full text-sm">
+                        <thead>
+                            <tr class="text-left text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                                <th class="px-4 py-2">Client</th>
+                                <th class="px-4 py-2">Channel prefix</th>
+                                <th class="px-4 py-2">Reason</th>
+                                <th class="px-4 py-2 text-right">Count</th>
+                                <th class="px-4 py-2">Last</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each this.denials as |row|}}
+                                <tr class="border-t border-gray-100 text-gray-800 dark:border-gray-800 dark:text-gray-200" data-test-socket-denial>
+                                    <td class="px-4 py-2 font-mono text-xs">{{or row.client "unknown"}}</td>
+                                    <td class="px-4 py-2 font-mono text-xs">{{or row.prefix "(token)"}}</td>
+                                    <td class="px-4 py-2 font-mono text-xs">{{row.reason}}</td>
+                                    <td class="px-4 py-2 text-right">{{row.count}}</td>
+                                    <td class="px-4 py-2 text-xs">{{row.lastAtLabel}}</td>
+                                </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
                 </div>
             {{else}}
-                <div class="flex items-center mt-6 text-green-300">
-                    <Spinner @iconClass="green-loader" />
-                    <span class="ml-2 text-sm font-mono">
-                        Awaiting events...
-                    </span>
+                <p class="border-t border-gray-200 px-4 py-3 text-sm text-gray-500 dark:border-gray-700 dark:text-gray-400" data-test-socket-no-denials>No denials reported.</p>
+            {{/if}}
+        </ContentPanel>
+
+        <ContentPanel @title="Socket Settings" @open={{true}} @wrapperClass="bordered-classic">
+            <div class="mb-4 rounded-md border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-900 dark:border-blue-900 dark:bg-blue-900 dark:text-blue-100" data-test-socket-key-help>
+                <p>
+                    Settings saved here override the environment on the API and the socket server. The socket server picks up a change within about 30 seconds, without a restart.
+                    Tick "Use environment" to clear a setting and go back to the environment value.
+                </p>
+                <p class="mt-2">
+                    The auth key is never stored or shown here: it lives only in SOCKETCLUSTER_AUTH_KEY. To rotate it, set the new key on the API (application, queue and scheduler) and the
+                    socket server, then restart both.
+                </p>
+            </div>
+
+            <InputGroup @name="Socket authentication" @helpText="Verify socket tokens and authorize channel subscriptions. Needs SOCKETCLUSTER_AUTH_KEY.">
+                <div class="space-y-2">
+                    <Checkbox @label="Use environment" @value={{this.inherits.enabled}} @onToggle={{fn this.toggleInherit "enabled"}} data-test-socket-inherit="enabled" />
+                    {{#unless this.inherits.enabled}}
+                        <Toggle
+                            @isToggled={{this.enabled}}
+                            @onToggle={{this.toggleEnabled}}
+                            @label={{if this.enabled "On" "Off"}}
+                            @disabled={{or this.isBusy (not this.keyConfigured)}}
+                            data-test-socket-enabled
+                        />
+                        {{#unless this.keyConfigured}}
+                            <p class="text-xs text-yellow-700 dark:text-yellow-300" data-test-socket-key-missing>
+                                Set SOCKETCLUSTER_AUTH_KEY on the API and the socket server before switching socket authentication on.
+                            </p>
+                        {{/unless}}
+                    {{/unless}}
                 </div>
-            {{/each}}
-        </div>
-    </div>
-    {{#if this.testResponse}}
-        <div class="flex flex-row items-center rounded-lg border {{if (eq this.testResponse.status 'error') 'border-red-900 bg-red-800 text-red-100' 'border-green-900 bg-green-800 text-green-100'}} shadow-sm my-2 px-4 py-2">
-            <FaIcon @icon={{if (eq this.testResponse.status 'error') 'triangle-exclamation' 'circle-check'}} class="mr-1.5 {{if (eq this.testResponse.status 'error') 'text-red-200' 'text-green-200'}}" />
-            <span class="text-xs">{{this.this.testResponse.message}}</span>
+            </InputGroup>
+
+            <InputGroup @name="Mode" @helpText="What happens to subscriptions the API does not authorize while socket authentication is on.">
+                <div class="space-y-2">
+                    <Checkbox @label="Use environment" @value={{this.inherits.mode}} @onToggle={{fn this.toggleInherit "mode"}} data-test-socket-inherit="mode" />
+                    {{#unless this.inherits.mode}}
+                        <Select
+                            @options={{this.modeOptions}}
+                            @optionValue="value"
+                            @optionLabel="label"
+                            @value={{this.mode}}
+                            @onSelect={{this.setMode}}
+                            class="w-full"
+                            data-test-socket-mode
+                        />
+                    {{/unless}}
+                </div>
+            </InputGroup>
+
+            <InputGroup @name="Token lifetime (seconds)" @helpText="How long a socket token is valid, from 60 to 3600 seconds. Clients refresh tokens before they expire.">
+                <div class="space-y-2">
+                    <Checkbox @label="Use environment" @value={{this.inherits.token_ttl}} @onToggle={{fn this.toggleInherit "token_ttl"}} data-test-socket-inherit="token_ttl" />
+                    {{#unless this.inherits.token_ttl}}
+                        <Input @type="number" @value={{this.tokenTtl}} min="60" max="3600" placeholder="900" class="w-full form-input" disabled={{this.isBusy}} data-test-socket-token-ttl />
+                    {{/unless}}
+                </div>
+            </InputGroup>
+
+            <InputGroup
+                @name="Allowed origins"
+                @helpText="SocketCluster origins: host:port patterns separated by spaces, e.g. console.example.com:*. *:* allows every origin. Applies to new connections."
+            >
+                <div class="space-y-2">
+                    <Checkbox @label="Use environment" @value={{this.inherits.origins}} @onToggle={{fn this.toggleInherit "origins"}} data-test-socket-inherit="origins" />
+                    {{#unless this.inherits.origins}}
+                        <Input @value={{this.origins}} placeholder="console.example.com:*" class="w-full form-input" disabled={{this.isBusy}} data-test-socket-origins />
+                    {{/unless}}
+                </div>
+            </InputGroup>
+
+            <InputGroup
+                @name="Publisher origin"
+                @helpText="The Origin header the API sends when it publishes over the websocket (while socket authentication is off). Must be an allowed origin, e.g. https://console.example.com."
+            >
+                <div class="space-y-2">
+                    <Checkbox
+                        @label="Use environment"
+                        @value={{this.inherits.publisher_origin}}
+                        @onToggle={{fn this.toggleInherit "publisher_origin"}}
+                        data-test-socket-inherit="publisher_origin"
+                    />
+                    {{#unless this.inherits.publisher_origin}}
+                        <Input @value={{this.publisherOrigin}} placeholder="https://console.example.com" class="w-full form-input" disabled={{this.isBusy}} data-test-socket-publisher-origin />
+                    {{/unless}}
+                </div>
+            </InputGroup>
+
+            <div class="flex justify-end">
+                <Button
+                    @type="primary"
+                    @icon="save"
+                    @text="Save Socket Settings"
+                    @onClick={{this.save}}
+                    @disabled={{this.isBusy}}
+                    @isLoading={{this.saveSettings.isRunning}}
+                    data-test-socket-save
+                />
+            </div>
+        </ContentPanel>
+    {{else}}
+        <div class="flex items-center justify-center p-4" data-test-socket-loading>
+            <Spinner @loadingMessage="Loading socket settings..." @wrapperClass="flex flex-row" @iconClass="mr-2" />
         </div>
     {{/if}}
-    <Button @wrapperClass="mt-3" @icon="plug" @text="Test Socket Connection" @onClick={{this.testSocketConnection}} @isLoading={{this.isLoading}} />
-</ContentPanel>
+
+    <ContentPanel @title="SocketCluster Connection" @open={{true}} @wrapperClass="bordered-classic">
+        <div id="output" class="font-mono rounded-lg max-h-full px-6 py-4 overflow-y-scroll bg-black shadow-inner dark:shadow-none">
+            <div class="flex items-center justify-between mb-4">
+                <div class="block w-1/2 font-mono text-sm font-semibold text-green-300">
+                    Output
+                </div>
+                {{#if this.events.length}}
+                    <div class="flex items-center justify-end w-1/2 text-sm text-green-300">
+                        <Spinner @iconClass="green-loader" />
+
+                        <span class="ml-2 text-sm font-mono">
+                            Awaiting events...
+                        </span>
+                    </div>
+                {{/if}}
+            </div>
+
+            <div>
+                {{#each this.events as |event|}}
+                    <div class="mb-3 text-sm font-mono rounded-lg shadow-sm flex flex-row" data-test-socket-event>
+                        <div class="text-{{event.color}}-300 uppercase text-sm font-mono pr-2 flex-shrink-0">
+                            [{{event.time}}]:
+                        </div>
+                        {{! Escaped on purpose: channel data and refusal reasons come from the network. }}
+                        <div class="text-{{event.color}}-300 text-sm font-mono whitespace-pre-wrap break-all" data-test-socket-event-content>{{event.content}}</div>
+                    </div>
+                {{else}}
+                    <div class="flex items-center mt-6 text-green-300">
+                        <Spinner @iconClass="green-loader" />
+                        <span class="ml-2 text-sm font-mono">
+                            Awaiting events...
+                        </span>
+                    </div>
+                {{/each}}
+            </div>
+        </div>
+        {{#if this.testResponse}}
+            <div
+                class="flex flex-row items-center rounded-lg border
+                    {{if (eq this.testResponse.status 'error') 'border-red-900 bg-red-800 text-red-100' 'border-green-900 bg-green-800 text-green-100'}}
+                    shadow-sm my-2 px-4 py-2"
+            >
+                <FaIcon @icon={{if (eq this.testResponse.status "error") "triangle-exclamation" "circle-check"}} class="mr-1.5 {{if (eq this.testResponse.status 'error') 'text-red-200' 'text-green-200'}}" />
+                <span class="text-xs" data-test-socket-test-message>{{this.testResponse.message}}</span>
+            </div>
+        {{/if}}
+        <Button @wrapperClass="mt-3" @icon="plug" @text="Test Socket Connection" @onClick={{this.testSocketConnection}} @isLoading={{this.isLoading}} />
+    </ContentPanel>
+</div>

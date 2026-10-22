@@ -111,11 +111,49 @@ export default class AuthTwoFaController extends Controller {
     @tracked isCodeExpired = false;
 
     /**
+     * How the code is provided: `authenticator_app`, or the method a code was sent with.
+     *
+     * @property {string} method
+     * @tracked
+     */
+    @tracked method;
+
+    /**
+     * Whether the user is entering one of their recovery codes instead.
+     *
+     * @property {Boolean} useRecoveryCode
+     * @tracked
+     * @default false
+     */
+    @tracked useRecoveryCode = false;
+
+    /**
      * Query parameters for the controller.
      *
      * @property {Array} queryParams
      */
     queryParams = ['token', 'clientToken'];
+
+    /**
+     * Whether the code comes from the user's authenticator app.
+     *
+     * @property {Boolean} isAuthenticatorApp
+     */
+    get isAuthenticatorApp() {
+        return this.method === 'authenticator_app';
+    }
+
+    /**
+     * Switch between the authenticator app code and a recovery code.
+     *
+     * @method toggleRecoveryCode
+     * @action
+     */
+    @action toggleRecoveryCode(event) {
+        event?.preventDefault?.();
+        this.useRecoveryCode = !this.useRecoveryCode;
+        this.verificationCode = '';
+    }
 
     /**
      * Action method for verifying the entered verification code.
@@ -155,6 +193,10 @@ export default class AuthTwoFaController extends Controller {
         } catch (error) {
             if (error?.message?.includes('Verification code has expired')) {
                 this.notifications.info(this.intl.t('auth.two-fa.verify-code.verification-code-expired-notification'));
+            } else if (error?.message?.includes('Too many failed verification attempts')) {
+                // The server has ended this 2FA session; only a fresh sign-in starts another.
+                this.notifications.error(this.intl.t('auth.two-fa.verify-code.too-many-attempts-notification'));
+                return this.router.transitionTo('auth.login');
             } else {
                 this.notifications.error(this.intl.t('auth.two-fa.verify-code.verification-code-failed-notification'));
             }
@@ -168,19 +210,25 @@ export default class AuthTwoFaController extends Controller {
      * @returns {Promise<void>}
      * @action
      */
-    @action async resendCode() {
+    @action async resendCode(event) {
+        event?.preventDefault?.();
+
         // disable countdown timer
         this.countdownReady = false;
 
         try {
             const { identity, token } = this;
-            const { clientToken } = await this.fetch.post('two-fa/resend', {
+            const { clientToken, method } = await this.fetch.post('two-fa/resend', {
                 identity,
                 token,
             });
 
             if (clientToken) {
+                // An authenticator app user asking for a code gets one by email or SMS
+                this.method = method;
+                this.useRecoveryCode = false;
                 this.clientToken = clientToken;
+                this.session.store.persist({ identity, token, clientToken, method });
                 this.twoFactorSessionExpiresAfter = this.getExpirationDateFromClientToken(clientToken);
                 this.countdownReady = true;
                 this.isCodeExpired = false;

@@ -1,8 +1,12 @@
 import Controller from '@ember/controller';
+import { action } from '@ember/object';
+import { inject as service } from '@ember/service';
 
 export default class ConsoleAdminOrganizationsDetailsIndexController extends Controller {
+    @service router;
+
     get organization() {
-        return this.model;
+        return this.model?.organization;
     }
 
     get owner() {
@@ -21,10 +25,6 @@ export default class ConsoleAdminOrganizationsDetailsIndexController extends Con
         return this.owner?.phone;
     }
 
-    get ownerState() {
-        return this.owner ? 'Assigned' : 'Missing';
-    }
-
     get statusLabel() {
         return this.organization?.statusLabel || this.organization?.status || 'active';
     }
@@ -33,37 +33,21 @@ export default class ConsoleAdminOrganizationsDetailsIndexController extends Con
         return this.organization?.onboarding_completed ? 'Complete' : 'Incomplete';
     }
 
-    get metrics() {
+    get usageRows() {
+        const usage = this.model?.usage;
+
         return [
-            {
-                label: 'Users',
-                value: this.organization?.users_count ?? 0,
-                caption: 'Organization members',
-                icon: 'users',
-                accentClass: 'admin-organization-kpi-accent-blue',
-            },
-            {
-                label: 'Owner',
-                value: this.ownerState,
-                caption: this.ownerEmail ?? 'Needs assignment',
-                icon: this.owner ? 'user-check' : 'user-slash',
-                accentClass: this.owner ? 'admin-organization-kpi-accent-green' : 'admin-organization-kpi-accent-amber',
-            },
-            {
-                label: 'Onboarding',
-                value: this.onboardingState,
-                caption: this.organization?.onboarding_completed ? 'Ready for operations' : 'Needs review',
-                icon: this.organization?.onboarding_completed ? 'circle-check' : 'triangle-exclamation',
-                accentClass: this.organization?.onboarding_completed ? 'admin-organization-kpi-accent-green' : 'admin-organization-kpi-accent-amber',
-            },
-            {
-                label: 'Status',
-                value: this.statusLabel,
-                caption: 'Platform access',
-                icon: this.statusLabel === 'active' ? 'shield-check' : 'circle-exclamation',
-                accentClass: this.statusLabel === 'active' ? 'admin-organization-kpi-accent-green' : 'admin-organization-kpi-accent-rose',
-            },
-        ];
+            { key: 'users_count', label: 'Organization users' },
+            { key: 'drivers_count', label: 'Drivers' },
+            { key: 'customers_count', label: 'Customers' },
+            { key: 'orders_count', label: 'Orders' },
+            { key: 'api_requests_count', label: 'API calls' },
+            { key: 'webhook_callbacks_count', label: 'Webhook callbacks' },
+        ].map((row) => ({ ...row, value: usage?.[row.key] ?? null }));
+    }
+
+    @action refresh() {
+        return this.router.refresh();
     }
 
     resolveBelongsTo(record) {

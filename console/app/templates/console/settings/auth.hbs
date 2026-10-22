@@ -1,0 +1,38 @@
+{{page-title "Authentication"}}
+<Layout::Section::Header @title="Authentication" />
+
+<Layout::Section::Body class="overflow-y-scroll h-full">
+    <div class="container mx-auto h-screen">
+        <div class="max-w-3xl my-10 mx-auto space-y-6">
+            <ContentPanel @title="Passwords" @open={{true}} @wrapperClass="bordered-classic">
+                {{#if this.loadAuthSettings.isIdle}}
+                    <div class="flex items-center space-x-4">
+                        <label class="text-base font-medium">Allow users to change their own password</label>
+                        <Toggle @isToggled={{this.allowUsersChangePassword}} @onToggle={{this.onAllowUsersChangePasswordToggled}} />
+                    </div>
+                    <p class="text-sm text-gray-700 dark:text-gray-300 mt-3">
+                        When this is off, only administrators and users whose role or policy grants the
+                        <code>iam change-password</code>
+                        permission can change their own password. Invited users can always set their first password.
+                    </p>
+                {{else}}
+                    <div class="flex items-center justify-center p-4">
+                        <Spinner @loadingMessage="Loading authentication settings..." @wrapperClass="flex flex-row" @iconClass="mr-2" />
+                    </div>
+                {{/if}}
+                <div class="mt-4">
+                    <Button
+                        @type="primary"
+                        @buttonType="submit"
+                        @text="Save Authentication Settings"
+                        @icon="save"
+                        @onClick={{perform this.saveAuthSettings}}
+                        @isLoading={{this.saveAuthSettings.isRunning}}
+                        @disabled={{not this.loadAuthSettings.isIdle}}
+                    />
+                </div>
+            </ContentPanel>
+        </div>
+    </div>
+    <Spacer @height="300px" />
+</Layout::Section::Body>

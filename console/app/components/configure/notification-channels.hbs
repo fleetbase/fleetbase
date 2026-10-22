@@ -1,4 +1,4 @@
-<ContentPanel @title="APN Configutation" @open={{true}} @wrapperClass="bordered-classic">
+<ContentPanel @title="APN Configuration" @open={{true}} @wrapperClass="bordered-classic">
     <InputGroup @name="APN Key ID" @value={{this.apn.key_id}} disabled={{this.isLoading}} />
     <InputGroup @name="APN Team ID" @value={{this.apn.team_id}} disabled={{this.isLoading}} />
     <InputGroup @name="APN App Bundle ID" @value={{this.apn.app_bundle_id}} disabled={{this.isLoading}} />
@@ -20,7 +20,7 @@
     </InputGroup>
 </ContentPanel>
 
-<ContentPanel @title="Firebase Configutation" @open={{true}} @wrapperClass="bordered-classic">
+<ContentPanel @title="Firebase Configuration" @open={{true}} @wrapperClass="bordered-classic">
     <InputGroup @wrapperClass="flex flex-row items-center mb-0i">
         <UploadButton @name="firebase-service-account" @accept="text/plain,text/javascript,application/json" @onFileAdded={{this.uploadFirebaseCredentials}} @buttonText="Upload Service Account JSON" @icon="upload" class="w-auto m-0i mt-0i" />
         {{#if this.firebase.credentials_file}}

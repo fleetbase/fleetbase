@@ -33,11 +33,25 @@ export default class ConsoleAccountAuthController extends Controller {
     @tracked currentPassword;
 
     /**
+     * The current password used to authorize a password change.
+     *
+     * @type {string}
+     */
+    @tracked changePasswordCurrentPassword;
+
+    /**
      * The new password the user intends to set.
      *
      * @type {string}
      */
     @tracked newPassword;
+
+    /**
+     * Whether the user may change their own password.
+     *
+     * @type {boolean}
+     */
+    @tracked canChangePassword = true;
 
     /**
      * The user's confirmation of the new password.
@@ -68,11 +82,28 @@ export default class ConsoleAccountAuthController extends Controller {
     @tracked isSystemTwoFaEnabled = false;
 
     /**
-     * Available two-factor authentication methods.
+     * The user's authenticator app, without any secrets.
+     *
+     * @type {Object}
+     */
+    @tracked authenticator = { enabled: false, confirmed_at: null, recovery_codes_remaining: 0 };
+
+    /**
+     * Bumped to redraw the 2FA settings when they change outside the settings form.
+     *
+     * @type {number}
+     */
+    @tracked twoFaSettingsRevision = 0;
+
+    /**
+     * Available two-factor authentication methods. The authenticator app needs setting
+     * up before it can be chosen.
      *
      * @type {Array}
      */
-    @tracked methods = getTwoFaMethods();
+    get methods() {
+        return getTwoFaMethods({ includeAuthenticatorApp: true }).map((method) => (method.key === 'authenticator_app' ? { ...method, requiresSetup: !this.authenticator.enabled } : method));
+    }
 
     /**
      * Load the 2FA settings this page shows. Called by the route on entry.
@@ -87,6 +118,61 @@ export default class ConsoleAccountAuthController extends Controller {
     @action load() {
         this.loadSystemTwoFaConfig.perform();
         this.loadUserTwoFaSettings.perform();
+        this.loadPasswordPolicy.perform();
+        this.loadAuthenticator.perform();
+    }
+
+    /**
+     * Before the authenticator app is chosen as the 2FA method, set it up if needed.
+     *
+     * @method beforeTwoFaMethodSelected
+     * @param {string} method
+     * @return {Promise<boolean>} whether the method can be chosen
+     */
+    @action beforeTwoFaMethodSelected(method) {
+        if (method !== 'authenticator_app' || this.authenticator.enabled) {
+            return Promise.resolve(true);
+        }
+
+        return this.openAuthenticatorModal('setup');
+    }
+
+    /**
+     * Set up, remove, or get new recovery codes for the authenticator app from its panel,
+     * then redraw the 2FA settings, which the change may have updated.
+     *
+     * @method manageAuthenticator
+     * @param {string} mode - `setup`, `recovery-codes` or `disable`
+     */
+    @action async manageAuthenticator(mode) {
+        if (await this.openAuthenticatorModal(mode)) {
+            this.twoFaSettingsRevision++;
+        }
+    }
+
+    /**
+     * Open the authenticator app modal.
+     *
+     * @method openAuthenticatorModal
+     * @param {string} mode - `setup`, `recovery-codes` or `disable`
+     * @return {Promise<boolean>} whether the change was made
+     */
+    @action openAuthenticatorModal(mode = 'setup') {
+        return new Promise((resolve) => {
+            this.modalsManager.show('modals/authenticator-app', {
+                mode,
+                onChanged: ({ status, settings }) => {
+                    if (status) {
+                        this.authenticator = status;
+                    }
+                    if (settings) {
+                        this.twoFaSettings = settings;
+                        this.isUserTwoFaEnabled = settings.enabled;
+                    }
+                },
+                onClosed: (changed) => resolve(changed),
+            });
+        });
     }
 
     /**
@@ -149,7 +235,8 @@ export default class ConsoleAccountAuthController extends Controller {
     }
 
     /**
-     * Initiates the task to change the user's password asynchronously.
+     * Initiates the task to change the user's password asynchronously. The current
+     * password is sent with the new one and checked by the server.
      *
      * @method changePassword
      */
@@ -159,45 +246,36 @@ export default class ConsoleAccountAuthController extends Controller {
             event.preventDefault();
         }
 
-        // Validate current password
-        const isPasswordValid = yield this.validatePassword.perform();
-        if (!isPasswordValid) {
-            this.newPassword = undefined;
-            this.newConfirmPassword = undefined;
-            return;
-        }
-
         try {
             yield this.fetch.post('users/change-password', {
+                current_password: this.changePasswordCurrentPassword,
                 password: this.newPassword,
                 password_confirmation: this.newConfirmPassword,
             });
 
-            this.notifications.success('Password change successfully.');
+            this.notifications.success('Password changed successfully.');
         } catch (error) {
             this.notifications.serverError(error, 'Failed to change password.');
         }
 
+        this.changePasswordCurrentPassword = undefined;
         this.newPassword = undefined;
         this.newConfirmPassword = undefined;
     }
 
     /**
-     * Task to validate current password
+     * Loads whether the user may change their own password.
      *
-     * @return {boolean}
+     * @method loadPasswordPolicy
      */
-    @task *validatePassword() {
-        let isPasswordValid = false;
-
-        yield this.modalsManager.show('modals/validate-password', {
-            body: 'You must validate your current password before it can be changed.',
-            onValidated: (isValid) => {
-                isPasswordValid = isValid;
-            },
-        });
-
-        return isPasswordValid;
+    @task *loadPasswordPolicy() {
+        try {
+            const policy = yield this.fetch.get('users/password-policy');
+            this.canChangePassword = policy?.can_change_password !== false;
+        } catch {
+            // Older servers have no password policy endpoint; keep the form available.
+            this.canChangePassword = true;
+        }
     }
 
     /**
@@ -231,6 +309,22 @@ export default class ConsoleAccountAuthController extends Controller {
             return twoFaSettings;
         } catch (error) {
             this.notifications.serverError(error);
+        }
+    }
+
+    /**
+     * Loads the user's authenticator app status.
+     *
+     * @method loadAuthenticator
+     */
+    @task *loadAuthenticator() {
+        try {
+            const authenticator = yield this.fetch.get('users/two-fa/authenticator');
+            if (authenticator) {
+                this.authenticator = authenticator;
+            }
+        } catch {
+            // Older servers have no authenticator app support; the option stays unavailable.
         }
     }
 

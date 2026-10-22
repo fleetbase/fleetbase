@@ -153,7 +153,7 @@ module('Unit | Controller | console/admin/organizations/details', function (hook
     test('the core tabs are always present and ordered by priority', function (assert) {
         const labels = this.controller.tabs.map((t) => t.label);
 
-        assert.deepEqual(labels, ['Overview', 'Users', 'Extensions', 'Activity', 'Settings']);
+        assert.deepEqual(labels, ['Overview', 'Users', 'Activity', 'Settings']);
     });
 
     test('registered tabs are merged in, filtered and sorted', function (assert) {
@@ -183,7 +183,7 @@ module('Unit | Controller | console/admin/organizations/details', function (hook
         this.menuItems['console:admin:organization:tabs'] = undefined;
 
         assert.deepEqual(this.controller.visibleRegisteredTabs, []);
-        assert.strictEqual(this.controller.tabs.length, 5, 'only the core tabs remain');
+        assert.strictEqual(this.controller.tabs.length, 4, 'only the core tabs remain');
     });
 
     test('isTabActive matches the current route, including nested routes', function (assert) {
@@ -363,7 +363,7 @@ module('Unit | Controller | console/admin/organizations/details | registry fallb
 
         assert.deepEqual(this.controller.visibleRegisteredTabs, [], 'a non-array tab registry is ignored');
         assert.deepEqual(this.controller.registeredActions, [], 'so is a non-array action registry');
-        assert.strictEqual(this.controller.tabs.length, 5, 'only the five core tabs remain');
+        assert.strictEqual(this.controller.tabs.length, 4, 'only the four core tabs remain');
     });
 
     test('registered tabs must declare both a slug and a component', function (assert) {

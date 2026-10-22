@@ -32,27 +32,46 @@
             <Account::ConnectedAccounts />
 
             <ContentPanel @title="Change Password" @open={{true}} @wrapperClass="bordered-classic">
-                <form id="change-password-form" aria-label="change-password" {{on "submit" (perform this.changePassword)}}>
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                        <InputGroup @name="Enter new Password" @type="password" @value={{this.newPassword}} />
-                        <InputGroup @name="Confirm Password" @type="password" @value={{this.newConfirmPassword}} />
-                    </div>
-                    <div class="mt-3">
-                        <Button @type="primary" @buttonType="submit" @text="Confirm & Change Password" @icon="save" @disabled={{not (and this.newPassword this.newConfirmPassword)}} {{on "click" (perform this.changePassword)}} />
-                    </div>
-                </form>
+                {{#if this.canChangePassword}}
+                    <form id="change-password-form" aria-label="change-password" {{on "submit" (perform this.changePassword)}}>
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                            <InputGroup @name="Current Password" @type="password" @value={{this.changePasswordCurrentPassword}} @wrapperClass="lg:col-span-2" />
+                            <InputGroup @name="Enter new Password" @type="password" @value={{this.newPassword}} />
+                            <InputGroup @name="Confirm Password" @type="password" @value={{this.newConfirmPassword}} />
+                        </div>
+                        <div class="mt-3">
+                            <Button
+                                @type="primary"
+                                @buttonType="submit"
+                                @text="Confirm & Change Password"
+                                @icon="save"
+                                @disabled={{not (and this.changePasswordCurrentPassword this.newPassword this.newConfirmPassword)}}
+                                @isLoading={{this.changePassword.isRunning}}
+                                {{on "click" (perform this.changePassword)}}
+                            />
+                        </div>
+                    </form>
+                {{else}}
+                    <p class="text-sm text-gray-700 dark:text-gray-300">
+                        Your organization does not allow you to change your own password. Ask an administrator to change it for you.
+                    </p>
+                {{/if}}
             </ContentPanel>
 
             {{#if this.isSystemTwoFaEnabled}}
                 <ContentPanel @title="2FA Settings" @open={{true}} @wrapperClass="bordered-classic">
                     <div class="mb-3">
-                        {{#if this.loadUserTwoFaSettings.isIdle}}
-                            <TwoFaSettings
-                                @twoFaMethods={{this.methods}}
-                                @twoFaSettings={{this.twoFaSettings}}
-                                @onTwoFaToggled={{this.onTwoFaToggled}}
-                                @onTwoFaMethodSelected={{this.onTwoFaMethodSelected}}
-                            />
+                        {{#if (and this.loadUserTwoFaSettings.isIdle this.loadAuthenticator.isIdle)}}
+                            {{! Redrawn when the settings change outside this form }}
+                            {{#each (array this.twoFaSettingsRevision) key="@identity"}}
+                                <TwoFaSettings
+                                    @twoFaMethods={{this.methods}}
+                                    @twoFaSettings={{this.twoFaSettings}}
+                                    @onTwoFaToggled={{this.onTwoFaToggled}}
+                                    @onTwoFaMethodSelected={{this.onTwoFaMethodSelected}}
+                                    @beforeTwoFaMethodSelected={{this.beforeTwoFaMethodSelected}}
+                                />
+                            {{/each}}
                         {{else}}
                             <div class="flex items-center justify-center p-4">
                                 <Spinner @loadingMessage="Loading User 2FA Settings..." @wrapperClass="flex flex-row" @iconClass="mr-2" />
@@ -68,8 +87,30 @@
                         @isLoading={{this.saveUserTwoFaSettings.isRunning}}
                     />
                 </ContentPanel>
+
+                <ContentPanel @title="Authenticator App" @open={{true}} @wrapperClass="bordered-classic">
+                    {{#if this.authenticator.enabled}}
+                        <p class="text-sm text-gray-700 dark:text-gray-300">
+                            Your authenticator app is set up.
+                            {{this.authenticator.recovery_codes_remaining}}
+                            recovery codes left.
+                        </p>
+                        <div class="flex flex-row space-x-2 mt-3">
+                            <Button @icon="key" @text="Get new recovery codes" @onClick={{fn this.manageAuthenticator "recovery-codes"}} />
+                            <Button @type="danger" @icon="trash" @text="Remove authenticator app" @onClick={{fn this.manageAuthenticator "disable"}} />
+                        </div>
+                    {{else}}
+                        <p class="text-sm text-gray-700 dark:text-gray-300">
+                            Use an app like Google Authenticator, Microsoft Authenticator, Authy or 1Password to get sign-in codes, even without signal.
+                        </p>
+                        <div class="mt-3">
+                            <Button @type="primary" @icon="mobile-screen" @text="Set up authenticator app" @onClick={{fn this.manageAuthenticator "setup"}} />
+                        </div>
+                    {{/if}}
+                </ContentPanel>
             {{/if}}
+
+            <Spacer @height="200px" />
         </div>
     </div>
-    <Spacer @height="500px" />
 </Layout::Section::Body>

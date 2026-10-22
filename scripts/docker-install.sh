@@ -17,6 +17,14 @@ warn()    { echo -e "${YELLOW}⚠  ${RESET}$*"; }
 error()   { echo -e "${RED}✖  ${RESET}$*" >&2; }
 section() { echo -e "\n${BOLD}── $* $(printf '─%.0s' {1..40})${RESET}"; }
 
+# ─── Portability ─────────────────────────────────────────────────────────────
+# This script must run on macOS's stock /bin/bash 3.2 and on Git Bash (Windows),
+# not only on Linux bash 5: no ${var,,} / ${var^^} expansions, no Linux-only tools.
+lower() { printf '%s' "$1" | tr '[:upper:]' '[:lower:]'; }
+upper() { printf '%s' "$1" | tr '[:lower:]' '[:upper:]'; }
+# Git Bash rewrites arguments that look like POSIX paths before docker.exe sees them.
+case "$(uname -s)" in MINGW*|MSYS*|CYGWIN*) export MSYS_NO_PATHCONV=1 ;; esac
+
 # ─── Non-interactive flag ────────────────────────────────────────────────────
 NON_INTERACTIVE=false
 for arg in "$@"; do
@@ -60,13 +68,28 @@ if ! docker compose version >/dev/null 2>&1; then
 fi
 success "Docker Compose v2 found"
 
-# Port availability (warn only — do not block)
+# Port availability (warn only — do not block). Each OS ships a different tool:
+# ss on Linux, lsof on macOS, netstat -an on Windows (Git Bash) and the BSDs.
+# Returns 0 = in use, 1 = free, 2 = could not check.
+port_in_use() {
+  local port="$1"
+  if command -v ss >/dev/null 2>&1; then
+    ss -ltn 2>/dev/null | grep -Eq "[.:]${port}[[:space:]]"
+  elif command -v lsof >/dev/null 2>&1; then
+    lsof -nP -iTCP:"${port}" -sTCP:LISTEN -t >/dev/null 2>&1
+  elif command -v netstat >/dev/null 2>&1; then
+    netstat -an 2>/dev/null | grep -Eq "[.:]${port}[[:space:]].*LISTEN"
+  else
+    return 2
+  fi
+}
 for port_label in "8000:API" "4200:Console" "3306:MySQL" "38000:SocketCluster"; do
   port="${port_label%%:*}"
   label="${port_label##*:}"
-  if ss -tlnp 2>/dev/null | grep -q ":${port} " || \
-     netstat -tlnp 2>/dev/null | grep -q ":${port} "; then
+  if port_in_use "$port"; then
     warn "Port ${port} (${label}) is already in use — this may cause a conflict."
+  elif [[ $? -eq 2 ]]; then
+    warn "Could not check whether port ${port} (${label}) is free (no ss, lsof or netstat found)."
   else
     success "Port ${port} (${label}) is free"
   fi
@@ -141,7 +164,9 @@ if [[ "$DB_MODE" == "external" ]]; then
   read -rp  "  Database username: "           DB_USER
   read -srp "  Database password: "           DB_PASS; echo
   # URL-encode the password (basic: replace @ and / which are most problematic)
-  DB_PASS_ENC=$(python3 -c "import urllib.parse,sys; print(urllib.parse.quote(sys.argv[1],safe=''))" "$DB_PASS" 2>/dev/null || echo "$DB_PASS")
+  # Windows installs usually expose `python`, not `python3`; fall back to the raw value.
+  PY_QUOTE="import urllib.parse,sys; print(urllib.parse.quote(sys.argv[1],safe=''))"
+  DB_PASS_ENC=$(python3 -c "$PY_QUOTE" "$DB_PASS" 2>/dev/null || python -c "$PY_QUOTE" "$DB_PASS" 2>/dev/null || echo "$DB_PASS")
   DATABASE_URL="mysql://${DB_USER}:${DB_PASS_ENC}@${DB_HOST}:${DB_PORT}/${DB_NAME}"
   DB_ROOT_PASSWORD=""
   DB_USERNAME="$DB_USER"
@@ -181,7 +206,7 @@ POSTMARK_TOKEN=""; SENDGRID_API_KEY=""; RESEND_KEY=""
 CONFIG_MAIL=false
 if ! $NON_INTERACTIVE; then
   read -rp "Configure a mail server? Required for password resets & notifications (y/N): " MAIL_YN
-  [[ "${MAIL_YN,,}" == "y" || "${MAIL_YN,,}" == "yes" ]] && CONFIG_MAIL=true
+  case "$(lower "$MAIL_YN")" in y|yes) CONFIG_MAIL=true ;; esac
 fi
 
 if $CONFIG_MAIL; then
@@ -259,7 +284,7 @@ if [[ "$FILESYSTEM_DRIVER" == "s3" ]]; then
   read -rp  "  S3 Bucket name: "                                         AWS_BUCKET
   read -rp  "  S3 Public URL (leave blank for default): "                AWS_URL
   read -rp  "  Use path-style endpoint? (for MinIO/non-AWS S3) (y/N): " PATH_STYLE_INPUT
-  [[ "${PATH_STYLE_INPUT,,}" == "y" ]] && AWS_USE_PATH_STYLE_ENDPOINT="true"
+  case "$(lower "$PATH_STYLE_INPUT")" in y|yes) AWS_USE_PATH_STYLE_ENDPOINT="true" ;; esac
   success "S3 storage configured"
 elif [[ "$FILESYSTEM_DRIVER" == "gcs" ]]; then
   read -rp "  GCS Project ID: "      GOOGLE_CLOUD_PROJECT_ID
@@ -305,7 +330,7 @@ TWILIO_SID=""; TWILIO_TOKEN=""; TWILIO_FROM=""
 CONFIG_3P=false
 if ! $NON_INTERACTIVE; then
   read -rp "Configure optional third-party API keys now? (Maps, Geolocation, SMS) (y/N): " TP_YN
-  [[ "${TP_YN,,}" == "y" || "${TP_YN,,}" == "yes" ]] && CONFIG_3P=true
+  case "$(lower "$TP_YN")" in y|yes) CONFIG_3P=true ;; esac
 fi
 
 if $CONFIG_3P; then
@@ -326,6 +351,87 @@ fi
 section "Generating Application Key"
 APP_KEY="base64:$(openssl rand -base64 32 | tr -d '\n')"
 success "APP_KEY generated"
+
+###############################################################################
+# STEP 8b — Socket authentication key
+###############################################################################
+section "Socket Authentication"
+
+# docker-compose.yml reads SOCKETCLUSTER_AUTH_ENABLED, SOCKETCLUSTER_AUTH_KEY and
+# SOCKETCLUSTER_AUTH_MODE from the project .env file (Compose loads it automatically) and
+# hands the same values to the application, queue, scheduler and socket containers. The key
+# is generated now and kept across re-runs (changing it would invalidate every socket token
+# already handed out), but auth stays switched off: mobile apps and other socket clients
+# that don't fetch socket tokens yet would otherwise be refused. Switch it on with
+# SOCKETCLUSTER_AUTH_ENABLED=true once they all do; it starts in log mode.
+PROJECT_ENV_FILE=".env"
+
+# read_env_value FILE KEY → prints the last KEY=value in FILE, unquoted ("" if absent)
+read_env_value() {
+  local file="$1" key="$2" line
+  [[ -f "$file" ]] || return 0
+  line="$(grep -E "^[[:space:]]*${key}=" "$file" | tail -n 1 || true)"
+  line="${line#*=}"
+  line="${line%\"}"; line="${line#\"}"
+  line="${line%\'}"; line="${line#\'}"
+  printf '%s' "$line"
+}
+
+# set_env_value FILE KEY VALUE → replaces (or appends) KEY=VALUE; no sed -i for portability
+set_env_value() {
+  local file="$1" key="$2" value="$3" tmp
+  tmp="${file}.tmp.$$"
+  if [[ -f "$file" ]]; then
+    grep -vE "^[[:space:]]*${key}=" "$file" > "$tmp" || true
+  else
+    : > "$tmp"
+  fi
+  printf '%s=%s\n' "$key" "$value" >> "$tmp"
+  mv -f "$tmp" "$file"
+}
+
+SOCKETCLUSTER_AUTH_KEY_VALUE="$(read_env_value "$PROJECT_ENV_FILE" SOCKETCLUSTER_AUTH_KEY)"
+if [[ -n "$SOCKETCLUSTER_AUTH_KEY_VALUE" && ${#SOCKETCLUSTER_AUTH_KEY_VALUE} -ge 32 ]]; then
+  success "Keeping the existing socket auth key from $PROJECT_ENV_FILE"
+else
+  if [[ -n "$SOCKETCLUSTER_AUTH_KEY_VALUE" ]]; then
+    warn "The socket auth key in $PROJECT_ENV_FILE is shorter than 32 characters; generating a new one."
+  fi
+  SOCKETCLUSTER_AUTH_KEY_VALUE="$(gen_secret 32)"   # 64 hex characters
+  success "Socket auth key generated"
+fi
+
+SOCKETCLUSTER_AUTH_ENABLED_VALUE="$(read_env_value "$PROJECT_ENV_FILE" SOCKETCLUSTER_AUTH_ENABLED)"
+SOCKETCLUSTER_AUTH_ENABLED_VALUE="${SOCKETCLUSTER_AUTH_ENABLED_VALUE:-false}"
+SOCKETCLUSTER_AUTH_MODE_VALUE="$(read_env_value "$PROJECT_ENV_FILE" SOCKETCLUSTER_AUTH_MODE)"
+SOCKETCLUSTER_AUTH_MODE_VALUE="${SOCKETCLUSTER_AUTH_MODE_VALUE:-log}"
+
+set_env_value "$PROJECT_ENV_FILE" SOCKETCLUSTER_AUTH_ENABLED "$SOCKETCLUSTER_AUTH_ENABLED_VALUE"
+set_env_value "$PROJECT_ENV_FILE" SOCKETCLUSTER_AUTH_KEY     "$SOCKETCLUSTER_AUTH_KEY_VALUE"
+set_env_value "$PROJECT_ENV_FILE" SOCKETCLUSTER_AUTH_MODE    "$SOCKETCLUSTER_AUTH_MODE_VALUE"
+
+# SOCKETCLUSTER_ORIGIN is the Origin header the API sends when it publishes over the
+# websocket (the path used while socket auth is off). Without it the socket server treats
+# the publisher's origin as "*" and, because the origins are restricted above, refuses every
+# broadcast with "Invalid origin: *". It has to be an origin SOCKET_ORIGINS allows: the
+# server matches hostname + port against entries such as "${HOST}:*". Kept on re-runs.
+SOCKETCLUSTER_ORIGIN_VALUE="$(read_env_value "$PROJECT_ENV_FILE" SOCKETCLUSTER_ORIGIN)"
+if [[ -z "$SOCKETCLUSTER_ORIGIN_VALUE" ]]; then
+  if $IS_LOCALHOST; then
+    SOCKETCLUSTER_ORIGIN_VALUE="http://localhost:4200"
+  else
+    SOCKETCLUSTER_ORIGIN_VALUE="${SCHEME_CONSOLE}://${HOST}"
+  fi
+fi
+set_env_value "$PROJECT_ENV_FILE" SOCKETCLUSTER_ORIGIN       "$SOCKETCLUSTER_ORIGIN_VALUE"
+chmod 600 "$PROJECT_ENV_FILE" 2>/dev/null || true
+if [[ "$SOCKETCLUSTER_AUTH_ENABLED_VALUE" == "true" ]]; then
+  SOCKETCLUSTER_AUTH_SUMMARY="on, mode: $SOCKETCLUSTER_AUTH_MODE_VALUE"
+else
+  SOCKETCLUSTER_AUTH_SUMMARY="off until SOCKETCLUSTER_AUTH_ENABLED=true"
+fi
+success "Socket auth written to $PROJECT_ENV_FILE ($SOCKETCLUSTER_AUTH_SUMMARY)"
+success "API publisher origin: $SOCKETCLUSTER_ORIGIN_VALUE"
 
 ###############################################################################
 # STEP 9 — Write docker-compose.override.yml
@@ -464,6 +570,30 @@ ENV_PROD
 success "Console configuration files updated"
 
 ###############################################################################
+# STEP 10b — Ensure api/.env exists
+###############################################################################
+# docker-compose.yml bind-mounts ./api/.env into the application container. When the
+# file is missing Docker creates a *directory* at that path and Laravel cannot boot.
+# Values set in docker-compose.override.yml take precedence over this file, so an
+# empty file with a comment header is the correct default.
+API_ENV_FILE="api/.env"
+if [[ -d "$API_ENV_FILE" ]]; then
+  error "$API_ENV_FILE is a directory (left behind by an earlier 'docker compose up' before the file existed)."
+  error "Remove it and re-run the installer:  sudo rm -rf $API_ENV_FILE"
+  exit 1
+elif [[ ! -f "$API_ENV_FILE" ]]; then
+  mkdir -p "$(dirname "$API_ENV_FILE")"
+  cat > "$API_ENV_FILE" <<'ENV_API'
+# Fleetbase API environment overrides.
+# Runtime configuration comes from docker-compose.override.yml and takes precedence
+# over this file; add per-host secrets or extra overrides here.
+ENV_API
+  success "$API_ENV_FILE created"
+else
+  success "$API_ENV_FILE already present"
+fi
+
+###############################################################################
 # STEP 11 — Start containers
 ###############################################################################
 section "Starting Fleetbase Containers"
@@ -545,10 +675,11 @@ $CONFIG_MAIL \
   || SKIPPED_ITEMS+=("Mail (using log driver — configure later)")
 
 [[ "$FILESYSTEM_DRIVER" != "public" ]] \
-  && CONFIGURED_ITEMS+=("File Storage (${FILESYSTEM_DRIVER^^})") \
+  && CONFIGURED_ITEMS+=("File Storage ($(upper "$FILESYSTEM_DRIVER"))") \
   || SKIPPED_ITEMS+=("File storage (local disk — not suitable for production)")
 
 CONFIGURED_ITEMS+=("WebSocket security (origins restricted to ${HOST})")
+CONFIGURED_ITEMS+=("Socket authentication (${SOCKETCLUSTER_AUTH_SUMMARY}; key in ${PROJECT_ENV_FILE})")
 
 $CONFIG_3P \
   && CONFIGURED_ITEMS+=("Third-party APIs (Maps, Geolocation, SMS)") \

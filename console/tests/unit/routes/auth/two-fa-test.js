@@ -87,7 +87,7 @@ module('Unit | Route | auth/two-fa', function (hooks) {
         class FetchStub extends Service {
             post(path, payload) {
                 posted = { path, payload };
-                return Promise.resolve({ clientToken: 'fresh-client-token', expired: false });
+                return Promise.resolve({ clientToken: 'fresh-client-token', method: 'email', expired: false });
             }
         }
         this.owner.register('service:fetch', FetchStub);
@@ -99,7 +99,7 @@ module('Unit | Route | auth/two-fa', function (hooks) {
             path: 'two-fa/validate',
             payload: { token: 'tok', identity: 'ron@fleetbase.io', clientToken: 'stale' },
         });
-        assert.deepEqual(persisted, [{ identity: 'ron@fleetbase.io', token: 'tok', clientToken: 'fresh-client-token' }]);
+        assert.deepEqual(persisted, [{ identity: 'ron@fleetbase.io', token: 'tok', clientToken: 'fresh-client-token', method: 'email' }]);
     });
 
     test('beforeModel invalidates an expired two-factor session', async function (assert) {
@@ -170,6 +170,26 @@ module('Unit | Route | auth/two-fa', function (hooks) {
         assert.strictEqual(controller.clientToken, 'client-token');
         assert.strictEqual(controller.twoFactorSessionExpiresAfter, 'expires:client-token');
         assert.true(controller.countdownReady);
+    });
+
+    test('setupController skips the countdown for codes from an authenticator app', async function (assert) {
+        registerSession(this.owner, { identity: 'ron@fleetbase.io', clientToken: 'client-token', method: 'authenticator_app' });
+
+        const route = this.owner.lookup('route:auth/two-fa');
+        const controller = {
+            get isAuthenticatorApp() {
+                return this.method === 'authenticator_app';
+            },
+            getExpirationDateFromClientToken() {
+                return null;
+            },
+        };
+
+        route.setupController(controller);
+        await new Promise((resolve) => setTimeout(resolve, 0));
+
+        assert.strictEqual(controller.method, 'authenticator_app');
+        assert.false(controller.countdownReady, 'app codes are not sent, so nothing counts down');
     });
 
     test('setupController tolerates a store that restores nothing', async function (assert) {

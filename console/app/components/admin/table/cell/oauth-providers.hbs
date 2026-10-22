@@ -1,0 +1,11 @@
+{{#if (is-array @row.oauth_providers)}}
+    <div class="flex flex-wrap items-center gap-1.5">
+        {{#each @row.oauth_providers as |provider|}}
+            <span class="rounded border border-gray-200 bg-gray-50 px-2 py-0.5 text-xs capitalize text-gray-700 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100" data-test-oauth-provider>{{provider}}</span>
+        {{else}}
+            <span class="text-xs text-gray-500 dark:text-gray-400" data-test-oauth-none>None linked</span>
+        {{/each}}
+    </div>
+{{else}}
+    <span class="text-xs text-gray-500 dark:text-gray-400" data-test-oauth-unavailable>Unavailable</span>
+{{/if}}

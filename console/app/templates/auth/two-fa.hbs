@@ -9,17 +9,35 @@
 
 <div class="flex px-3 py-2 mb-4 rounded-md shadow-sm bg-green-200">
     <div>
-        <FaIcon @icon="check-circle" @size="lg" class="text-green-900 mr-4" />
+        <FaIcon @icon={{if this.isAuthenticatorApp "mobile-screen" "check-circle"}} @size="lg" class="text-green-900 mr-4" />
     </div>
     <p class="flex-1 text-sm text-green-900 dark:text-green-900">
-        <strong>{{t "auth.two-fa.verify-code.check-title"}}</strong><br />
-        {{t "auth.two-fa.verify-code.check-subtitle"}}
+        {{#if this.useRecoveryCode}}
+            <strong>{{t "auth.two-fa.verify-code.recovery-code-title"}}</strong><br />
+            {{t "auth.two-fa.verify-code.recovery-code-subtitle"}}
+        {{else if this.isAuthenticatorApp}}
+            <strong>{{t "auth.two-fa.verify-code.authenticator-title"}}</strong><br />
+            {{t "auth.two-fa.verify-code.authenticator-subtitle"}}
+        {{else}}
+            <strong>{{t "auth.two-fa.verify-code.check-title"}}</strong><br />
+            {{t "auth.two-fa.verify-code.check-subtitle"}}
+        {{/if}}
     </p>
 </div>
 
 <form class="mt-8" {{on "submit" this.verifyCode}}>
     <div class="flex items-center justify-between my-6">
-        <OtpInput @onInputCompleted={{this.handleOtpInput}} @size={{6}} class="w-full" />
+        {{#if this.useRecoveryCode}}
+            <Input
+                @value={{this.verificationCode}}
+                class="form-input form-input-lg w-full font-mono"
+                placeholder="xxxxx-xxxxx"
+                autocomplete="off"
+                aria-label={{t "auth.two-fa.verify-code.recovery-code-title"}}
+            />
+        {{else}}
+            <OtpInput @onInputCompleted={{this.handleOtpInput}} @size={{6}} class="w-full" />
+        {{/if}}
     </div>
 
     <div id="otp-countdown-container" class="otp-countdown-container flex {{if this.isCodeExpired 'flex-col' 'flex-row'}} items-center justify-center min-h-12">
@@ -38,10 +56,19 @@
         <Button @buttonType="submit" @type="primary" @text={{t "auth.two-fa.verify-code.verify-code"}} @icon="check-circle" @wrapperClass="btn-block" @isLoading={{this.isLoading}} />
     </div>
 
-    <div class="text-center flex flex-row items-center justify-center space-x-4 mt-3.5">
-        <a href="#" class="text-sm text-blue-500 hover:underline inline-block" {{on "click" this.resendCode}}>
-            {{t "auth.two-fa.verify-code.resend-code"}}
-        </a>
+    <div class="text-center flex flex-row flex-wrap items-center justify-center space-x-4 mt-3.5">
+        {{#if this.isAuthenticatorApp}}
+            <a href="#" class="text-sm text-blue-500 hover:underline inline-block" {{on "click" this.toggleRecoveryCode}}>
+                {{if this.useRecoveryCode (t "auth.two-fa.verify-code.use-authenticator-code") (t "auth.two-fa.verify-code.use-recovery-code")}}
+            </a>
+            <a href="#" class="text-sm text-blue-500 hover:underline inline-block" {{on "click" this.resendCode}}>
+                {{t "auth.two-fa.verify-code.send-code-instead"}}
+            </a>
+        {{else}}
+            <a href="#" class="text-sm text-blue-500 hover:underline inline-block" {{on "click" this.resendCode}}>
+                {{t "auth.two-fa.verify-code.resend-code"}}
+            </a>
+        {{/if}}
         <a href="#" class="text-sm text-danger hover:underline inline-block" {{on "click" this.cancelTwoFactor}}>
             {{t "auth.two-fa.verify-code.cancel-two-factor"}}
         </a>

@@ -37,7 +37,7 @@ export default class AuthTwoFaRoute extends Route {
 
             return this.fetch
                 .post('two-fa/validate', { token, identity, clientToken })
-                .then(({ clientToken, expired }) => {
+                .then(({ clientToken, method, expired }) => {
                     // handle when code expired
                     if (expired === true) {
                         return this.invalidateTwoFaSession(token, identity);
@@ -48,6 +48,7 @@ export default class AuthTwoFaRoute extends Route {
                         identity,
                         token,
                         clientToken,
+                        method,
                     });
                 })
                 .catch((error) => {
@@ -63,11 +64,13 @@ export default class AuthTwoFaRoute extends Route {
         this.session.store
             .restore()
             .then((restored) => {
-                const { clientToken, identity } = restored ?? {};
+                const { clientToken, identity, method } = restored ?? {};
                 controller.clientToken = clientToken;
                 controller.identity = identity;
+                controller.method = method;
                 controller.twoFactorSessionExpiresAfter = controller.getExpirationDateFromClientToken(clientToken);
-                controller.countdownReady = true;
+                // Codes from an authenticator app are not sent, so they do not expire
+                controller.countdownReady = !controller.isAuthenticatorApp;
             })
             .catch(() => {});
     }

@@ -1,0 +1,10 @@
+{{#if @value}}
+    <div class="leading-4" data-test-date-time-cell>
+        <div class="whitespace-nowrap text-xs tabular-nums text-gray-900 dark:text-gray-100">{{@value}}</div>
+        {{#if @row.lastSeenRelative}}
+            <div class="text-[11px] text-gray-500 dark:text-gray-400">{{@row.lastSeenRelative}}</div>
+        {{/if}}
+    </div>
+{{else}}
+    <span class="text-gray-400">—</span>
+{{/if}}
