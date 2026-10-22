@@ -2,7 +2,8 @@
 # Base stage
 # laravel/octane sets a minimum FrankenPHP version and enforces it at startup, so this tag and the
 # Octane range in api/composer.json move together. The build fails below when they don't match.
-FROM dunglas/frankenphp:1.13.1-php8.2-bookworm AS base
+# 1.13.2 ships PHP 8.2.35, which fixes PHP2Shell (CVE-2026-109618, CVE-2026-109619). Don't go below it.
+FROM dunglas/frankenphp:1.13.2-php8.2-bookworm AS base
 
 # Install packages
 # default-mysql-client provides mysqldump (MariaDB's), which db:backup runs. Without it every
@@ -55,9 +56,15 @@ RUN curl -fsSL -o php-geos.zip \
     && rm -rf php-geos-*
 
 # Update PHP configurations
+# post_max_size is bounded (it was 0, unlimited) and session upload progress is off: both narrow the
+# PHP2Shell attack paths (https://www.php.net/archive/2026.php#2026-10-21-5). The version check fails
+# the build if the base image ever ships a PHP 8.2 without the fix.
 RUN sed -e 's/^expose_php.*/expose_php = Off/' "$PHP_INI_DIR/php.ini-production" > "$PHP_INI_DIR/php.ini" \
-  && sed -i -e 's/^upload_max_filesize.*/upload_max_filesize = 600M/' -e 's/^post_max_size.*/post_max_size = 0/' \
-  -e 's/^memory_limit.*/memory_limit = 600M/' "$PHP_INI_DIR/php.ini"
+  && sed -i -e 's/^upload_max_filesize.*/upload_max_filesize = 600M/' -e 's/^post_max_size.*/post_max_size = 610M/' \
+  -e 's/^memory_limit.*/memory_limit = 600M/' "$PHP_INI_DIR/php.ini" \
+  && printf 'session.upload_progress.enabled = 0\n' > "$PHP_INI_DIR/conf.d/zz-fleetbase-security.ini" \
+  && php -r 'if (version_compare(PHP_VERSION, "8.2.35", "<")) { fwrite(STDERR, "PHP " . PHP_VERSION . " is vulnerable to PHP2Shell; need 8.2.35+\n"); exit(1); }' \
+  && php -r 'if (ini_get("session.upload_progress.enabled")) { fwrite(STDERR, "session.upload_progress.enabled is still on\n"); exit(1); }'
 
 # Install global node modules
 RUN npm install -g chokidar pnpm ember-cli npm-cli-login
@@ -84,7 +91,7 @@ ENV OCTANE_SERVER=frankenphp
 # its "develop" default it roughly doubled every request's time and disabled the OPcache
 # JIT in every image built from here, production included.
 ENV XDEBUG_MODE=off
-ENV FLEETBASE_VERSION=0.7.72
+ENV FLEETBASE_VERSION=0.7.73
 
 # Set environment
 ARG ENVIRONMENT=production
