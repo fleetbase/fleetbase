@@ -11,6 +11,7 @@ export default class ConsoleRoute extends Route {
     @service router;
     @service currentUser;
     @service intl;
+    @service oauthAuthorization;
 
     /**
      * Require authentication to access all `console` routes.
@@ -39,6 +40,12 @@ export default class ConsoleRoute extends Route {
     async afterModel(model, transition) {
         this.hookService.execute('console:after-model', this.session, this.router, model, transition);
         removeBootLoader();
+
+        // An app's "Continue with Fleetbase" request was waiting for the user to sign in (or sign
+        // up). Unless a hook already sent them elsewhere (e.g. to finish onboarding), go back to it.
+        if (!transition.isAborted) {
+            this.oauthAuthorization.resume();
+        }
     }
 
     /**
