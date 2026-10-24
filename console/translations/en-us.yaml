@@ -739,6 +739,7 @@ console:
       queue: Queue
       socket: Socket
       oauth: 'OAuth Sign-in'
+      oauth-apps: 'OAuth Apps'
       push-notifications: Push Notifications
     schedule-monitor:
       schedule-monitor: Schedule Monitor
@@ -864,6 +865,44 @@ invite:
     invitation-code-sent-text: Your invitiation code
     accept-invitation-text: Accept Invitation
 
+oauth:
+  authorize:
+    title: 'Continue with Fleetbase'
+    loading: 'Checking the request...'
+    heading: '{app} wants to access your Fleetbase account'
+    official: 'Made by Fleetbase'
+    signed-in-as: 'Signed in as {email}'
+    not-you: 'Not you?'
+    organization-label: 'Organization to share'
+    organization-help: 'The app can only see and change this organization. You can remove its access at any time under Account → Auth.'
+    not-admin: 'only administrators can share it'
+    no-organization: "You don't administer an organization you could share. Ask an administrator of your organization to connect the app."
+    your-organization: 'your organization'
+    will-be-able-to: '{app} will be able to:'
+    allow: 'Allow'
+    cancel: 'Cancel'
+    footnote: 'You are sharing this with {app}, not with Fleetbase.'
+    privacy: 'Privacy policy'
+    terms: 'Terms'
+    reauthenticate: 'Sign in again to continue...'
+    errors:
+      generic: 'This request could not be completed.'
+      invalid-client: "This app isn't registered with Fleetbase, or it has been turned off."
+      invalid-request: "The link from the app isn't valid. Go back to the app and try again."
+      invalid-scope: 'The app asked for access it is not allowed to have.'
+      no-organization: 'Choose an organization you administer to share with this app.'
+      go-back: 'You can close this page and go back to the app.'
+  connected-apps:
+    title: 'Connected apps'
+    help: 'Apps you signed in to with your Fleetbase account, and what each can do. Removing an app signs you out of it and stops its access straight away.'
+    organization: 'Has access to {organization}'
+    sign-in-only: 'Sign-in only'
+    last-used: 'last used {date}'
+    never-used: 'not used yet'
+    remove-button: 'Remove access'
+    remove-title: 'Remove {app}?'
+    remove-body: '{app} will be signed out and lose access straight away. To use it again, you will authorize it again.'
+    removed: '{app} no longer has access.'
 onboard:
   index:
     title: Create your account
