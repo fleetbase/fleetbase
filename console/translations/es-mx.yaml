@@ -708,6 +708,7 @@ console:
       queue: Cola
       socket: Socket
       oauth: 'Inicio de sesión OAuth'
+      oauth-apps: "Aplicaciones OAuth"
       push-notifications: Notificaciones push
 
     schedule-monitor:
@@ -811,6 +812,44 @@ invite:
     invitation-code-sent-text: Tu código de invitación
     accept-invitation-text: Aceptar invitación
 
+oauth:
+  authorize:
+    title: "Continuar con Fleetbase"
+    loading: "Revisando la solicitud..."
+    heading: "{app} quiere acceder a tu cuenta de Fleetbase"
+    official: "Hecha por Fleetbase"
+    signed-in-as: "Sesión iniciada como {email}"
+    not-you: "¿No eres tú?"
+    organization-label: "Organización que compartir"
+    organization-help: "La aplicación solo puede ver y cambiar esta organización. Puedes quitarle el acceso en cualquier momento en Cuenta → Autenticación."
+    not-admin: "solo los administradores pueden compartirla"
+    no-organization: "No administras ninguna organización que puedas compartir. Pídele a un administrador de tu organización que conecte la aplicación."
+    your-organization: "tu organización"
+    will-be-able-to: "{app} podrá:"
+    allow: "Permitir"
+    cancel: "Cancelar"
+    footnote: "Lo compartes con {app}, no con Fleetbase."
+    privacy: "Aviso de privacidad"
+    terms: "Términos"
+    reauthenticate: "Vuelve a iniciar sesión para continuar..."
+    errors:
+      generic: "No se pudo completar esta solicitud."
+      invalid-client: "Esta aplicación no está registrada en Fleetbase o se desactivó."
+      invalid-request: "El enlace de la aplicación no es válido. Regresa a la aplicación e inténtalo de nuevo."
+      invalid-scope: "La aplicación pidió un acceso que no tiene permitido."
+      no-organization: "Elige una organización que administres para compartirla con esta aplicación."
+      go-back: "Puedes cerrar esta página y regresar a la aplicación."
+  connected-apps:
+    title: "Aplicaciones conectadas"
+    help: "Aplicaciones en las que iniciaste sesión con tu cuenta de Fleetbase y lo que puede hacer cada una. Al quitar una aplicación se cierra tu sesión en ella y su acceso termina de inmediato."
+    organization: "Tiene acceso a {organization}"
+    sign-in-only: "Solo inicio de sesión"
+    last-used: "último uso {date}"
+    never-used: "sin usar todavía"
+    remove-button: "Quitar acceso"
+    remove-title: "¿Quitar {app}?"
+    remove-body: "{app} cerrará sesión y perderá el acceso de inmediato. Para volver a usarla, tendrás que autorizarla otra vez."
+    removed: "{app} ya no tiene acceso."
 onboard:
   index:
     title: Crea tu cuenta

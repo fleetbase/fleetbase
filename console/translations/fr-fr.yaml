@@ -675,6 +675,7 @@ console:
       queue: File d'attente
       socket: Socket
       oauth: 'Connexion OAuth'
+      oauth-apps: "Applications OAuth"
       push-notifications: Notifications Push
     schedule-monitor:
       schedule-monitor: Moniteur de planification
@@ -768,6 +769,44 @@ invite:
       reçu par email et cliquez sur continuer.
     invitation-code-sent-text: Votre code d'invitation
     accept-invitation-text: Accepter l'invitation
+oauth:
+  authorize:
+    title: "Continuer avec Fleetbase"
+    loading: "Vérification de la demande..."
+    heading: "{app} souhaite accéder à votre compte Fleetbase"
+    official: "Conçue par Fleetbase"
+    signed-in-as: "Connecté en tant que {email}"
+    not-you: "Ce n’est pas vous ?"
+    organization-label: "Organisation à partager"
+    organization-help: "L’application ne peut voir et modifier que cette organisation. Vous pouvez retirer son accès à tout moment dans Compte → Authentification."
+    not-admin: "seuls les administrateurs peuvent la partager"
+    no-organization: "Vous n’administrez aucune organisation que vous pourriez partager. Demandez à un administrateur de votre organisation de connecter l’application."
+    your-organization: "votre organisation"
+    will-be-able-to: "{app} pourra :"
+    allow: "Autoriser"
+    cancel: "Annuler"
+    footnote: "Vous partagez ceci avec {app}, pas avec Fleetbase."
+    privacy: "Politique de confidentialité"
+    terms: "Conditions"
+    reauthenticate: "Reconnectez-vous pour continuer..."
+    errors:
+      generic: "Cette demande n’a pas pu aboutir."
+      invalid-client: "Cette application n’est pas enregistrée auprès de Fleetbase, ou elle a été désactivée."
+      invalid-request: "Le lien de l’application n’est pas valide. Retournez dans l’application et réessayez."
+      invalid-scope: "L’application a demandé un accès qui ne lui est pas autorisé."
+      no-organization: "Choisissez une organisation que vous administrez à partager avec cette application."
+      go-back: "Vous pouvez fermer cette page et retourner dans l’application."
+  connected-apps:
+    title: "Applications connectées"
+    help: "Les applications auxquelles vous vous êtes connecté avec votre compte Fleetbase, et ce que chacune peut faire. Retirer une application vous en déconnecte et coupe son accès immédiatement."
+    organization: "A accès à {organization}"
+    sign-in-only: "Connexion uniquement"
+    last-used: "utilisée le {date}"
+    never-used: "pas encore utilisée"
+    remove-button: "Retirer l’accès"
+    remove-title: "Retirer {app} ?"
+    remove-body: "{app} sera déconnectée et perdra son accès immédiatement. Pour l’utiliser à nouveau, vous devrez l’autoriser à nouveau."
+    removed: "{app} n’a plus accès."
 onboard:
   index:
     title: Créez votre compte

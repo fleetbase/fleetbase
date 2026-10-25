@@ -663,6 +663,7 @@ console:
       queue: الطابور
       socket: المقبس
       oauth: 'تسجيل الدخول عبر OAuth'
+      oauth-apps: "تطبيقات OAuth"
       push-notifications: الإشعارات الفورية
     schedule-monitor:
       schedule-monitor: مراقب الجدول
@@ -753,6 +754,44 @@ invite:
       لقبول هذه الدعوة، أدخل رمز الدعوة الذي تلقيته عبر البريد الإلكتروني واضغط متابعة.
     invitation-code-sent-text: رمز الدعوة الخاص بك
     accept-invitation-text: قبول الدعوة
+oauth:
+  authorize:
+    title: "المتابعة باستخدام Fleetbase"
+    loading: "جارٍ التحقق من الطلب..."
+    heading: "يريد {app} الوصول إلى حسابك في Fleetbase"
+    official: "من إنتاج Fleetbase"
+    signed-in-as: "تم تسجيل الدخول باسم {email}"
+    not-you: "لست أنت؟"
+    organization-label: "المؤسسة المراد مشاركتها"
+    organization-help: "لا يمكن للتطبيق رؤية وتعديل سوى هذه المؤسسة. يمكنك إزالة وصوله في أي وقت من الحساب ← المصادقة."
+    not-admin: "لا يمكن مشاركتها إلا من قبل المسؤولين"
+    no-organization: "أنت لا تدير أي مؤسسة يمكنك مشاركتها. اطلب من أحد مسؤولي مؤسستك ربط التطبيق."
+    your-organization: "مؤسستك"
+    will-be-able-to: "سيتمكن {app} من:"
+    allow: "سماح"
+    cancel: "إلغاء"
+    footnote: "أنت تشارك هذا مع {app}، وليس مع Fleetbase."
+    privacy: "سياسة الخصوصية"
+    terms: "الشروط"
+    reauthenticate: "سجّل الدخول مرة أخرى للمتابعة..."
+    errors:
+      generic: "تعذّر إكمال هذا الطلب."
+      invalid-client: "هذا التطبيق غير مسجّل في Fleetbase أو تم إيقافه."
+      invalid-request: "الرابط القادم من التطبيق غير صالح. ارجع إلى التطبيق وحاول مرة أخرى."
+      invalid-scope: "طلب التطبيق وصولاً غير مسموح له به."
+      no-organization: "اختر مؤسسة تديرها لمشاركتها مع هذا التطبيق."
+      go-back: "يمكنك إغلاق هذه الصفحة والعودة إلى التطبيق."
+  connected-apps:
+    title: "التطبيقات المتصلة"
+    help: "التطبيقات التي سجّلت الدخول إليها بحسابك في Fleetbase وما يمكن لكل منها فعله. تؤدي إزالة تطبيق إلى تسجيل خروجك منه وإيقاف وصوله فورًا."
+    organization: "لديه وصول إلى {organization}"
+    sign-in-only: "تسجيل الدخول فقط"
+    last-used: "آخر استخدام {date}"
+    never-used: "لم يُستخدم بعد"
+    remove-button: "إزالة الوصول"
+    remove-title: "إزالة {app}؟"
+    remove-body: "سيتم تسجيل خروج {app} وسيفقد الوصول فورًا. لاستخدامه مرة أخرى، ستحتاج إلى السماح له من جديد."
+    removed: "لم يعد لدى {app} وصول."
 onboard:
   index:
     title: إنشاء حسابك
