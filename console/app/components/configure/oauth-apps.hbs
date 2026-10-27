@@ -10,155 +10,275 @@
 
 {{#if this.revealedSecret}}
     <ContentPanel @title="Client credentials for {{this.revealedSecret.app.name}}" @open={{true}} @wrapperClass="bordered-classic" data-test-oauth-app-secret>
-        <InfoBlock @type="warning" @icon="key" @text="Copy the secret now. It is stored only as a hash and is not shown again." class="mb-3" />
-        <InputGroup @name="client_id">
-            <Input class="form-input w-full font-mono text-xs" @value={{this.revealedSecret.app.id}} readonly={{true}} />
+        <InfoBlock @type="warning" @icon="key" @text="Copy the secret now. It is stored only as a hash and is not shown again." class="mb-4" />
+        <InputGroup @name="Client ID">
+            <ClickToCopy @value={{this.revealedSecret.app.id}} class="form-input disabled cursor-pointer font-mono text-xs">{{this.revealedSecret.app.id}}</ClickToCopy>
         </InputGroup>
         {{#if this.revealedSecret.secret}}
-            <InputGroup @name="client_secret">
-                <Input class="form-input w-full font-mono text-xs" @value={{this.revealedSecret.secret}} readonly={{true}} />
+            <InputGroup @name="Client secret">
+                <ClickToCopy @value={{this.revealedSecret.secret}} class="form-input disabled cursor-pointer font-mono text-xs break-all">{{this.revealedSecret.secret}}</ClickToCopy>
             </InputGroup>
         {{else}}
-            <p class="text-sm text-gray-600 dark:text-gray-400">This is a public app: it has no secret and must use PKCE, which every app does anyway.</p>
+            <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">This is a public app: it has no secret and must use PKCE, which every app does anyway.</p>
         {{/if}}
-        <Button @text="Done" @onClick={{this.dismissSecret}} />
+        <Button @type="primary" @text="I've copied it" @onClick={{this.dismissSecret}} />
     </ContentPanel>
 {{/if}}
 
 {{#if this.form}}
     <ContentPanel @title={{if this.editing (concat "Edit " this.editing.name) "Register an app"}} @open={{true}} @wrapperClass="bordered-classic" data-test-oauth-app-form>
-        <InputGroup @name="Name" @helpText="Shown on the consent screen: “{{if this.form.name this.form.name 'App'}} wants to access your Fleetbase account”.">
-            <Input class="form-input w-full" @value={{this.form.name}} {{on "input" (fn this.setField "name")}} />
-        </InputGroup>
-        <InputGroup @name="Description">
-            <Input class="form-input w-full" @value={{this.form.description}} {{on "input" (fn this.setField "description")}} />
-        </InputGroup>
-        <InputGroup @name="Redirect URIs" @helpText="One per line. Matched exactly, including path and query. https only; http://127.0.0.1 or http://[::1] only on a development app.">
-            <Textarea class="form-input w-full font-mono text-xs" rows="3" @value={{this.form.redirect_uris}} {{on "input" (fn this.setField "redirect_uris")}} />
-        </InputGroup>
-        <InputGroup @name="Allowed scopes" @helpText="The app can ask for these and nothing else. Organization scopes make the person pick an organization they administer.">
-            <div class="space-y-1">
-                {{#each this.scopes as |scope|}}
-                    <label class="flex items-start text-sm text-gray-700 dark:text-gray-300">
-                        <input type="checkbox" class="form-checkbox mr-2 mt-0.5" checked={{this.hasScope scope.scope}} {{on "change" (fn this.toggleScope scope.scope)}} />
-                        <span><code class="text-xs">{{scope.scope}}</code> — {{scope.description}}</span>
-                    </label>
-                {{/each}}
-            </div>
-        </InputGroup>
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
-            <InputGroup @name="Logo URL">
-                <Input class="form-input w-full" @value={{this.form.logo_url}} {{on "input" (fn this.setField "logo_url")}} />
-            </InputGroup>
-            <InputGroup @name="Website">
-                <Input class="form-input w-full" @value={{this.form.website_url}} {{on "input" (fn this.setField "website_url")}} />
-            </InputGroup>
-            <InputGroup @name="Privacy policy URL">
-                <Input class="form-input w-full" @value={{this.form.privacy_url}} {{on "input" (fn this.setField "privacy_url")}} />
-            </InputGroup>
-            <InputGroup @name="Terms URL">
-                <Input class="form-input w-full" @value={{this.form.terms_url}} {{on "input" (fn this.setField "terms_url")}} />
-            </InputGroup>
+        <div class="space-y-6">
+            <section>
+                <h4 class="mb-3 text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">App</h4>
+                <InputGroup @name="Logo" @helpText="Shown on the consent screen and under Account → Auth. A square image works best.">
+                    <div class="flex flex-row items-center space-x-3">
+                        <div class="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-md border border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800">
+                            {{#if this.form.logo_url}}
+                                <img src={{this.form.logo_url}} alt="" class="h-full w-full object-contain" data-test-oauth-app-logo-preview />
+                            {{else}}
+                                <FaIcon @icon="plug" class="text-gray-400" />
+                            {{/if}}
+                        </div>
+                        <FileUpload @name="oauth-app-logo" @accept="image/*" @onFileAdded={{this.uploadLogo}} @labelClass="flex flex-row items-center justify-center mb-0i" as |queue|>
+                            <a tabindex={{0}} class="btn btn-sm btn-default flex items-center text-xs no-underline" disabled={{queue.files.length}}>
+                                {{#if queue.files.length}}
+                                    <Spinner class="mr-1.5" />
+                                    <span>Uploading...</span>
+                                {{else}}
+                                    <FaIcon @icon="image" class="mr-1.5" />
+                                    <span>{{if this.form.logo_url "Replace logo" "Upload logo"}}</span>
+                                {{/if}}
+                            </a>
+                        </FileUpload>
+                        {{#if this.form.logo_url}}
+                            <Button @size="sm" @type="link" @text="Remove" @onClick={{this.removeLogo}} class="text-danger" />
+                        {{/if}}
+                    </div>
+                </InputGroup>
+                <InputGroup @name="Name" @helpText="Shown on the consent screen as “{{if this.form.name this.form.name 'App'}} wants to access your Fleetbase account”.">
+                    <Input class="form-input w-full" @value={{this.form.name}} placeholder="e.g. AppHelm" {{on "input" (fn this.setField "name")}} />
+                </InputGroup>
+                <InputGroup @name="Description">
+                    <Input class="form-input w-full" @value={{this.form.description}} placeholder="What the app does, in one sentence" {{on "input" (fn this.setField "description")}} />
+                </InputGroup>
+            </section>
+
+            <section>
+                <h4 class="mb-3 text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Sign-in</h4>
+                <InputGroup
+                    @name="Redirect URIs"
+                    @helpText="One per line. Matched exactly, including path and query. https only; http://127.0.0.1 or http://[::1] only on a development app."
+                >
+                    <Textarea
+                        class="form-input w-full font-mono text-xs"
+                        rows="3"
+                        @value={{this.form.redirect_uris}}
+                        placeholder="https://app.example.com/auth/fleetbase/callback"
+                        {{on "input" (fn this.setField "redirect_uris")}}
+                    />
+                </InputGroup>
+                <InputGroup @name="Allowed scopes" @helpText="The app can ask for these and nothing else. Organization scopes make the person pick an organization they administer.">
+                    <div class="space-y-1.5 rounded-md border border-gray-200 p-3 dark:border-gray-700">
+                        {{#each this.scopes as |scope|}}
+                            <label class="flex items-start text-sm text-gray-700 dark:text-gray-300">
+                                <input type="checkbox" class="form-checkbox mr-2 mt-0.5" checked={{this.hasScope scope.scope}} {{on "change" (fn this.toggleScope scope.scope)}} />
+                                <span><code class="text-xs">{{scope.scope}}</code> <span class="text-gray-500 dark:text-gray-400">— {{scope.description}}</span></span>
+                            </label>
+                        {{/each}}
+                    </div>
+                </InputGroup>
+            </section>
+
+            <section>
+                <h4 class="mb-3 text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Links</h4>
+                <div class="grid grid-cols-1 gap-x-4 lg:grid-cols-2">
+                    <InputGroup @name="Website">
+                        <Input class="form-input w-full" @value={{this.form.website_url}} placeholder="https://app.example.com" {{on "input" (fn this.setField "website_url")}} />
+                    </InputGroup>
+                    <InputGroup @name="Privacy policy">
+                        <Input class="form-input w-full" @value={{this.form.privacy_url}} placeholder="https://app.example.com/privacy" {{on "input" (fn this.setField "privacy_url")}} />
+                    </InputGroup>
+                    <InputGroup @name="Terms">
+                        <Input class="form-input w-full" @value={{this.form.terms_url}} placeholder="https://app.example.com/terms" {{on "input" (fn this.setField "terms_url")}} />
+                    </InputGroup>
+                </div>
+            </section>
+
+            <section>
+                <h4 class="mb-3 text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Options</h4>
+                <InputGroup>
+                    <Toggle
+                        @isToggled={{this.form.official}}
+                        @onToggle={{fn this.setField "official"}}
+                        @label="Made by Fleetbase"
+                        @helpText="Shows a “Made by Fleetbase” badge on the consent screen."
+                    />
+                </InputGroup>
+                <InputGroup>
+                    <Toggle
+                        @isToggled={{this.form.development}}
+                        @onToggle={{fn this.setField "development"}}
+                        @label="Development app"
+                        @helpText="Allows http://127.0.0.1 and http://[::1] redirect URIs on any port, for local testing."
+                    />
+                </InputGroup>
+                {{#unless this.editing}}
+                    <InputGroup>
+                        <Toggle
+                            @isToggled={{this.form.confidential}}
+                            @onToggle={{fn this.setField "confidential"}}
+                            @label="Confidential (has a secret)"
+                            @helpText="Turn off for a mobile or single-page app that can't keep a secret. Every app must use PKCE either way."
+                        />
+                    </InputGroup>
+                {{/unless}}
+            </section>
         </div>
-        <InputGroup>
-            <Toggle
-                @isToggled={{this.form.official}}
-                @onToggle={{fn this.setField "official"}}
-                @label="Made by Fleetbase"
-                @helpText="Shows a “Made by Fleetbase” badge on the consent screen."
+
+        <div class="mt-6 flex flex-row space-x-2 border-t border-gray-200 pt-4 dark:border-gray-700">
+            <Button
+                @type="primary"
+                @icon="save"
+                @text={{if this.editing "Save changes" "Register app"}}
+                @isLoading={{this.save.isRunning}}
+                @disabled={{this.isUploadingLogo}}
+                @onClick={{perform this.save}}
             />
-        </InputGroup>
-        <InputGroup>
-            <Toggle
-                @isToggled={{this.form.development}}
-                @onToggle={{fn this.setField "development"}}
-                @label="Development app"
-                @helpText="Allows http://127.0.0.1 and http://[::1] redirect URIs on any port, for local testing."
-            />
-        </InputGroup>
-        {{#unless this.editing}}
-            <InputGroup>
-                <Toggle
-                    @isToggled={{this.form.confidential}}
-                    @onToggle={{fn this.setField "confidential"}}
-                    @label="Confidential (has a secret)"
-                    @helpText="Turn off for a mobile or single-page app that can't keep a secret. Every app must use PKCE either way."
-                />
-            </InputGroup>
-        {{/unless}}
-        <div class="flex flex-row space-x-2">
-            <Button @type="primary" @icon="save" @text={{if this.editing "Save" "Register"}} @isLoading={{this.save.isRunning}} @onClick={{perform this.save}} />
             <Button @text="Cancel" @onClick={{this.cancelForm}} />
         </div>
     </ContentPanel>
 {{/if}}
 
-{{#each this.apps key="id" as |app|}}
-    <ContentPanel @title={{app.name}} @open={{true}} @wrapperClass="bordered-classic" data-test-oauth-app>
-        <dl class="grid grid-cols-1 gap-2 text-sm lg:grid-cols-2">
-            <div>
-                <dt class="text-xs uppercase tracking-wide text-gray-500">client_id</dt>
-                <dd class="font-mono text-xs break-all text-gray-900 dark:text-gray-100">{{app.id}}</dd>
-            </div>
-            <div>
-                <dt class="text-xs uppercase tracking-wide text-gray-500">Status</dt>
-                <dd class="text-gray-900 dark:text-gray-100">
-                    {{if app.disabled_at "Turned off" "Active"}}
-                    ·
-                    {{if app.confidential "Confidential" "Public"}}
-                    {{#if app.official}}· Made by Fleetbase{{/if}}
-                    {{#if app.development}}· Development{{/if}}
-                    ·
-                    {{app.active_grants_count}}
-                    authorized
-                </dd>
-            </div>
-            <div class="lg:col-span-2">
-                <dt class="text-xs uppercase tracking-wide text-gray-500">Redirect URIs</dt>
-                <dd class="font-mono text-xs break-all text-gray-900 dark:text-gray-100">
-                    {{#each app.redirect_uris as |uri|}}<div>{{uri}}</div>{{/each}}
-                </dd>
-            </div>
-            <div class="lg:col-span-2">
-                <dt class="text-xs uppercase tracking-wide text-gray-500">Allowed scopes</dt>
-                <dd class="font-mono text-xs text-gray-900 dark:text-gray-100">{{this.joined app.allowed_scopes}}</dd>
-            </div>
-        </dl>
-        <div class="mt-3 flex flex-row flex-wrap gap-2">
-            <Button @size="xs" @icon="pencil" @text="Edit" @onClick={{fn this.startEdit app}} />
-            {{#if app.confidential}}
-                <Button @size="xs" @icon="rotate" @text="Rotate secret" @onClick={{fn this.confirmRotate app}} />
-            {{/if}}
-            <Button @size="xs" @icon="users" @text="Who authorized it" @isLoading={{and this.showGrants.isRunning (eq this.grantsFor.id app.id)}} @onClick={{perform this.showGrants app}} />
-            <Button @size="xs" @type={{if app.disabled_at "primary" "danger"}} @icon="power-off" @text={{if app.disabled_at "Turn on" "Turn off"}} @onClick={{fn this.confirmToggle app}} />
-        </div>
-
-        {{#if (eq this.grantsFor.id app.id)}}
-            <div class="mt-4 border-t border-gray-200 pt-3 dark:border-gray-700">
-                <div class="mb-2 flex items-center justify-between">
-                    <h4 class="text-xs font-semibold uppercase tracking-wide text-gray-500">Authorized by</h4>
-                    <Button @size="xs" @type="link" @text="Hide" @onClick={{this.hideGrants}} />
-                </div>
-                {{#if this.grants.length}}
-                    <div class="space-y-2">
-                        {{#each this.grants key="id" as |grant|}}
-                            <div class="flex items-center justify-between rounded-md border border-gray-200 px-3 py-2 text-sm dark:border-gray-700">
-                                <div class="min-w-0">
-                                    <div class="text-gray-900 dark:text-white">{{grant.user.name}} <span class="text-gray-500">{{grant.user.email}}</span></div>
-                                    <div class="text-xs text-gray-500">
-                                        {{if grant.organization grant.organization.name "Sign-in only"}}
-                                        ·
-                                        <span class="font-mono">{{this.joined grant.scopes}}</span>
-                                    </div>
-                                </div>
-                                <Button @size="xs" @type="danger" @text="Revoke" @isLoading={{this.revokeGrant.isRunning}} @onClick={{perform this.revokeGrant grant}} />
+<ContentPanel @title={{concat "Registered apps (" this.apps.length ")"}} @open={{true}} @wrapperClass="bordered-classic" data-test-oauth-apps>
+    {{#if this.apps.length}}
+        <ul class="divide-y divide-gray-200 dark:divide-gray-700">
+            {{#each this.apps key="id" as |app|}}
+                <li class="py-5 first:pt-0 last:pb-0" data-test-oauth-app>
+                    <div class="flex items-start justify-between">
+                        <div class="flex min-w-0 items-start">
+                            <div
+                                class="mr-3 flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-md border border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800"
+                            >
+                                {{#if app.logo_url}}
+                                    <img src={{app.logo_url}} alt="" class="h-full w-full object-contain" />
+                                {{else}}
+                                    <FaIcon @icon="plug" class="text-gray-400" />
+                                {{/if}}
                             </div>
-                        {{/each}}
+                            <div class="min-w-0">
+                                <div class="truncate text-sm font-semibold text-gray-900 dark:text-white">{{app.name}}</div>
+                                {{#if app.description}}
+                                    <div class="truncate text-sm text-gray-500 dark:text-gray-400">{{app.description}}</div>
+                                {{/if}}
+                            </div>
+                        </div>
+                        <div class="ml-3 flex shrink-0 flex-wrap justify-end gap-1">
+                            {{#if app.disabled_at}}
+                                <Badge @status="danger" @hideStatusDot={{true}}>Turned off</Badge>
+                            {{else}}
+                                <Badge @status="success" @hideStatusDot={{true}}>Active</Badge>
+                            {{/if}}
+                            <Badge @status="default" @hideStatusDot={{true}}>{{if app.confidential "Confidential" "Public"}}</Badge>
+                            {{#if app.official}}
+                                <Badge @status="info" @hideStatusDot={{true}}>Made by Fleetbase</Badge>
+                            {{/if}}
+                            {{#if app.development}}
+                                <Badge @status="warning" @hideStatusDot={{true}}>Development</Badge>
+                            {{/if}}
+                        </div>
                     </div>
-                {{else if (not this.showGrants.isRunning)}}
-                    <p class="text-sm text-gray-500">Nobody has authorized this app yet.</p>
-                {{/if}}
-            </div>
-        {{/if}}
-    </ContentPanel>
-{{/each}}
+
+                    <dl class="mt-4 grid grid-cols-1 gap-x-6 gap-y-3 lg:grid-cols-2">
+                        <div>
+                            <dt class="text-xs font-medium text-gray-500 dark:text-gray-400">Client ID</dt>
+                            <dd class="mt-1"><ClickToCopy @value={{app.id}} class="font-mono text-xs text-gray-900 dark:text-gray-100">{{app.id}}</ClickToCopy></dd>
+                        </div>
+                        <div>
+                            <dt class="text-xs font-medium text-gray-500 dark:text-gray-400">Authorized by</dt>
+                            <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100">{{app.active_grants_count}} {{if (eq app.active_grants_count 1) "person" "people"}}</dd>
+                        </div>
+                        <div class="lg:col-span-2">
+                            <dt class="text-xs font-medium text-gray-500 dark:text-gray-400">Redirect URIs</dt>
+                            <dd class="mt-1 space-y-0.5">
+                                {{#each app.redirect_uris as |uri|}}
+                                    <div class="break-all font-mono text-xs text-gray-900 dark:text-gray-100">{{uri}}</div>
+                                {{/each}}
+                            </dd>
+                        </div>
+                        <div class="lg:col-span-2">
+                            <dt class="text-xs font-medium text-gray-500 dark:text-gray-400">Allowed scopes</dt>
+                            <dd class="mt-1 flex flex-wrap gap-1">
+                                {{#each app.allowed_scopes as |scope|}}
+                                    <code class="rounded bg-gray-100 px-1.5 py-0.5 text-xs text-gray-700 dark:bg-gray-800 dark:text-gray-300">{{scope}}</code>
+                                {{/each}}
+                            </dd>
+                        </div>
+                        {{#if app.website_url}}
+                            <div class="lg:col-span-2">
+                                <dt class="text-xs font-medium text-gray-500 dark:text-gray-400">Website</dt>
+                                <dd class="mt-1 text-sm"><a
+                                        href={{app.website_url}}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        class="text-blue-600 hover:underline dark:text-blue-400"
+                                    >{{app.website_url}}</a></dd>
+                            </div>
+                        {{/if}}
+                    </dl>
+
+                    <div class="mt-4 flex flex-row flex-wrap gap-2">
+                        <Button @size="xs" @icon="pencil" @text="Edit" @onClick={{fn this.startEdit app}} />
+                        {{#if app.confidential}}
+                            <Button @size="xs" @icon="rotate" @text="Rotate secret" @onClick={{fn this.confirmRotate app}} />
+                        {{/if}}
+                        <Button
+                            @size="xs"
+                            @icon="users"
+                            @text={{if (eq this.grantsFor.id app.id) "Hide who authorized it" "Who authorized it"}}
+                            @isLoading={{and this.showGrants.isRunning (eq this.grantsFor.id app.id)}}
+                            @onClick={{if (eq this.grantsFor.id app.id) this.hideGrants (perform this.showGrants app)}}
+                        />
+                        <Button
+                            @size="xs"
+                            @type={{if app.disabled_at "primary" "danger"}}
+                            @icon="power-off"
+                            @text={{if app.disabled_at "Turn on" "Turn off"}}
+                            @onClick={{fn this.confirmToggle app}}
+                        />
+                    </div>
+
+                    {{#if (eq this.grantsFor.id app.id)}}
+                        <div class="mt-4 rounded-md border border-gray-200 dark:border-gray-700" data-test-oauth-app-grants>
+                            {{#if this.grants.length}}
+                                <ul class="divide-y divide-gray-200 dark:divide-gray-700">
+                                    {{#each this.grants key="id" as |grant|}}
+                                        <li class="flex items-center justify-between px-3 py-2">
+                                            <div class="min-w-0">
+                                                <div class="truncate text-sm text-gray-900 dark:text-white">
+                                                    {{grant.user.name}}
+                                                    <span class="text-gray-500 dark:text-gray-400">{{grant.user.email}}</span>
+                                                </div>
+                                                <div class="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
+                                                    {{if grant.organization grant.organization.name "Sign-in only"}}
+                                                    ·
+                                                    <span class="font-mono">{{this.joined grant.scopes}}</span>
+                                                </div>
+                                            </div>
+                                            <Button @size="xs" @type="danger" @text="Revoke" @isLoading={{this.revokeGrant.isRunning}} @onClick={{perform this.revokeGrant grant}} />
+                                        </li>
+                                    {{/each}}
+                                </ul>
+                            {{else if (not this.showGrants.isRunning)}}
+                                <p class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">Nobody has authorized this app yet.</p>
+                            {{/if}}
+                        </div>
+                    {{/if}}
+                </li>
+            {{/each}}
+        </ul>
+    {{else if (not this.load.isRunning)}}
+        <p class="text-sm text-gray-500 dark:text-gray-400">No apps yet. Register one to offer “Continue with Fleetbase”.</p>
+    {{/if}}
+</ContentPanel>
+
+<Spacer @height="200px" />
