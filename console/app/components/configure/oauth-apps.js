@@ -36,6 +36,7 @@ export default class ConfigureOauthAppsComponent extends Component {
     @tracked revealedSecret = null;
     @tracked grantsFor = null;
     @tracked grants = [];
+    @tracked isUploadingLogo = false;
 
     constructor() {
         super(...arguments);
@@ -77,6 +78,31 @@ export default class ConfigureOauthAppsComponent extends Component {
     @action setField(key, eventOrValue) {
         const value = eventOrValue?.target ? eventOrValue.target.value : eventOrValue;
         this.form = { ...this.form, [key]: value };
+    }
+
+    /**
+     * Upload the logo the way Admin → Branding does, and keep its URL: the consent screen and
+     * Connected apps show it to people outside this organization, so it must be publicly readable.
+     */
+    @action uploadLogo(file) {
+        this.isUploadingLogo = true;
+
+        return this.fetch.uploadFile.perform(
+            file,
+            { path: 'uploads/system/oauth-apps', type: 'system' },
+            (uploadedFile) => {
+                this.form = { ...this.form, logo_url: uploadedFile.url };
+                this.isUploadingLogo = false;
+            },
+            (error) => {
+                this.isUploadingLogo = false;
+                this.notifications.serverError(error);
+            }
+        );
+    }
+
+    @action removeLogo() {
+        this.form = { ...this.form, logo_url: '' };
     }
 
     @action toggleScope(scope) {
