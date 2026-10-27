@@ -64,4 +64,17 @@ module('Unit | Route | console', function (hooks) {
 
         assert.strictEqual(await route.model(), 'brand:1');
     });
+
+    test('afterModel goes back to a waiting OAuth request unless a hook redirected', async function (assert) {
+        const route = this.owner.lookup('route:console');
+        route.hookService.execute = () => {};
+        let resumed = 0;
+        route.oauthAuthorization.resume = () => resumed++;
+
+        await route.afterModel({}, { isAborted: true });
+        assert.strictEqual(resumed, 0, 'a hook already sent the user elsewhere');
+
+        await route.afterModel({}, { isAborted: false });
+        assert.strictEqual(resumed, 1);
+    });
 });
