@@ -1,0 +1,47 @@
+{{#if this.apps.length}}
+    <ContentPanel @title={{t "oauth.connected-apps.title"}} @open={{true}} @wrapperClass="bordered-classic">
+        <p class="text-sm text-gray-700 dark:text-gray-300 mb-4">{{t "oauth.connected-apps.help"}}</p>
+        <div class="space-y-2" data-test-connected-apps>
+            {{#each this.apps key="id" as |connectedApp|}}
+                <div class="rounded-md border border-gray-200 dark:border-gray-700 px-3 py-2">
+                    <div class="flex items-start justify-between">
+                        <div class="flex items-start min-w-0">
+                            {{#if connectedApp.app.logo_url}}
+                                <img src={{connectedApp.app.logo_url}} alt="" class="mr-3 h-8 w-8 rounded object-contain" />
+                            {{/if}}
+                            <div class="min-w-0">
+                                <div class="text-sm font-semibold text-gray-900 dark:text-white">{{connectedApp.app.name}}</div>
+                                <div class="text-xs text-gray-500 dark:text-gray-400">
+                                    {{#if connectedApp.organization}}
+                                        {{t "oauth.connected-apps.organization" organization=connectedApp.organization.name}}
+                                    {{else}}
+                                        {{t "oauth.connected-apps.sign-in-only"}}
+                                    {{/if}}
+                                    ·
+                                    {{#if connectedApp.last_used_at}}
+                                        {{t "oauth.connected-apps.last-used" date=(this.formatDate connectedApp.last_used_at)}}
+                                    {{else}}
+                                        {{t "oauth.connected-apps.never-used"}}
+                                    {{/if}}
+                                </div>
+                                <ul class="mt-1 list-disc pl-4 text-xs text-gray-600 dark:text-gray-300">
+                                    {{#each connectedApp.scopes as |scope|}}
+                                        <li>{{scope.description}}</li>
+                                    {{/each}}
+                                </ul>
+                            </div>
+                        </div>
+                        <Button
+                            @size="xs"
+                            @type="danger"
+                            @icon="ban"
+                            @text={{t "oauth.connected-apps.remove-button"}}
+                            @isLoading={{this.revoke.isRunning}}
+                            @onClick={{fn this.confirmRevoke connectedApp}}
+                        />
+                    </div>
+                </div>
+            {{/each}}
+        </div>
+    </ContentPanel>
+{{/if}}
