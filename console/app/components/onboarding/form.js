@@ -23,6 +23,23 @@ export default class OnboardingFormComponent extends Component {
     @tracked password_confirmation;
     @tracked error;
 
+    /**
+     * Whether the API offers this signup a free Fleetbase Hosted Routing key: only
+     * the first admin of a self-hosted install, while ROUTING_AUTO_REGISTER is on
+     * and no Valhalla server of the admin's own is configured.
+     *
+     * @var {Boolean}
+     */
+    @tracked offersHostedRouting = false;
+
+    /**
+     * The admin's choice, on by default. Sent as `hosted_routing`; the API only
+     * registers when it is true.
+     *
+     * @var {Boolean}
+     */
+    @tracked hostedRouting = true;
+
     constructor() {
         super(...arguments);
 
@@ -38,6 +55,21 @@ export default class OnboardingFormComponent extends Component {
             this.email = registration.prefill?.email ?? null;
             this.emailVerifiedByProvider = registration.prefill?.email_verified === true;
         }
+
+        this.loadHostedRoutingOffer.perform();
+    }
+
+    @task *loadHostedRoutingOffer() {
+        try {
+            const { hosted_routing } = yield this.fetch.get('onboard/should-onboard', {}, { rawError: true });
+            this.offersHostedRouting = hosted_routing === true;
+        } catch {
+            this.offersHostedRouting = false;
+        }
+    }
+
+    @action toggleHostedRouting(value) {
+        this.hostedRouting = value;
     }
 
     /**
@@ -120,6 +152,10 @@ export default class OnboardingFormComponent extends Component {
 
         if (this.hasOauthIntent) {
             input.oauth_intent = this.oauthIntent;
+        }
+
+        if (this.offersHostedRouting) {
+            input.hosted_routing = this.hostedRouting === true;
         }
 
         try {

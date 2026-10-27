@@ -74,6 +74,19 @@
                     />
                 {{/if}}
 
+                {{#if this.offersHostedRouting}}
+                    <div class="mt-4 rounded-md border border-gray-200 px-3 py-3 dark:border-gray-700" data-test-hosted-routing-consent>
+                        <Checkbox
+                            @value={{this.hostedRouting}}
+                            @label={{t "onboard.index.hosted-routing-label"}}
+                            @onToggle={{this.toggleHostedRouting}}
+                            @alignItems="center"
+                            @labelClass="mb-0i font-semibold"
+                        />
+                        <p class="mt-1 text-xs text-gray-600 dark:text-gray-400">{{t "onboard.index.hosted-routing-help-text"}}</p>
+                    </div>
+                {{/if}}
+
                 <div class="flex items-center justify-end mt-5">
                     <Button
                         @buttonType="submit"

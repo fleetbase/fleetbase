@@ -668,6 +668,7 @@ console:
       queue: Fila
       socket: Socket
       oauth: 'Login OAuth'
+      oauth-apps: "Apps OAuth"
       push-notifications: Notificações Push
     schedule-monitor:
       schedule-monitor: Monitor de Agendamento
@@ -760,6 +761,44 @@ invite:
       por e-mail e clique em continuar.
     invitation-code-sent-text: Seu código de convite
     accept-invitation-text: Aceitar Convite
+oauth:
+  authorize:
+    title: "Continuar com a Fleetbase"
+    loading: "Verificando a solicitação..."
+    heading: "{app} quer acessar sua conta da Fleetbase"
+    official: "Feito pela Fleetbase"
+    signed-in-as: "Conectado como {email}"
+    not-you: "Não é você?"
+    organization-label: "Organização a compartilhar"
+    organization-help: "O app só pode ver e alterar esta organização. Você pode remover o acesso dele a qualquer momento em Conta → Autenticação."
+    not-admin: "só administradores podem compartilhá-la"
+    no-organization: "Você não administra nenhuma organização que possa compartilhar. Peça a um administrador da sua organização para conectar o app."
+    your-organization: "sua organização"
+    will-be-able-to: "{app} poderá:"
+    allow: "Permitir"
+    cancel: "Cancelar"
+    footnote: "Você está compartilhando isto com {app}, não com a Fleetbase."
+    privacy: "Política de privacidade"
+    terms: "Termos"
+    reauthenticate: "Entre novamente para continuar..."
+    errors:
+      generic: "Não foi possível concluir esta solicitação."
+      invalid-client: "Este app não está registrado na Fleetbase ou foi desativado."
+      invalid-request: "O link do app não é válido. Volte ao app e tente novamente."
+      invalid-scope: "O app pediu um acesso que não tem permissão para ter."
+      no-organization: "Escolha uma organização que você administra para compartilhar com este app."
+      go-back: "Você pode fechar esta página e voltar ao app."
+  connected-apps:
+    title: "Apps conectados"
+    help: "Apps em que você entrou com sua conta da Fleetbase e o que cada um pode fazer. Remover um app desconecta você dele e encerra o acesso na hora."
+    organization: "Tem acesso a {organization}"
+    sign-in-only: "Somente login"
+    last-used: "último uso em {date}"
+    never-used: "ainda não usado"
+    remove-button: "Remover acesso"
+    remove-title: "Remover {app}?"
+    remove-body: "{app} será desconectado e perderá o acesso na hora. Para usá-lo de novo, você precisará autorizá-lo novamente."
+    removed: "{app} não tem mais acesso."
 onboard:
   index:
     title: Crie sua conta

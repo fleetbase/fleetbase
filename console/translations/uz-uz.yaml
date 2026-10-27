@@ -683,6 +683,7 @@ console:
       queue: Navbat
       socket: Soket
       oauth: 'OAuth orqali kirish'
+      oauth-apps: "OAuth ilovalari"
       push-notifications: Push-bildirishnomalar
     schedule-monitor:
       schedule-monitor: Jadval monitori
@@ -776,6 +777,44 @@ invite:
     invitation-code-sent-text: Sizning taklifnoma kodingiz
     accept-invitation-text: Taklifni qabul qilish
 
+oauth:
+  authorize:
+    title: "Fleetbase bilan davom etish"
+    loading: "So‘rov tekshirilmoqda..."
+    heading: "{app} Fleetbase hisobingizga kirishni so‘ramoqda"
+    official: "Fleetbase tomonidan yaratilgan"
+    signed-in-as: "{email} sifatida kirgansiz"
+    not-you: "Siz emasmisiz?"
+    organization-label: "Ulashiladigan tashkilot"
+    organization-help: "Ilova faqat shu tashkilotni ko‘ra va o‘zgartira oladi. Uning kirishini istalgan vaqtda Hisob → Autentifikatsiya bo‘limida olib tashlashingiz mumkin."
+    not-admin: "faqat administratorlar ulasha oladi"
+    no-organization: "Siz ulasha oladigan birorta tashkilotni boshqarmaysiz. Tashkilotingiz administratoridan ilovani ulashni so‘rang."
+    your-organization: "tashkilotingiz"
+    will-be-able-to: "{app} quyidagilarni qila oladi:"
+    allow: "Ruxsat berish"
+    cancel: "Bekor qilish"
+    footnote: "Buni Fleetbase bilan emas, {app} bilan ulashyapsiz."
+    privacy: "Maxfiylik siyosati"
+    terms: "Shartlar"
+    reauthenticate: "Davom etish uchun qayta kiring..."
+    errors:
+      generic: "Bu so‘rovni bajarib bo‘lmadi."
+      invalid-client: "Bu ilova Fleetbase’da ro‘yxatdan o‘tmagan yoki o‘chirib qo‘yilgan."
+      invalid-request: "Ilovadan kelgan havola yaroqsiz. Ilovaga qaytib, qaytadan urinib ko‘ring."
+      invalid-scope: "Ilova o‘ziga ruxsat berilmagan kirishni so‘radi."
+      no-organization: "Bu ilova bilan ulashish uchun o‘zingiz boshqaradigan tashkilotni tanlang."
+      go-back: "Bu sahifani yopib, ilovaga qaytishingiz mumkin."
+  connected-apps:
+    title: "Ulangan ilovalar"
+    help: "Fleetbase hisobingiz bilan kirgan ilovalaringiz va har biri nima qila olishi. Ilovani olib tashlasangiz, undan chiqasiz va uning kirishi darhol to‘xtaydi."
+    organization: "{organization} ga kirish huquqi bor"
+    sign-in-only: "Faqat kirish"
+    last-used: "oxirgi marta {date} ishlatilgan"
+    never-used: "hali ishlatilmagan"
+    remove-button: "Kirishni olib tashlash"
+    remove-title: "{app} olib tashlansinmi?"
+    remove-body: "{app} hisobdan chiqariladi va kirishni darhol yo‘qotadi. Uni yana ishlatish uchun qaytadan ruxsat berishingiz kerak bo‘ladi."
+    removed: "{app} endi kira olmaydi."
 onboard:
   index:
     title: Hisobingizni yarating

@@ -646,6 +646,7 @@ console:
       queue: 队列
       socket: 套接字
       oauth: 'OAuth 登录'
+      oauth-apps: "OAuth 应用"
       push-notifications: 推送通知
     schedule-monitor:
       schedule-monitor: 计划监控
@@ -735,6 +736,44 @@ invite:
     invitation-sent-message: 您已被邀请加入 {appName} 上的 {companyName} 组织。要接受此邀请，请输入您通过电子邮件收到的邀请代码并点击继续。
     invitation-code-sent-text: 您的邀请码
     accept-invitation-text: 接受邀请
+oauth:
+  authorize:
+    title: "使用 Fleetbase 继续"
+    loading: "正在检查请求..."
+    heading: "{app} 想要访问您的 Fleetbase 账户"
+    official: "Fleetbase 出品"
+    signed-in-as: "已登录为 {email}"
+    not-you: "不是您？"
+    organization-label: "要共享的组织"
+    organization-help: "该应用只能查看和更改此组织。您可以随时在“账户 → 认证”中移除它的访问权限。"
+    not-admin: "仅管理员可以共享"
+    no-organization: "您没有可以共享的、由您管理的组织。请让您组织的管理员连接该应用。"
+    your-organization: "您的组织"
+    will-be-able-to: "{app} 将能够："
+    allow: "允许"
+    cancel: "取消"
+    footnote: "您是与 {app} 共享，而不是与 Fleetbase 共享。"
+    privacy: "隐私政策"
+    terms: "条款"
+    reauthenticate: "请重新登录以继续..."
+    errors:
+      generic: "无法完成此请求。"
+      invalid-client: "此应用未在 Fleetbase 注册，或已被停用。"
+      invalid-request: "来自应用的链接无效。请返回应用后重试。"
+      invalid-scope: "该应用请求了不被允许的访问权限。"
+      no-organization: "请选择一个由您管理的组织与此应用共享。"
+      go-back: "您可以关闭此页面并返回应用。"
+  connected-apps:
+    title: "已连接的应用"
+    help: "您用 Fleetbase 账户登录过的应用，以及每个应用能做的事情。移除应用会让您退出该应用，并立即停止它的访问。"
+    organization: "可访问 {organization}"
+    sign-in-only: "仅登录"
+    last-used: "上次使用于 {date}"
+    never-used: "尚未使用"
+    remove-button: "移除访问权限"
+    remove-title: "要移除 {app} 吗？"
+    remove-body: "{app} 将被退出登录并立即失去访问权限。如需再次使用，您需要重新授权。"
+    removed: "{app} 已不再拥有访问权限。"
 onboard:
   index:
     title: 创建您的账户
