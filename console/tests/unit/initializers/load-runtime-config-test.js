@@ -27,6 +27,16 @@ module('Unit | Initializer | load-runtime-config', function () {
         assert.deepEqual(calls, ['defer', 'advance'], 'readiness always advances');
     });
 
+    test('the load is exposed as a promise for initializers that need the runtime config', async function (assert) {
+        const application = { deferReadiness() {}, advanceReadiness() {} };
+
+        initialize(application);
+
+        assert.strictEqual(typeof application.runtimeConfigLoaded?.then, 'function');
+        await application.runtimeConfigLoaded;
+        assert.ok(true, 'and it settles');
+    });
+
     test('readiness still advances when the first attempt throws', async function (assert) {
         // The app must boot even if advancing readiness fails once — otherwise a failure
         // here would leave the console stuck on its loading screen forever.
