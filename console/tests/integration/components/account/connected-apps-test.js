@@ -123,7 +123,10 @@ module('Integration | Component | account/connected-apps', function (hooks) {
         await options.confirm({ startLoading: () => log.push('loading'), done: () => log.push('done') });
 
         assert.deepEqual(this.calls[this.calls.length - 1], ['delete', 'oauth-server/connected-apps/ca_1']);
-        assert.deepEqual(captured.instance.apps.map((app) => app.id), ['ca_2']);
+        assert.deepEqual(
+            captured.instance.apps.map((app) => app.id),
+            ['ca_2']
+        );
         assert.deepEqual(this.successes, ['AppHelm no longer has access.']);
         assert.deepEqual(log, ['loading', 'done']);
     });

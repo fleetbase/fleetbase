@@ -173,7 +173,10 @@ module('Unit | Controller | oauth/authorize', function (hooks) {
         await controller.load.perform(PARAMS);
 
         assert.strictEqual(controller.selectedOrganization, 'org_c');
-        assert.deepEqual(controller.shareableOrganizations.map((organization) => organization.id), ['org_c']);
+        assert.deepEqual(
+            controller.shareableOrganizations.map((organization) => organization.id),
+            ['org_c']
+        );
 
         controller.selectOrganization({ target: { value: 'org_b' } });
         assert.strictEqual(controller.selectedOrganization, 'org_b', 'a select change event works too');
