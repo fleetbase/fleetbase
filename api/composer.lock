@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3f56a2cd7f33105d60221da31c4259a7",
+    "content-hash": "b745ddd70080042c0343dbaf05ef3d5f",
     "packages": [
         {
             "name": "appstract/laravel-opcache",
@@ -1214,6 +1214,73 @@
             "time": "2026-08-11T07:30:08+00:00"
         },
         {
+            "name": "defuse/php-encryption",
+            "version": "v2.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/defuse/php-encryption.git",
+                "reference": "f53396c2d34225064647a05ca76c1da9d99e5828"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/defuse/php-encryption/zipball/f53396c2d34225064647a05ca76c1da9d99e5828",
+                "reference": "f53396c2d34225064647a05ca76c1da9d99e5828",
+                "shasum": ""
+            },
+            "require": {
+                "ext-openssl": "*",
+                "paragonie/random_compat": ">= 2",
+                "php": ">=5.6.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^5|^6|^7|^8|^9|^10",
+                "yoast/phpunit-polyfills": "^2.0.0"
+            },
+            "bin": [
+                "bin/generate-defuse-key"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Defuse\\Crypto\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Hornby",
+                    "email": "taylor@defuse.ca",
+                    "homepage": "https://defuse.ca/"
+                },
+                {
+                    "name": "Scott Arciszewski",
+                    "email": "info@paragonie.com",
+                    "homepage": "https://paragonie.com"
+                }
+            ],
+            "description": "Secure PHP Encryption Library",
+            "keywords": [
+                "aes",
+                "authenticated encryption",
+                "cipher",
+                "crypto",
+                "cryptography",
+                "encrypt",
+                "encryption",
+                "openssl",
+                "security",
+                "symmetric key cryptography"
+            ],
+            "support": {
+                "issues": "https://github.com/defuse/php-encryption/issues",
+                "source": "https://github.com/defuse/php-encryption/tree/v2.4.0"
+            },
+            "time": "2023-06-19T06:10:36+00:00"
+        },
+        {
             "name": "dflydev/dot-access-data",
             "version": "v3.0.3",
             "source": {
@@ -2310,16 +2377,16 @@
         },
         {
             "name": "fleetbase/core-api",
-            "version": "1.6.73",
+            "version": "1.6.74",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/core-api.git",
-                "reference": "494d8859c2eaa65d13a95c450c0b44d92262d20e"
+                "reference": "ac97b5620b260660ae4e6fd5ea0e64025629b0c9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/494d8859c2eaa65d13a95c450c0b44d92262d20e",
-                "reference": "494d8859c2eaa65d13a95c450c0b44d92262d20e",
+                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/ac97b5620b260660ae4e6fd5ea0e64025629b0c9",
+                "reference": "ac97b5620b260660ae4e6fd5ea0e64025629b0c9",
                 "shasum": ""
             },
             "require": {
@@ -2349,9 +2416,11 @@
                 "laravel/socialite": "^5.31",
                 "lcobucci/clock": "3.3.1",
                 "lcobucci/jwt": "^5.4",
+                "league/oauth2-server": "^8.5.5",
                 "maatwebsite/excel": "^3.1",
                 "milon/barcode": "^10.0",
                 "mossadal/math-parser": "^1.3",
+                "nyholm/psr7": "^1.5",
                 "php": "^8.1",
                 "phpoffice/phpspreadsheet": "^1.28",
                 "phrity/websocket": "^1.7",
@@ -2366,6 +2435,7 @@
                 "spatie/laravel-schedule-monitor": "^3.7",
                 "spatie/laravel-sluggable": "^3.5",
                 "sqids/sqids": "^0.4.1",
+                "symfony/psr-http-message-bridge": "^2.1|^6.0|^7.0",
                 "xantios/mimey": "^2.2.0"
             },
             "require-dev": {
@@ -2415,9 +2485,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/core-api/issues",
-                "source": "https://github.com/fleetbase/core-api/tree/v1.6.73"
+                "source": "https://github.com/fleetbase/core-api/tree/v1.6.74"
             },
-            "time": "2026-10-22T05:13:03+00:00"
+            "time": "2026-10-27T08:58:20+00:00"
         },
         {
             "name": "fleetbase/countries",
@@ -2555,23 +2625,23 @@
         },
         {
             "name": "fleetbase/fleetops-api",
-            "version": "0.6.74",
+            "version": "0.6.75",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/fleetops.git",
-                "reference": "33032e53ebee5e4a514970ee2379c12348c77c54"
+                "reference": "811aa711a68833dfd8390d8ddac582d4ed75f3c6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/33032e53ebee5e4a514970ee2379c12348c77c54",
-                "reference": "33032e53ebee5e4a514970ee2379c12348c77c54",
+                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/811aa711a68833dfd8390d8ddac582d4ed75f3c6",
+                "reference": "811aa711a68833dfd8390d8ddac582d4ed75f3c6",
                 "shasum": ""
             },
             "require": {
                 "barryvdh/laravel-dompdf": "^3.1",
                 "brick/geo": "0.7.2",
                 "cknow/laravel-money": "^7.1",
-                "fleetbase/core-api": "^1.6.69",
+                "fleetbase/core-api": "^1.6.74",
                 "geocoder-php/google-maps-places-provider": "^1.4",
                 "giggsey/libphonenumber-for-php": "^8.13",
                 "league/geotools": "^1.1.0",
@@ -2642,9 +2712,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/fleetops/issues",
-                "source": "https://github.com/fleetbase/fleetops/tree/v0.6.74"
+                "source": "https://github.com/fleetbase/fleetops/tree/v0.6.75"
             },
-            "time": "2026-10-19T06:21:11+00:00"
+            "time": "2026-10-27T09:24:35+00:00"
         },
         {
             "name": "fleetbase/laravel-mysql-spatial",
@@ -2875,20 +2945,20 @@
         },
         {
             "name": "fleetbase/storefront-api",
-            "version": "0.4.29",
+            "version": "0.4.30",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/storefront.git",
-                "reference": "69b3c20f769d12ad136739c5608b49ba3e845c24"
+                "reference": "af7d978f5b90e5f2a5664ab878c29667f2ddf64d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/storefront/zipball/69b3c20f769d12ad136739c5608b49ba3e845c24",
-                "reference": "69b3c20f769d12ad136739c5608b49ba3e845c24",
+                "url": "https://api.github.com/repos/fleetbase/storefront/zipball/af7d978f5b90e5f2a5664ab878c29667f2ddf64d",
+                "reference": "af7d978f5b90e5f2a5664ab878c29667f2ddf64d",
                 "shasum": ""
             },
             "require": {
-                "fleetbase/core-api": "^1.6.71",
+                "fleetbase/core-api": "^1.6.74",
                 "fleetbase/fleetops-api": "*",
                 "geocoder-php/google-maps-places-provider": "^1.4",
                 "laravel-notification-channels/apn": "^5.0",
@@ -2953,9 +3023,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/storefront/issues",
-                "source": "https://github.com/fleetbase/storefront/tree/v0.4.29"
+                "source": "https://github.com/fleetbase/storefront/tree/v0.4.30"
             },
-            "time": "2026-10-22T05:12:31+00:00"
+            "time": "2026-10-27T09:49:42+00:00"
         },
         {
             "name": "fleetbase/twilio",
@@ -3036,16 +3106,16 @@
         },
         {
             "name": "fleetbase/valhalla-api",
-            "version": "0.0.4",
+            "version": "0.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/valhalla.git",
-                "reference": "f25160fd0ec6d885ff5667922d9834951ca6e255"
+                "reference": "7be6021ae9418debcc265ed89e0518777a05ea22"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/valhalla/zipball/f25160fd0ec6d885ff5667922d9834951ca6e255",
-                "reference": "f25160fd0ec6d885ff5667922d9834951ca6e255",
+                "url": "https://api.github.com/repos/fleetbase/valhalla/zipball/7be6021ae9418debcc265ed89e0518777a05ea22",
+                "reference": "7be6021ae9418debcc265ed89e0518777a05ea22",
                 "shasum": ""
             },
             "require": {
@@ -3056,10 +3126,11 @@
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.34.1",
+                "laravel/framework": "^10.0",
                 "nunomaduro/collision": "^5.11.0|^6.4.0",
                 "pestphp/pest": "^1.22.6",
                 "phpstan/phpstan": "^1.10.38",
-                "symfony/var-dumper": "^5.4.29"
+                "symfony/var-dumper": "^5.4.29|^6.2"
             },
             "type": "library",
             "extra": {
@@ -3095,22 +3166,22 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/valhalla/issues",
-                "source": "https://github.com/fleetbase/valhalla/tree/v0.0.4"
+                "source": "https://github.com/fleetbase/valhalla/tree/v0.0.5"
             },
-            "time": "2026-05-05T10:52:46+00:00"
+            "time": "2026-10-27T09:12:28+00:00"
         },
         {
             "name": "fleetbase/vroom-api",
-            "version": "0.0.4",
+            "version": "0.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/vroom.git",
-                "reference": "da154b395354155e5daa0a9f95adbbc042c72b85"
+                "reference": "e758becbb92a2cd2997462184f02e87d9436d2e1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/vroom/zipball/da154b395354155e5daa0a9f95adbbc042c72b85",
-                "reference": "da154b395354155e5daa0a9f95adbbc042c72b85",
+                "url": "https://api.github.com/repos/fleetbase/vroom/zipball/e758becbb92a2cd2997462184f02e87d9436d2e1",
+                "reference": "e758becbb92a2cd2997462184f02e87d9436d2e1",
                 "shasum": ""
             },
             "require": {
@@ -3121,10 +3192,11 @@
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.34.1",
+                "laravel/framework": "^10.0",
                 "nunomaduro/collision": "^5.11.0|^6.4.0",
                 "pestphp/pest": "^1.22.6",
                 "phpstan/phpstan": "^1.10.38",
-                "symfony/var-dumper": "^5.4.29"
+                "symfony/var-dumper": "^5.4.29|^6.2"
             },
             "type": "library",
             "extra": {
@@ -3160,9 +3232,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/vroom/issues",
-                "source": "https://github.com/fleetbase/vroom/tree/v0.0.4"
+                "source": "https://github.com/fleetbase/vroom/tree/v0.0.5"
             },
-            "time": "2026-05-05T10:45:24+00:00"
+            "time": "2026-10-27T09:12:32+00:00"
         },
         {
             "name": "fruitcake/php-cors",
@@ -7004,6 +7076,60 @@
             "time": "2022-12-11T20:36:23+00:00"
         },
         {
+            "name": "league/event",
+            "version": "2.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thephpleague/event.git",
+                "reference": "062ebb450efbe9a09bc2478e89b7c933875b0935"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thephpleague/event/zipball/062ebb450efbe9a09bc2478e89b7c933875b0935",
+                "reference": "062ebb450efbe9a09bc2478e89b7c933875b0935",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1.0"
+            },
+            "require-dev": {
+                "henrikbjorn/phpspec-code-coverage": "~1.0.1",
+                "phpspec/phpspec": "^2.2"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.2-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "League\\Event\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Frank de Jonge",
+                    "email": "info@frenky.net"
+                }
+            ],
+            "description": "Event package",
+            "keywords": [
+                "emitter",
+                "event",
+                "listener"
+            ],
+            "support": {
+                "issues": "https://github.com/thephpleague/event/issues",
+                "source": "https://github.com/thephpleague/event/tree/2.3.0"
+            },
+            "time": "2025-03-14T19:51:10+00:00"
+        },
+        {
             "name": "league/flysystem",
             "version": "3.36.0",
             "source": {
@@ -7447,6 +7573,277 @@
                 "source": "https://github.com/thephpleague/oauth1-client/tree/v1.12.0"
             },
             "time": "2026-09-19T05:12:51+00:00"
+        },
+        {
+            "name": "league/oauth2-server",
+            "version": "8.5.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thephpleague/oauth2-server.git",
+                "reference": "cc8778350f905667e796b3c2364a9d3bd7a73518"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thephpleague/oauth2-server/zipball/cc8778350f905667e796b3c2364a9d3bd7a73518",
+                "reference": "cc8778350f905667e796b3c2364a9d3bd7a73518",
+                "shasum": ""
+            },
+            "require": {
+                "defuse/php-encryption": "^2.3",
+                "ext-openssl": "*",
+                "lcobucci/clock": "^2.2 || ^3.0",
+                "lcobucci/jwt": "^4.3 || ^5.0",
+                "league/event": "^2.2",
+                "league/uri": "^6.7 || ^7.0",
+                "php": "^8.0",
+                "psr/http-message": "^1.0.1 || ^2.0"
+            },
+            "replace": {
+                "league/oauth2server": "*",
+                "lncd/oauth2": "*"
+            },
+            "require-dev": {
+                "laminas/laminas-diactoros": "^3.0.0",
+                "phpstan/phpstan": "^0.12.57",
+                "phpstan/phpstan-phpunit": "^0.12.16",
+                "phpunit/phpunit": "^9.6.6",
+                "roave/security-advisories": "dev-master"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "League\\OAuth2\\Server\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Alex Bilbie",
+                    "email": "hello@alexbilbie.com",
+                    "homepage": "http://www.alexbilbie.com",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Andy Millington",
+                    "email": "andrew@noexceptions.io",
+                    "homepage": "https://www.noexceptions.io",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A lightweight and powerful OAuth 2.0 authorization and resource server library with support for all the core specification grants. This library will allow you to secure your API with OAuth and allow your applications users to approve apps that want to access their data from your API.",
+            "homepage": "https://oauth2.thephpleague.com/",
+            "keywords": [
+                "Authentication",
+                "api",
+                "auth",
+                "authorisation",
+                "authorization",
+                "oauth",
+                "oauth 2",
+                "oauth 2.0",
+                "oauth2",
+                "protect",
+                "resource",
+                "secure",
+                "server"
+            ],
+            "support": {
+                "issues": "https://github.com/thephpleague/oauth2-server/issues",
+                "source": "https://github.com/thephpleague/oauth2-server/tree/8.5.5"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/sephster",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-12-20T23:06:10+00:00"
+        },
+        {
+            "name": "league/uri",
+            "version": "7.9.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thephpleague/uri.git",
+                "reference": "fcc872a3d872aa13f935e0cd1887b9abb06da07f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thephpleague/uri/zipball/fcc872a3d872aa13f935e0cd1887b9abb06da07f",
+                "reference": "fcc872a3d872aa13f935e0cd1887b9abb06da07f",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "league/uri-interfaces": "^7.9.0",
+                "php": "^8.1",
+                "psr/http-factory": "^1"
+            },
+            "conflict": {
+                "league/uri-schemes": "^1.0"
+            },
+            "suggest": {
+                "ext-bcmath": "to improve IPV4 host parsing",
+                "ext-dom": "to convert the URI into an HTML anchor tag",
+                "ext-fileinfo": "to create Data URI from file contennts",
+                "ext-gmp": "to improve IPV4 host parsing",
+                "ext-intl": "to handle IDN host with the best performance",
+                "ext-uri": "to use the PHP native URI class",
+                "jeremykendall/php-domain-parser": "to further parse the URI host and resolve its Public Suffix and Top Level Domain",
+                "league/uri-components": "to provide additional tools to manipulate URI objects components",
+                "league/uri-polyfill": "to backport the PHP URI extension for older versions of PHP",
+                "php-64bit": "to improve IPV4 host parsing",
+                "rowbot/url": "to handle URLs using the WHATWG URL Living Standard specification",
+                "symfony/polyfill-intl-idn": "to handle IDN host via the Symfony polyfill if ext-intl is not present"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "7.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "League\\Uri\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ignace Nyamagana Butera",
+                    "email": "nyamsprod@gmail.com",
+                    "homepage": "https://nyamsprod.com"
+                }
+            ],
+            "description": "URI manipulation library",
+            "homepage": "https://uri.thephpleague.com",
+            "keywords": [
+                "URN",
+                "data-uri",
+                "file-uri",
+                "ftp",
+                "hostname",
+                "http",
+                "https",
+                "middleware",
+                "parse_str",
+                "parse_url",
+                "psr-7",
+                "query-string",
+                "querystring",
+                "rfc2141",
+                "rfc3986",
+                "rfc3987",
+                "rfc6570",
+                "rfc8141",
+                "uri",
+                "uri-template",
+                "url",
+                "ws"
+            ],
+            "support": {
+                "docs": "https://uri.thephpleague.com",
+                "forum": "https://thephpleague.slack.com",
+                "issues": "https://github.com/thephpleague/uri-src/issues",
+                "source": "https://github.com/thephpleague/uri/tree/7.9.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/sponsors/nyamsprod",
+                    "type": "github"
+                }
+            ],
+            "time": "2026-10-16T15:19:33+00:00"
+        },
+        {
+            "name": "league/uri-interfaces",
+            "version": "7.9.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thephpleague/uri-interfaces.git",
+                "reference": "eb5f6d24e6a4fe0a8e9c78ded4eb1dfff1404f58"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thephpleague/uri-interfaces/zipball/eb5f6d24e6a4fe0a8e9c78ded4eb1dfff1404f58",
+                "reference": "eb5f6d24e6a4fe0a8e9c78ded4eb1dfff1404f58",
+                "shasum": ""
+            },
+            "require": {
+                "ext-filter": "*",
+                "php": "^8.1",
+                "psr/http-message": "^1.1 || ^2.0"
+            },
+            "suggest": {
+                "ext-bcmath": "to improve IPV4 host parsing",
+                "ext-gmp": "to improve IPV4 host parsing",
+                "ext-intl": "to handle IDN host with the best performance",
+                "php-64bit": "to improve IPV4 host parsing",
+                "rowbot/url": "to handle URLs using the WHATWG URL Living Standard specification",
+                "symfony/polyfill-intl-idn": "to handle IDN host via the Symfony polyfill if ext-intl is not present"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "7.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "League\\Uri\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ignace Nyamagana Butera",
+                    "email": "nyamsprod@gmail.com",
+                    "homepage": "https://nyamsprod.com"
+                }
+            ],
+            "description": "Common tools for parsing and resolving RFC3987/RFC3986 URI",
+            "homepage": "https://uri.thephpleague.com",
+            "keywords": [
+                "data-uri",
+                "file-uri",
+                "ftp",
+                "hostname",
+                "http",
+                "https",
+                "parse_str",
+                "parse_url",
+                "psr-7",
+                "query-string",
+                "querystring",
+                "rfc3986",
+                "rfc3987",
+                "rfc6570",
+                "uri",
+                "url",
+                "ws"
+            ],
+            "support": {
+                "docs": "https://uri.thephpleague.com",
+                "forum": "https://thephpleague.slack.com",
+                "issues": "https://github.com/thephpleague/uri-src/issues",
+                "source": "https://github.com/thephpleague/uri-interfaces/tree/7.9.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/sponsors/nyamsprod",
+                    "type": "github"
+                }
+            ],
+            "time": "2026-10-16T15:19:33+00:00"
         },
         {
             "name": "lorisleiva/cron-translator",
@@ -8853,6 +9250,56 @@
                 "source": "https://github.com/paragonie/constant_time_encoding"
             },
             "time": "2025-09-24T15:06:41+00:00"
+        },
+        {
+            "name": "paragonie/random_compat",
+            "version": "v9.99.100",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/paragonie/random_compat.git",
+                "reference": "996434e5492cb4c3edcb9168db6fbb1359ef965a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/996434e5492cb4c3edcb9168db6fbb1359ef965a",
+                "reference": "996434e5492cb4c3edcb9168db6fbb1359ef965a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">= 7"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.*|5.*",
+                "vimeo/psalm": "^1"
+            },
+            "suggest": {
+                "ext-libsodium": "Provides a modern crypto API that can be used to generate random bytes."
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Paragon Initiative Enterprises",
+                    "email": "security@paragonie.com",
+                    "homepage": "https://paragonie.com"
+                }
+            ],
+            "description": "PHP 5.x polyfill for random_bytes() and random_int() from PHP 7",
+            "keywords": [
+                "csprng",
+                "polyfill",
+                "pseudorandom",
+                "random"
+            ],
+            "support": {
+                "email": "info@paragonie.com",
+                "issues": "https://github.com/paragonie/random_compat/issues",
+                "source": "https://github.com/paragonie/random_compat"
+            },
+            "time": "2020-10-15T08:29:30+00:00"
         },
         {
             "name": "paragonie/sodium_compat",
