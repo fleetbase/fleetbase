@@ -149,136 +149,119 @@
     </ContentPanel>
 {{/if}}
 
-<ContentPanel @title={{concat "Registered apps (" this.apps.length ")"}} @open={{true}} @wrapperClass="bordered-classic" data-test-oauth-apps>
-    {{#if this.apps.length}}
-        <ul class="divide-y divide-gray-200 dark:divide-gray-700">
-            {{#each this.apps key="id" as |app|}}
-                <li class="py-5 first:pt-0 last:pb-0" data-test-oauth-app>
-                    <div class="flex items-start justify-between">
-                        <div class="flex min-w-0 items-start">
-                            <div
-                                class="mr-3 flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-md border border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800"
-                            >
-                                {{#if app.logo_url}}
-                                    <img src={{app.logo_url}} alt="" class="h-full w-full object-contain" />
-                                {{else}}
-                                    <FaIcon @icon="plug" class="text-gray-400" />
-                                {{/if}}
-                            </div>
-                            <div class="min-w-0">
-                                <div class="truncate text-sm font-semibold text-gray-900 dark:text-white">{{app.name}}</div>
-                                {{#if app.description}}
-                                    <div class="truncate text-sm text-gray-500 dark:text-gray-400">{{app.description}}</div>
-                                {{/if}}
-                            </div>
-                        </div>
-                        <div class="ml-3 flex shrink-0 flex-wrap justify-end gap-1">
-                            {{#if app.disabled_at}}
-                                <Badge @status="danger" @hideStatusDot={{true}}>Turned off</Badge>
+<div class="mb-3 flex items-center justify-between" data-test-oauth-apps>
+    <h3 class="text-sm font-semibold text-gray-900 dark:text-white">
+        Registered apps
+        <span class="ml-1 font-normal text-gray-500 dark:text-gray-400">{{this.apps.length}}</span>
+    </h3>
+</div>
+
+{{#if this.apps.length}}
+    <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
+        {{#each this.apps key="id" as |app|}}
+            <Layout::Resource::Card class="flex flex-col {{if app.disabled_at 'opacity-75'}}" data-test-oauth-app as |Card|>
+                <Card.header class="px-3 py-2.5">
+                    <div class="flex items-center">
+                        <div class="mr-2.5 flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-900">
+                            {{#if app.logo_url}}
+                                <img src={{app.logo_url}} alt="" class="h-full w-full object-contain" />
                             {{else}}
-                                <Badge @status="success" @hideStatusDot={{true}}>Active</Badge>
-                            {{/if}}
-                            <Badge @status="default" @hideStatusDot={{true}}>{{if app.confidential "Confidential" "Public"}}</Badge>
-                            {{#if app.official}}
-                                <Badge @status="info" @hideStatusDot={{true}}>Made by Fleetbase</Badge>
-                            {{/if}}
-                            {{#if app.development}}
-                                <Badge @status="warning" @hideStatusDot={{true}}>Development</Badge>
+                                <FaIcon @icon="plug" @size="sm" class="text-gray-400" />
                             {{/if}}
                         </div>
+                        <div class="min-w-0 flex-1">
+                            <div class="truncate text-sm font-semibold text-gray-900 dark:text-white">{{app.name}}</div>
+                            <ClickToCopy @value={{app.id}} class="block truncate font-mono text-xs text-gray-500 dark:text-gray-400">{{app.id}}</ClickToCopy>
+                        </div>
+                        <Badge @status={{if app.disabled_at "danger" "success"}} @size="xs" class="ml-2 shrink-0">{{if app.disabled_at "Off" "Active"}}</Badge>
                     </div>
-
-                    <dl class="mt-4 grid grid-cols-1 gap-x-6 gap-y-3 lg:grid-cols-2">
-                        <div>
-                            <dt class="text-xs font-medium text-gray-500 dark:text-gray-400">Client ID</dt>
-                            <dd class="mt-1"><ClickToCopy @value={{app.id}} class="font-mono text-xs text-gray-900 dark:text-gray-100">{{app.id}}</ClickToCopy></dd>
-                        </div>
-                        <div>
-                            <dt class="text-xs font-medium text-gray-500 dark:text-gray-400">Authorized by</dt>
-                            <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100">{{app.active_grants_count}} {{if (eq app.active_grants_count 1) "person" "people"}}</dd>
-                        </div>
-                        <div class="lg:col-span-2">
-                            <dt class="text-xs font-medium text-gray-500 dark:text-gray-400">Redirect URIs</dt>
-                            <dd class="mt-1 space-y-0.5">
-                                {{#each app.redirect_uris as |uri|}}
-                                    <div class="break-all font-mono text-xs text-gray-900 dark:text-gray-100">{{uri}}</div>
-                                {{/each}}
-                            </dd>
-                        </div>
-                        <div class="lg:col-span-2">
-                            <dt class="text-xs font-medium text-gray-500 dark:text-gray-400">Allowed scopes</dt>
-                            <dd class="mt-1 flex flex-wrap gap-1">
-                                {{#each app.allowed_scopes as |scope|}}
-                                    <code class="rounded bg-gray-100 px-1.5 py-0.5 text-xs text-gray-700 dark:bg-gray-800 dark:text-gray-300">{{scope}}</code>
-                                {{/each}}
-                            </dd>
-                        </div>
-                        {{#if app.website_url}}
-                            <div class="lg:col-span-2">
-                                <dt class="text-xs font-medium text-gray-500 dark:text-gray-400">Website</dt>
-                                <dd class="mt-1 text-sm"><a
-                                        href={{app.website_url}}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        class="text-blue-600 hover:underline dark:text-blue-400"
-                                    >{{app.website_url}}</a></dd>
-                            </div>
+                </Card.header>
+                <Card.body class="flex-1 space-y-2 px-3 py-2.5 text-xs text-gray-600 dark:text-gray-300">
+                    {{#if app.description}}
+                        <p class="line-clamp-2">{{app.description}}</p>
+                    {{/if}}
+                    <div class="flex flex-wrap items-center gap-1">
+                        <Badge @status="default" @hideStatusDot={{true}} @size="xs">{{if app.confidential "Confidential" "Public"}}</Badge>
+                        {{#if app.official}}
+                            <Badge @status="info" @hideStatusDot={{true}} @size="xs">Made by Fleetbase</Badge>
                         {{/if}}
-                    </dl>
-
-                    <div class="mt-4 flex flex-row flex-wrap gap-2">
-                        <Button @size="xs" @icon="pencil" @text="Edit" @onClick={{fn this.startEdit app}} />
-                        {{#if app.confidential}}
-                            <Button @size="xs" @icon="rotate" @text="Rotate secret" @onClick={{fn this.confirmRotate app}} />
+                        {{#if app.development}}
+                            <Badge @status="warning" @hideStatusDot={{true}} @size="xs">Development</Badge>
                         {{/if}}
-                        <Button
-                            @size="xs"
-                            @icon="users"
-                            @text={{if (eq this.grantsFor.id app.id) "Hide who authorized it" "Who authorized it"}}
-                            @isLoading={{and this.showGrants.isRunning (eq this.grantsFor.id app.id)}}
-                            @onClick={{if (eq this.grantsFor.id app.id) this.hideGrants (perform this.showGrants app)}}
-                        />
-                        <Button
-                            @size="xs"
-                            @type={{if app.disabled_at "primary" "danger"}}
-                            @icon="power-off"
-                            @text={{if app.disabled_at "Turn on" "Turn off"}}
-                            @onClick={{fn this.confirmToggle app}}
-                        />
+                    </div>
+                    <div class="flex items-center space-x-3 text-gray-500 dark:text-gray-400">
+                        <span><FaIcon @icon="users" @size="xs" class="mr-1" />{{app.active_grants_count}} authorized</span>
+                        <span title={{this.joined app.redirect_uris}}><FaIcon @icon="link" @size="xs" class="mr-1" />{{app.redirect_uris.length}}
+                            {{if (eq app.redirect_uris.length 1) "redirect URI" "redirect URIs"}}</span>
+                    </div>
+                    <div class="flex flex-wrap gap-1">
+                        {{#each app.allowed_scopes as |scope|}}
+                            <code class="rounded bg-gray-100 px-1 py-px text-[11px] text-gray-600 dark:bg-gray-900 dark:text-gray-400">{{scope}}</code>
+                        {{/each}}
                     </div>
 
                     {{#if (eq this.grantsFor.id app.id)}}
-                        <div class="mt-4 rounded-md border border-gray-200 dark:border-gray-700" data-test-oauth-app-grants>
+                        <div class="rounded border border-gray-200 dark:border-gray-700" data-test-oauth-app-grants>
                             {{#if this.grants.length}}
                                 <ul class="divide-y divide-gray-200 dark:divide-gray-700">
                                     {{#each this.grants key="id" as |grant|}}
-                                        <li class="flex items-center justify-between px-3 py-2">
+                                        <li class="flex items-center justify-between px-2 py-1.5">
                                             <div class="min-w-0">
-                                                <div class="truncate text-sm text-gray-900 dark:text-white">
-                                                    {{grant.user.name}}
-                                                    <span class="text-gray-500 dark:text-gray-400">{{grant.user.email}}</span>
-                                                </div>
-                                                <div class="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
-                                                    {{if grant.organization grant.organization.name "Sign-in only"}}
-                                                    ·
-                                                    <span class="font-mono">{{this.joined grant.scopes}}</span>
-                                                </div>
+                                                <div class="truncate text-gray-900 dark:text-white">{{grant.user.name}}
+                                                    <span class="text-gray-500 dark:text-gray-400">{{grant.user.email}}</span></div>
+                                                <div class="truncate text-gray-500 dark:text-gray-400">{{if grant.organization grant.organization.name "Sign-in only"}}</div>
                                             </div>
-                                            <Button @size="xs" @type="danger" @text="Revoke" @isLoading={{this.revokeGrant.isRunning}} @onClick={{perform this.revokeGrant grant}} />
+                                            <Button
+                                                @size="xs"
+                                                @type="danger"
+                                                @icon="ban"
+                                                @helpText="Revoke access"
+                                                @isLoading={{this.revokeGrant.isRunning}}
+                                                @onClick={{perform this.revokeGrant grant}}
+                                            />
                                         </li>
                                     {{/each}}
                                 </ul>
                             {{else if (not this.showGrants.isRunning)}}
-                                <p class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">Nobody has authorized this app yet.</p>
+                                <p class="px-2 py-1.5 text-gray-500 dark:text-gray-400">Nobody has authorized this app yet.</p>
                             {{/if}}
                         </div>
                     {{/if}}
-                </li>
-            {{/each}}
-        </ul>
-    {{else if (not this.load.isRunning)}}
-        <p class="text-sm text-gray-500 dark:text-gray-400">No apps yet. Register one to offer “Continue with Fleetbase”.</p>
-    {{/if}}
-</ContentPanel>
+                </Card.body>
+                <Card.footer class="px-3 py-1.5">
+                    <div class="flex items-center justify-between">
+                        <span class="truncate text-xs text-gray-400 dark:text-gray-500">{{if app.website_url app.website_url ""}}</span>
+                        <div class="flex shrink-0 items-center space-x-1">
+                            <Button @size="xs" @icon="pencil" @helpText="Edit" @onClick={{fn this.startEdit app}} />
+                            {{#if app.confidential}}
+                                <Button @size="xs" @icon="rotate" @helpText="Rotate secret" @onClick={{fn this.confirmRotate app}} />
+                            {{/if}}
+                            <Button
+                                @size="xs"
+                                @icon="users"
+                                @type={{if (eq this.grantsFor.id app.id) "primary" "default"}}
+                                @helpText={{if (eq this.grantsFor.id app.id) "Hide who authorized it" "Who authorized it"}}
+                                @isLoading={{and this.showGrants.isRunning (eq this.grantsFor.id app.id)}}
+                                @onClick={{if (eq this.grantsFor.id app.id) this.hideGrants (perform this.showGrants app)}}
+                            />
+                            <Button
+                                @size="xs"
+                                @icon="power-off"
+                                @type={{if app.disabled_at "primary" "danger"}}
+                                @helpText={{if app.disabled_at "Turn on" "Turn off"}}
+                                @onClick={{fn this.confirmToggle app}}
+                            />
+                        </div>
+                    </div>
+                </Card.footer>
+            </Layout::Resource::Card>
+        {{/each}}
+    </div>
+{{else if (not this.load.isRunning)}}
+    <div class="rounded-md border border-dashed border-gray-300 px-4 py-8 text-center text-sm text-gray-500 dark:border-gray-700 dark:text-gray-400">
+        <FaIcon @icon="plug" class="mb-2 text-gray-400" />
+        <p>No apps yet. Register one to offer “Continue with Fleetbase”.</p>
+    </div>
+{{/if}}
 
 <Spacer @height="200px" />
