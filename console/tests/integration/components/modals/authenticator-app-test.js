@@ -49,6 +49,7 @@ module('Integration | Component | modals/authenticator-app', function (hooks) {
         }
         this.owner.register('service:fetch', FetchStub);
         this.owner.register('service:notifications', NotificationsStub);
+        this.owner.lookup('service:intl').setLocale('en-us');
 
         this.changes = [];
         this.closed = [];
