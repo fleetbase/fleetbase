@@ -266,8 +266,8 @@ Extensions add features, integrate external systems, or change how Fleetbase beh
 
 | Feature | Status | Expected Release | Description |
 |---------|--------|------------------|-------------|
-| **[Navigator App v3](https://github.com/fleetbase/navigator-app/pull/115)** | In development | October 2026 | Redesigned driver app: Today view, route manifest, vehicle inspections, offline queue, and inbox |
-| **[Pallet (WMS)](https://github.com/fleetbase/pallet/pull/9)** | In development | October 2026 | Inventory and warehouse management extension |
+| **[Navigator App v3](https://github.com/fleetbase/navigator-app/pull/115)** | In development | November 2026 | Redesigned driver app: Today view, route manifest, vehicle inspections, offline queue, and inbox |
+| **[Pallet (WMS)](https://github.com/fleetbase/pallet/pull/9)** | In development | November 2026 | Inventory and warehouse management extension |
 | **[Fleetbase Registry v2](https://github.com/fleetbase/registry/pull/4)** | In development | November 2026 | New extension registry service: one catalog, npm and Composer delivery, licensing, and publisher accounts for cloud and self-hosted instances |
 | **Dynamic Rules** | Planned | 2027 | Rule builder to trigger events, tasks, and jobs |
 
