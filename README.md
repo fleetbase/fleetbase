@@ -180,17 +180,22 @@ Fleetbase has two open-source mobile apps, both built with React Native. They co
 
 ### Storefront App
 
+<table>
+  <tr>
+    <td width="34%" valign="top">
+      <img src="https://fleetbase.io/images/screenshots/storefront-app/ios/storefront-app-network-details.webp" alt="A marketplace home: featured stores, categories and stores near the customer" width="100%" />
+    </td>
+    <td valign="top">
+
 [Storefront](https://github.com/fleetbase/storefront-app) is the customer app for the [Storefront](https://www.fleetbase.io/docs/storefront) extension, for iOS, Android and the web. Launch your own shop or service-booking app, or run a multi-vendor marketplace. Customers browse products, check out with the payment gateway you configure, and follow their order live as Fleet&#8209;Ops delivers it. It runs as a single store, a marketplace of stores, or a food-truck network that shows live trucks on a map.
 
-To publish it without writing code, [AppHelm](https://apphelm.fleetbase.io/storefront?utm_source=github&utm_medium=readme&utm_campaign=launch&utm_content=fleetbase) takes your Fleetbase store and publishes it as your own branded app: free on the web at your own `yourstore.apphelm.io` address, then in the App Store and Google Play, with the builds and submission handled for you.
+To publish it without writing code, [Fleetbase AppHelm](https://apphelm.fleetbase.io/storefront?utm_source=github&utm_medium=readme&utm_campaign=launch&utm_content=fleetbase) takes your Fleetbase store and publishes it as your own branded app: free on the web at your own `yourstore.apphelm.io` address, then in the App Store and Google Play, with the builds and submission handled for you.
 
-<p align="center">
-  <img src="https://fleetbase.io/images/screenshots/storefront-app/ios/storefront-app-store-details.webp" width="240" alt="A store's home page: categories, recommended products and the store's open hours" />
-  <img src="https://fleetbase.io/images/screenshots/storefront-app/ios/storefront-app-network-details.webp" width="240" alt="A marketplace home: featured stores, categories and stores near the customer" />
-  <img src="https://fleetbase.io/images/screenshots/storefront-app/ios/storefront-app-food-trucks-map.webp" width="240" alt="The trucks home: live trucks on a map with the trucks serving the customer's zone" />
-</p>
+[Source code](https://github.com/fleetbase/storefront-app) · [Releases](https://github.com/fleetbase/storefront-app/releases) · [Launch your app](https://apphelm.fleetbase.io/storefront?utm_source=github&utm_medium=readme&utm_campaign=launch&utm_content=fleetbase) · [See it in action](https://bayfront-pharmacy.apphelm.io)
 
-[Source code](https://github.com/fleetbase/storefront-app) · [Releases](https://github.com/fleetbase/storefront-app/releases)
+</td>
+  </tr>
+</table>
 
 ## Getting Started
 
