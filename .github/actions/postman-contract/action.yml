@@ -325,7 +325,7 @@ runs:
 
     - name: Checkout Postman collections
       if: steps.pmauth.outputs.available == 'true'
-      uses: actions/checkout@v4
+      uses: actions/checkout@v4.4.0
       with:
         persist-credentials: false
         repository: fleetbase/postman
@@ -651,7 +651,7 @@ runs:
 
     - name: Upload Postman results
       if: always() && steps.pmauth.outputs.available == 'true'
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v4.6.2
       with:
         name: postman-results
         path: postman-results/

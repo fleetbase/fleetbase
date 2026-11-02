@@ -29,13 +29,13 @@ jobs:
 
     steps:
     - name: Checkout Code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v3.7.0
       with:
         persist-credentials: false
         submodules: recursive
 
     - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
+      uses: docker/setup-buildx-action@v2.10.0
 
     - name: Set Dynamic ENV Vars
       run: |
@@ -46,7 +46,7 @@ jobs:
 
     - id: 'auth'
       name: 'Authenticate to Google Cloud'
-      uses: 'google-github-actions/auth@v1'
+      uses: 'google-github-actions/auth@v1.3.0'
       with:
         token_format: "access_token"
         create_credentials_file: true
@@ -54,15 +54,15 @@ jobs:
         service_account: ${{ env.GCP_SERVICE_ACCOUNT }}
 
     - name: 'Set up Cloud SDK'
-      uses: 'google-github-actions/setup-gcloud@v1'
+      uses: 'google-github-actions/setup-gcloud@v1.1.1'
 
     - id: 'get-credentials'
-      uses: 'google-github-actions/get-gke-credentials@v1'
+      uses: 'google-github-actions/get-gke-credentials@v1.0.2'
       with:
         cluster_name: ${{ env.K8S_CLUSTER_NAME }}
         location: ${{ env.K8S_CLUSTER_LOCATION }}
 
-    - uses: 'docker/login-action@v3'
+    - uses: 'docker/login-action@v3.7.0'
       with:
         registry: ${{ env.REGISTRY_HOST }}
         username: 'oauth2accesstoken'
@@ -82,7 +82,7 @@ jobs:
         echo > api/.ssm-parent.yaml
 
     - name: Build and Release
-      uses: docker/bake-action@v2
+      uses: docker/bake-action@v2.3.0
       env: 
         REGISTRY: ${{ env.REGISTRY }}
         VERSION: ${{ env.VERSION }}
@@ -106,7 +106,7 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v3.7.0
       with:
         persist-credentials: false
         submodules: true
@@ -119,7 +119,7 @@ jobs:
 
     - id: 'auth'
       name: 'Authenticate to Google Cloud'
-      uses: 'google-github-actions/auth@v1'
+      uses: 'google-github-actions/auth@v1.3.0'
       with:
         token_format: "access_token"
         create_credentials_file: true
@@ -127,14 +127,14 @@ jobs:
         service_account: ${{ env.GCP_SERVICE_ACCOUNT }}
 
     - name: 'Set up Cloud SDK'
-      uses: 'google-github-actions/setup-gcloud@v1'
+      uses: 'google-github-actions/setup-gcloud@v1.1.1'
 
     - name: Install Node.js
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v3.9.1
       with:
         node-version: 22
 
-    - uses: pnpm/action-setup@v2
+    - uses: pnpm/action-setup@v2.4.1
       name: Install pnpm
       id: pnpm-install
       with:
@@ -147,7 +147,7 @@ jobs:
       run: |
         echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
 
-    - uses: actions/cache@v3
+    - uses: actions/cache@v3.5.0
       name: Setup pnpm Cache
       with:
         path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}

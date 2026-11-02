@@ -67,12 +67,12 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.4.0
         with:
           persist-credentials: false
 
       - name: Setup PHP
-        uses: shivammathur/setup-php@v2
+        uses: shivammathur/setup-php@2.40.0
         with:
           php-version: '8.2'
           extensions: mbstring, xml, gd, zip, pdo_mysql, redis, sockets, intl, bcmath, gmp, geos
@@ -119,7 +119,7 @@ jobs:
         run: composer coverage:baseline
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v4.6.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: api/coverage/clover.xml

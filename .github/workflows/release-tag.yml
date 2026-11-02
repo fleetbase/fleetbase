@@ -200,7 +200,7 @@ jobs:
       # fetch-depth 0 so the tag-collision check below can see existing tags, and so the
       # annotated tag is created against real history rather than a shallow graft.
       - name: Checkout the commit being released
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.4.0
         with:
           ref: ${{ steps.resolve.outputs.sha || 'main' }}
           fetch-depth: 0
