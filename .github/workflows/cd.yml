@@ -12,6 +12,9 @@ env:
   PROJECT: ${{ secrets.PROJECT }}
   GITHUB_AUTH_KEY: ${{ secrets._GITHUB_AUTH_TOKEN }}
 
+permissions:
+  contents: read
+
 jobs:
   setup:
     name: Setup Environment

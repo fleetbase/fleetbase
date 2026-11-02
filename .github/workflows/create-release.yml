@@ -4,6 +4,10 @@ on:
     tags:
       - 'v*'
 
+permissions:
+  # softprops/action-gh-release publishes the release with GITHUB_TOKEN.
+  contents: write
+
 jobs:
   create:
     runs-on: ubuntu-latest

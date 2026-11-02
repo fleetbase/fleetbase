@@ -17,6 +17,9 @@ on:
     branches: [ main, 'dev-v*', 'release/v*' ]
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   build:
     name: Build and Start Docker Services
