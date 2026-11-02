@@ -19,11 +19,16 @@ jobs:
     # 1️⃣  Figure out which tag we’re talking about
     - id: vars
       shell: bash
+      env:
+        # Read through the environment: inlined into the script, a crafted tag or
+        # branch name would run as shell in this job.
+        INPUT_TAG: ${{ github.event.inputs.tag }}
+        RUN_BRANCH: ${{ github.event.workflow_run.head_branch }}
       run: |
         if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-          TAG="${{ github.event.inputs.tag }}"
+          TAG="$INPUT_TAG"
         else
-          TAG="${{ github.event.workflow_run.head_branch }}"
+          TAG="$RUN_BRANCH"
         fi
         echo "TAG=$TAG"   >> "$GITHUB_ENV"
 
