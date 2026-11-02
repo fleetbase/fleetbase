@@ -49,6 +49,32 @@ module.exports = {
         this.watchExtensionFiles();
     },
 
+    /**
+     * Write dist/host-modules.json in production builds: the modules this
+     * console defines at boot and the ember-ui/ember-core versions it was built
+     * with. The extension installer checks prebuilt engine releases against it
+     * (see @fleetbase/ember-core docs/runtime-engines.md). FLEETBASE_HOST_MODULES=1
+     * writes it in other environments too.
+     */
+    postBuild(results) {
+        const isProduction = process.env.EMBER_ENV === 'production';
+        if (!isProduction && process.env.FLEETBASE_HOST_MODULES !== '1') {
+            return;
+        }
+
+        let engineCompat;
+        try {
+            engineCompat = require(require.resolve('@fleetbase/ember-core/lib/engine-compat', { paths: [this.project.root] }));
+        } catch (error) {
+            console.log('[Fleetbase] Skipping host-modules.json: this @fleetbase/ember-core has no lib/engine-compat');
+            return;
+        }
+
+        const hostModules = engineCompat.buildHostModules(results.directory, { consoleDir: this.project.root });
+        fs.writeFileSync(path.join(results.directory, 'host-modules.json'), JSON.stringify(hostModules), 'utf8');
+        console.log(`[Fleetbase]   ✓ Wrote host-modules.json (${hostModules.modules.length} modules)`);
+    },
+
     async generateExtensionFiles() {
         // Clean up old/stale extensions directory before generating new files
         const extensionsDir = path.join(this.project.root, 'app', 'extensions');
