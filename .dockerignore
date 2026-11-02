@@ -25,3 +25,10 @@ docker-compose.yml
 $virtualenv.tar.gz
 $node_modules.tar.gz
 docker-compose.override.yml
+
+# Host-only api/ state. The image installs its own vendor/ before COPY ./api, and a local
+# vendor/ can hold composer path-repo symlinks that COPY can't lay over those directories.
+api/vendor
+api/frankenphp
+api/storage/app/tmp
+api/storage/logs/*.log
