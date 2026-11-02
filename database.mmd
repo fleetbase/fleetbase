@@ -3393,6 +3393,20 @@ erDiagram
     TIMESTAMP updated_at
   }
 
+  fleetbase_storefront_apple_sign_in_tokens {
+    INTUNSIGNED id PK, UK
+    CHAR uuid UK
+    CHAR company_uuid
+    CHAR customer_uuid UK
+    CHAR user_uuid
+    VARCHAR apple_user_id
+    VARCHAR client_id UK
+    TEXT refresh_token
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
   fleetbase_storefront_campaigns {
     BIGINTUNSIGNED id PK, UK
     CHAR uuid UK
