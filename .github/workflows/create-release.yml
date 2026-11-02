@@ -13,6 +13,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
         - uses: actions/checkout@v4
+          with:
+            persist-credentials: false
         - name: Publish GitHub Release
           uses: softprops/action-gh-release@v2
           with:

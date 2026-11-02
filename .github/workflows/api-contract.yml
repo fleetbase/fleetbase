@@ -106,6 +106,7 @@ jobs:
       - name: Checkout fleetbase/fleetbase
         uses: actions/checkout@v4
         with:
+          persist-credentials: false
           repository: fleetbase/fleetbase
           ref: ${{ inputs.fleetbase-ref }}
           submodules: recursive
@@ -258,6 +259,7 @@ jobs:
         if: ${{ inputs.overlay-package != '' }}
         uses: actions/checkout@v4
         with:
+          persist-credentials: false
           repository: ${{ github.repository }}
           ref: ${{ github.sha }}
           token: ${{ secrets._GITHUB_AUTH_TOKEN }}

@@ -38,6 +38,7 @@ jobs:
     # 2️⃣  Check out the exact commit for that tag
     - uses: actions/checkout@v3
       with:
+        persist-credentials: false
         ref: ${{ env.TAG }}
         fetch-depth: 1
 

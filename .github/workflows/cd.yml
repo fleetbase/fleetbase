@@ -42,6 +42,7 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
         with:
+          persist-credentials: false
           submodules: recursive
 
       - name: Set up Docker Buildx
@@ -149,6 +150,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
+          persist-credentials: false
           submodules: true
 
       - name: Set Dynamic ENV Vars

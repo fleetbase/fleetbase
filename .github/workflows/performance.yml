@@ -105,6 +105,7 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
         with:
+          persist-credentials: false
           submodules: recursive
 
       - name: Set up Docker Buildx

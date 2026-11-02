@@ -327,6 +327,7 @@ runs:
       if: steps.pmauth.outputs.available == 'true'
       uses: actions/checkout@v4
       with:
+        persist-credentials: false
         repository: fleetbase/postman
         ref: ${{ inputs.postman-ref }}
         token: ${{ inputs.github-token }}
