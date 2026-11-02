@@ -81,6 +81,13 @@ on:
         type: boolean
         required: false
         default: false
+    secrets:
+      _GITHUB_AUTH_TOKEN:
+        description: >-
+          Token that pushes the tag, so the publish workflows fire on it. Optional
+          on purpose: without it the workflow warns and no-ops (see WHY NOT
+          GITHUB_TOKEN above). Callers may still pass `secrets: inherit`.
+        required: false
 
 permissions:
   contents: read
