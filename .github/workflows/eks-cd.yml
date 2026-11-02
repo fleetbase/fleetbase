@@ -22,12 +22,13 @@ jobs:
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v3.7.0
         with:
+          persist-credentials: false
           submodules: recursive
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v2.10.0
 
       - name: Set Dynamic ENV Vars
         run: |
@@ -36,7 +37,7 @@ jobs:
           echo "STACK=$(basename $GITHUB_REF)" >> $GITHUB_ENV
 
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v4.3.1
         with:
           role-to-assume: ${{ secrets.EKS_DEPLOYER_ROLE }}
           role-session-name: github
@@ -44,10 +45,10 @@ jobs:
 
       - name: Login to Amazon ECR
         id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
+        uses: aws-actions/amazon-ecr-login@v1.7.1
 
       - name: Build and Release
-        uses: docker/bake-action@v2
+        uses: docker/bake-action@v2.3.0
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}/${{ env.PROJECT }}-${{ env.STACK }}
           VERSION: ${{ env.VERSION }}
@@ -84,8 +85,9 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v3.7.0
         with:
+          persist-credentials: false
           submodules: true
 
       - name: Set Dynamic ENV Vars
@@ -95,7 +97,7 @@ jobs:
           echo "STACK=$(basename $GITHUB_REF)" >> $GITHUB_ENV
 
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: aws-actions/configure-aws-credentials@v2.2.0
         with:
           role-to-assume: ${{ secrets.EKS_DEPLOYER_ROLE }}
           role-session-name: github
@@ -112,11 +114,11 @@ jobs:
           cat /tmp/dotenv.file | sed -e 's/"//g' >> $GITHUB_ENV
 
       - name: Install Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v3.9.1
         with:
           node-version: 22
 
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v2.4.1
         name: Install pnpm
         id: pnpm-install
         with:
@@ -129,7 +131,7 @@ jobs:
         run: |
           echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
 
-      - uses: actions/cache@v3
+      - uses: actions/cache@v3.5.0
         name: Setup pnpm Cache
         with:
           path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}

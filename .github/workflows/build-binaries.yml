@@ -19,7 +19,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.4.0
+        with:
+          persist-credentials: false
       - name: Build Linux binary
         run: |
           set -o pipefail
@@ -27,14 +29,14 @@ jobs:
           ./builds/linux/build-linux.sh 2>&1 | tee build-linux.log
       - name: Upload Linux build log
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: fleetbase-linux-build-log
           path: build-linux.log
           if-no-files-found: ignore
       - name: Upload Linux binary
         if: github.event_name == 'workflow_run'
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v2.6.2
         with:
           tag_name: ${{ github.event.workflow_run.head_branch }}
           files: |
@@ -49,10 +51,12 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.4.0
+        with:
+          persist-credentials: false
       # Go is not on PATH on the macOS runner image. Pin to the same Go line as
       # the Linux builder image (FrankenPHP v1.9.0 and Caddy v2.10.0 need 1.24).
-      - uses: actions/setup-go@v5
+      - uses: actions/setup-go@v5.6.0
         with:
           go-version: '1.24'
           cache: false
@@ -72,7 +76,7 @@ jobs:
           ./builds/osx/build-osx.sh
       - name: Upload macOS binary
         if: github.event_name == 'workflow_run'
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v2.6.2
         with:
           tag_name: ${{ github.event.workflow_run.head_branch }}
           files: |

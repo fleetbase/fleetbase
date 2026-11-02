@@ -42,4 +42,5 @@ jobs:
       # while console/package.json says 0.7.54, and nothing catches that today.
       version-files: console/package.json,docker/Dockerfile=FLEETBASE_VERSION
       version: ${{ github.event.inputs.version || '' }}
-    secrets: inherit
+    secrets:
+      _GITHUB_AUTH_TOKEN: ${{ secrets._GITHUB_AUTH_TOKEN }}

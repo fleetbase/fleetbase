@@ -4,13 +4,19 @@ on:
     tags:
       - 'v*'
 
+permissions:
+  # softprops/action-gh-release publishes the release with GITHUB_TOKEN.
+  contents: write
+
 jobs:
   create:
     runs-on: ubuntu-latest
     steps:
-        - uses: actions/checkout@v4
+        - uses: actions/checkout@v4.4.0
+          with:
+            persist-credentials: false
         - name: Publish GitHub Release
-          uses: softprops/action-gh-release@v2
+          uses: softprops/action-gh-release@v2.6.2
           with:
             tag_name: ${{ github.ref_name }}
             name: ${{ github.ref_name }}

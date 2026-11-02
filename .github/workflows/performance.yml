@@ -103,12 +103,13 @@ jobs:
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.4.0
         with:
+          persist-credentials: false
           submodules: recursive
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v3.12.0
 
       # Same gate as install-smoke.yml: without the token the API image cannot resolve
       # the private Fleetbase packages, so skip rather than fail on forks.
@@ -284,7 +285,7 @@ jobs:
 
       - name: Set up k6
         if: steps.auth.outputs.available == 'true'
-        uses: grafana/setup-k6-action@v1
+        uses: grafana/setup-k6-action@v1.2.2
         with:
           k6-version: ${{ env.K6_VERSION }}
 
@@ -457,7 +458,7 @@ jobs:
 
       - name: Upload k6 report artifact
         if: always() && steps.auth.outputs.available == 'true'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: k6-report
           path: |
@@ -521,7 +522,7 @@ jobs:
       # re-run).
       - name: Attach report to the GitHub Release
         if: always() && steps.release.outputs.exists == 'true'
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v2.6.2
         with:
           tag_name: ${{ github.ref_name }}
           files: |
