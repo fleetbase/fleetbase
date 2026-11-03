@@ -13,6 +13,9 @@ RUN apt-get update && apt-get install -y git bind9-utils mycli default-mysql-cli
   && ssh-keyscan github.com >> /root/.ssh/known_hosts
 
 # Install PHP Extensions
+# Composer is pinned because blocking rules change between releases and 2.11 hashes config.policy into
+# composer.lock's content-hash. Update it with api/composer.lock, and keep it at 2.11 or later while
+# api/composer.json ignores the Laravel 10 advisories. Review the pin at the Laravel 12.69+ upgrade.
 RUN install-php-extensions \
   pdo_mysql \
   gd \
@@ -29,7 +32,7 @@ RUN install-php-extensions \
   sockets \
   pcntl \
   xdebug \
-  @composer
+  @composer-2.11.1
 
 # Install build dependencies for GEOS
 RUN apt-get update \
