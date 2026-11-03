@@ -130,6 +130,36 @@
         "sort-packages": true,
         "allow-plugins": {
             "php-http/discovery": true
+        },
+        "policy": {
+            "advisories": {
+                "ignore-id": {
+                    "PKSA-b41t-wbzk-9q51": {
+                        "reason": "TokenGuard bypass. Fixed on 10.x in v10.50.4, but Packagist still lists every 10.x version as affected. Remove at the Laravel 12.69+ upgrade.",
+                        "on-audit": false
+                    },
+                    "PKSA-zwc5-qtrz-zm1n": {
+                        "reason": "CRLF in the email rule, filed against illuminate/mail. No 10.x fix; symfony/mime rejects the payloads. Remove at the Laravel 12.69+ upgrade.",
+                        "on-audit": false
+                    },
+                    "PKSA-mdq4-51ck-6kdq": {
+                        "reason": "CRLF in the email rule (CVE-2026-48019). No 10.x fix; symfony/mime rejects the payloads. Remove at the Laravel 12.69+ upgrade.",
+                        "on-audit": false
+                    },
+                    "PKSA-3r5d-mb8f-1qw9": {
+                        "reason": "CRLF in the email rule. No 10.x fix; symfony/mime rejects the payloads. Remove at the Laravel 12.69+ upgrade.",
+                        "on-audit": false
+                    },
+                    "PKSA-m5cs-t1y6-qpcs": {
+                        "reason": "Temporary signed URL path confusion. No 10.x fix; local-driver temporary URLs are not used. Remove at the Laravel 12.69+ upgrade.",
+                        "on-audit": false
+                    },
+                    "PKSA-d5tc-s1qs-h781": {
+                        "reason": "Debug page XSS. No 10.x fix; needs APP_DEBUG=true. Remove at the Laravel 12.69+ upgrade.",
+                        "on-audit": false
+                    }
+                }
+            }
         }
     },
     "minimum-stability": "dev",

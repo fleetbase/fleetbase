@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d7b19395e459e1f0419a624c11cf29ba",
+    "content-hash": "39c31e379a7c308225673ac32244400e",
     "packages": [
         {
             "name": "appstract/laravel-opcache",
@@ -6131,16 +6131,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "10.x-dev",
+            "version": "v10.50.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "74e222cee687f957d95aaadddae69270e3205cf7"
+                "reference": "dcbc876d5bfb62b5d0d8e0b8c8526a2779b14015"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/74e222cee687f957d95aaadddae69270e3205cf7",
-                "reference": "74e222cee687f957d95aaadddae69270e3205cf7",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/dcbc876d5bfb62b5d0d8e0b8c8526a2779b14015",
+                "reference": "dcbc876d5bfb62b5d0d8e0b8c8526a2779b14015",
                 "shasum": ""
             },
             "require": {
@@ -6335,7 +6335,8 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2026-08-12T03:46:26+00:00"
+            "time": "2026-10-27T14:09:24+00:00",
+            "published-time": "2026-10-27T14:09:46+00:00"
         },
         {
             "name": "laravel/octane",
@@ -9833,16 +9834,16 @@
         },
         {
             "name": "phpoffice/phpspreadsheet",
-            "version": "1.30.6",
+            "version": "1.30.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPOffice/PhpSpreadsheet.git",
-                "reference": "a416375ffc8bf5b661c1bb4e6c60d8f3fddbe5ce"
+                "reference": "f5dd9c1f084d336ea63cf53099533e061a9c157a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPOffice/PhpSpreadsheet/zipball/a416375ffc8bf5b661c1bb4e6c60d8f3fddbe5ce",
-                "reference": "a416375ffc8bf5b661c1bb4e6c60d8f3fddbe5ce",
+                "url": "https://api.github.com/repos/PHPOffice/PhpSpreadsheet/zipball/f5dd9c1f084d336ea63cf53099533e061a9c157a",
+                "reference": "f5dd9c1f084d336ea63cf53099533e061a9c157a",
                 "shasum": ""
             },
             "require": {
@@ -9935,9 +9936,10 @@
             ],
             "support": {
                 "issues": "https://github.com/PHPOffice/PhpSpreadsheet/issues",
-                "source": "https://github.com/PHPOffice/PhpSpreadsheet/tree/1.30.6"
+                "source": "https://github.com/PHPOffice/PhpSpreadsheet/tree/1.30.7"
             },
-            "time": "2026-07-12T19:59:31+00:00"
+            "time": "2026-09-17T03:56:23+00:00",
+            "published-time": "2026-09-17T04:07:00+00:00"
         },
         {
             "name": "phpoption/phpoption",
@@ -14595,16 +14597,16 @@
         },
         {
             "name": "symfony/mime",
-            "version": "v6.4.45",
+            "version": "v6.4.49",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/mime.git",
-                "reference": "3f850171f3bb396a84117ca97d3d474fc4b83deb"
+                "reference": "371f182b3174ef1b6d33b641f1295e7f88292557"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/mime/zipball/3f850171f3bb396a84117ca97d3d474fc4b83deb",
-                "reference": "3f850171f3bb396a84117ca97d3d474fc4b83deb",
+                "url": "https://api.github.com/repos/symfony/mime/zipball/371f182b3174ef1b6d33b641f1295e7f88292557",
+                "reference": "371f182b3174ef1b6d33b641f1295e7f88292557",
                 "shasum": ""
             },
             "require": {
@@ -14660,7 +14662,7 @@
                 "mime-type"
             ],
             "support": {
-                "source": "https://github.com/symfony/mime/tree/v6.4.45"
+                "source": "https://github.com/symfony/mime/tree/v6.4.49"
             },
             "funding": [
                 {
@@ -14680,7 +14682,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-08-22T07:48:48+00:00"
+            "time": "2026-10-28T17:57:40+00:00",
+            "published-time": "2026-10-28T18:17:40+00:00"
         },
         {
             "name": "symfony/options-resolver",
@@ -20183,5 +20186,5 @@
         "php": ">=8.0 <8.3"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.11.0"
 }
