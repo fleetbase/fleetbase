@@ -88,8 +88,14 @@ services:
     # of memory.
     command: ['sh', '-c', 'while :; do php /fleetbase/api/artisan schedule:run; sleep $$((60 - $$(date +%s) % 60)); done']
     init: true
+    # The image's own check calls the admin port only application runs. compose up --wait also
+    # refuses a service with no check at all, so this one proves PHP and the app still boot.
     healthcheck:
-      disable: true
+      test: ['CMD-SHELL', 'php /fleetbase/api/artisan --version > /dev/null']
+      interval: 30s
+      timeout: 20s
+      retries: 3
+      start_period: 30s
 
   socket:
     image: ${FLEETBASE_SOCKET_IMAGE:-fleetbase/fleetbase-socket:${FLEETBASE_VERSION}}
