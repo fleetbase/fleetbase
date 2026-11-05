@@ -47,7 +47,7 @@
 		handle @maintenance {
 			header Retry-After 120
 			header Content-Type application/json
-			respond `{"status":"maintenance","message":"Fleetbase is being updated and will be back shortly."}` 503
+			respond `{"status":"maintenance","message":"Fleetbase is closed for maintenance and will reopen once the work is finished."}` 503
 		}
 		handle /socketcluster/* {
 			reverse_proxy socket:8000

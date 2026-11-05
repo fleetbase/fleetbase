@@ -81,7 +81,7 @@ maintenance_page="$(request "$CONSOLE_DOMAIN" /)"
 rm -f "$HOME_DIR/run/maintenance"
 [[ "$console_status" == "503" ]] || fail "Maintenance closes the console (got: $console_status)"
 [[ "$api_status" == "503" ]] || fail "Maintenance closes the API (got: $api_status)"
-echo "$maintenance_page" | grep -q 'being updated' || fail "Maintenance page shows"
+echo "$maintenance_page" | grep -q 'closed for maintenance' || fail "Maintenance page shows"
 [[ "$(status_of "$API_DOMAIN" /health)" == "200" ]] || fail "Site reopens after maintenance"
 pass "Maintenance page opens and closes"
 
