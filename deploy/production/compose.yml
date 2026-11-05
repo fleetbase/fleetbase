@@ -1,0 +1,134 @@
+# Fleetbase production stack. One server, HTTPS through Caddy, pinned images, and nothing
+# public except ports 80 and 443. See README.md in this folder.
+#
+# Values come from the env file init.sh writes:
+#
+#   docker compose -f compose.yml --env-file "$FLEETBASE_HOME/config/stack.env" up -d
+#
+# Every API-side service (application, queue, scheduler) reads the same secrets/app.env, so
+# they can't disagree about the database, the app key, mail or storage.
+
+name: ${COMPOSE_PROJECT_NAME:-fleetbase}
+
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: 10m
+    max-file: '5'
+
+x-api: &api
+  image: ${FLEETBASE_API_IMAGE:-fleetbase/fleetbase-api:${FLEETBASE_VERSION}}
+  restart: unless-stopped
+  logging: *logging
+  env_file: ${FLEETBASE_HOME}/secrets/app.env
+  volumes:
+    - ${FLEETBASE_HOME}/data/storage:/fleetbase/api/storage/app
+  depends_on:
+    database:
+      condition: service_healthy
+      required: false
+    cache:
+      condition: service_healthy
+
+services:
+  proxy:
+    image: caddy:2.10-alpine
+    restart: unless-stopped
+    logging: *logging
+    ports:
+      - '${HTTP_PORT:-80}:80'
+      - '${HTTPS_PORT:-443}:443'
+      - '${HTTPS_PORT:-443}:443/udp'
+    environment:
+      CONSOLE_DOMAIN: ${CONSOLE_DOMAIN}
+      API_DOMAIN: ${API_DOMAIN}
+      TLS_MODE: ${TLS_MODE:-auto}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./site:/etc/caddy/site:ro
+      - ${FLEETBASE_HOME}/run:/run/fleetbase:ro
+      - ${FLEETBASE_HOME}/certs:/certs:ro
+      - ${FLEETBASE_HOME}/data/caddy:/data
+    depends_on:
+      - application
+      - console
+      - socket
+
+  console:
+    image: ${FLEETBASE_CONSOLE_IMAGE:-fleetbase/fleetbase-console:${FLEETBASE_VERSION}}
+    restart: unless-stopped
+    logging: *logging
+    volumes:
+      - ${FLEETBASE_HOME}/config/fleetbase.config.json:/usr/share/nginx/html/fleetbase.config.json:ro
+
+  application:
+    <<: *api
+    healthcheck:
+      test: ['CMD', 'php', '-r', "exit(@file_get_contents('http://127.0.0.1:8000/health') === false ? 1 : 0);"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  queue:
+    <<: *api
+    command: ['php', 'artisan', 'queue:work']
+    # The image's own check calls the web server's admin port, which only application runs.
+    healthcheck:
+      test: ['CMD', 'php', 'artisan', 'queue:status']
+      interval: 30s
+      timeout: 20s
+      retries: 3
+      start_period: 60s
+
+  scheduler:
+    <<: *api
+    # One schedule:run at a time, on the minute. The image's go-crond starts a new run every minute
+    # whether or not the last one finished, and on a busy server those pile up until it runs out
+    # of memory.
+    command: ['sh', '-c', 'while :; do php /fleetbase/api/artisan schedule:run; sleep $$((60 - $$(date +%s) % 60)); done']
+    init: true
+    healthcheck:
+      disable: true
+
+  socket:
+    image: ${FLEETBASE_SOCKET_IMAGE:-fleetbase/fleetbase-socket:${FLEETBASE_VERSION}}
+    restart: unless-stopped
+    logging: *logging
+    env_file: ${FLEETBASE_HOME}/secrets/socket.env
+
+  # Left out when the install uses an external database: init.sh only sets the profile for
+  # the bundled one. No port is published, so it's reachable only from this stack.
+  database:
+    image: mysql:8.4-oracle
+    profiles: ['bundled-database']
+    restart: unless-stopped
+    logging: *logging
+    # Nothing replicates from or reads the binary log, and telematics ingest makes it grow fast.
+    # MySQL 8.4 refuses foreign keys to a column without a unique key, which Fleetbase's permissions
+    # tables have, so the migrations fail without the second flag.
+    command: ['mysqld', '--skip-log-bin', '--restrict-fk-on-non-standard-key=OFF']
+    env_file: ${FLEETBASE_HOME}/secrets/database.env
+    volumes:
+      - ./mysql-init:/docker-entrypoint-initdb.d:ro
+      - ${FLEETBASE_HOME}/data/mysql:/var/lib/mysql
+    healthcheck:
+      test: ['CMD-SHELL', 'mysqladmin ping -h 127.0.0.1 --silent']
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+
+  cache:
+    image: valkey/valkey:8-alpine
+    restart: unless-stopped
+    logging: *logging
+    # Queued jobs live here too, so keep them across a restart.
+    command: ['valkey-server', '--appendonly', 'yes', '--maxmemory-policy', 'noeviction']
+    volumes:
+      - ${FLEETBASE_HOME}/data/valkey:/data
+    healthcheck:
+      test: ['CMD', 'valkey-cli', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 5

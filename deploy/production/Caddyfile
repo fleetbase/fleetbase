@@ -1,0 +1,57 @@
+# Two hostnames: the console, and the API with the socket on the same host. TLS_MODE picks one
+# of the snippets below. Touching /run/fleetbase/maintenance closes the site without a reload.
+
+(tls_auto) {
+}
+
+(tls_internal) {
+	tls internal
+}
+
+(tls_own) {
+	tls /certs/fullchain.pem /certs/privkey.pem
+}
+
+(maintenance_flag) {
+	@maintenance file {
+		root /run/fleetbase
+		try_files /maintenance
+	}
+}
+
+{$CONSOLE_DOMAIN} {
+	import tls_{$TLS_MODE}
+	import maintenance_flag
+	encode zstd gzip
+
+	route {
+		handle @maintenance {
+			header Retry-After 120
+			header Cache-Control no-store
+			root * /etc/caddy/site
+			rewrite * /maintenance.html
+			file_server {
+				status 503
+			}
+		}
+		reverse_proxy console:4200
+	}
+}
+
+{$API_DOMAIN} {
+	import tls_{$TLS_MODE}
+	import maintenance_flag
+	encode zstd gzip
+
+	route {
+		handle @maintenance {
+			header Retry-After 120
+			header Content-Type application/json
+			respond `{"status":"maintenance","message":"Fleetbase is being updated and will be back shortly."}` 503
+		}
+		handle /socketcluster/* {
+			reverse_proxy socket:8000
+		}
+		reverse_proxy application:8000
+	}
+}

@@ -1,0 +1,115 @@
+name: Production Stack Smoke Test
+
+# Proves deploy/production works from a fresh server folder: every service up, HTTPS through the
+# proxy, a real job through the queue, the scheduler reaching the database, a socket connection
+# and the maintenance page. Builds the API and socket from this checkout. The console comes from
+# the last published image, because building it takes far longer and only its config is under test.
+
+on:
+  push:
+    tags:
+      - 'v*'
+    branches:
+      - 'release/v*'
+    paths:
+      - 'deploy/production/**'
+      - 'api/**'
+      - 'docker/**'
+      - 'socket/**'
+      - '.github/workflows/stack-smoke.yml'
+  pull_request:
+    branches: [main, 'release/v*']
+    paths:
+      - 'deploy/production/**'
+      - 'api/**'
+      - 'docker/**'
+      - 'socket/**'
+      - '.github/workflows/stack-smoke.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: stack-smoke-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  stack-smoke:
+    name: Production Stack Boots and Works
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    env:
+      COMPOSE_PROJECT_NAME: stack-smoke
+      FLEETBASE_API_IMAGE: stack-smoke/fleetbase-api:ci
+      FLEETBASE_SOCKET_IMAGE: stack-smoke/fleetbase-socket:ci
+      FLEETBASE_CONSOLE_IMAGE: fleetbase/fleetbase-console:latest
+      STACK_HOME: ${{ github.workspace }}/.stack
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Check composer auth availability
+        id: auth
+        env:
+          GITHUB_AUTH_TOKEN: ${{ secrets._GITHUB_AUTH_TOKEN }}
+        run: |
+          if [[ -n "$GITHUB_AUTH_TOKEN" ]]; then
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "available=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::_GITHUB_AUTH_TOKEN is not set, so the API image can't be built and this test is skipped."
+          fi
+
+      - name: Build API image from source
+        if: steps.auth.outputs.available == 'true'
+        env:
+          GITHUB_AUTH_TOKEN: ${{ secrets._GITHUB_AUTH_TOKEN }}
+        run: |
+          docker build \
+            --file docker/Dockerfile \
+            --target app-release \
+            --build-arg GITHUB_AUTH_KEY="$GITHUB_AUTH_TOKEN" \
+            --tag "$FLEETBASE_API_IMAGE" \
+            .
+
+      - name: Build socket image from source
+        if: steps.auth.outputs.available == 'true'
+        run: docker build --tag "$FLEETBASE_SOCKET_IMAGE" socket
+
+      - name: Prepare the server folder
+        if: steps.auth.outputs.available == 'true'
+        run: |
+          deploy/production/init.sh \
+            --domain fleet.localhost \
+            --version ci \
+            --home "$STACK_HOME" \
+            --tls internal
+
+      - name: Start the stack
+        if: steps.auth.outputs.available == 'true'
+        working-directory: deploy/production
+        run: docker compose -f compose.yml --env-file "$STACK_HOME/config/stack.env" up -d --wait --wait-timeout 300
+
+      - name: Run the deploy script
+        if: steps.auth.outputs.available == 'true'
+        working-directory: deploy/production
+        run: docker compose -f compose.yml --env-file "$STACK_HOME/config/stack.env" exec -T application ./deploy.sh
+
+      - name: Verify
+        if: steps.auth.outputs.available == 'true'
+        run: deploy/production/verify.sh "$STACK_HOME"
+
+      - name: Dump logs on failure
+        if: failure() && steps.auth.outputs.available == 'true'
+        working-directory: deploy/production
+        run: |
+          docker compose -f compose.yml --env-file "$STACK_HOME/config/stack.env" ps
+          docker compose -f compose.yml --env-file "$STACK_HOME/config/stack.env" logs --tail=100
