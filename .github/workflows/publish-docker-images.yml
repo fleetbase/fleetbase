@@ -53,6 +53,70 @@ jobs:
                   files: |
                       ./docker-bake.hcl
 
+    # Publishes what the upgrade engine trusts: a manifest pinning each image's digest and the stack's
+    # hash, with a detached Ed25519 signature over its exact bytes.
+    #
+    # Setup: an Ed25519 private key in PEM, as GANTRY_SIGNING_KEY_PEM in the protected "release"
+    # environment, so only these tag runs can read it. Publishing never fails for want of it: a missing
+    # key is a warning, and the release simply can't be upgraded to through the engine.
+    sign-manifest:
+        name: Sign the release manifest
+        needs: docker-release
+        runs-on: ubuntu-latest
+        if: github.ref_type == 'tag'
+        environment: release
+        permissions:
+            contents: write
+        env:
+            SIGNING_KEY: ${{ secrets.GANTRY_SIGNING_KEY_PEM }}
+            TAG: ${{ github.ref_name }}
+            GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        steps:
+            - name: Check for the signing key
+              id: key
+              run: |
+                  if [ -z "$SIGNING_KEY" ]; then
+                    echo "::warning::GANTRY_SIGNING_KEY_PEM is not set; $TAG has no signed manifest."
+                    echo "available=false" >> "$GITHUB_OUTPUT"
+                  else
+                    echo "available=true" >> "$GITHUB_OUTPUT"
+                  fi
+
+            - name: Checkout Repo
+              if: steps.key.outputs.available == 'true'
+              uses: actions/checkout@v4
+
+            - name: Log in to Docker Hub
+              if: steps.key.outputs.available == 'true'
+              uses: docker/login-action@v3
+              with:
+                  username: ${{ secrets.DOCKER_HUB_USERNAME }}
+                  password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+            - name: Build, sign and publish
+              if: steps.key.outputs.available == 'true'
+              run: |
+                  set -euo pipefail
+                  pip install --quiet pyyaml
+                  pin() {
+                    local digest
+                    digest="$(docker buildx imagetools inspect "fleetbase/$1:$TAG" --format '{{.Manifest.Digest}}')"
+                    echo "fleetbase/$1@$digest"
+                  }
+                  # Fixed names and times, so the same tree always makes the same archive.
+                  tar --sort=name --mtime='2020-01-01 00:00Z' --owner=0 --group=0 --numeric-owner \
+                    -C deploy/production -cf - . | gzip -n > fleetbase-stack.tar.gz
+                  python3 scripts/release-manifest.py build upgrade.yml "$TAG" \
+                    "$(pin fleetbase-api)" "$(pin fleetbase-console)" "$(pin fleetbase-socket)" \
+                    "https://github.com/${GITHUB_REPOSITORY}/releases/download/$TAG/fleetbase-stack.tar.gz" \
+                    "$(sha256sum fleetbase-stack.tar.gz | cut -d' ' -f1)" > manifest.yml
+                  umask 077
+                  printf '%s\n' "$SIGNING_KEY" > signing.pem
+                  openssl pkeyutl -sign -inkey signing.pem -rawin -in manifest.yml -out manifest.bin
+                  rm -f signing.pem
+                  base64 -w0 manifest.bin > manifest.yml.sig
+                  gh release upload "$TAG" manifest.yml manifest.yml.sig fleetbase-stack.tar.gz --clobber
+
     # Tell fleetbase/showcase that this tag's images exist, so it can screenshot the release.
     #
     # A job with `needs:` rather than a workflow_run trigger in the other repo: needs gives a real

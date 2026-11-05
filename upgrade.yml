@@ -1,0 +1,17 @@
+# What a release asks of whoever upgrades to it. Update this on every release branch: CI adds image
+# digests and the stack's hash after images are pushed, then signs the result. A release whose version
+# doesn't match this file is published as `risk: review`, which blocks automatic upgrades.
+#
+#   risk: safe | review | action
+#   stop: true means every upgrade must land on this release on its way through
+#   steps: things to know or do. kind: before-upgrade | after-upgrade, ack: read | setting
+schema: 1
+version: v0.7.76
+min_from: v0.7.76
+engine_min: 1.0.0
+risk: safe
+stop: false
+migrations: true
+downtime_minutes: 2
+notes: First release with the production stack.
+steps: []

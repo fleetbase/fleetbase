@@ -1,0 +1,27 @@
+name: Upgrade Manifest
+
+# upgrade.yml is what a release tells the upgrade engine, so a mistake in it should fail the PR rather
+# than the release.
+on:
+  pull_request:
+    branches: [main, 'release/v*']
+    paths:
+      - upgrade.yml
+      - scripts/release-manifest.py
+      - .github/workflows/upgrade-manifest.yml
+  push:
+    branches: ['release/v*']
+    paths:
+      - upgrade.yml
+      - scripts/release-manifest.py
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install --quiet pyyaml
+      - run: python3 scripts/release-manifest.py check upgrade.yml
