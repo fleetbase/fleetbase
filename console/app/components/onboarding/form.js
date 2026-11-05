@@ -154,6 +154,12 @@ export default class OnboardingFormComponent extends Component {
             input.oauth_intent = this.oauthIntent;
         }
 
+        // The setup link on a new install carries the token that lets its owner create the first organization.
+        const claimToken = new URLSearchParams(window.location.search).get('claim');
+        if (!isBlank(claimToken)) {
+            input.claim_token = claimToken;
+        }
+
         if (this.offersHostedRouting) {
             input.hosted_routing = this.hostedRouting === true;
         }
