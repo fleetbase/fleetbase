@@ -32,8 +32,9 @@ php artisan route:clear
 php artisan config:cache
 php artisan route:cache
 
-# Initialize registry
-php artisan registry:init
+# Initialize registry. An unreachable registry must not stop an install or an upgrade on a
+# private network.
+php artisan registry:init || echo "Registry not initialized, continuing."
 
 # Notify open install pages that setup has completed
 php artisan fleetbase:notify-installed || true
