@@ -8,6 +8,7 @@
 # Every API-side service (application, queue, scheduler) reads the same secrets/app.env, so
 # they can't disagree about the database, the app key, mail or storage.
 
+# Pinned by digest: the signed manifest covers this file, so it covers these images too.
 name: ${COMPOSE_PROJECT_NAME:-fleetbase}
 
 x-logging: &logging
@@ -32,7 +33,7 @@ x-api: &api
 
 services:
   proxy:
-    image: caddy:2.10-alpine
+    image: caddy:2.10-alpine@sha256:4c6e91c6ed0e2fa03efd5b44747b625fec79bc9cd06ac5235a779726618e530d
     restart: unless-stopped
     logging: *logging
     ports:
@@ -106,7 +107,7 @@ services:
   # Left out when the install uses an external database: init.sh only sets the profile for
   # the bundled one. No port is published, so it's reachable only from this stack.
   database:
-    image: mysql:8.4-oracle
+    image: mysql:8.4-oracle@sha256:a81d043930e51745522bd5c430961cf8286f0a23f0a9a2a6e0108f7ea71b0902
     profiles: ['bundled-database']
     restart: unless-stopped
     logging: *logging
@@ -126,7 +127,7 @@ services:
       start_period: 30s
 
   cache:
-    image: valkey/valkey:8-alpine
+    image: valkey/valkey:8-alpine@sha256:2602ace2be6569bc2bbb06f873776516ab9089821525be34f4305c67eb9db02a
     restart: unless-stopped
     logging: *logging
     # Queued jobs live here too, so keep them across a restart.
