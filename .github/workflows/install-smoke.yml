@@ -106,6 +106,15 @@ jobs:
             echo "::error::Pending migrations remain after install"; exit 1
           fi
 
+      # The installer's override has to reach these too, or they can't sign in to the database it
+      # just locked with a password.
+      - name: Assert queue and scheduler reach the database
+        if: steps.auth.outputs.available == 'true'
+        run: |
+          set -euo pipefail
+          docker compose exec -T queue php artisan migrate:status > /dev/null
+          docker compose exec -T scheduler php artisan migrate:status > /dev/null
+
       - name: Smoke test HTTP endpoints
         if: steps.auth.outputs.available == 'true'
         run: |

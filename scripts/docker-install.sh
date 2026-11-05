@@ -450,13 +450,10 @@ fi
 # Build the file using a temp file for atomicity
 OVERRIDE_TMP="${OVERRIDE_FILE}.tmp.$$"
 
-{
-  cat <<YAML_HEADER
-services:
-  application:
-    environment:
-YAML_HEADER
-
+# Everything the API-side containers need. application, queue and scheduler all get the same
+# values. Otherwise queue and scheduler keep the base file's passwordless DATABASE_URL, and
+# have no APP_KEY, mail or storage settings.
+write_api_env() {
   env_line "APP_KEY"           "$APP_KEY"
   env_line "APP_NAME"          "$APP_NAME"
   env_line "APP_URL"           "${SCHEME_API}://${HOST}:8000"
@@ -497,6 +494,14 @@ YAML_HEADER
   env_line "TWILIO_SID"          "$TWILIO_SID"
   env_line "TWILIO_TOKEN"        "$TWILIO_TOKEN"
   env_line "TWILIO_FROM"         "$TWILIO_FROM"
+}
+
+{
+  printf 'services:\n'
+  for service in application queue scheduler; do
+    printf '  %s:\n    environment:\n' "$service"
+    write_api_env
+  done
 
   cat <<YAML_SOCKET
 
