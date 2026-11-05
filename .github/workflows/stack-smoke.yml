@@ -107,6 +107,17 @@ jobs:
         if: steps.auth.outputs.available == 'true'
         run: deploy/production/verify.sh "$STACK_HOME"
 
+      - name: Record memory use
+        if: steps.auth.outputs.available == 'true'
+        run: |
+          {
+            echo '### Memory after setup'
+            echo '```'
+            docker stats --no-stream --format '{{.Name}} {{.MemUsage}}' | sort
+            free -m
+            echo '```'
+          } | tee -a "$GITHUB_STEP_SUMMARY"
+
       - name: Dump logs on failure
         if: failure() && steps.auth.outputs.available == 'true'
         working-directory: deploy/production
