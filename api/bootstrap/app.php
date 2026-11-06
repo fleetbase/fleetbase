@@ -17,6 +17,20 @@ $app = new Illuminate\Foundation\Application(
 
 /*
 |--------------------------------------------------------------------------
+| Use This App's Configuration As Is
+|--------------------------------------------------------------------------
+|
+| Laravel 11+ merges its own default config files into the app's. Its default
+| `database.connections.mysql` then wins over the one core-api registers, which
+| reads DATABASE_URL, so the API would connect to 127.0.0.1. This app ships a
+| complete config/, so it opts out, as Laravel 10 behaved.
+|
+*/
+
+$app->dontMergeFrameworkConfiguration();
+
+/*
+|--------------------------------------------------------------------------
 | Bind Important Interfaces
 |--------------------------------------------------------------------------
 |
