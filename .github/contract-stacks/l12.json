@@ -1,0 +1,16 @@
+{
+  "description": "Laravel 12 release train. Every package is linked from its branch, so a release PR can be tested before anything is tagged. Point each entry at its release branch once its Laravel 12 PR merges there, and delete this stack after the release ships.",
+  "fleetbase-ref": "feat/laravel-12",
+  "build-from-source": true,
+  "overlays": [
+    { "repository": "fleetbase/core-api", "ref": "feat/laravel-12", "package": "fleetbase/core-api" },
+    { "repository": "fleetbase/fleetops", "ref": "chore/laravel-12", "package": "fleetbase/fleetops-api" },
+    { "repository": "fleetbase/storefront", "ref": "chore/laravel-12", "package": "fleetbase/storefront-api" },
+    { "repository": "fleetbase/ledger", "ref": "chore/laravel-12", "package": "fleetbase/ledger-api" },
+    { "repository": "fleetbase/customer-portal", "ref": "chore/laravel-12", "package": "fleetbase/customer-portal-api" },
+    { "repository": "fleetbase/registry-bridge", "ref": "chore/laravel-12", "package": "fleetbase/registry-bridge" },
+    { "repository": "fleetbase/ai", "ref": "chore/laravel-12", "package": "fleetbase/ai" },
+    { "repository": "fleetbase/valhalla", "ref": "chore/laravel-12", "package": "fleetbase/valhalla-api" },
+    { "repository": "fleetbase/vroom", "ref": "chore/laravel-12", "package": "fleetbase/vroom-api" }
+  ]
+}

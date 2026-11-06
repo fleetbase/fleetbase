@@ -16,6 +16,12 @@ name: API Contract (Postman)
 #         overlay-package: fleetbase/storefront-api
 #       secrets: inherit
 #
+# To test a release train before anything is tagged, a caller adds `stack: <name>`
+# (a file in .github/contract-stacks/). The stack sets the fleetbase ref, builds the
+# image from it, and links every listed package from its branch, with the caller's
+# own entry replaced by the commit under test. `extra-overlays` adds packages the
+# stack doesn't list.
+#
 # Requires org-level secrets POSTMAN_API_KEY and _GITHUB_AUTH_TOKEN (inherited).
 
 on:
@@ -74,6 +80,29 @@ on:
         type: string
         required: false
         default: main
+      stack:
+        description: >-
+          Name of a file in .github/contract-stacks/ (without .json) listing packages to
+          link from branches before the run, for testing a release train before anything
+          is tagged. The stack also sets fleetbase-ref and build-from-source. The calling
+          repository's own entry is replaced by the commit under test. Leave empty for the
+          usual single-package overlay.
+        type: string
+        required: false
+        default: ''
+      stack-ref:
+        description: Ref of fleetbase/fleetbase to read the stack file from.
+        type: string
+        required: false
+        default: main
+      extra-overlays:
+        description: >-
+          More packages to link from branches, one a line: `owner/repo@ref composer/package [path]`.
+          Added to the stack's list. Every linked package goes in as a Composer path
+          repository, and the whole app is re-resolved against them.
+        type: string
+        required: false
+        default: ''
 
 permissions:
   contents: read
@@ -103,11 +132,50 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
+      # Resolved before anything else, because a stack sets which fleetbase ref to boot.
+      # Read through the API rather than a checkout, which would be wiped by the
+      # workspace checkout below.
+      - name: Resolve contract stack
+        id: stack
+        env:
+          GH_TOKEN: ${{ secrets._GITHUB_AUTH_TOKEN || github.token }}
+          STACK: ${{ inputs.stack }}
+          STACK_REF: ${{ inputs.stack-ref }}
+          EXTRA_OVERLAYS: ${{ inputs.extra-overlays }}
+          CALLER: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          if [[ -z "$STACK" && -z "$EXTRA_OVERLAYS" ]]; then
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          resolver="$RUNNER_TEMP/resolve-contract-stack.py"
+          gh api -H 'Accept: application/vnd.github.raw' \
+            "repos/fleetbase/fleetbase/contents/scripts/ci/resolve-contract-stack.py?ref=${STACK_REF}" > "$resolver"
+          stack_file=""
+          if [[ -n "$STACK" ]]; then
+            if [[ ! "$STACK" =~ ^[a-z0-9_-]+$ ]]; then
+              echo "::error::Invalid stack name."; exit 1
+            fi
+            stack_file="$RUNNER_TEMP/stack.json"
+            gh api -H 'Accept: application/vnd.github.raw' \
+              "repos/fleetbase/fleetbase/contents/.github/contract-stacks/${STACK}.json?ref=${STACK_REF}" > "$stack_file"
+          fi
+          python3 "$resolver" "$stack_file" "$CALLER" "$EXTRA_OVERLAYS" > "$RUNNER_TEMP/stack.out"
+          cat "$RUNNER_TEMP/stack.out" >> "$GITHUB_OUTPUT"
+          echo "enabled=true" >> "$GITHUB_OUTPUT"
+          {
+            echo "### Contract stack \`${STACK:-extra overlays}\` from fleetbase/fleetbase@${STACK_REF}"
+            echo '```'
+            cat "$RUNNER_TEMP/stack.out"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
       - name: Checkout fleetbase/fleetbase
         uses: actions/checkout@v4
         with:
           repository: fleetbase/fleetbase
-          ref: ${{ inputs.fleetbase-ref }}
+          ref: ${{ steps.stack.outputs.fleetbase_ref || inputs.fleetbase-ref }}
           submodules: recursive
           token: ${{ secrets._GITHUB_AUTH_TOKEN }}
 
@@ -115,7 +183,7 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Build API image from source
-        if: ${{ inputs.build-from-source }}
+        if: ${{ inputs.build-from-source || steps.stack.outputs.build_from_source == 'true' }}
         run: |
           docker build \
             --file docker/Dockerfile \
@@ -125,7 +193,7 @@ jobs:
             .
 
       - name: Pull published API image
-        if: ${{ !inputs.build-from-source }}
+        if: ${{ !inputs.build-from-source && steps.stack.outputs.build_from_source != 'true' }}
         run: |
           docker pull "${{ inputs.api-image }}"
           # :latest is a moving target, so record the digest and build date the run
@@ -264,7 +332,7 @@ jobs:
           path: .overlay
 
       - name: Install branch source and resolve its Composer dependencies
-        if: ${{ inputs.overlay-package != '' }}
+        if: ${{ inputs.overlay-package != '' && steps.stack.outputs.enabled != 'true' }}
         env:
           OVERLAY_PACKAGE: ${{ inputs.overlay-package }}
           OVERLAY_PATH: ${{ inputs.overlay-path }}
@@ -357,8 +425,91 @@ jobs:
             echo "Composer resolved the checkout's required dependencies before discovery and migrations."
           } >> "$GITHUB_STEP_SUMMARY"
 
+      # A stack links many packages at once, so the whole app is re-resolved against them
+      # rather than updating one package. It can move the framework itself, which a
+      # worker reload would not pick up, so the containers restart afterwards.
+      - name: Install contract stack and re-resolve the app
+        if: ${{ steps.stack.outputs.enabled == 'true' }}
+        env:
+          CALLER_PACKAGE: ${{ inputs.overlay-package }}
+          CALLER_PATH: ${{ inputs.overlay-path }}
+          OVERLAYS: ${{ steps.stack.outputs.overlays }}
+          GIT_TOKEN: ${{ secrets._GITHUB_AUTH_TOKEN || github.token }}
+          COMPOSER_AUTH: '{"github-oauth":{"github.com":"${{ secrets._GITHUB_AUTH_TOKEN }}"}}'
+        run: |
+          set -euo pipefail
+          : > "$RUNNER_TEMP/linked.txt"
+          n=0
+
+          link() {
+            local src="$1" pkg="$2" from="$3" version
+            if [[ ! -f "$src/composer.json" ]]; then
+              echo "::error::No composer.json at ${src} for ${pkg}."; exit 1
+            fi
+            version="$(python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); assert d["name"] == sys.argv[2], "package name mismatch"; assert isinstance(d.get("version"), str) and d["version"], "no version in composer.json"; print(d["version"])' "$src/composer.json" "$pkg")"
+            docker compose exec -T application sh -c "mkdir -p /tmp/fleetbase-contract-packages/${n}"
+            tar -C "$src" --exclude=.git -cf - . | docker compose exec -T application sh -c "tar -C /tmp/fleetbase-contract-packages/${n} -xf -"
+            echo "${n} ${pkg} ${version} ${from}" >> "$RUNNER_TEMP/linked.txt"
+            n=$((n + 1))
+          }
+
+          if [[ -n "$CALLER_PACKAGE" ]]; then
+            link ".overlay/${CALLER_PATH}" "$CALLER_PACKAGE" "${{ github.repository }}@${{ github.sha }}"
+          fi
+          while read -r repository ref package path; do
+            [[ -z "${repository:-}" ]] && continue
+            dir="$RUNNER_TEMP/stack/${n}"
+            git clone --quiet --depth 1 --branch "$ref" "https://x-access-token:${GIT_TOKEN}@github.com/${repository}.git" "$dir"
+            link "${dir}/${path}" "$package" "${repository}@${ref} ($(git -C "$dir" rev-parse --short HEAD))"
+          done <<< "$OVERLAYS"
+
+          docker compose exec -T application chown -R www-data:www-data /tmp/fleetbase-contract-packages
+          docker compose exec -T application sh -c 'cat > /tmp/fleetbase-contract-linked.txt' < "$RUNNER_TEMP/linked.txt"
+          docker compose exec -T -e COMPOSER_AUTH application su www-data -s /bin/sh -c '
+            set -eu
+            cd /fleetbase/api
+            while read -r i pkg version from; do
+              composer config "repositories.contract-stack-${i}" "{\"type\":\"path\",\"url\":\"/tmp/fleetbase-contract-packages/${i}\",\"options\":{\"symlink\":false}}"
+              composer require "${pkg}:${version}" --no-update --no-scripts --no-interaction
+            done < /tmp/fleetbase-contract-linked.txt
+            composer update --with-all-dependencies --no-dev --no-scripts --no-interaction --prefer-dist --no-progress --optimize-autoloader
+            composer show "fleetbase/*"
+            composer show laravel/framework | head -4
+            php artisan package:discover --ansi
+          '
+
+          # Reported, not enforced here: the release PRs gate on it.
+          audit="$(docker compose exec -T application su www-data -s /bin/sh -c 'cd /fleetbase/api && composer audit --locked --no-dev 2>&1' || true)"
+          echo "$audit"
+
+          docker compose exec -T application su www-data -s /bin/sh -c \
+            "cd /fleetbase/api && php artisan optimize:clear" 2>&1 | tail -5
+          docker compose exec -T application su www-data -s /bin/sh -c \
+            "cd /fleetbase/api && php artisan migrate --force && php artisan sandbox:migrate --force && php artisan fleetbase:create-permissions" 2>&1 | tail -15
+
+          # The queue and scheduler run the same code from their own container filesystems.
+          for svc in queue scheduler; do
+            docker compose exec -T application tar -C /fleetbase/api -cf - vendor composer.json composer.lock bootstrap/cache \
+              | docker compose exec -T "$svc" tar -C /fleetbase/api -xf -
+          done
+          docker compose restart application queue scheduler
+
+          {
+            echo "### Packages linked from branches"
+            echo
+            echo "| Package | Version | Source |"
+            echo "| --- | --- | --- |"
+            while read -r _ pkg version from; do echo "| \`${pkg}\` | ${version} | ${from} |"; done < "$RUNNER_TEMP/linked.txt"
+            echo
+            echo "The app was re-resolved against these with a full \`composer update --no-dev\`."
+            echo
+            echo '```'
+            echo "$audit"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
       - name: Re-check API health after overlay
-        if: ${{ inputs.overlay-package != '' }}
+        if: ${{ inputs.overlay-package != '' || steps.stack.outputs.enabled == 'true' }}
         run: |
           for _attempt in $(seq 1 20); do
             if curl -fsS --max-time 5 http://localhost:8000/health | grep -q '"status"'; then
