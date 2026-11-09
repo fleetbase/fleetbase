@@ -65,6 +65,9 @@ services:
       CACHE_PATH: /fleetbase/api/storage/framework/cache
       CACHE_URL: tcp://cache
       REDIS_URL: tcp://cache
+      # Keep queued jobs out of the cache database: deploy.sh runs cache:clear,
+      # which is a FLUSHDB on the cache connection.
+      REDIS_QUEUE_DB: 1
       SOCKETCLUSTER_AUTH_ENABLED: ${SOCKETCLUSTER_AUTH_ENABLED:-false}
       SOCKETCLUSTER_AUTH_KEY: ${SOCKETCLUSTER_AUTH_KEY:-}
       SOCKETCLUSTER_PUBLISH_URL: http://socket:8001
@@ -91,6 +94,7 @@ services:
       CACHE_PATH: /fleetbase/api/storage/framework/cache
       CACHE_URL: tcp://cache
       REDIS_URL: tcp://cache
+      REDIS_QUEUE_DB: 1
       SOCKETCLUSTER_AUTH_ENABLED: ${SOCKETCLUSTER_AUTH_ENABLED:-false}
       SOCKETCLUSTER_AUTH_KEY: ${SOCKETCLUSTER_AUTH_KEY:-}
       SOCKETCLUSTER_PUBLISH_URL: http://socket:8001
@@ -127,6 +131,7 @@ services:
       CACHE_PATH: /fleetbase/api/storage/framework/cache
       CACHE_URL: tcp://cache
       REDIS_URL: tcp://cache
+      REDIS_QUEUE_DB: 1
       SESSION_DOMAIN: localhost
       BROADCAST_DRIVER: socketcluster
       MAIL_FROM_NAME: Fleetbase
