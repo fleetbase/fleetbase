@@ -17,6 +17,20 @@ $app = new Illuminate\Foundation\Application(
 
 /*
 |--------------------------------------------------------------------------
+| Load Installed Extensions
+|--------------------------------------------------------------------------
+|
+| Extensions are a second Composer project in api/extensions with its own
+| vendor folder, so installing one never edits core's composer.json or
+| composer.lock (see api/extensions/README.md). Its autoloader is added
+| after core's and package discovery reads both projects.
+|
+*/
+
+App\Support\Extensions\Extensions::register($app);
+
+/*
+|--------------------------------------------------------------------------
 | Bind Important Interfaces
 |--------------------------------------------------------------------------
 |
