@@ -1,9 +1,9 @@
 {
-  "description": "Laravel 12 release train. Each package is linked from its release branch, so release PRs can be tested before anything is tagged. Delete this stack after the release ships.",
+  "description": "Laravel 12 release train. Each package is linked from its release branch, or from its tag once that release has merged and its branch is gone, so release PRs can be tested before everything is tagged. Delete this stack after the release ships.",
   "fleetbase-ref": "feat/laravel-12",
   "build-from-source": true,
   "overlays": [
-    { "repository": "fleetbase/core-api", "ref": "release/v2.0.0", "package": "fleetbase/core-api" },
+    { "repository": "fleetbase/core-api", "ref": "v2.0.0", "package": "fleetbase/core-api" },
     { "repository": "fleetbase/fleetops", "ref": "release/v0.7.0", "package": "fleetbase/fleetops-api" },
     { "repository": "fleetbase/storefront", "ref": "release/v0.5.0", "package": "fleetbase/storefront-api" },
     { "repository": "fleetbase/ledger", "ref": "release/v0.1.0", "package": "fleetbase/ledger-api" },
