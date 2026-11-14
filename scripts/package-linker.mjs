@@ -91,14 +91,57 @@ function workspaceSpecFor(packageDir) {
     return 'workspace:*';
 }
 
-function composerRepositoryFor(packageDir) {
+function composerRepositoryFor(packageDir, project = CORE_PROJECT) {
     return {
         type: 'path',
-        url: workspacePathForPackage(packageDir),
+        url: path.posix.join(project.packagesBase, path.basename(packageDir)),
         options: {
             symlink: true,
         },
     };
+}
+
+// The API has two Composer projects: core's (api/composer.json) and, since the extensions manifest, the
+// installed extensions' (api/extensions/composer.json, see api/extensions/README.md).
+export const CORE_PROJECT = { dir: 'api', composer: path.join('api', 'composer.json'), packagesBase: '../packages', alsoUpdate: [] };
+export const EXTENSIONS_PROJECT = {
+    dir: path.join('api', 'extensions'),
+    composer: path.join('api', 'extensions', 'composer.json'),
+    packagesBase: '../../packages',
+    // Picks up a core that changed since the extensions were last resolved.
+    alsoUpdate: ['fleetbase/core-platform'],
+};
+
+function projectByDir(dir) {
+    return dir === EXTENSIONS_PROJECT.dir ? EXTENSIONS_PROJECT : CORE_PROJECT;
+}
+
+/**
+ * The Composer project a backend package is linked in: core's for core packages (core-api, registry-bridge
+ * and anything core's composer.json still requires), else the extensions manifest when there is one.
+ */
+export function backendProjectFor(root, packageName) {
+    if (DEFAULT_SHARED_BACKEND_PACKAGES.includes(packageName) || !fs.existsSync(path.join(root, EXTENSIONS_PROJECT.composer))) {
+        return CORE_PROJECT;
+    }
+
+    return readJson(path.join(root, CORE_PROJECT.composer), {})?.require?.[packageName] ? CORE_PROJECT : EXTENSIONS_PROJECT;
+}
+
+// Composer accepts repositories as a list or as an object keyed by name (the extensions manifest uses
+// names). These work on a list of [key, repository] pairs and write back the shape the file had.
+function repositoryEntries(composerJson) {
+    const repositories = composerJson.repositories ?? [];
+
+    return Array.isArray(repositories) ? repositories.map((repository) => [null, repository]) : Object.entries(repositories);
+}
+
+function writeRepositoryEntries(composerJson, entries) {
+    composerJson.repositories = Array.isArray(composerJson.repositories ?? []) ? entries.map(([, repository]) => repository) : Object.fromEntries(entries);
+}
+
+function repositoryKeyFor(packageDir) {
+    return `local-${path.basename(packageDir)}`;
 }
 
 function makeEmptyState() {
@@ -462,7 +505,44 @@ function ensureWorkspaceDevelopmentSettings(root, workspace) {
 }
 
 function findRepositoryIndex(composerJson, repository) {
-    return (composerJson.repositories ?? []).findIndex((candidate) => candidate.type === 'path' && candidate.url === repository.url);
+    return repositoryEntries(composerJson).findIndex(([, candidate]) => candidate?.type === 'path' && candidate.url === repository.url);
+}
+
+function findPathRepository(composerJson, packageDir, project) {
+    const url = composerRepositoryFor(packageDir, project).url;
+
+    return repositoryEntries(composerJson).find(([, candidate]) => candidate?.type === 'path' && candidate.url === url)?.[1] ?? null;
+}
+
+/** Add the package's path repository first (it must win over the registries), or mark an existing one as a symlink. */
+function linkPathRepository(composerJson, packageDir, project) {
+    const repository = composerRepositoryFor(packageDir, project);
+    const entries = repositoryEntries(composerJson);
+    const index = findRepositoryIndex(composerJson, repository);
+
+    if (index === -1) {
+        entries.unshift([repositoryKeyFor(packageDir), repository]);
+    } else {
+        entries[index] = [entries[index][0], { ...entries[index][1], options: { ...(entries[index][1].options ?? {}), symlink: true } }];
+    }
+    writeRepositoryEntries(composerJson, entries);
+}
+
+function unlinkPathRepository(composerJson, packageDir, project, originalRepository = null) {
+    if (composerJson.repositories === undefined) {
+        return;
+    }
+    const entries = repositoryEntries(composerJson);
+    const index = findRepositoryIndex(composerJson, composerRepositoryFor(packageDir, project));
+
+    if (index >= 0) {
+        if (originalRepository) {
+            entries[index] = [entries[index][0], originalRepository];
+        } else {
+            entries.splice(index, 1);
+        }
+        writeRepositoryEntries(composerJson, entries);
+    }
 }
 
 function packageVersionRange(packageJson) {
@@ -485,9 +565,10 @@ export function enableModule(root, moduleName, options = {}) {
     const module = findModule(root, moduleName);
     const state = readState(root);
     const consolePackage = readPackageJson(root, path.join('console', 'package.json'));
-    const apiComposer = readPackageJson(root, path.join('api', 'composer.json'));
-    const workspace = ensureWorkspaceDevelopmentSettings(root, readWorkspace(root));
     const moduleState = state.modules[module.slug] ?? {};
+    const project = module.backend ? (moduleState.composer?.project ? projectByDir(moduleState.composer.project) : backendProjectFor(root, module.backend)) : CORE_PROJECT;
+    const apiComposer = readPackageJson(root, project.composer);
+    const workspace = ensureWorkspaceDevelopmentSettings(root, readWorkspace(root));
     const workspacePath = workspacePathForPackage(module.dir);
 
     moduleState.workspacePath = workspacePath;
@@ -509,24 +590,10 @@ export function enableModule(root, moduleName, options = {}) {
             packageName: module.backend,
             originalRange: apiComposer.require[module.backend] ?? packageVersionRange(readJson(path.join(module.dir, 'composer.json'), null)),
             originalRepository: null,
+            project: project.dir,
         };
         apiComposer.require[module.backend] = moduleState.composer.originalRange;
-
-        apiComposer.repositories ??= [];
-        const repository = composerRepositoryFor(module.dir);
-        const repositoryIndex = findRepositoryIndex(apiComposer, repository);
-
-        if (repositoryIndex === -1) {
-            apiComposer.repositories.unshift(repository);
-        } else {
-            apiComposer.repositories[repositoryIndex] = {
-                ...apiComposer.repositories[repositoryIndex],
-                options: {
-                    ...(apiComposer.repositories[repositoryIndex].options ?? {}),
-                    symlink: true,
-                },
-            };
-        }
+        linkPathRepository(apiComposer, module.dir, project);
     }
 
     state.modules[module.slug] = moduleState;
@@ -541,7 +608,9 @@ export function enableModule(root, moduleName, options = {}) {
     }
 
     writePackageJson(root, path.join('console', 'package.json'), consolePackage);
-    writePackageJson(root, path.join('api', 'composer.json'), apiComposer);
+    if (module.backend) {
+        writePackageJson(root, project.composer, apiComposer);
+    }
     writeWorkspace(root, workspace);
     writeState(root, state);
 
@@ -556,9 +625,10 @@ export function disableModule(root, moduleName) {
     const module = findModule(root, moduleName);
     const state = readState(root);
     const consolePackage = readPackageJson(root, path.join('console', 'package.json'));
-    const apiComposer = readPackageJson(root, path.join('api', 'composer.json'));
-    const workspace = readWorkspace(root);
     const moduleState = state.modules[module.slug] ?? {};
+    const project = moduleState.composer?.project ? projectByDir(moduleState.composer.project) : module.backend ? backendProjectFor(root, module.backend) : CORE_PROJECT;
+    const apiComposer = readPackageJson(root, project.composer);
+    const workspace = readWorkspace(root);
     const workspacePath = workspacePathForPackage(module.dir);
 
     if (module.frontend && consolePackage.dependencies?.[module.frontend]) {
@@ -569,24 +639,17 @@ export function disableModule(root, moduleName) {
         apiComposer.require[module.backend] = moduleState.composer?.originalRange ?? packageVersionRange(readJson(path.join(module.dir, 'composer.json'), null));
     }
 
-    if (module.backend && Array.isArray(apiComposer.repositories)) {
-        const repository = composerRepositoryFor(module.dir);
-        const repositoryIndex = findRepositoryIndex(apiComposer, repository);
-
-        if (repositoryIndex >= 0) {
-            if (moduleState.composer?.originalRepository) {
-                apiComposer.repositories[repositoryIndex] = moduleState.composer.originalRepository;
-            } else {
-                apiComposer.repositories.splice(repositoryIndex, 1);
-            }
-        }
+    if (module.backend) {
+        unlinkPathRepository(apiComposer, module.dir, project, moduleState.composer?.originalRepository);
     }
 
     delete state.modules[module.slug];
     removeWorkspaceEntry(workspace, workspacePath, state);
 
     writePackageJson(root, path.join('console', 'package.json'), consolePackage);
-    writePackageJson(root, path.join('api', 'composer.json'), apiComposer);
+    if (module.backend) {
+        writePackageJson(root, project.composer, apiComposer);
+    }
     writeWorkspace(root, workspace);
     writeState(root, state);
 
@@ -637,31 +700,16 @@ export function enableSharedBackendPackage(root, packageName) {
     const module = normalizeSharedBackendPackage(root, packageName);
     const state = readState(root);
     const apiComposer = readPackageJson(root, path.join('api', 'composer.json'));
-    const repository = composerRepositoryFor(module.dir);
-    const repositoryIndex = findRepositoryIndex(apiComposer, repository);
-
     state.shared[module.backend] ??= {
         type: 'backend',
         originalRange: apiComposer.require?.[module.backend] ?? packageVersionRange(readJson(path.join(module.dir, 'composer.json'), null)),
-        originalRepository: repositoryIndex >= 0 ? apiComposer.repositories[repositoryIndex] : null,
+        originalRepository: findPathRepository(apiComposer, module.dir, CORE_PROJECT),
         packageDir: path.basename(module.dir),
     };
 
     apiComposer.require ??= {};
     apiComposer.require[module.backend] = state.shared[module.backend].originalRange;
-    apiComposer.repositories ??= [];
-
-    if (repositoryIndex === -1) {
-        apiComposer.repositories.unshift(repository);
-    } else {
-        apiComposer.repositories[repositoryIndex] = {
-            ...apiComposer.repositories[repositoryIndex],
-            options: {
-                ...(apiComposer.repositories[repositoryIndex].options ?? {}),
-                symlink: true,
-            },
-        };
-    }
+    linkPathRepository(apiComposer, module.dir, CORE_PROJECT);
 
     writePackageJson(root, path.join('api', 'composer.json'), apiComposer);
     writeState(root, state);
@@ -716,20 +764,12 @@ export function disableSharedBackendPackage(root, packageName) {
     const state = readState(root);
     const apiComposer = readPackageJson(root, path.join('api', 'composer.json'));
     const sharedState = state.shared[module.backend] ?? {};
-    const repository = composerRepositoryFor(module.dir);
-    const repositoryIndex = findRepositoryIndex(apiComposer, repository);
 
     if (apiComposer.require?.[module.backend]) {
         apiComposer.require[module.backend] = sharedState.originalRange ?? packageVersionRange(readJson(path.join(module.dir, 'composer.json'), null));
     }
 
-    if (repositoryIndex >= 0) {
-        if (sharedState.originalRepository) {
-            apiComposer.repositories[repositoryIndex] = sharedState.originalRepository;
-        } else {
-            apiComposer.repositories.splice(repositoryIndex, 1);
-        }
-    }
+    unlinkPathRepository(apiComposer, module.dir, CORE_PROJECT, sharedState.originalRepository);
 
     delete state.shared[module.backend];
 
@@ -844,8 +884,10 @@ export function getStatus(root = DEFAULT_ROOT) {
     return {
         modules: modules.map((module) => {
             const npmRange = module.frontend ? consolePackage.dependencies?.[module.frontend] : null;
-            const composerRange = module.backend ? apiComposer.require?.[module.backend] : null;
-            const repository = module.backend ? (apiComposer.repositories ?? []).find((candidate) => candidate.type === 'path' && candidate.url === workspacePathForPackage(module.dir)) : null;
+            const project = module.backend ? (state.modules[module.slug]?.composer?.project ? projectByDir(state.modules[module.slug].composer.project) : backendProjectFor(root, module.backend)) : CORE_PROJECT;
+            const projectComposer = project === CORE_PROJECT ? apiComposer : readJson(path.join(root, project.composer), {});
+            const composerRange = module.backend ? projectComposer.require?.[module.backend] : null;
+            const repository = module.backend ? findPathRepository(projectComposer, module.dir, project) : null;
 
             return {
                 ...module,
@@ -853,6 +895,7 @@ export function getStatus(root = DEFAULT_ROOT) {
                 npmRange,
                 composerLinked: Boolean(repository),
                 composerRange,
+                composerProject: module.backend ? project.dir : null,
                 workspaceLinked: Boolean((workspace.packages ?? []).includes(workspacePathForPackage(module.dir))),
                 stateTracked: Boolean(state.modules[module.slug]),
             };
@@ -871,7 +914,7 @@ export function getStatus(root = DEFAULT_ROOT) {
                 };
             }),
             ...backendSharedPackages.map((module) => {
-                const repository = (apiComposer.repositories ?? []).find((candidate) => candidate.type === 'path' && candidate.url === workspacePathForPackage(module.dir));
+                const repository = findPathRepository(apiComposer, module.dir, CORE_PROJECT);
                 return {
                     type: 'backend',
                     packageName: module.backend,
@@ -984,11 +1027,11 @@ function printDoctor(root) {
     }
 }
 
-function printFollowUp(modules = []) {
+function printFollowUp(modules = [], root = null) {
     const normalizedModules = Array.isArray(modules) ? modules : [modules].filter(Boolean);
 
     console.log('\nNext steps:');
-    for (const command of getInstallCommands(normalizedModules)) {
+    for (const command of getInstallCommands(normalizedModules, root)) {
         console.log(`  ${command}`);
     }
 
@@ -1008,7 +1051,7 @@ function copyIfExists(source, destination) {
 function createDryRunRoot(root) {
     const dryRunRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'package-linker-dry-run-'));
 
-    for (const relativePath of ['console/package.json', 'console/pnpm-workspace.yaml', 'console/.npmrc', 'api/composer.json', STATE_FILE]) {
+    for (const relativePath of ['console/package.json', 'console/pnpm-workspace.yaml', 'console/.npmrc', 'api/composer.json', 'api/extensions/composer.json', STATE_FILE]) {
         copyIfExists(path.join(root, relativePath), path.join(dryRunRoot, relativePath));
     }
 
@@ -1023,7 +1066,7 @@ function createDryRunRoot(root) {
 }
 
 function collectManifestSnapshots(root) {
-    const files = ['console/package.json', 'console/pnpm-workspace.yaml', 'console/.npmrc', 'api/composer.json', STATE_FILE];
+    const files = ['console/package.json', 'console/pnpm-workspace.yaml', 'console/.npmrc', 'api/composer.json', 'api/extensions/composer.json', STATE_FILE];
     const snapshots = {};
 
     for (const file of files) {
@@ -1059,13 +1102,31 @@ function printDryRunDiff(originalRoot, dryRunRoot) {
     }
 }
 
-export function getInstallCommands(modules = []) {
+/**
+ * `composer update` runs per Composer project: core's packages in api/, extensions in api/extensions.
+ * Without a root every backend package is treated as core's (the layout before the extensions manifest).
+ *
+ * @returns {{ project: object, packages: string[] }[]}
+ */
+export function getComposerUpdates(modules = [], root = null) {
     const normalizedModules = Array.isArray(modules) ? modules : [modules].filter(Boolean);
-    const backendPackages = unique(normalizedModules.map((module) => module?.backend).filter(Boolean));
+    const updates = new Map();
+
+    for (const packageName of unique(normalizedModules.map((module) => module?.backend).filter(Boolean))) {
+        const project = root ? backendProjectFor(root, packageName) : CORE_PROJECT;
+        updates.set(project, [...(updates.get(project) ?? []), packageName]);
+    }
+
+    return [CORE_PROJECT, EXTENSIONS_PROJECT]
+        .filter((project) => updates.has(project))
+        .map((project) => ({ project, packages: [...updates.get(project), ...project.alsoUpdate] }));
+}
+
+export function getInstallCommands(modules = [], root = null) {
     const commands = ['cd console && pnpm install'];
 
-    if (backendPackages.length > 0) {
-        commands.push(`cd api && composer update ${backendPackages.join(' ')} --with-dependencies`);
+    for (const { project, packages } of getComposerUpdates(modules, root)) {
+        commands.push(`cd ${project.dir.split(path.sep).join('/')} && composer update ${packages.join(' ')} --with-dependencies`);
     }
 
     return commands;
@@ -1091,16 +1152,14 @@ export function getInstallModules(root, moduleNames = []) {
     return [...unique(linkedModuleNames).map((moduleName) => findModule(root, moduleName)), ...linkedBackendSharedModules];
 }
 
-function printInstallPlan(modules = []) {
+function printInstallPlan(modules = [], root = null) {
     console.log('Install commands:');
-    for (const command of getInstallCommands(modules)) {
+    for (const command of getInstallCommands(modules, root)) {
         console.log(`  ${command}`);
     }
 }
 
 function runInstall(root, modules = []) {
-    const normalizedModules = Array.isArray(modules) ? modules : [modules].filter(Boolean);
-    const backendPackages = unique(normalizedModules.map((module) => module?.backend).filter(Boolean));
     const pnpm = spawnSync('pnpm', ['install'], {
         cwd: path.join(root, 'console'),
         stdio: 'inherit',
@@ -1110,9 +1169,9 @@ function runInstall(root, modules = []) {
         process.exit(pnpm.status ?? 1);
     }
 
-    if (backendPackages.length > 0) {
-        const composer = spawnSync('composer', ['update', ...backendPackages, '--with-dependencies'], {
-            cwd: path.join(root, 'api'),
+    for (const { project, packages } of getComposerUpdates(modules, root)) {
+        const composer = spawnSync('composer', ['update', ...packages, '--with-dependencies'], {
+            cwd: path.join(root, project.dir),
             stdio: 'inherit',
         });
 
@@ -1196,7 +1255,7 @@ export function runCli(argv = process.argv.slice(2)) {
         const modules = getInstallModules(root, values);
 
         if (dryRun) {
-            printInstallPlan(modules);
+            printInstallPlan(modules, root);
         } else {
             runInstall(root, modules);
         }
@@ -1215,7 +1274,7 @@ export function runCli(argv = process.argv.slice(2)) {
         if (dryRun) {
             printDryRunDiff(root, targetRoot);
         } else {
-            install ? runInstall(root, modules) : printFollowUp(modules);
+            install ? runInstall(root, modules) : printFollowUp(modules, root);
         }
         return;
     }
@@ -1232,7 +1291,7 @@ export function runCli(argv = process.argv.slice(2)) {
         if (dryRun) {
             printDryRunDiff(root, targetRoot);
         } else {
-            install ? runInstall(root, modules) : printFollowUp(modules);
+            install ? runInstall(root, modules) : printFollowUp(modules, root);
         }
         return;
     }
@@ -1246,7 +1305,7 @@ export function runCli(argv = process.argv.slice(2)) {
         for (const module of modules) {
             console.log(`Disabled local development links for ${module.slug}.`);
         }
-        dryRun ? printDryRunDiff(root, targetRoot) : printFollowUp(modules);
+        dryRun ? printDryRunDiff(root, targetRoot) : printFollowUp(modules, root);
         return;
     }
 
@@ -1265,7 +1324,7 @@ export function runCli(argv = process.argv.slice(2)) {
         if (dryRun) {
             printDryRunDiff(root, targetRoot);
         } else {
-            install ? runInstall(root, modules) : printFollowUp(modules);
+            install ? runInstall(root, modules) : printFollowUp(modules, root);
         }
         return;
     }
@@ -1282,7 +1341,7 @@ export function runCli(argv = process.argv.slice(2)) {
             console.log(`Disabled shared package ${module.frontend ?? module.backend}.`);
         }
 
-        dryRun ? printDryRunDiff(root, targetRoot) : printFollowUp(modules);
+        dryRun ? printDryRunDiff(root, targetRoot) : printFollowUp(modules, root);
         return;
     }
 

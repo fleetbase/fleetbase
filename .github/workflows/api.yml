@@ -110,6 +110,15 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-interaction
 
+      # The extensions (api/extensions) are a Composer project of their own, resolved against the packages
+      # core installs (fleetbase/core-platform, see api/extensions/README.md). A core lock change that an
+      # extension in the shipped extensions lock does not accept fails here, not on an instance.
+      - name: Check the extensions lock resolves against core
+        run: |
+          composer validate --no-check-publish --no-check-all --working-dir=extensions
+          php scripts/extensions-core-platform.php
+          composer update fleetbase/core-platform --dry-run --no-dev --no-interaction --no-progress --working-dir=extensions
+
       - name: Run tests
         run: composer test:unit
 

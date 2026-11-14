@@ -25,3 +25,8 @@ docker-compose.yml
 $virtualenv.tar.gz
 $node_modules.tar.gz
 docker-compose.override.yml
+
+# The image installs the extensions project itself (docker/Dockerfile). A host vendor/ or a core-platform
+# generated from the host's core would otherwise be copied over the image's by COPY ./api.
+api/extensions/vendor
+api/extensions/core-platform

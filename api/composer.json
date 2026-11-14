@@ -21,14 +21,7 @@
         "php": ">=8.0 <8.3",
         "appstract/laravel-opcache": "^4.0",
         "fleetbase/core-api": "^1.6.73",
-        "fleetbase/ai": "^0.0.5",
-        "fleetbase/fleetops-api": "^0.6.74",
         "fleetbase/registry-bridge": "^0.1.11",
-        "fleetbase/customer-portal-api": "^0.0.16",
-        "fleetbase/storefront-api": "^0.4.29",
-        "fleetbase/ledger-api": "^0.0.13",
-        "fleetbase/valhalla-api": "^0.0.4",
-        "fleetbase/vroom-api": "^0.0.4",
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^10.0",
         "laravel/octane": "~2.22.0",
@@ -53,23 +46,6 @@
         "nunomaduro/collision": "^7.0",
         "phpunit/phpunit": "^10.0"
     },
-    "repositories": [
-        {
-            "type": "composer",
-            "url": "https://registry.fleetbase.io",
-            "canonical": false,
-            "exclude": [
-                "fleetbase/core-api",
-                "fleetbase/fleetops-api",
-                "fleetbase/storefront-api",
-                "fleetbase/ledger-api",
-                "fleetbase/customer-portal-api",
-                "fleetbase/ai",
-                "fleetbase/valhalla-api",
-                "fleetbase/vroom-api"
-            ]
-        }
-    ],
     "autoload": {
         "psr-4": {
             "App\\": "app/",
@@ -85,10 +61,12 @@
     "scripts": {
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "@php scripts/extensions-core-platform.php",
             "@php artisan package:discover --ansi"
         ],
         "post-update-cmd": [
-            "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
+            "@php artisan vendor:publish --tag=laravel-assets --ansi --force",
+            "@php artisan extensions:sync --ansi"
         ],
         "post-root-package-install": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""

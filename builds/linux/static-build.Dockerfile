@@ -10,6 +10,12 @@ COPY api ./dist/app
 # Set working directory to the embedded Fleetbase app
 WORKDIR /go/src/app/dist/app
 
+# build-static.sh runs composer install for core's project only. The extensions (api/extensions) are a
+# second Composer project, described against the core installed here (see api/extensions/README.md).
+RUN composer install --no-dev -a --no-scripts --ignore-platform-reqs --no-interaction \
+  && php scripts/extensions-core-platform.php \
+  && composer install --working-dir=extensions --no-dev -a --no-scripts --ignore-platform-reqs --no-interaction
+
 # Setup for production environment
 ENV APP_ENV=production
 ENV APP_DEBUG=false

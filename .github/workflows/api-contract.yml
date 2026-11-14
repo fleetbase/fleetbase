@@ -278,12 +278,39 @@ jobs:
             echo "::error::Invalid Composer overlay package name."
             exit 1
           fi
-          DEST="/fleetbase/api/vendor/${PKG}"
-
           if [[ ! -f "$SRC/composer.json" ]]; then
             echo "::error::No composer.json at ${SRC}; set overlay-path to the package root."
             exit 1
           fi
+
+          # Images built since the extensions manifest install extensions in api/extensions, a Composer
+          # project of its own beside core's (api/extensions/README.md). Core packages (core-api,
+          # registry-bridge) and images from before the manifest are overlaid in api/ as before.
+          docker compose exec -T application cat /fleetbase/api/composer.json > "$RUNNER_TEMP/core-composer.json"
+          docker compose exec -T application cat /fleetbase/api/vendor/composer/installed.json > "$RUNNER_TEMP/core-installed.json"
+          docker compose exec -T application sh -c 'cat /fleetbase/api/extensions/composer.json 2>/dev/null || echo null' > "$RUNNER_TEMP/extensions-composer.json"
+          cat > "$RUNNER_TEMP/overlay-project.py" <<'PY'
+          import json, shlex, sys
+          src, pkg, tmp = sys.argv[1:4]
+          overlay = json.load(open(src))
+          core = json.load(open(f"{tmp}/core-composer.json"))
+          manifest = json.load(open(f"{tmp}/extensions-composer.json"))
+          installed = json.load(open(f"{tmp}/core-installed.json"))
+          packages = installed.get("packages", []) if isinstance(installed, dict) else installed
+          dev = set(installed.get("dev-package-names", [])) if isinstance(installed, dict) else set()
+          core_installed = {p["name"] for p in packages if p["name"] not in dev}
+          extension = manifest is not None and pkg not in core.get("require", {})
+          # What the branch needs from packages core installs (a newer core-api, say) is core's to upgrade:
+          # the extensions project only sees those through fleetbase/core-platform.
+          needs = [f"{name}:{constraint}" for name, constraint in overlay.get("require", {}).items() if extension and name in core_installed]
+          print("PROJECT=" + shlex.quote("/fleetbase/api/extensions" if extension else "/fleetbase/api"))
+          print("HAS_MANIFEST=" + ("1" if manifest is not None else ""))
+          print("CORE_REQUIREMENTS=" + shlex.quote("\n".join(needs)))
+          print("CORE_PACKAGES=" + shlex.quote("\n".join(need.split(":", 1)[0] for need in needs)))
+          PY
+          eval "$(python3 "$RUNNER_TEMP/overlay-project.py" "$SRC/composer.json" "$PKG" "$RUNNER_TEMP")"
+          DEST="${PROJECT}/vendor/${PKG}"
+          echo "Overlaying ${PKG} in the Composer project at ${PROJECT}."
 
           WAS="$(docker compose exec -T application sh -c "cat ${DEST}/composer.json 2>/dev/null" \
                   | python3 -c 'import json,sys; print(json.load(sys.stdin).get("version","unknown"))' 2>/dev/null || echo unknown)"
@@ -300,12 +327,45 @@ jobs:
             -e COMPOSER_AUTH \
             -e "CI_OVERLAY_PACKAGE=${PKG}" \
             -e "CI_OVERLAY_VERSION=${VERSION}" \
+            -e "CI_OVERLAY_PROJECT=${PROJECT}" \
+            -e "CI_HAS_MANIFEST=${HAS_MANIFEST}" \
+            -e "CI_CORE_REQUIREMENTS=${CORE_REQUIREMENTS}" \
+            -e "CI_CORE_PACKAGES=${CORE_PACKAGES}" \
             application su www-data -s /bin/sh -c '
-              set -eu
+              set -euf
               cd /fleetbase/api
+              NL="
+          "
+              if [ "$CI_OVERLAY_PROJECT" != /fleetbase/api ] && [ -n "$CI_CORE_REQUIREMENTS" ]; then
+                IFS="$NL"
+                composer require $CI_CORE_REQUIREMENTS --no-update --no-scripts --no-interaction
+                composer update $CI_CORE_PACKAGES --with-all-dependencies --minimal-changes --no-dev --no-scripts --no-interaction --prefer-dist --no-progress --optimize-autoloader
+                unset IFS
+              fi
+              # Describe the core the extensions now run on (fleetbase/core-platform, api/extensions/README.md).
+              if [ -n "$CI_HAS_MANIFEST" ]; then
+                php scripts/extensions-core-platform.php
+              fi
+
+              cd "$CI_OVERLAY_PROJECT"
+              ALSO=""
+              if [ "$CI_OVERLAY_PROJECT" != /fleetbase/api ]; then
+                ALSO=fleetbase/core-platform
+              fi
               composer config repositories.contract-overlay "{\"type\":\"path\",\"url\":\"/tmp/fleetbase-contract-package\",\"options\":{\"symlink\":false}}"
               composer require "$CI_OVERLAY_PACKAGE:$CI_OVERLAY_VERSION" --no-update --no-scripts --no-interaction
-              composer update "$CI_OVERLAY_PACKAGE" --with-all-dependencies --minimal-changes --no-dev --no-scripts --no-interaction --prefer-dist --no-progress --optimize-autoloader
+              composer update "$CI_OVERLAY_PACKAGE" $ALSO --with-all-dependencies --minimal-changes --no-dev --no-scripts --no-interaction --prefer-dist --no-progress --optimize-autoloader
+              cd /fleetbase/api
+
+              # A core overlay (core-api, registry-bridge) changes what the extensions run on: re-resolve
+              # them, so a branch that breaks an installed extension fails here rather than at runtime.
+              if [ -n "$CI_HAS_MANIFEST" ]; then
+                if [ "$CI_OVERLAY_PROJECT" = /fleetbase/api ]; then
+                  php scripts/extensions-core-platform.php
+                  composer update fleetbase/core-platform --working-dir=extensions --no-dev --no-scripts --no-interaction --prefer-dist --no-progress --optimize-autoloader
+                fi
+                composer show "fleetbase/*" --working-dir=extensions
+              fi
               composer show "fleetbase/*"
               php artisan package:discover --ansi
             '

@@ -1,0 +1,39 @@
+{
+    "name": "fleetbase/extensions",
+    "description": "Extensions installed on this Fleetbase instance. Core packages are in ../composer.json; see README.md.",
+    "type": "project",
+    "license": "AGPL-3.0-or-later",
+    "require": {
+        "fleetbase/ai": "^0.0.5",
+        "fleetbase/core-platform": "*",
+        "fleetbase/customer-portal-api": "^0.0.16",
+        "fleetbase/fleetops-api": "^0.6.74",
+        "fleetbase/ledger-api": "^0.0.13",
+        "fleetbase/storefront-api": "^0.4.29",
+        "fleetbase/valhalla-api": "^0.0.4",
+        "fleetbase/vroom-api": "^0.0.4"
+    },
+    "repositories": {
+        "core-platform": {
+            "type": "path",
+            "url": "core-platform",
+            "options": {
+                "symlink": false
+            }
+        }
+    },
+    "config": {
+        "autoloader-suffix": "FleetbaseExtensions",
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "allow-plugins": {}
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "@php ../artisan package:discover --ansi"
+        ]
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

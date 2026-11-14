@@ -143,10 +143,13 @@ Depending on the command, `flb-package-linker` may update:
 - `console/package.json`
 - `console/pnpm-workspace.yaml`
 - `console/.npmrc`
-- `api/composer.json`
+- `api/composer.json` (core packages: `core-api`, `registry-bridge`, and anything core's `composer.json` still requires)
+- `api/extensions/composer.json` (every other extension backend, when the extensions manifest exists; see `api/extensions/README.md`)
 - `.fleetbase-dev-links.json`
 
-The `.fleetbase-dev-links.json` file stores original dependency ranges so links can be reversed. It is ignored by git.
+The `.fleetbase-dev-links.json` file stores original dependency ranges, and the Composer project each backend was linked in, so links can be reversed. It is ignored by git.
+
+Path repositories are relative to the project they are written to: `../packages/<pkg>` in `api/composer.json`, `../../packages/<pkg>` in `api/extensions/composer.json`. `install` and the printed next steps run `composer update` in each project that has linked packages; in `api/extensions` it also updates `fleetbase/core-platform`, so a core-api link is picked up.
 
 For pnpm, the linker moves non-auth `public-hoist-pattern[]` settings from `console/.npmrc` into `console/pnpm-workspace.yaml`, keeps registry auth in `.npmrc`, and sets workspace linking options for local shared packages.
 
