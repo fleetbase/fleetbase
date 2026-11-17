@@ -758,6 +758,21 @@ erDiagram
     TIMESTAMP updated_at
   }
 
+  fleetbase_driver_ratings {
+    INTUNSIGNED id PK, UK
+    CHAR uuid UK
+    CHAR company_uuid
+    CHAR order_uuid UK
+    CHAR driver_uuid
+    CHAR customer_uuid
+    VARCHAR customer_type
+    TINYINTUNSIGNED stars
+    TEXT comment
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
   fleetbase_drivers {
     INTUNSIGNED id PK, UK
     VARCHAR _key
@@ -798,6 +813,8 @@ erDiagram
     TIMESTAMP deleted_at
     TIMESTAMP created_at
     TIMESTAMP updated_at
+    DECIMAL rating_average
+    INTUNSIGNED rating_count
   }
 
   fleetbase_entities {
@@ -1117,7 +1134,7 @@ erDiagram
     BIGINTUNSIGNED id PK, UK
     CHAR uuid UK
     CHAR company_uuid
-    CHAR driver_uuid "(DC2Type:guid)"
+    CHAR driver_uuid
     CHAR vehicle_uuid
     CHAR order_uuid
     CHAR subject_uuid
@@ -1818,6 +1835,23 @@ erDiagram
     TIMESTAMP created_at
     TIMESTAMP updated_at
     TIMESTAMP deleted_at
+    JSON policies
+    JSON triggers
+  }
+
+  fleetbase_order_offers {
+    INTUNSIGNED id PK, UK
+    CHAR uuid UK
+    CHAR company_uuid
+    CHAR order_uuid
+    CHAR driver_uuid
+    VARCHAR status
+    INTUNSIGNED distance
+    TIMESTAMP expires_at
+    TIMESTAMP responded_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
   }
 
   fleetbase_orders {
@@ -1849,6 +1883,8 @@ erDiagram
     DATETIME dispatched_at
     BIT adhoc
     INT adhoc_distance
+    VARCHAR adhoc_strategy
+    VARCHAR required_vehicle_type
     BIT started
     DATETIME started_at
     INT distance
@@ -1867,6 +1903,7 @@ erDiagram
     TIMESTAMP deleted_at
     TIMESTAMP created_at
     TIMESTAMP updated_at
+    CHAR chat_channel_uuid
   }
 
   fleetbase_parts {
@@ -1949,7 +1986,7 @@ erDiagram
   fleetbase_personal_access_tokens {
     BIGINTUNSIGNED id PK, UK
     VARCHAR tokenable_type
-    CHAR tokenable_id "(DC2Type:guid)"
+    CHAR tokenable_id
     VARCHAR name
     VARCHAR token UK
     TEXT abilities
@@ -2184,8 +2221,8 @@ erDiagram
     CHAR uuid
     ENUM account_type
     CHAR developer_account_uuid FK
-    CHAR company_uuid FK "(DC2Type:guid)"
-    CHAR user_uuid FK "(DC2Type:guid)"
+    CHAR company_uuid FK
+    CHAR user_uuid FK
     VARCHAR public_id
     VARCHAR token
     VARCHAR registry_token
@@ -2589,6 +2626,8 @@ erDiagram
     TIMESTAMP created_at
     TIMESTAMP updated_at
     CHAR integrated_vendor_uuid FK
+    INTUNSIGNED distance
+    INTUNSIGNED time
   }
 
   fleetbase_service_rate_fees {
