@@ -52,7 +52,7 @@
 - **Back up the database first.** This is a major framework upgrade.
 - Pull the new images and restart every API, queue, scheduler and events container. Octane workers must restart to load the new framework.
 - Migrations run on deploy. core-api adds a guarded `personal_access_tokens` migration, which does nothing where the table already exists, so existing API tokens keep working.
-- **Update installed extensions.** Every extension needs its release built for core-api 2.0. Registry extensions with Laravel 12 releases: billing `0.2.0`, internals `0.1.0`, solid `0.1.0`, flespi `0.2.0`, samsara `0.1.0` and pallet `0.1.0`. An extension still on core-api 1.6.x won't install.
+- **Update installed extensions.** Every extension needs a release built for core-api 2.0. Update extensions installed from the registry to their latest release; an extension still on core-api 1.6.x won't install.
 - **Custom code:** call `$request->inputArray()` instead of `$request->array()`, and check Carbon `diffIn*` calls, which now return signed floats.
 - **If you set `CACHE_PREFIX`** without a trailing `:`, flush the cache when upgrading; Laravel 11+ no longer adds one. The default prefix now includes it.
 - **If you maintain your own `api/bootstrap/app.php`,** keep `$app->dontMergeFrameworkConfiguration()`. Without it, Laravel 12's default database connection replaces the one core-api builds from `DATABASE_URL`, and the API connects to 127.0.0.1.
