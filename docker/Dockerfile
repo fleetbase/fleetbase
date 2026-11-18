@@ -13,23 +13,38 @@ RUN apt-get update && apt-get install -y git bind9-utils mycli default-mysql-cli
   && ssh-keyscan github.com >> /root/.ssh/known_hosts
 
 # Install PHP Extensions
-RUN install-php-extensions \
-  pdo_mysql \
-  gd \
-  bcmath \
-  redis \
-  intl \
-  zip \
-  gmp \
-  apcu \
-  opcache \
-  memcached \
-  imagick \
-  # geos \
-  sockets \
-  pcntl \
-  xdebug \
-  @composer
+# PECL sometimes answers "No releases available" for a package it does have; the v0.8.0 image
+# build failed on exactly that for apcu. Retry with a growing delay rather than fail the release.
+# install-php-extensions skips modules that are already installed, so a retry only redoes what
+# failed. geos is built from source below instead.
+RUN set -u; \
+  for attempt in 1 2 3 4; do \
+    if install-php-extensions \
+      pdo_mysql \
+      gd \
+      bcmath \
+      redis \
+      intl \
+      zip \
+      gmp \
+      apcu \
+      opcache \
+      memcached \
+      imagick \
+      sockets \
+      pcntl \
+      xdebug \
+      @composer; then \
+      exit 0; \
+    fi; \
+    if [ "$attempt" -eq 4 ]; then \
+      echo "install-php-extensions failed after $attempt attempts" >&2; \
+      exit 1; \
+    fi; \
+    delay=$((attempt * 20)); \
+    echo "install-php-extensions failed (attempt $attempt of 4); retrying in ${delay}s" >&2; \
+    sleep "$delay"; \
+  done
 
 # Install build dependencies for GEOS
 RUN apt-get update \
@@ -91,7 +106,7 @@ ENV OCTANE_SERVER=frankenphp
 # its "develop" default it roughly doubled every request's time and disabled the OPcache
 # JIT in every image built from here, production included.
 ENV XDEBUG_MODE=off
-ENV FLEETBASE_VERSION=0.8.0
+ENV FLEETBASE_VERSION=0.8.1
 
 # Set environment
 ARG ENVIRONMENT=production
