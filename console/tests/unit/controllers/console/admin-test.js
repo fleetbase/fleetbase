@@ -52,6 +52,7 @@ class IntlStub extends Service {
         'console.admin.menu.queue': 'Queue',
         'console.admin.menu.socket': 'Socket',
         'console.admin.menu.oauth': 'OAuth Sign-in',
+        'console.admin.menu.oauth-apps': 'OAuth Apps',
         'console.admin.menu.push-notifications': 'Push Notifications',
     };
 
@@ -222,13 +223,13 @@ module('Unit | Controller | console/admin', function (hooks) {
         assert.ok(authConfig, 'the group exists');
         assert.deepEqual(
             authConfig.children.map((item) => item.label),
-            ['OAuth Sign-in', 'Two-Factor Auth'],
-            'sign-in first, then the second factor'
+            ['OAuth Sign-in', 'OAuth Apps', 'Two-Factor Auth'],
+            'sign-in first, then the apps that sign in with Fleetbase, then the second factor'
         );
         // Grouping is sidebar-only: 2FA keeps its route, so existing links still work.
         assert.deepEqual(
             authConfig.children.map((item) => item.route),
-            ['console.admin.oauth-settings', 'console.admin.two-fa-settings']
+            ['console.admin.oauth-settings', 'console.admin.oauth-apps', 'console.admin.two-fa-settings']
         );
         assert.strictEqual(labels.indexOf('Auth Config') + 1, labels.indexOf('System Config'), 'auth config sits just before system config');
         assert.notOk(

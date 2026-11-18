@@ -186,6 +186,8 @@ erDiagram
     VARCHAR secret
     INT test_mode
     VARCHAR api
+    CHAR oauth_client_id
+    VARCHAR oauth_installation
     JSON browser_origins
     DATETIME last_used_at
     DATETIME expires_at
@@ -756,6 +758,21 @@ erDiagram
     TIMESTAMP updated_at
   }
 
+  fleetbase_driver_ratings {
+    INTUNSIGNED id PK, UK
+    CHAR uuid UK
+    CHAR company_uuid
+    CHAR order_uuid UK
+    CHAR driver_uuid
+    CHAR customer_uuid
+    VARCHAR customer_type
+    TINYINTUNSIGNED stars
+    TEXT comment
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
   fleetbase_drivers {
     INTUNSIGNED id PK, UK
     VARCHAR _key
@@ -796,6 +813,8 @@ erDiagram
     TIMESTAMP deleted_at
     TIMESTAMP created_at
     TIMESTAMP updated_at
+    DECIMAL rating_average
+    INTUNSIGNED rating_count
   }
 
   fleetbase_entities {
@@ -1115,7 +1134,7 @@ erDiagram
     BIGINTUNSIGNED id PK, UK
     CHAR uuid UK
     CHAR company_uuid
-    CHAR driver_uuid "(DC2Type:guid)"
+    CHAR driver_uuid
     CHAR vehicle_uuid
     CHAR order_uuid
     CHAR subject_uuid
@@ -1692,6 +1711,69 @@ erDiagram
     TIMESTAMP updated_at
   }
 
+  fleetbase_oauth_access_tokens {
+    VARCHAR id PK, UK
+    CHAR grant_uuid
+    CHAR client_id
+    CHAR user_uuid
+    CHAR company_uuid
+    VARCHAR auth_code_id
+    JSON scopes
+    BIT revoked
+    DATETIME expires_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  fleetbase_oauth_auth_codes {
+    VARCHAR id PK, UK
+    CHAR grant_uuid
+    CHAR client_id
+    CHAR user_uuid
+    CHAR company_uuid
+    JSON scopes
+    VARCHAR nonce
+    TIMESTAMP auth_time
+    BIT revoked
+    DATETIME expires_at
+    TIMESTAMP created_at
+  }
+
+  fleetbase_oauth_clients {
+    CHAR id PK, UK
+    VARCHAR name
+    TEXT description
+    VARCHAR secret
+    JSON redirect_uris
+    JSON allowed_scopes
+    VARCHAR logo_url
+    VARCHAR website_url
+    VARCHAR privacy_url
+    VARCHAR terms_url
+    BIT official
+    BIT development
+    VARCHAR software_id
+    CHAR registration_key UK
+    CHAR created_by_uuid
+    TIMESTAMP secret_rotated_at
+    TIMESTAMP disabled_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
+  fleetbase_oauth_grants {
+    INTUNSIGNED id PK, UK
+    CHAR uuid UK
+    CHAR user_uuid FK
+    CHAR client_id FK
+    CHAR company_uuid
+    JSON scopes
+    TIMESTAMP last_used_at
+    TIMESTAMP revoked_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+
   fleetbase_oauth_identities {
     INTUNSIGNED id PK, UK
     CHAR uuid
@@ -1704,6 +1786,15 @@ erDiagram
     TIMESTAMP last_login_at
     TIMESTAMP created_at
     TIMESTAMP updated_at
+  }
+
+  fleetbase_oauth_refresh_tokens {
+    VARCHAR id PK, UK
+    VARCHAR access_token_id
+    CHAR grant_uuid
+    BIT revoked
+    DATETIME expires_at
+    TIMESTAMP created_at
   }
 
   fleetbase_oauth_states {
@@ -1744,6 +1835,23 @@ erDiagram
     TIMESTAMP created_at
     TIMESTAMP updated_at
     TIMESTAMP deleted_at
+    JSON policies
+    JSON triggers
+  }
+
+  fleetbase_order_offers {
+    INTUNSIGNED id PK, UK
+    CHAR uuid UK
+    CHAR company_uuid
+    CHAR order_uuid
+    CHAR driver_uuid
+    VARCHAR status
+    INTUNSIGNED distance
+    TIMESTAMP expires_at
+    TIMESTAMP responded_at
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
   }
 
   fleetbase_orders {
@@ -1775,6 +1883,8 @@ erDiagram
     DATETIME dispatched_at
     BIT adhoc
     INT adhoc_distance
+    VARCHAR adhoc_strategy
+    VARCHAR required_vehicle_type
     BIT started
     DATETIME started_at
     INT distance
@@ -1793,6 +1903,7 @@ erDiagram
     TIMESTAMP deleted_at
     TIMESTAMP created_at
     TIMESTAMP updated_at
+    CHAR chat_channel_uuid
   }
 
   fleetbase_parts {
@@ -1875,7 +1986,7 @@ erDiagram
   fleetbase_personal_access_tokens {
     BIGINTUNSIGNED id PK, UK
     VARCHAR tokenable_type
-    CHAR tokenable_id "(DC2Type:guid)"
+    CHAR tokenable_id
     VARCHAR name
     VARCHAR token UK
     TEXT abilities
@@ -2110,8 +2221,8 @@ erDiagram
     CHAR uuid
     ENUM account_type
     CHAR developer_account_uuid FK
-    CHAR company_uuid FK "(DC2Type:guid)"
-    CHAR user_uuid FK "(DC2Type:guid)"
+    CHAR company_uuid FK
+    CHAR user_uuid FK
     VARCHAR public_id
     VARCHAR token
     VARCHAR registry_token
@@ -2236,6 +2347,22 @@ erDiagram
     TIMESTAMP deleted_at
     TIMESTAMP created_at
     TIMESTAMP updated_at
+  }
+
+  fleetbase_review_accesses {
+    BIGINTUNSIGNED id PK, UK
+    CHAR uuid UK
+    CHAR company_uuid
+    VARCHAR subject_type UK
+    CHAR subject_uuid UK
+    BIT enabled
+    VARCHAR code
+    TIMESTAMP code_generated_at
+    TIMESTAMP enabled_at
+    CHAR updated_by_uuid
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
   }
 
   fleetbase_role_has_permissions {
@@ -2499,6 +2626,8 @@ erDiagram
     TIMESTAMP created_at
     TIMESTAMP updated_at
     CHAR integrated_vendor_uuid FK
+    INTUNSIGNED distance
+    INTUNSIGNED time
   }
 
   fleetbase_service_rate_fees {
@@ -3199,6 +3328,7 @@ erDiagram
     VARCHAR url
     VARCHAR mode
     VARCHAR version
+    TEXT secret
     VARCHAR description
     JSON events
     VARCHAR status
@@ -3300,6 +3430,20 @@ erDiagram
     TIMESTAMP deleted_at
     TIMESTAMP created_at
     TIMESTAMP updated_at
+  }
+
+  fleetbase_storefront_apple_sign_in_tokens {
+    INTUNSIGNED id PK, UK
+    CHAR uuid UK
+    CHAR company_uuid
+    CHAR customer_uuid UK
+    CHAR user_uuid
+    VARCHAR apple_user_id
+    VARCHAR client_id UK
+    TEXT refresh_token
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
   }
 
   fleetbase_storefront_campaigns {
@@ -4089,6 +4233,7 @@ erDiagram
   fleetbase_issues ||--o{ fleetbase_inspection_submissions : "foreign key"
   fleetbase_manifests ||--o{ fleetbase_manifest_stops : "foreign key"
   fleetbase_monitored_scheduled_tasks ||--o{ fleetbase_monitored_scheduled_task_log_items : "foreign key"
+  fleetbase_oauth_clients ||--o{ fleetbase_oauth_grants : "foreign key"
   fleetbase_order_configs ||--o{ fleetbase_orders : "foreign key"
   fleetbase_order_configs ||--o{ fleetbase_service_rates : "foreign key"
   fleetbase_order_configs ||--o{ fleetbase_storefront_networks : "foreign key"
@@ -4211,6 +4356,7 @@ erDiagram
   fleetbase_users ||--o{ fleetbase_issues : "foreign key"
   fleetbase_users ||--o{ fleetbase_maintenance_schedules : "foreign key"
   fleetbase_users ||--o{ fleetbase_maintenances : "foreign key"
+  fleetbase_users ||--o{ fleetbase_oauth_grants : "foreign key"
   fleetbase_users ||--o{ fleetbase_oauth_identities : "foreign key"
   fleetbase_users ||--o{ fleetbase_oauth_states : "foreign key"
   fleetbase_users ||--o{ fleetbase_order_configs : "foreign key"

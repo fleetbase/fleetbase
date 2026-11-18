@@ -703,6 +703,7 @@ console:
       queue: Warteschlange
       socket: Socket
       oauth: 'OAuth-Anmeldung'
+      oauth-apps: "OAuth-Apps"
       push-notifications: Push-Benachrichtigungen
     schedule-monitor:
       schedule-monitor: Zeitplan-Monitor
@@ -799,6 +800,44 @@ invite:
     invitation-code-sent-text: Ihr Einladungscode
     accept-invitation-text: Einladung annehmen
 
+oauth:
+  authorize:
+    title: "Weiter mit Fleetbase"
+    loading: "Anfrage wird geprüft..."
+    heading: "{app} möchte auf Ihr Fleetbase-Konto zugreifen"
+    official: "Von Fleetbase"
+    signed-in-as: "Angemeldet als {email}"
+    not-you: "Nicht Sie?"
+    organization-label: "Freizugebende Organisation"
+    organization-help: "Die App kann nur diese Organisation sehen und ändern. Sie können ihren Zugriff jederzeit unter Konto → Anmeldung entfernen."
+    not-admin: "nur Administratoren können sie freigeben"
+    no-organization: "Sie verwalten keine Organisation, die Sie freigeben könnten. Bitten Sie einen Administrator Ihrer Organisation, die App zu verbinden."
+    your-organization: "Ihre Organisation"
+    will-be-able-to: "{app} kann dann:"
+    allow: "Erlauben"
+    cancel: "Abbrechen"
+    footnote: "Sie geben dies an {app} frei, nicht an Fleetbase."
+    privacy: "Datenschutz"
+    terms: "Bedingungen"
+    reauthenticate: "Melden Sie sich erneut an, um fortzufahren..."
+    errors:
+      generic: "Diese Anfrage konnte nicht abgeschlossen werden."
+      invalid-client: "Diese App ist nicht bei Fleetbase registriert oder wurde deaktiviert."
+      invalid-request: "Der Link der App ist ungültig. Kehren Sie zur App zurück und versuchen Sie es erneut."
+      invalid-scope: "Die App hat einen Zugriff angefordert, der ihr nicht erlaubt ist."
+      no-organization: "Wählen Sie eine Organisation, die Sie verwalten, um sie für diese App freizugeben."
+      go-back: "Sie können diese Seite schließen und zur App zurückkehren."
+  connected-apps:
+    title: "Verbundene Apps"
+    help: "Apps, bei denen Sie sich mit Ihrem Fleetbase-Konto angemeldet haben, und was jede davon kann. Wenn Sie eine App entfernen, werden Sie abgemeldet und ihr Zugriff endet sofort."
+    organization: "Hat Zugriff auf {organization}"
+    sign-in-only: "Nur Anmeldung"
+    last-used: "zuletzt verwendet {date}"
+    never-used: "noch nicht verwendet"
+    remove-button: "Zugriff entfernen"
+    remove-title: "{app} entfernen?"
+    remove-body: "{app} wird abgemeldet und verliert sofort den Zugriff. Um sie wieder zu nutzen, müssen Sie sie erneut autorisieren."
+    removed: "{app} hat keinen Zugriff mehr."
 onboard:
   index:
     title: Erstellen Sie Ihr Konto

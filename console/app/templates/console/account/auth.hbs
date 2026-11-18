@@ -31,6 +31,8 @@
 
             <Account::ConnectedAccounts />
 
+            <Account::ConnectedApps />
+
             <ContentPanel @title="Change Password" @open={{true}} @wrapperClass="bordered-classic">
                 {{#if this.canChangePassword}}
                     <form id="change-password-form" aria-label="change-password" {{on "submit" (perform this.changePassword)}}>
