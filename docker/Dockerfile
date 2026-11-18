@@ -106,7 +106,7 @@ ENV OCTANE_SERVER=frankenphp
 # its "develop" default it roughly doubled every request's time and disabled the OPcache
 # JIT in every image built from here, production included.
 ENV XDEBUG_MODE=off
-ENV FLEETBASE_VERSION=0.8.0
+ENV FLEETBASE_VERSION=0.8.1
 
 # Set environment
 ARG ENVIRONMENT=production
