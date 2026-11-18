@@ -133,7 +133,7 @@ export default class ConsoleAdminController extends Controller {
     get authConfigNavigationItem() {
         return {
             label: 'Auth Config',
-            description: 'Configure how people sign in: OAuth providers and two-factor authentication.',
+            description: 'Configure how people sign in: OAuth providers, apps that sign in with Fleetbase, and two-factor authentication.',
             icon: 'user-shield',
             keywords: ['auth', 'authentication', 'sign in', 'login', 'security'],
             children: [
@@ -143,6 +143,13 @@ export default class ConsoleAdminController extends Controller {
                     icon: 'right-to-bracket',
                     route: 'console.admin.oauth-settings',
                     keywords: ['oauth', 'sso', 'sign in', 'login', 'google', 'microsoft', 'github', 'apple'],
+                },
+                {
+                    label: this.intl.t('console.admin.menu.oauth-apps'),
+                    description: 'Register apps that offer “Continue with Fleetbase”, rotate their secrets and see who authorized them.',
+                    icon: 'plug',
+                    route: 'console.admin.oauth-apps',
+                    keywords: ['oauth', 'openid', 'oidc', 'apps', 'clients', 'continue with fleetbase', 'apphelm', 'consent'],
                 },
                 {
                     label: this.intl.t('console.admin.menu.2fa-config'),

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3d8a549d7246ad162d602469f954a76a",
+    "content-hash": "6ffae22e755ed507ad55d132288a4cce",
     "packages": [
         {
             "name": "barryvdh/laravel-dompdf",
@@ -81,8 +81,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-02-21T08:51:10+00:00",
-            "published-time": "2026-03-17T15:52:42+00:00"
+            "time": "2026-02-21T08:51:10+00:00"
         },
         {
             "name": "brick/geo",
@@ -141,37 +140,35 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-10-09T22:30:24+00:00",
-            "published-time": "2022-10-09T22:36:05+00:00"
+            "time": "2022-10-09T22:30:24+00:00"
         },
         {
             "name": "cknow/laravel-money",
-            "version": "v7.2.1",
+            "version": "v8.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cknow/laravel-money.git",
-                "reference": "82d506202f95e8b6977a9ffffcdbd218bc58bdc5"
+                "reference": "eda76ac0b7034bdeea40616021c9bb2d9568f8b3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cknow/laravel-money/zipball/82d506202f95e8b6977a9ffffcdbd218bc58bdc5",
-                "reference": "82d506202f95e8b6977a9ffffcdbd218bc58bdc5",
+                "url": "https://api.github.com/repos/cknow/laravel-money/zipball/eda76ac0b7034bdeea40616021c9bb2d9568f8b3",
+                "reference": "eda76ac0b7034bdeea40616021c9bb2d9568f8b3",
                 "shasum": ""
             },
             "require": {
                 "ext-intl": "*",
                 "ext-json": "*",
-                "illuminate/support": "^7.0|^8.0|^9.0|^10.0",
-                "illuminate/view": "^7.0|^8.0|^9.0|^10.0",
-                "moneyphp/money": "^3.3|^4.2",
-                "php": "^7.3|^8.0"
+                "illuminate/support": "^9.0|^10.0|^11.0|^12.0|^13.0",
+                "illuminate/view": "^9.0|^10.0|^11.0|^12.0|^13.0",
+                "moneyphp/money": "^4.8",
+                "php": "^8.1"
             },
             "require-dev": {
-                "graham-campbell/testbench": "^5.7",
-                "illuminate/filesystem": "^7.0|^8.0|^9.0|^10.0",
+                "graham-campbell/testbench": "^6.1",
+                "illuminate/filesystem": "^9.0|^10.0|^11.0|^12.0|^13.0",
                 "mockery/mockery": "^1.6",
-                "phpunit/phpunit": "^8.5|^9.5.10|^10.0",
-                "spatie/phpunit-watcher": "^1.23"
+                "phpunit/phpunit": "^10.5"
             },
             "type": "library",
             "extra": {
@@ -208,77 +205,9 @@
             ],
             "support": {
                 "issues": "https://github.com/cknow/laravel-money/issues",
-                "source": "https://github.com/cknow/laravel-money/tree/v7.2.1"
+                "source": "https://github.com/cknow/laravel-money/tree/v8.5.0"
             },
-            "time": "2024-03-16T12:43:13+00:00",
-            "published-time": "2024-03-16T12:45:30+00:00"
-        },
-        {
-            "name": "clue/stream-filter",
-            "version": "v1.7.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/clue/stream-filter.git",
-                "reference": "049509fef80032cb3f051595029ab75b49a3c2f7"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/clue/stream-filter/zipball/049509fef80032cb3f051595029ab75b49a3c2f7",
-                "reference": "049509fef80032cb3f051595029ab75b49a3c2f7",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^9.6 || ^5.7 || ^4.8.36"
-            },
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "src/functions_include.php"
-                ],
-                "psr-4": {
-                    "Clue\\StreamFilter\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Christian Lück",
-                    "email": "christian@clue.engineering"
-                }
-            ],
-            "description": "A simple and modern approach to stream filtering in PHP",
-            "homepage": "https://github.com/clue/stream-filter",
-            "keywords": [
-                "bucket brigade",
-                "callback",
-                "filter",
-                "php_user_filter",
-                "stream",
-                "stream_filter_append",
-                "stream_filter_register"
-            ],
-            "support": {
-                "issues": "https://github.com/clue/stream-filter/issues",
-                "source": "https://github.com/clue/stream-filter/tree/v1.7.0"
-            },
-            "funding": [
-                {
-                    "url": "https://clue.engineering/support",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/clue",
-                    "type": "github"
-                }
-            ],
-            "time": "2023-12-20T15:40:13+00:00",
-            "published-time": "2023-12-20T15:43:41+00:00"
+            "time": "2026-02-24T21:07:12+00:00"
         },
         {
             "name": "dompdf/dompdf",
@@ -342,8 +271,7 @@
                 "issues": "https://github.com/dompdf/dompdf/issues",
                 "source": "https://github.com/dompdf/dompdf/tree/v3.1.6"
             },
-            "time": "2026-07-20T12:29:38+00:00",
-            "published-time": "2026-07-20T12:35:08+00:00"
+            "time": "2026-07-20T12:29:38+00:00"
         },
         {
             "name": "dompdf/php-font-lib",
@@ -388,8 +316,7 @@
                 "issues": "https://github.com/dompdf/php-font-lib/issues",
                 "source": "https://github.com/dompdf/php-font-lib/tree/1.0.2"
             },
-            "time": "2026-01-20T14:10:26+00:00",
-            "published-time": "2026-01-20T14:14:50+00:00"
+            "time": "2026-01-20T14:10:26+00:00"
         },
         {
             "name": "dompdf/php-svg-lib",
@@ -435,35 +362,34 @@
                 "issues": "https://github.com/dompdf/php-svg-lib/issues",
                 "source": "https://github.com/dompdf/php-svg-lib/tree/1.0.2"
             },
-            "time": "2026-01-02T16:01:13+00:00",
-            "published-time": "2026-01-02T16:02:22+00:00"
+            "time": "2026-01-02T16:01:13+00:00"
         },
         {
             "name": "fleetbase/ai",
-            "version": "0.0.5",
+            "version": "0.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/ai.git",
-                "reference": "46ebe2bcc22372f65fc45f379f79971b4bf911bd"
+                "reference": "ed48e0c2c4837e48894642766de654f081911421"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/ai/zipball/46ebe2bcc22372f65fc45f379f79971b4bf911bd",
-                "reference": "46ebe2bcc22372f65fc45f379f79971b4bf911bd",
+                "url": "https://api.github.com/repos/fleetbase/ai/zipball/ed48e0c2c4837e48894642766de654f081911421",
+                "reference": "ed48e0c2c4837e48894642766de654f081911421",
                 "shasum": ""
             },
             "require": {
-                "fleetbase/core-api": "*",
-                "php": "^8.0",
+                "fleetbase/core-api": "^2.0",
+                "php": "^8.2",
                 "php-http/guzzle7-adapter": "^1.0",
                 "psr/http-factory-implementation": "*"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.34.1",
-                "nunomaduro/collision": "^5.11.0|^6.4.0",
-                "pestphp/pest": "^1.22.6",
-                "phpstan/phpstan": "^1.10.38",
-                "symfony/var-dumper": "^5.4.29"
+                "nunomaduro/collision": "^8.0",
+                "pestphp/pest": "^3.0",
+                "phpstan/phpstan": "^2.0",
+                "symfony/var-dumper": "^7.0"
             },
             "type": "library",
             "extra": {
@@ -500,10 +426,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/ai/issues",
-                "source": "https://github.com/fleetbase/ai/tree/v0.0.5"
+                "source": "https://github.com/fleetbase/ai/tree/v0.1.0"
             },
-            "time": "2026-09-22T11:37:32+00:00",
-            "published-time": "2026-09-22T11:37:52+00:00"
+            "time": "2026-11-17T05:19:42+00:00"
         },
         {
             "name": "fleetbase/core-platform",
@@ -511,12 +436,13 @@
             "dist": {
                 "type": "path",
                 "url": "core-platform",
-                "reference": "54bef591fff54d058c14897f3786183883e489f6"
+                "reference": "64d9060f59cb8f5374bee8953f005e2390ebbbfd"
             },
             "require": {
-                "php": ">=8.0 <8.3"
+                "php": ">=8.2 <8.5"
             },
             "conflict": {
+                "aaronfrancis/fast-paginate": "*",
                 "appstract/laravel-opcache": "*",
                 "aws/aws-crt-php": "*",
                 "aws/aws-sdk-php": "*",
@@ -530,10 +456,8 @@
                 "composer/pcre": "*",
                 "composer/semver": "*",
                 "cuyz/valinor": "*",
+                "defuse/php-encryption": "*",
                 "dflydev/dot-access-data": "*",
-                "doctrine/dbal": "*",
-                "doctrine/deprecations": "*",
-                "doctrine/event-manager": "*",
                 "doctrine/inflector": "*",
                 "doctrine/lexer": "*",
                 "dragonmantank/cron-expression": "*",
@@ -569,12 +493,12 @@
                 "guzzlehttp/promises": "*",
                 "guzzlehttp/psr7": "*",
                 "guzzlehttp/uri-template": "*",
-                "hammerstone/fast-paginate": "*",
                 "illuminate/auth": "*",
                 "illuminate/broadcasting": "*",
                 "illuminate/bus": "*",
                 "illuminate/cache": "*",
                 "illuminate/collections": "*",
+                "illuminate/concurrency": "*",
                 "illuminate/conditionable": "*",
                 "illuminate/config": "*",
                 "illuminate/console": "*",
@@ -587,6 +511,7 @@
                 "illuminate/filesystem": "*",
                 "illuminate/hashing": "*",
                 "illuminate/http": "*",
+                "illuminate/json-schema": "*",
                 "illuminate/log": "*",
                 "illuminate/macroable": "*",
                 "illuminate/mail": "*",
@@ -596,6 +521,7 @@
                 "illuminate/process": "*",
                 "illuminate/queue": "*",
                 "illuminate/redis": "*",
+                "illuminate/reflection": "*",
                 "illuminate/routing": "*",
                 "illuminate/session": "*",
                 "illuminate/support": "*",
@@ -629,12 +555,18 @@
                 "lcobucci/jwt": "*",
                 "league/commonmark": "*",
                 "league/config": "*",
+                "league/event": "*",
                 "league/flysystem": "*",
                 "league/flysystem-aws-s3-v3": "*",
                 "league/flysystem-google-cloud-storage": "*",
                 "league/flysystem-local": "*",
                 "league/mime-type-detection": "*",
                 "league/oauth1-client": "*",
+                "league/oauth2-server": "*",
+                "league/oauth2server": "*",
+                "league/uri": "*",
+                "league/uri-interfaces": "*",
+                "lncd/oauth2": "*",
                 "lorisleiva/cron-translator": "*",
                 "maatwebsite/excel": "*",
                 "maennchen/zipstream-php": "*",
@@ -654,6 +586,7 @@
                 "nunomaduro/termwind": "*",
                 "nyholm/psr7": "*",
                 "paragonie/constant_time_encoding": "*",
+                "paragonie/random_compat": "*",
                 "paragonie/sodium_compat": "*",
                 "php-http/guzzle7-adapter": "*",
                 "php-http/httplug": "*",
@@ -665,11 +598,7 @@
                 "phrity/net-uri": "*",
                 "phrity/util-errorhandler": "*",
                 "phrity/websocket": "*",
-                "pragmarx/coollection": "*",
                 "pragmarx/google2fa": "*",
-                "pragmarx/ia-arr": "*",
-                "pragmarx/ia-collection": "*",
-                "pragmarx/ia-str": "*",
                 "predis/predis": "*",
                 "psr/cache": "*",
                 "psr/clock": "*",
@@ -700,12 +629,14 @@
                 "spatie/laravel-responsecache": "*",
                 "spatie/laravel-schedule-monitor": "*",
                 "spatie/laravel-sluggable": "*",
+                "spatie/once": "*",
                 "spatie/temporary-directory": "*",
                 "spomky-labs/pki-framework": "*",
                 "sqids/sqids": "*",
                 "stripe/stripe-php": "*",
                 "symfony/cache": "*",
                 "symfony/cache-contracts": "*",
+                "symfony/clock": "*",
                 "symfony/console": "*",
                 "symfony/css-selector": "*",
                 "symfony/deprecation-contracts": "*",
@@ -732,6 +663,8 @@
                 "symfony/polyfill-php82": "*",
                 "symfony/polyfill-php83": "*",
                 "symfony/polyfill-php84": "*",
+                "symfony/polyfill-php85": "*",
+                "symfony/polyfill-time": "*",
                 "symfony/polyfill-uuid": "*",
                 "symfony/postmark-mailer": "*",
                 "symfony/process": "*",
@@ -752,258 +685,266 @@
                 "xantios/mimey": "*"
             },
             "provide": {
-                "appstract/laravel-opcache": "4.0.2.0",
-                "aws/aws-crt-php": "1.2.7.0",
-                "aws/aws-sdk-php": "3.394.10.0",
-                "aws/aws-sdk-php-laravel": "3.11.0.0",
-                "beste/clock": "3.1.0.0",
-                "beste/in-memory-cache": "1.4.0.0",
-                "beste/json": "1.7.0.0",
-                "brick/math": "0.12.3.0",
-                "carbonphp/carbon-doctrine-types": "2.1.1.0",
-                "colinodell/json5": "2.3.0.0",
-                "composer/pcre": "3.4.0.0",
-                "composer/semver": "3.4.4.0",
-                "cuyz/valinor": "2.6.0.0",
-                "dflydev/dot-access-data": "3.0.3.0",
-                "doctrine/dbal": "3.10.6.0",
-                "doctrine/deprecations": "1.1.6.0",
-                "doctrine/event-manager": "2.1.1.0",
-                "doctrine/inflector": "2.1.0.0",
-                "doctrine/lexer": "3.0.1.0",
-                "dragonmantank/cron-expression": "3.6.0.0",
-                "edamov/pushok": "0.18.1.0",
-                "egulias/email-validator": "4.0.4.0",
+                "aaronfrancis/fast-paginate": "v2.0.0",
+                "appstract/laravel-opcache": "4.0.2",
+                "aws/aws-crt-php": "v1.2.7",
+                "aws/aws-sdk-php": "3.404.0",
+                "aws/aws-sdk-php-laravel": "3.11.0",
+                "beste/clock": "3.1.0",
+                "beste/in-memory-cache": "1.4.0",
+                "beste/json": "1.8.0",
+                "brick/math": "0.12.3",
+                "carbonphp/carbon-doctrine-types": "3.2.1",
+                "colinodell/json5": "v2.3.0",
+                "composer/pcre": "3.4.0",
+                "composer/semver": "3.6.0",
+                "cuyz/valinor": "2.7.0",
+                "defuse/php-encryption": "v2.4.0",
+                "dflydev/dot-access-data": "v3.0.3",
+                "doctrine/inflector": "2.1.1",
+                "doctrine/lexer": "3.0.3",
+                "dragonmantank/cron-expression": "v3.6.1",
+                "edamov/pushok": "0.18.1",
+                "egulias/email-validator": "4.0.4",
                 "ext-ctype": "*",
                 "ext-mbstring": "*",
                 "ext-uuid": "*",
-                "ezyang/htmlpurifier": "4.19.0.0",
-                "fig/http-message-util": "1.1.5.0",
-                "firebase/php-jwt": "7.1.0.0",
-                "fleetbase/core-api": "1.6.73.0",
-                "fleetbase/countries": "0.8.3.0",
-                "fleetbase/laravel-mysql-spatial": "1.0.3.0",
-                "fleetbase/registry-bridge": "0.1.11.0",
-                "fleetbase/twilio": "5.0.1.0",
-                "fruitcake/php-cors": "1.4.0.0",
-                "geo-io/interface": "1.0.1.0",
-                "geo-io/wkb-parser": "1.0.2.0",
-                "giggsey/libphonenumber-for-php": "8.13.55.0",
-                "giggsey/libphonenumber-for-php-lite": "8.13.55.0",
-                "giggsey/locale": "2.9.0.0",
-                "google/apiclient": "2.19.4.0",
-                "google/apiclient-services": "0.458.0.0",
-                "google/auth": "1.53.0.0",
-                "google/cloud-core": "1.73.2.0",
-                "google/cloud-storage": "1.51.0.0",
-                "google/common-protos": "4.14.2.0",
-                "google/gax": "1.49.0.0",
-                "google/grpc-gcp": "0.4.2.0",
-                "google/longrunning": "0.8.3.0",
-                "google/protobuf": "5.36.1.0",
-                "graham-campbell/result-type": "1.2.0.0",
-                "grpc/grpc": "1.82.0.0",
-                "guzzlehttp/guzzle": "7.15.5.0",
-                "guzzlehttp/promises": "2.5.3.0",
-                "guzzlehttp/psr7": "2.13.1.0",
-                "guzzlehttp/uri-template": "1.0.11.0",
-                "hammerstone/fast-paginate": "1.1.1.0",
-                "illuminate/auth": "10.9999999.9999999.9999999-dev",
-                "illuminate/broadcasting": "10.9999999.9999999.9999999-dev",
-                "illuminate/bus": "10.9999999.9999999.9999999-dev",
-                "illuminate/cache": "10.9999999.9999999.9999999-dev",
-                "illuminate/collections": "10.9999999.9999999.9999999-dev",
-                "illuminate/conditionable": "10.9999999.9999999.9999999-dev",
-                "illuminate/config": "10.9999999.9999999.9999999-dev",
-                "illuminate/console": "10.9999999.9999999.9999999-dev",
-                "illuminate/container": "10.9999999.9999999.9999999-dev",
-                "illuminate/contracts": "10.9999999.9999999.9999999-dev",
-                "illuminate/cookie": "10.9999999.9999999.9999999-dev",
-                "illuminate/database": "10.9999999.9999999.9999999-dev",
-                "illuminate/encryption": "10.9999999.9999999.9999999-dev",
-                "illuminate/events": "10.9999999.9999999.9999999-dev",
-                "illuminate/filesystem": "10.9999999.9999999.9999999-dev",
-                "illuminate/hashing": "10.9999999.9999999.9999999-dev",
-                "illuminate/http": "10.9999999.9999999.9999999-dev",
-                "illuminate/log": "10.9999999.9999999.9999999-dev",
-                "illuminate/macroable": "10.9999999.9999999.9999999-dev",
-                "illuminate/mail": "10.9999999.9999999.9999999-dev",
-                "illuminate/notifications": "10.9999999.9999999.9999999-dev",
-                "illuminate/pagination": "10.9999999.9999999.9999999-dev",
-                "illuminate/pipeline": "10.9999999.9999999.9999999-dev",
-                "illuminate/process": "10.9999999.9999999.9999999-dev",
-                "illuminate/queue": "10.9999999.9999999.9999999-dev",
-                "illuminate/redis": "10.9999999.9999999.9999999-dev",
-                "illuminate/routing": "10.9999999.9999999.9999999-dev",
-                "illuminate/session": "10.9999999.9999999.9999999-dev",
-                "illuminate/support": "10.9999999.9999999.9999999-dev",
-                "illuminate/testing": "10.9999999.9999999.9999999-dev",
-                "illuminate/translation": "10.9999999.9999999.9999999-dev",
-                "illuminate/validation": "10.9999999.9999999.9999999-dev",
-                "illuminate/view": "10.9999999.9999999.9999999-dev",
-                "inkrot/php-compress-json": "0.1.3.0",
-                "innoge/laravel-msgraph-mail": "1.5.0.0",
-                "intervention/gif": "4.2.4.0",
-                "intervention/image": "3.11.8.0",
-                "jdorn/sql-formatter": "1.2.17.0",
-                "jean85/pretty-package-versions": "2.1.1.0",
-                "jmikola/geojson": "1.2.0.0",
-                "kreait/firebase-php": "7.24.1.0",
-                "kreait/firebase-tokens": "5.3.0.0",
-                "kreait/laravel-firebase": "5.10.0.0",
-                "laminas/laminas-diactoros": "3.8.0.0",
-                "laravel-notification-channels/apn": "5.5.0.0",
-                "laravel-notification-channels/fcm": "4.5.0.0",
-                "laravel-notification-channels/twilio": "3.4.0.0",
-                "laravel/cashier": "16.7.0.0",
-                "laravel/framework": "10.9999999.9999999.9999999-dev",
-                "laravel/octane": "2.22.0.0",
-                "laravel/prompts": "0.1.25.0",
-                "laravel/sanctum": "3.2.4.0",
-                "laravel/serializable-closure": "1.3.7.0",
-                "laravel/socialite": "5.31.0.0",
-                "laravel/tinker": "2.11.1.0",
-                "lcobucci/clock": "3.3.1.0",
-                "lcobucci/jwt": "5.6.0.0",
-                "league/commonmark": "2.10.0.0",
-                "league/config": "1.2.0.0",
-                "league/flysystem": "3.36.0.0",
-                "league/flysystem-aws-s3-v3": "3.35.3.0",
-                "league/flysystem-google-cloud-storage": "3.34.0.0",
-                "league/flysystem-local": "3.35.3.0",
-                "league/mime-type-detection": "1.17.0.0",
-                "league/oauth1-client": "1.12.0.0",
-                "lorisleiva/cron-translator": "0.4.6.0",
-                "maatwebsite/excel": "3.1.70.0",
-                "maennchen/zipstream-php": "3.1.2.0",
-                "markbaker/complex": "3.0.2.0",
-                "markbaker/matrix": "3.0.1.0",
-                "milon/barcode": "10.0.1.0",
-                "moneyphp/money": "4.9.0.0",
-                "monolog/monolog": "3.11.0.0",
-                "mossadal/math-parser": "1.3.16.0",
+                "ezyang/htmlpurifier": "v4.19.1",
+                "fig/http-message-util": "1.1.5",
+                "firebase/php-jwt": "v7.2.1",
+                "fleetbase/core-api": "2.0.2",
+                "fleetbase/countries": "0.9.0",
+                "fleetbase/laravel-mysql-spatial": "2.0.0",
+                "fleetbase/registry-bridge": "0.2.0",
+                "fleetbase/twilio": "6.0.0",
+                "fruitcake/php-cors": "v1.4.0",
+                "geo-io/interface": "v1.0.1",
+                "geo-io/wkb-parser": "v1.0.2",
+                "giggsey/libphonenumber-for-php": "8.13.55",
+                "giggsey/libphonenumber-for-php-lite": "8.13.55",
+                "giggsey/locale": "2.10.0",
+                "google/apiclient": "v2.20.1",
+                "google/apiclient-services": "v0.467.0",
+                "google/auth": "v1.55.3",
+                "google/cloud-core": "v1.74.0",
+                "google/cloud-storage": "v1.51.0",
+                "google/common-protos": "4.15.0",
+                "google/gax": "v1.51.2",
+                "google/grpc-gcp": "0.5.0",
+                "google/longrunning": "0.9.0",
+                "google/protobuf": "v5.36.2",
+                "graham-campbell/result-type": "v1.2.0",
+                "grpc/grpc": "1.85.0",
+                "guzzlehttp/guzzle": "7.16.2",
+                "guzzlehttp/promises": "2.6.0",
+                "guzzlehttp/psr7": "2.13.3",
+                "guzzlehttp/uri-template": "v1.0.11",
+                "illuminate/auth": "v12.72.0",
+                "illuminate/broadcasting": "v12.72.0",
+                "illuminate/bus": "v12.72.0",
+                "illuminate/cache": "v12.72.0",
+                "illuminate/collections": "v12.72.0",
+                "illuminate/concurrency": "v12.72.0",
+                "illuminate/conditionable": "v12.72.0",
+                "illuminate/config": "v12.72.0",
+                "illuminate/console": "v12.72.0",
+                "illuminate/container": "v12.72.0",
+                "illuminate/contracts": "v12.72.0",
+                "illuminate/cookie": "v12.72.0",
+                "illuminate/database": "v12.72.0",
+                "illuminate/encryption": "v12.72.0",
+                "illuminate/events": "v12.72.0",
+                "illuminate/filesystem": "v12.72.0",
+                "illuminate/hashing": "v12.72.0",
+                "illuminate/http": "v12.72.0",
+                "illuminate/json-schema": "v12.72.0",
+                "illuminate/log": "v12.72.0",
+                "illuminate/macroable": "v12.72.0",
+                "illuminate/mail": "v12.72.0",
+                "illuminate/notifications": "v12.72.0",
+                "illuminate/pagination": "v12.72.0",
+                "illuminate/pipeline": "v12.72.0",
+                "illuminate/process": "v12.72.0",
+                "illuminate/queue": "v12.72.0",
+                "illuminate/redis": "v12.72.0",
+                "illuminate/reflection": "v12.72.0",
+                "illuminate/routing": "v12.72.0",
+                "illuminate/session": "v12.72.0",
+                "illuminate/support": "v12.72.0",
+                "illuminate/testing": "v12.72.0",
+                "illuminate/translation": "v12.72.0",
+                "illuminate/validation": "v12.72.0",
+                "illuminate/view": "v12.72.0",
+                "inkrot/php-compress-json": "v0.1.3",
+                "innoge/laravel-msgraph-mail": "v2.0.0",
+                "intervention/gif": "4.2.4",
+                "intervention/image": "3.11.10",
+                "jdorn/sql-formatter": "v1.2.17",
+                "jean85/pretty-package-versions": "2.1.1",
+                "jmikola/geojson": "1.2.0",
+                "kreait/firebase-php": "7.24.1",
+                "kreait/firebase-tokens": "5.3.0",
+                "kreait/laravel-firebase": "6.2.0",
+                "laminas/laminas-diactoros": "3.9.0",
+                "laravel-notification-channels/apn": "v5.5.0",
+                "laravel-notification-channels/fcm": "5.1.0",
+                "laravel-notification-channels/twilio": "4.1.3",
+                "laravel/cashier": "v16.10.0",
+                "laravel/framework": "v12.72.0",
+                "laravel/octane": "v2.22.0",
+                "laravel/prompts": "v0.3.27",
+                "laravel/sanctum": "v4.4.0",
+                "laravel/serializable-closure": "v2.2.0",
+                "laravel/socialite": "v5.32.0",
+                "laravel/tinker": "v2.11.1",
+                "lcobucci/clock": "3.3.1",
+                "lcobucci/jwt": "5.6.1",
+                "league/commonmark": "2.10.7",
+                "league/config": "v1.2.0",
+                "league/event": "2.3.0",
+                "league/flysystem": "3.36.0",
+                "league/flysystem-aws-s3-v3": "3.35.3",
+                "league/flysystem-google-cloud-storage": "3.34.0",
+                "league/flysystem-local": "3.35.3",
+                "league/mime-type-detection": "1.17.0",
+                "league/oauth1-client": "v1.12.0",
+                "league/oauth2-server": "8.5.5",
+                "league/oauth2server": "*",
+                "league/uri": "7.10.0",
+                "league/uri-interfaces": "7.10.0",
+                "lncd/oauth2": "*",
+                "lorisleiva/cron-translator": "v0.4.6",
+                "maatwebsite/excel": "3.1.70",
+                "maennchen/zipstream-php": "3.1.2",
+                "markbaker/complex": "3.0.2",
+                "markbaker/matrix": "3.0.1",
+                "milon/barcode": "v13.6.0",
+                "moneyphp/money": "v4.9.0",
+                "monolog/monolog": "3.13.0",
+                "mossadal/math-parser": "v1.3.16",
                 "mtdowling/cron-expression": "^1.0",
-                "mtdowling/jmespath.php": "2.9.2.0",
-                "nesbot/carbon": "2.73.0.0",
-                "nette/caching": "3.4.2.0",
-                "nette/schema": "1.3.6.0",
-                "nette/utils": "4.1.5.0",
-                "nikic/php-parser": "5.8.0.0",
-                "nunomaduro/termwind": "1.17.0.0",
-                "nyholm/psr7": "1.8.2.0",
-                "paragonie/constant_time_encoding": "3.1.3.0",
-                "paragonie/sodium_compat": "2.5.2.0",
+                "mtdowling/jmespath.php": "2.9.4",
+                "nesbot/carbon": "3.15.1",
+                "nette/caching": "v3.4.3",
+                "nette/schema": "v1.4.0",
+                "nette/utils": "v4.1.6",
+                "nikic/php-parser": "v5.9.0",
+                "nunomaduro/termwind": "v2.4.1",
+                "nyholm/psr7": "1.8.2",
+                "paragonie/constant_time_encoding": "v3.1.4",
+                "paragonie/random_compat": "v9.99.100",
+                "paragonie/sodium_compat": "v2.5.2",
                 "php-http/async-client-implementation": "1.0",
                 "php-http/client-implementation": "1.0",
-                "php-http/guzzle7-adapter": "1.1.0.0",
-                "php-http/httplug": "2.4.1.0",
+                "php-http/guzzle7-adapter": "1.1.0",
+                "php-http/httplug": "2.4.1",
                 "php-http/message-factory-implementation": "1.0",
-                "php-http/promise": "1.3.1.0",
-                "phpoffice/phpspreadsheet": "1.30.6.0",
-                "phpoption/phpoption": "1.10.0.0",
-                "phpseclib/phpseclib": "4.0.1.0",
-                "phrity/net-stream": "1.3.0.0",
-                "phrity/net-uri": "1.3.0.0",
-                "phrity/util-errorhandler": "1.2.2.0",
-                "phrity/websocket": "1.7.3.0",
-                "pragmarx/coollection": "0.8.1.0",
-                "pragmarx/google2fa": "8.0.3.0",
-                "pragmarx/ia-arr": "7.3.3.0",
-                "pragmarx/ia-collection": "7.3.2.0",
-                "pragmarx/ia-str": "7.3.1.0",
-                "predis/predis": "2.4.1.0",
-                "psr/cache": "3.0.0.0",
+                "php-http/promise": "1.3.1",
+                "phpoffice/phpspreadsheet": "1.30.8",
+                "phpoption/phpoption": "1.10.0",
+                "phpseclib/phpseclib": "4.0.3",
+                "phrity/net-stream": "1.3.0",
+                "phrity/net-uri": "1.3.0",
+                "phrity/util-errorhandler": "1.2.2",
+                "phrity/websocket": "1.7.3",
+                "pragmarx/google2fa": "v8.0.3",
+                "predis/predis": "v2.4.1",
+                "psr/cache": "3.0.0",
                 "psr/cache-implementation": "2.0 || 3.0",
-                "psr/clock": "1.0.0.0",
+                "psr/clock": "1.0.0",
                 "psr/clock-implementation": "1.0",
-                "psr/container": "2.0.2.0",
+                "psr/container": "2.0.2",
                 "psr/container-implementation": "1.1|2.0",
-                "psr/event-dispatcher": "1.0.0.0",
+                "psr/event-dispatcher": "1.0.0",
                 "psr/event-dispatcher-implementation": "1.0",
-                "psr/http-client": "1.0.3.0",
+                "psr/http-client": "1.0.3",
                 "psr/http-client-implementation": "1.0",
-                "psr/http-factory": "1.1.0.0",
+                "psr/http-factory": "1.1.0",
                 "psr/http-factory-implementation": "1.0",
-                "psr/http-message": "2.0.0.0",
+                "psr/http-message": "2.0",
                 "psr/http-message-implementation": "1.0",
-                "psr/log": "3.0.2.0",
-                "psr/log-implementation": "3.0.0",
-                "psr/simple-cache": "3.0.0.0",
+                "psr/log": "3.0.2",
+                "psr/log-implementation": "1.0|2.0|3.0",
+                "psr/simple-cache": "3.0.0",
                 "psr/simple-cache-implementation": "1.0|2.0|3.0",
-                "psy/psysh": "0.12.24.0",
-                "ralouphie/getallheaders": "3.0.3.0",
-                "ramsey/collection": "2.1.1.0",
-                "ramsey/uuid": "4.9.3.0",
-                "resend/resend-php": "0.14.0.0",
-                "rhumsaa/uuid": "4.9.3.0",
-                "rize/uri-template": "0.4.2.0",
-                "rlanvin/php-rrule": "2.6.0.0",
-                "s-ichikawa/laravel-sendgrid-driver": "4.0.11.0",
-                "sentry/sentry": "4.31.0.0",
-                "sentry/sentry-laravel": "4.27.0.0",
-                "spatie/browsershot": "5.4.0.0",
-                "spatie/laravel-activitylog": "4.12.3.0",
-                "spatie/laravel-google-cloud-storage": "2.3.4.0",
-                "spatie/laravel-package-tools": "1.93.2.0",
-                "spatie/laravel-pdf": "1.9.0.0",
-                "spatie/laravel-permission": "6.25.0.0",
-                "spatie/laravel-responsecache": "7.7.2.0",
-                "spatie/laravel-schedule-monitor": "3.10.3.0",
-                "spatie/laravel-sluggable": "3.8.1.0",
-                "spatie/temporary-directory": "2.4.0.0",
-                "spomky-labs/pki-framework": "1.6.2.0",
-                "sqids/sqids": "0.4.1.0",
-                "stripe/stripe-php": "17.6.0.0",
-                "symfony/cache": "7.4.18.0",
-                "symfony/cache-contracts": "3.7.1.0",
+                "psy/psysh": "v0.12.24",
+                "ralouphie/getallheaders": "3.0.3",
+                "ramsey/collection": "2.1.1",
+                "ramsey/uuid": "4.10.0",
+                "resend/resend-php": "v0.14.0",
+                "rhumsaa/uuid": "4.10.0",
+                "rize/uri-template": "0.4.2",
+                "rlanvin/php-rrule": "v2.6.0",
+                "s-ichikawa/laravel-sendgrid-driver": "4.0.13",
+                "sentry/sentry": "4.37.0",
+                "sentry/sentry-laravel": "4.30.0",
+                "spatie/browsershot": "5.5.0",
+                "spatie/laravel-activitylog": "4.12.3",
+                "spatie/laravel-google-cloud-storage": "2.3.4",
+                "spatie/laravel-package-tools": "1.93.3",
+                "spatie/laravel-pdf": "1.9.0",
+                "spatie/laravel-permission": "6.25.0",
+                "spatie/laravel-responsecache": "7.7.2",
+                "spatie/laravel-schedule-monitor": "3.10.3",
+                "spatie/laravel-sluggable": "3.8.1",
+                "spatie/once": "*",
+                "spatie/temporary-directory": "2.4.0",
+                "spomky-labs/pki-framework": "1.6.3",
+                "sqids/sqids": "0.4.1",
+                "stripe/stripe-php": "v17.6.1",
+                "symfony/cache": "v7.4.23",
+                "symfony/cache-contracts": "v3.8.1",
                 "symfony/cache-implementation": "1.1|2.0|3.0",
-                "symfony/console": "6.4.45.0",
-                "symfony/css-selector": "7.4.18.0",
-                "symfony/deprecation-contracts": "3.7.1.0",
-                "symfony/error-handler": "6.4.44.0",
-                "symfony/event-dispatcher": "7.4.17.0",
-                "symfony/event-dispatcher-contracts": "3.7.1.0",
+                "symfony/clock": "v7.4.21",
+                "symfony/console": "v7.4.23",
+                "symfony/css-selector": "v7.4.22",
+                "symfony/deprecation-contracts": "v3.8.1",
+                "symfony/error-handler": "v7.4.22",
+                "symfony/event-dispatcher": "v7.4.17",
+                "symfony/event-dispatcher-contracts": "v3.8.1",
                 "symfony/event-dispatcher-implementation": "2.0|3.0",
-                "symfony/filesystem": "7.4.18.0",
-                "symfony/finder": "6.4.44.0",
-                "symfony/http-client": "7.4.18.0",
-                "symfony/http-client-contracts": "3.7.3.0",
+                "symfony/filesystem": "v7.4.23",
+                "symfony/finder": "v7.4.23",
+                "symfony/http-client": "v7.4.23",
+                "symfony/http-client-contracts": "v3.8.1",
                 "symfony/http-client-implementation": "3.0",
-                "symfony/http-foundation": "6.4.45.0",
-                "symfony/http-kernel": "6.4.45.0",
-                "symfony/mailer": "6.4.44.0",
-                "symfony/mailgun-mailer": "7.1.6.0",
-                "symfony/mime": "6.4.45.0",
-                "symfony/options-resolver": "7.4.8.0",
-                "symfony/polyfill-ctype": "1.37.0.0",
-                "symfony/polyfill-intl-grapheme": "1.41.0.0",
-                "symfony/polyfill-intl-icu": "1.38.0.0",
-                "symfony/polyfill-intl-idn": "1.42.0.0",
-                "symfony/polyfill-intl-normalizer": "1.42.0.0",
-                "symfony/polyfill-mbstring": "1.38.2.0",
-                "symfony/polyfill-php80": "1.37.0.0",
-                "symfony/polyfill-php82": "1.38.1.0",
-                "symfony/polyfill-php83": "1.41.0.0",
-                "symfony/polyfill-php84": "1.38.1.0",
-                "symfony/polyfill-uuid": "1.37.0.0",
-                "symfony/postmark-mailer": "7.1.6.0",
-                "symfony/process": "6.4.45.0",
-                "symfony/psr-http-message-bridge": "7.4.8.0",
-                "symfony/routing": "6.4.45.0",
-                "symfony/service-contracts": "3.7.3.0",
-                "symfony/string": "7.4.15.0",
-                "symfony/translation": "6.4.44.0",
-                "symfony/translation-contracts": "3.7.1.0",
+                "symfony/http-foundation": "v7.4.23",
+                "symfony/http-kernel": "v7.4.23",
+                "symfony/mailer": "v7.4.22",
+                "symfony/mailgun-mailer": "v7.4.18",
+                "symfony/mime": "v7.4.22",
+                "symfony/options-resolver": "v7.4.22",
+                "symfony/polyfill-ctype": "v1.37.0",
+                "symfony/polyfill-intl-grapheme": "v1.43.3",
+                "symfony/polyfill-intl-icu": "v1.43.3",
+                "symfony/polyfill-intl-idn": "v1.43.0",
+                "symfony/polyfill-intl-normalizer": "v1.43.0",
+                "symfony/polyfill-mbstring": "v1.43.3",
+                "symfony/polyfill-php80": "v1.43.0",
+                "symfony/polyfill-php82": "v1.43.0",
+                "symfony/polyfill-php83": "v1.43.0",
+                "symfony/polyfill-php84": "v1.43.0",
+                "symfony/polyfill-php85": "v1.44.0",
+                "symfony/polyfill-time": "v1.42.0",
+                "symfony/polyfill-uuid": "v1.43.0",
+                "symfony/postmark-mailer": "v7.4.18",
+                "symfony/process": "v7.4.22",
+                "symfony/psr-http-message-bridge": "v7.4.21",
+                "symfony/routing": "v7.4.23",
+                "symfony/service-contracts": "v3.8.1",
+                "symfony/string": "v7.4.22",
+                "symfony/translation": "v7.4.23",
+                "symfony/translation-contracts": "v3.8.1",
                 "symfony/translation-implementation": "2.3|3.0",
-                "symfony/uid": "6.4.32.0",
-                "symfony/var-dumper": "6.4.45.0",
-                "symfony/var-exporter": "7.4.18.0",
-                "tijsverkoyen/css-to-inline-styles": "2.4.0.0",
-                "twilio/sdk": "6.44.4.0",
-                "vlucas/phpdotenv": "5.7.0.0",
-                "voku/portable-ascii": "2.1.1.0",
-                "web-token/jwt-library": "3.4.10.0",
-                "xantios/mimey": "2.2.0.0"
+                "symfony/uid": "v7.4.21",
+                "symfony/var-dumper": "v7.4.22",
+                "symfony/var-exporter": "v7.4.22",
+                "tijsverkoyen/css-to-inline-styles": "v2.4.0",
+                "twilio/sdk": "8.14.0",
+                "vlucas/phpdotenv": "v5.8.0",
+                "voku/portable-ascii": "2.1.1",
+                "web-token/jwt-library": "3.4.13",
+                "xantios/mimey": "v2.2.0"
             },
             "type": "metapackage",
             "description": "Generated from api/vendor by api/scripts/extensions-core-platform.php. Do not edit: it lists the packages core already installs.",
@@ -1014,32 +955,32 @@
         },
         {
             "name": "fleetbase/customer-portal-api",
-            "version": "0.0.16",
+            "version": "0.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/customer-portal.git",
-                "reference": "f153923f1f925665cc5c2433e296eabd5756582b"
+                "reference": "13d0e941197d003d4e894e93f41fdb41a0cd67c7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/customer-portal/zipball/f153923f1f925665cc5c2433e296eabd5756582b",
-                "reference": "f153923f1f925665cc5c2433e296eabd5756582b",
+                "url": "https://api.github.com/repos/fleetbase/customer-portal/zipball/13d0e941197d003d4e894e93f41fdb41a0cd67c7",
+                "reference": "13d0e941197d003d4e894e93f41fdb41a0cd67c7",
                 "shasum": ""
             },
             "require": {
-                "fleetbase/core-api": ">=1.6.65",
-                "fleetbase/fleetops-api": "*",
-                "fleetbase/ledger-api": "*",
-                "php": "^8.0",
+                "fleetbase/core-api": "^2.0",
+                "fleetbase/fleetops-api": "^0.7.0",
+                "fleetbase/ledger-api": "^0.1.0",
+                "php": "^8.2",
                 "php-http/guzzle7-adapter": "^1.0",
                 "psr/http-factory-implementation": "*"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.34.1",
-                "nunomaduro/collision": "^5.11.0|^6.4.0",
-                "pestphp/pest": "^1.22.6",
-                "phpstan/phpstan": "^1.10.38",
-                "symfony/var-dumper": "^5.4.29"
+                "nunomaduro/collision": "^8.0",
+                "pestphp/pest": "^3.0",
+                "phpstan/phpstan": "^2.0",
+                "symfony/var-dumper": "^7.0"
             },
             "type": "library",
             "extra": {
@@ -1077,50 +1018,49 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/customer-portal/issues",
-                "source": "https://github.com/fleetbase/customer-portal/tree/v0.0.16"
+                "source": "https://github.com/fleetbase/customer-portal/tree/v0.1.0"
             },
-            "time": "2026-10-14T07:30:17+00:00",
-            "published-time": "2026-10-14T07:30:35+00:00"
+            "time": "2026-11-17T07:37:38+00:00"
         },
         {
             "name": "fleetbase/fleetops-api",
-            "version": "0.6.74",
+            "version": "0.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/fleetops.git",
-                "reference": "33032e53ebee5e4a514970ee2379c12348c77c54"
+                "reference": "c844a12dd207c9e708737046d890ee628741ee03"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/33032e53ebee5e4a514970ee2379c12348c77c54",
-                "reference": "33032e53ebee5e4a514970ee2379c12348c77c54",
+                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/c844a12dd207c9e708737046d890ee628741ee03",
+                "reference": "c844a12dd207c9e708737046d890ee628741ee03",
                 "shasum": ""
             },
             "require": {
                 "barryvdh/laravel-dompdf": "^3.1",
                 "brick/geo": "0.7.2",
-                "cknow/laravel-money": "^7.1",
-                "fleetbase/core-api": "^1.6.69",
+                "cknow/laravel-money": "^8.0",
+                "fleetbase/core-api": "^2.0",
                 "geocoder-php/google-maps-places-provider": "^1.4",
                 "giggsey/libphonenumber-for-php": "^8.13",
                 "league/geotools": "^1.1.0",
-                "milon/barcode": "^10.0",
-                "php": "^8.0",
+                "milon/barcode": "^13.0",
+                "php": "^8.2",
                 "php-http/guzzle7-adapter": "^1.0",
                 "php-units-of-measure/php-units-of-measure": "^2.2",
                 "psr/http-factory-implementation": "*",
                 "rlanvin/php-rrule": "^2.6",
                 "spatie/icalendar-generator": "^2.8",
-                "toin0u/geocoder-laravel": "^4.4",
+                "toin0u/geocoder-laravel": "^13.0",
                 "webit/eval-math": "^1.0"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.34.1",
-                "illuminate/encryption": "^9.0|^10.0",
-                "nunomaduro/collision": "^7.0",
-                "pestphp/pest": "^2.33.2",
-                "phpstan/phpstan": "^1.10.38",
-                "symfony/var-dumper": "^5.4.29"
+                "illuminate/encryption": "^12.69",
+                "nunomaduro/collision": "^8.0",
+                "pestphp/pest": "^3.0",
+                "phpstan/phpstan": "^2.0",
+                "symfony/var-dumper": "^7.0"
             },
             "type": "library",
             "extra": {
@@ -1171,40 +1111,39 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/fleetops/issues",
-                "source": "https://github.com/fleetbase/fleetops/tree/v0.6.74"
+                "source": "https://github.com/fleetbase/fleetops/tree/v0.7.1"
             },
-            "time": "2026-10-19T06:21:11+00:00",
-            "published-time": "2026-10-19T06:21:29+00:00"
+            "time": "2026-11-18T04:36:11+00:00"
         },
         {
             "name": "fleetbase/ledger-api",
-            "version": "0.0.13",
+            "version": "0.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/ledger.git",
-                "reference": "e93eadc2d8b6a67a241b63ec30c21e6003c66663"
+                "reference": "70c75c68010dfe64d4d2f91bfe3ace4a6491743e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/ledger/zipball/e93eadc2d8b6a67a241b63ec30c21e6003c66663",
-                "reference": "e93eadc2d8b6a67a241b63ec30c21e6003c66663",
+                "url": "https://api.github.com/repos/fleetbase/ledger/zipball/70c75c68010dfe64d4d2f91bfe3ace4a6491743e",
+                "reference": "70c75c68010dfe64d4d2f91bfe3ace4a6491743e",
                 "shasum": ""
             },
             "require": {
-                "fleetbase/core-api": ">=1.6.65",
-                "fleetbase/fleetops-api": "*",
+                "fleetbase/core-api": "^2.0",
+                "fleetbase/fleetops-api": "^0.7.0",
                 "guzzlehttp/guzzle": "^7.0",
-                "php": "^8.0",
+                "php": "^8.2",
                 "php-http/guzzle7-adapter": "^1.0",
                 "psr/http-factory-implementation": "*",
                 "stripe/stripe-php": "^17.0"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.34.1",
-                "nunomaduro/collision": "^5.11.0|^6.4.0",
-                "pestphp/pest": "^1.22.6",
-                "phpstan/phpstan": "^1.10.38",
-                "symfony/var-dumper": "^5.4.29"
+                "nunomaduro/collision": "^8.0",
+                "pestphp/pest": "^3.0",
+                "phpstan/phpstan": "^2.0",
+                "symfony/var-dumper": "^7.0"
             },
             "type": "library",
             "extra": {
@@ -1250,46 +1189,45 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/ledger/issues",
-                "source": "https://github.com/fleetbase/ledger/tree/v0.0.13"
+                "source": "https://github.com/fleetbase/ledger/tree/v0.1.0"
             },
-            "time": "2026-10-14T07:30:39+00:00",
-            "published-time": "2026-10-14T07:30:57+00:00"
+            "time": "2026-11-17T06:04:41+00:00"
         },
         {
             "name": "fleetbase/storefront-api",
-            "version": "0.4.29",
+            "version": "0.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/storefront.git",
-                "reference": "69b3c20f769d12ad136739c5608b49ba3e845c24"
+                "reference": "64a1df2443727246f7750855f7e84dac2fe6a6ea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/storefront/zipball/69b3c20f769d12ad136739c5608b49ba3e845c24",
-                "reference": "69b3c20f769d12ad136739c5608b49ba3e845c24",
+                "url": "https://api.github.com/repos/fleetbase/storefront/zipball/64a1df2443727246f7750855f7e84dac2fe6a6ea",
+                "reference": "64a1df2443727246f7750855f7e84dac2fe6a6ea",
                 "shasum": ""
             },
             "require": {
-                "fleetbase/core-api": "^1.6.71",
-                "fleetbase/fleetops-api": "*",
+                "fleetbase/core-api": "^2.0",
+                "fleetbase/fleetops-api": "^0.7.0",
                 "geocoder-php/google-maps-places-provider": "^1.4",
-                "laravel-notification-channels/apn": "^5.0",
-                "laravel-notification-channels/fcm": "^4.1",
-                "laravel-notification-channels/twilio": "^3.3",
-                "milon/barcode": "^10.0",
-                "php": "^8.0",
+                "laravel-notification-channels/apn": "^5.5",
+                "laravel-notification-channels/fcm": "^5.1",
+                "laravel-notification-channels/twilio": "^4.1",
+                "milon/barcode": "^13.0",
+                "php": "^8.2",
                 "php-http/guzzle7-adapter": "^1.0",
                 "psr/http-factory-implementation": "*",
                 "stripe/stripe-php": "^17.0",
-                "toin0u/geocoder-laravel": "^4.4"
+                "toin0u/geocoder-laravel": "^13.0"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.34.1",
-                "illuminate/validation": "^10.0",
-                "nunomaduro/collision": "^7.0",
-                "pestphp/pest": "^2.33.2",
-                "phpstan/phpstan": "^1.10.38",
-                "symfony/var-dumper": "^5.4.29"
+                "illuminate/validation": "^12.69",
+                "nunomaduro/collision": "^8.0",
+                "pestphp/pest": "^3.0",
+                "phpstan/phpstan": "^2.0",
+                "symfony/var-dumper": "^7.0"
             },
             "type": "library",
             "extra": {
@@ -1335,37 +1273,37 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/storefront/issues",
-                "source": "https://github.com/fleetbase/storefront/tree/v0.4.29"
+                "source": "https://github.com/fleetbase/storefront/tree/v0.5.0"
             },
-            "time": "2026-10-22T05:12:31+00:00",
-            "published-time": "2026-10-22T05:12:51+00:00"
+            "time": "2026-11-17T07:37:45+00:00"
         },
         {
             "name": "fleetbase/valhalla-api",
-            "version": "0.0.4",
+            "version": "0.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/valhalla.git",
-                "reference": "f25160fd0ec6d885ff5667922d9834951ca6e255"
+                "reference": "59cccd45c8ed7bc9e0049911d7a4c422362d618c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/valhalla/zipball/f25160fd0ec6d885ff5667922d9834951ca6e255",
-                "reference": "f25160fd0ec6d885ff5667922d9834951ca6e255",
+                "url": "https://api.github.com/repos/fleetbase/valhalla/zipball/59cccd45c8ed7bc9e0049911d7a4c422362d618c",
+                "reference": "59cccd45c8ed7bc9e0049911d7a4c422362d618c",
                 "shasum": ""
             },
             "require": {
-                "fleetbase/core-api": "*",
-                "php": "^8.0",
+                "fleetbase/core-api": "^2.0",
+                "php": "^8.2",
                 "php-http/guzzle7-adapter": "^1.0",
                 "psr/http-factory-implementation": "*"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.34.1",
-                "nunomaduro/collision": "^5.11.0|^6.4.0",
-                "pestphp/pest": "^1.22.6",
-                "phpstan/phpstan": "^1.10.38",
-                "symfony/var-dumper": "^5.4.29"
+                "laravel/framework": "^12.69",
+                "nunomaduro/collision": "^8.0",
+                "pestphp/pest": "^3.0",
+                "phpstan/phpstan": "^2.0",
+                "symfony/var-dumper": "^7.0"
             },
             "type": "library",
             "extra": {
@@ -1401,37 +1339,37 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/valhalla/issues",
-                "source": "https://github.com/fleetbase/valhalla/tree/v0.0.4"
+                "source": "https://github.com/fleetbase/valhalla/tree/v0.1.0"
             },
-            "time": "2026-05-05T10:52:46+00:00",
-            "published-time": "2026-05-05T10:53:19+00:00"
+            "time": "2026-11-17T05:20:21+00:00"
         },
         {
             "name": "fleetbase/vroom-api",
-            "version": "0.0.4",
+            "version": "0.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/vroom.git",
-                "reference": "da154b395354155e5daa0a9f95adbbc042c72b85"
+                "reference": "1aa688c892b3e86a8ec414630cd100d8e1034588"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/vroom/zipball/da154b395354155e5daa0a9f95adbbc042c72b85",
-                "reference": "da154b395354155e5daa0a9f95adbbc042c72b85",
+                "url": "https://api.github.com/repos/fleetbase/vroom/zipball/1aa688c892b3e86a8ec414630cd100d8e1034588",
+                "reference": "1aa688c892b3e86a8ec414630cd100d8e1034588",
                 "shasum": ""
             },
             "require": {
-                "fleetbase/core-api": "*",
-                "php": "^8.0",
+                "fleetbase/core-api": "^2.0",
+                "php": "^8.2",
                 "php-http/guzzle7-adapter": "^1.0",
                 "psr/http-factory-implementation": "*"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.34.1",
-                "nunomaduro/collision": "^5.11.0|^6.4.0",
-                "pestphp/pest": "^1.22.6",
-                "phpstan/phpstan": "^1.10.38",
-                "symfony/var-dumper": "^5.4.29"
+                "laravel/framework": "^12.69",
+                "nunomaduro/collision": "^8.0",
+                "pestphp/pest": "^3.0",
+                "phpstan/phpstan": "^2.0",
+                "symfony/var-dumper": "^7.0"
             },
             "type": "library",
             "extra": {
@@ -1467,10 +1405,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/vroom/issues",
-                "source": "https://github.com/fleetbase/vroom/tree/v0.0.4"
+                "source": "https://github.com/fleetbase/vroom/tree/v0.1.0"
             },
-            "time": "2026-05-05T10:45:24+00:00",
-            "published-time": "2026-05-05T10:46:17+00:00"
+            "time": "2026-11-17T05:29:28+00:00"
         },
         {
             "name": "geocoder-php/chain-provider",
@@ -1529,8 +1466,7 @@
             "support": {
                 "source": "https://github.com/geocoder-php/chain-provider/tree/4.6.0"
             },
-            "time": "2025-04-15T13:24:32+00:00",
-            "published-time": "2025-04-15T13:27:23+00:00"
+            "time": "2025-04-15T13:24:32+00:00"
         },
         {
             "name": "geocoder-php/common-http",
@@ -1592,8 +1528,7 @@
             "support": {
                 "source": "https://github.com/geocoder-php/php-common-http/tree/4.7.0"
             },
-            "time": "2025-04-15T12:38:11+00:00",
-            "published-time": "2025-04-15T12:43:55+00:00"
+            "time": "2025-04-15T12:38:11+00:00"
         },
         {
             "name": "geocoder-php/geo-plugin-provider",
@@ -1652,8 +1587,7 @@
             "support": {
                 "source": "https://github.com/geocoder-php/geo-plugin-provider/tree/4.4.0"
             },
-            "time": "2025-04-15T13:24:32+00:00",
-            "published-time": "2025-04-16T12:33:44+00:00"
+            "time": "2025-04-15T13:24:32+00:00"
         },
         {
             "name": "geocoder-php/google-maps-places-provider",
@@ -1711,8 +1645,7 @@
             "support": {
                 "source": "https://github.com/geocoder-php/google-maps-places-provider/tree/1.5.0"
             },
-            "time": "2025-04-15T13:24:32+00:00",
-            "published-time": "2025-04-16T08:49:39+00:00"
+            "time": "2025-04-15T13:24:32+00:00"
         },
         {
             "name": "geocoder-php/google-maps-provider",
@@ -1770,8 +1703,7 @@
             "support": {
                 "source": "https://github.com/geocoder-php/google-maps-provider/tree/4.8.0"
             },
-            "time": "2025-04-15T13:24:32+00:00",
-            "published-time": "2025-04-15T13:26:11+00:00"
+            "time": "2025-04-15T13:24:32+00:00"
         },
         {
             "name": "http-interop/http-factory-guzzle",
@@ -1829,8 +1761,7 @@
                 "issues": "https://github.com/http-interop/http-factory-guzzle/issues",
                 "source": "https://github.com/http-interop/http-factory-guzzle/tree/1.2.1"
             },
-            "time": "2025-12-15T11:28:16+00:00",
-            "published-time": "2025-12-15T11:29:39+00:00"
+            "time": "2025-12-15T11:28:16+00:00"
         },
         {
             "name": "igorw/get-in",
@@ -1879,8 +1810,7 @@
                 "issues": "https://github.com/igorw/get-in/issues",
                 "source": "https://github.com/igorw/get-in/tree/v1.0.3"
             },
-            "time": "2014-12-15T23:03:51+00:00",
-            "published-time": "2014-12-15T23:06:38+00:00"
+            "time": "2014-12-15T23:03:51+00:00"
         },
         {
             "name": "league/geotools",
@@ -1958,25 +1888,25 @@
                 "issues": "https://github.com/thephpleague/geotools/issues",
                 "source": "https://github.com/thephpleague/geotools"
             },
-            "time": "2026-03-18T22:23:20+00:00",
-            "published-time": "2026-03-22T22:10:36+00:00"
+            "time": "2026-03-18T22:23:20+00:00"
         },
         {
             "name": "masterminds/html5",
-            "version": "2.11.0",
+            "version": "2.12.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Masterminds/html5-php.git",
-                "reference": "a1e7a2f88ee13635d86fc61cfbdf2306a76ddfc7"
+                "reference": "15e16663bd6f512352209d0e3a789c0a691c0d9b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Masterminds/html5-php/zipball/a1e7a2f88ee13635d86fc61cfbdf2306a76ddfc7",
-                "reference": "a1e7a2f88ee13635d86fc61cfbdf2306a76ddfc7",
+                "url": "https://api.github.com/repos/Masterminds/html5-php/zipball/15e16663bd6f512352209d0e3a789c0a691c0d9b",
+                "reference": "15e16663bd6f512352209d0e3a789c0a691c0d9b",
                 "shasum": ""
             },
             "require": {
                 "ext-dom": "*",
+                "ext-mbstring": "*",
                 "php": ">=7.4"
             },
             "require-dev": {
@@ -2024,76 +1954,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Masterminds/html5-php/issues",
-                "source": "https://github.com/Masterminds/html5-php/tree/2.11.0"
+                "source": "https://github.com/Masterminds/html5-php/tree/2.12.0"
             },
-            "time": "2026-08-18T06:18:41+00:00",
-            "published-time": "2026-08-18T06:20:37+00:00"
-        },
-        {
-            "name": "php-http/curl-client",
-            "version": "2.4.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-http/curl-client.git",
-                "reference": "f59d6992065f44be8b8fb484dd678a919c27dbf2"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/php-http/curl-client/zipball/f59d6992065f44be8b8fb484dd678a919c27dbf2",
-                "reference": "f59d6992065f44be8b8fb484dd678a919c27dbf2",
-                "shasum": ""
-            },
-            "require": {
-                "ext-curl": "*",
-                "php": "^8.1",
-                "php-http/discovery": "^1.6",
-                "php-http/httplug": "^2.0",
-                "php-http/message": "^1.2",
-                "psr/http-client": "^1.0",
-                "psr/http-factory-implementation": "^1.0",
-                "symfony/options-resolver": "^3.4 || ^4.0 || ^5.0 || ^6.0 || ^7.0 || ^8.0"
-            },
-            "provide": {
-                "php-http/async-client-implementation": "1.0",
-                "php-http/client-implementation": "1.0",
-                "psr/http-client-implementation": "1.0"
-            },
-            "require-dev": {
-                "guzzlehttp/psr7": "^2.0",
-                "laminas/laminas-diactoros": "^2.0 || ^3.0",
-                "php-http/client-integration-tests": "^4.0",
-                "php-http/message-factory": "^1.1",
-                "phpunit/phpunit": "^9.6.17 || ^10.0 || ^11.0 || ^12.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Http\\Client\\Curl\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Михаил Красильников",
-                    "email": "m.krasilnikov@yandex.ru"
-                }
-            ],
-            "description": "PSR-18 and HTTPlug Async client with cURL",
-            "homepage": "http://php-http.org",
-            "keywords": [
-                "curl",
-                "http",
-                "psr-18"
-            ],
-            "support": {
-                "issues": "https://github.com/php-http/curl-client/issues",
-                "source": "https://github.com/php-http/curl-client/tree/2.4.0"
-            },
-            "time": "2025-12-09T12:02:56+00:00",
-            "published-time": "2025-12-09T12:03:28+00:00"
+            "time": "2026-10-25T08:57:58+00:00"
         },
         {
             "name": "php-http/discovery",
@@ -2172,78 +2035,7 @@
                 "issues": "https://github.com/php-http/discovery/issues",
                 "source": "https://github.com/php-http/discovery/tree/1.20.0"
             },
-            "time": "2024-10-02T11:20:13+00:00",
-            "published-time": "2024-10-02T11:21:00+00:00"
-        },
-        {
-            "name": "php-http/message",
-            "version": "1.16.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-http/message.git",
-                "reference": "06dd5e8562f84e641bf929bfe699ee0f5ce8080a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/php-http/message/zipball/06dd5e8562f84e641bf929bfe699ee0f5ce8080a",
-                "reference": "06dd5e8562f84e641bf929bfe699ee0f5ce8080a",
-                "shasum": ""
-            },
-            "require": {
-                "clue/stream-filter": "^1.5",
-                "php": "^7.2 || ^8.0",
-                "psr/http-message": "^1.1 || ^2.0"
-            },
-            "provide": {
-                "php-http/message-factory-implementation": "1.0"
-            },
-            "require-dev": {
-                "ergebnis/composer-normalize": "^2.6",
-                "ext-zlib": "*",
-                "guzzlehttp/psr7": "^1.0 || ^2.0",
-                "laminas/laminas-diactoros": "^2.0 || ^3.0",
-                "php-http/message-factory": "^1.0.2",
-                "phpspec/phpspec": "^5.1 || ^6.3 || ^7.1",
-                "slim/slim": "^3.0"
-            },
-            "suggest": {
-                "ext-zlib": "Used with compressor/decompressor streams",
-                "guzzlehttp/psr7": "Used with Guzzle PSR-7 Factories",
-                "laminas/laminas-diactoros": "Used with Diactoros Factories",
-                "slim/slim": "Used with Slim Framework PSR-7 implementation"
-            },
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "src/filters.php"
-                ],
-                "psr-4": {
-                    "Http\\Message\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Márk Sági-Kazár",
-                    "email": "mark.sagikazar@gmail.com"
-                }
-            ],
-            "description": "HTTP Message related tools",
-            "homepage": "http://php-http.org",
-            "keywords": [
-                "http",
-                "message",
-                "psr-7"
-            ],
-            "support": {
-                "issues": "https://github.com/php-http/message/issues",
-                "source": "https://github.com/php-http/message/tree/1.16.2"
-            },
-            "time": "2024-10-02T11:34:13+00:00",
-            "published-time": "2024-10-02T11:35:49+00:00"
+            "time": "2024-10-02T11:20:13+00:00"
         },
         {
             "name": "php-units-of-measure/php-units-of-measure",
@@ -2296,8 +2088,7 @@
                 "issues": "https://github.com/PhpUnitsOfMeasure/php-units-of-measure/issues",
                 "source": "https://github.com/PhpUnitsOfMeasure/php-units-of-measure"
             },
-            "time": "2025-04-30T23:02:43+00:00",
-            "published-time": "2025-04-30T23:05:13+00:00"
+            "time": "2025-04-30T23:02:43+00:00"
         },
         {
             "name": "react/event-loop",
@@ -2369,8 +2160,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2025-11-17T20:46:25+00:00",
-            "published-time": "2025-11-17T20:47:32+00:00"
+            "time": "2025-11-17T20:46:25+00:00"
         },
         {
             "name": "react/promise",
@@ -2443,40 +2233,37 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2025-08-19T18:57:03+00:00",
-            "published-time": "2025-08-19T19:13:36+00:00"
+            "time": "2025-08-19T18:57:03+00:00"
         },
         {
             "name": "sabberworm/php-css-parser",
-            "version": "v9.4.0",
+            "version": "v9.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/MyIntervals/PHP-CSS-Parser.git",
-                "reference": "fd3bf9fb173e0df649bc4e3e0d088a1b2417c08f"
+                "reference": "f284e63b6e891e0c28631e54ba06c3ed102a9ef3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MyIntervals/PHP-CSS-Parser/zipball/fd3bf9fb173e0df649bc4e3e0d088a1b2417c08f",
-                "reference": "fd3bf9fb173e0df649bc4e3e0d088a1b2417c08f",
+                "url": "https://api.github.com/repos/MyIntervals/PHP-CSS-Parser/zipball/f284e63b6e891e0c28631e54ba06c3ed102a9ef3",
+                "reference": "f284e63b6e891e0c28631e54ba06c3ed102a9ef3",
                 "shasum": ""
             },
             "require": {
                 "ext-iconv": "*",
-                "php": "^7.2.0 || ~8.0.0 || ~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
-                "thecodingmachine/safe": "^1.3 || ^2.5 || ^3.4"
+                "php": "^7.2.0 || ~8.0.0 || ~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0 || ~8.6.0"
             },
             "require-dev": {
                 "php-parallel-lint/php-parallel-lint": "1.4.0",
                 "phpstan/extension-installer": "1.4.3",
-                "phpstan/phpstan": "1.12.33 || 2.2.2",
-                "phpstan/phpstan-phpunit": "1.4.2 || 2.0.16",
-                "phpstan/phpstan-strict-rules": "1.6.2 || 2.0.11",
-                "phpunit/phpunit": "8.5.52",
+                "phpstan/phpstan": "1.12.33 || 2.2.9",
+                "phpstan/phpstan-phpunit": "1.4.2 || 2.0.18",
+                "phpstan/phpstan-strict-rules": "1.6.2 || 2.0.12",
+                "phpunit/phpunit": "8.5.54",
                 "rawr/phpunit-data-provider": "3.3.1",
-                "rector/rector": "1.2.10 || 2.4.6",
-                "rector/type-perfect": "1.0.0 || 2.1.3",
-                "squizlabs/php_codesniffer": "4.0.1",
-                "thecodingmachine/phpstan-safe-rule": "1.2.0 || 1.4.3"
+                "rector/rector": "1.2.10 || 2.6.2",
+                "rector/type-perfect": "1.0.0 || 2.1.4",
+                "squizlabs/php_codesniffer": "4.0.4"
             },
             "suggest": {
                 "ext-mbstring": "for parsing UTF-8 CSS"
@@ -2484,7 +2271,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "9.5.x-dev"
+                    "dev-main": "9.6.x-dev"
                 }
             },
             "autoload": {
@@ -2522,10 +2309,9 @@
             ],
             "support": {
                 "issues": "https://github.com/MyIntervals/PHP-CSS-Parser/issues",
-                "source": "https://github.com/MyIntervals/PHP-CSS-Parser/tree/v9.4.0"
+                "source": "https://github.com/MyIntervals/PHP-CSS-Parser/tree/v9.5.0"
             },
-            "time": "2026-06-18T15:10:53+00:00",
-            "published-time": "2026-06-18T15:26:13+00:00"
+            "time": "2026-09-20T15:02:00+00:00"
         },
         {
             "name": "spatie/enum",
@@ -2601,8 +2387,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-04-22T08:51:55+00:00",
-            "published-time": "2022-04-22T08:52:38+00:00"
+            "time": "2022-04-22T08:51:55+00:00"
         },
         {
             "name": "spatie/icalendar-generator",
@@ -2661,21 +2446,20 @@
                 "issues": "https://github.com/spatie/icalendar-generator/issues",
                 "source": "https://github.com/spatie/icalendar-generator/tree/2.9.2"
             },
-            "time": "2025-03-21T09:01:17+00:00",
-            "published-time": "2025-03-21T09:01:21+00:00"
+            "time": "2025-03-21T09:01:17+00:00"
         },
         {
             "name": "symfony/property-access",
-            "version": "v7.4.16",
+            "version": "v7.4.23",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/property-access.git",
-                "reference": "c3dce76a6697c6428f7d80d5cd1cf0aa5d9679f3"
+                "reference": "4dce45112d7a31d530d2e0e69143fc88eaa1521f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/property-access/zipball/c3dce76a6697c6428f7d80d5cd1cf0aa5d9679f3",
-                "reference": "c3dce76a6697c6428f7d80d5cd1cf0aa5d9679f3",
+                "url": "https://api.github.com/repos/symfony/property-access/zipball/4dce45112d7a31d530d2e0e69143fc88eaa1521f",
+                "reference": "4dce45112d7a31d530d2e0e69143fc88eaa1521f",
                 "shasum": ""
             },
             "require": {
@@ -2723,7 +2507,7 @@
                 "reflection"
             ],
             "support": {
-                "source": "https://github.com/symfony/property-access/tree/v7.4.16"
+                "source": "https://github.com/symfony/property-access/tree/v7.4.23"
             },
             "funding": [
                 {
@@ -2743,21 +2527,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-07-30T12:37:26+00:00",
-            "published-time": "2026-08-07T18:03:12+00:00"
+            "time": "2026-11-01T19:17:22+00:00"
         },
         {
             "name": "symfony/property-info",
-            "version": "v7.4.18",
+            "version": "v7.4.23",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/property-info.git",
-                "reference": "52420d499b03ec20c0d38f0dc2f940bc9c43dc8e"
+                "reference": "1eeaa666bcd1864b883b98cad9e5188064ddac26"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/property-info/zipball/52420d499b03ec20c0d38f0dc2f940bc9c43dc8e",
-                "reference": "52420d499b03ec20c0d38f0dc2f940bc9c43dc8e",
+                "url": "https://api.github.com/repos/symfony/property-info/zipball/1eeaa666bcd1864b883b98cad9e5188064ddac26",
+                "reference": "1eeaa666bcd1864b883b98cad9e5188064ddac26",
                 "shasum": ""
             },
             "require": {
@@ -2814,7 +2597,7 @@
                 "validator"
             ],
             "support": {
-                "source": "https://github.com/symfony/property-info/tree/v7.4.18"
+                "source": "https://github.com/symfony/property-info/tree/v7.4.23"
             },
             "funding": [
                 {
@@ -2834,8 +2617,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-08-25T14:18:37+00:00",
-            "published-time": "2026-08-30T21:39:14+00:00"
+            "time": "2026-11-02T10:56:49+00:00"
         },
         {
             "name": "symfony/serializer",
@@ -2939,21 +2721,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-11-04T08:27:22+00:00",
-            "published-time": "2026-11-04T11:28:28+00:00"
+            "time": "2026-11-04T08:27:22+00:00"
         },
         {
             "name": "symfony/type-info",
-            "version": "v7.4.17",
+            "version": "v7.4.23",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/type-info.git",
-                "reference": "62d0ad6995630a4f7ea8fd270aadb3e2545c8e31"
+                "reference": "eca5fdb294539268ad3245b2214f32f24b337e09"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/type-info/zipball/62d0ad6995630a4f7ea8fd270aadb3e2545c8e31",
-                "reference": "62d0ad6995630a4f7ea8fd270aadb3e2545c8e31",
+                "url": "https://api.github.com/repos/symfony/type-info/zipball/eca5fdb294539268ad3245b2214f32f24b337e09",
+                "reference": "eca5fdb294539268ad3245b2214f32f24b337e09",
                 "shasum": ""
             },
             "require": {
@@ -3003,7 +2784,7 @@
                 "type"
             ],
             "support": {
-                "source": "https://github.com/symfony/type-info/tree/v7.4.17"
+                "source": "https://github.com/symfony/type-info/tree/v7.4.23"
             },
             "funding": [
                 {
@@ -3023,191 +2804,47 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-08-21T15:52:48+00:00",
-            "published-time": "2026-08-22T13:43:23+00:00"
-        },
-        {
-            "name": "thecodingmachine/safe",
-            "version": "v3.4.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/thecodingmachine/safe.git",
-                "reference": "705683a25bacf0d4860c7dea4d7947bfd09eea19"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/thecodingmachine/safe/zipball/705683a25bacf0d4860c7dea4d7947bfd09eea19",
-                "reference": "705683a25bacf0d4860c7dea4d7947bfd09eea19",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^8.1"
-            },
-            "require-dev": {
-                "php-parallel-lint/php-parallel-lint": "^1.4",
-                "phpstan/phpstan": "^2",
-                "phpunit/phpunit": "^10",
-                "squizlabs/php_codesniffer": "^3.2"
-            },
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "lib/special_cases.php",
-                    "generated/apache.php",
-                    "generated/apcu.php",
-                    "generated/array.php",
-                    "generated/bzip2.php",
-                    "generated/calendar.php",
-                    "generated/classobj.php",
-                    "generated/com.php",
-                    "generated/cubrid.php",
-                    "generated/curl.php",
-                    "generated/datetime.php",
-                    "generated/dir.php",
-                    "generated/eio.php",
-                    "generated/errorfunc.php",
-                    "generated/exec.php",
-                    "generated/fileinfo.php",
-                    "generated/filesystem.php",
-                    "generated/filter.php",
-                    "generated/fpm.php",
-                    "generated/ftp.php",
-                    "generated/funchand.php",
-                    "generated/gettext.php",
-                    "generated/gmp.php",
-                    "generated/gnupg.php",
-                    "generated/hash.php",
-                    "generated/ibase.php",
-                    "generated/ibmDb2.php",
-                    "generated/iconv.php",
-                    "generated/image.php",
-                    "generated/imap.php",
-                    "generated/info.php",
-                    "generated/inotify.php",
-                    "generated/json.php",
-                    "generated/ldap.php",
-                    "generated/libxml.php",
-                    "generated/lzf.php",
-                    "generated/mailparse.php",
-                    "generated/mbstring.php",
-                    "generated/misc.php",
-                    "generated/mysql.php",
-                    "generated/mysqli.php",
-                    "generated/network.php",
-                    "generated/oci8.php",
-                    "generated/opcache.php",
-                    "generated/openssl.php",
-                    "generated/outcontrol.php",
-                    "generated/pcntl.php",
-                    "generated/pcre.php",
-                    "generated/pgsql.php",
-                    "generated/posix.php",
-                    "generated/ps.php",
-                    "generated/pspell.php",
-                    "generated/readline.php",
-                    "generated/rnp.php",
-                    "generated/rpminfo.php",
-                    "generated/rrd.php",
-                    "generated/sem.php",
-                    "generated/session.php",
-                    "generated/shmop.php",
-                    "generated/sockets.php",
-                    "generated/sodium.php",
-                    "generated/solr.php",
-                    "generated/spl.php",
-                    "generated/sqlsrv.php",
-                    "generated/ssdeep.php",
-                    "generated/ssh2.php",
-                    "generated/stream.php",
-                    "generated/strings.php",
-                    "generated/swoole.php",
-                    "generated/uodbc.php",
-                    "generated/uopz.php",
-                    "generated/url.php",
-                    "generated/var.php",
-                    "generated/xdiff.php",
-                    "generated/xml.php",
-                    "generated/xmlrpc.php",
-                    "generated/yaml.php",
-                    "generated/yaz.php",
-                    "generated/zip.php",
-                    "generated/zlib.php"
-                ],
-                "classmap": [
-                    "lib/DateTime.php",
-                    "lib/DateTimeImmutable.php",
-                    "lib/Exceptions/",
-                    "generated/Exceptions/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "PHP core functions that throw exceptions instead of returning FALSE on error",
-            "support": {
-                "issues": "https://github.com/thecodingmachine/safe/issues",
-                "source": "https://github.com/thecodingmachine/safe/tree/v3.4.0"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/OskarStark",
-                    "type": "github"
-                },
-                {
-                    "url": "https://github.com/shish",
-                    "type": "github"
-                },
-                {
-                    "url": "https://github.com/silasjoisten",
-                    "type": "github"
-                },
-                {
-                    "url": "https://github.com/staabm",
-                    "type": "github"
-                }
-            ],
-            "time": "2026-02-04T18:08:13+00:00",
-            "published-time": "2026-02-15T15:48:29+00:00"
+            "time": "2026-11-02T09:31:16+00:00"
         },
         {
             "name": "toin0u/geocoder-laravel",
-            "version": "4.7.0",
+            "version": "13.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/geocoder-php/GeocoderLaravel.git",
-                "reference": "f354165d10768b04da0e46b76dd99fd44dba89d2"
+                "reference": "7f80d3761b25ce836907d8df6440d014aa9f6042"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/geocoder-php/GeocoderLaravel/zipball/f354165d10768b04da0e46b76dd99fd44dba89d2",
-                "reference": "f354165d10768b04da0e46b76dd99fd44dba89d2",
+                "url": "https://api.github.com/repos/geocoder-php/GeocoderLaravel/zipball/7f80d3761b25ce836907d8df6440d014aa9f6042",
+                "reference": "7f80d3761b25ce836907d8df6440d014aa9f6042",
                 "shasum": ""
             },
             "require": {
-                "geocoder-php/chain-provider": "^4.0",
-                "geocoder-php/geo-plugin-provider": "^4.0",
-                "geocoder-php/google-maps-provider": "^4.0",
-                "guzzlehttp/psr7": "*",
+                "geocoder-php/chain-provider": "^4.0|^5.0",
+                "geocoder-php/geo-plugin-provider": "^4.0|^5.0",
+                "geocoder-php/google-maps-provider": "^4.0|^5.0",
+                "guzzlehttp/psr7": "^2.12.1",
                 "http-interop/http-factory-guzzle": "^1.0",
-                "illuminate/cache": "^5.0|^6.0|^7.0|^8.0|^9.0|^10.0|^11.0",
-                "illuminate/support": "^5.0|^6.0|^7.0|^8.0|^9.0|^10.0|^11.0",
-                "php": "^8.0",
-                "php-http/curl-client": "*",
-                "willdurand/geocoder": "^4.0"
+                "illuminate/cache": "^11.0|^12.0|^13.0",
+                "illuminate/http": "^11.0|^12.0|^13.0",
+                "illuminate/support": "^11.0|^12.0|^13.0",
+                "php": "^8.2|^8.3|^8.4|^8.5",
+                "willdurand/geocoder": "^4.0|^5.0"
             },
             "require-dev": {
-                "doctrine/dbal": "*",
                 "geocoder-php/bing-maps-provider": "^4.0",
                 "geocoder-php/geoip2-provider": "^4.0",
                 "geocoder-php/maxmind-binary-provider": "^4.0",
-                "laravel/legacy-factories": "^1.0",
-                "orchestra/testbench": "^7.0|^8.0|^9.0",
-                "orchestra/testbench-browser-kit": "^7.0|^8.5",
-                "orchestra/testbench-dusk": "^7.0|^8.22",
-                "php-coveralls/php-coveralls": "*",
-                "phpunit/phpunit": "8.5|^9.0|^10.5",
-                "sebastian/phpcpd": "^5.0|^6.0"
+                "geocoder-php/nominatim-provider": "^5.0",
+                "larastan/larastan": "^3.5",
+                "laravel/boost": "^2.4",
+                "laravel/pint": "^1.24",
+                "mikebronner/development-settings": "^0.1",
+                "orchestra/testbench": "^9.0|^10.0|^11.0",
+                "pestphp/pest": "^3.0|^4.0",
+                "pestphp/pest-plugin-laravel": "^3.0|^4.0",
+                "slevomat/coding-standard": "^8.24"
             },
             "type": "library",
             "extra": {
@@ -3249,10 +2886,9 @@
             ],
             "support": {
                 "issues": "https://github.com/geocoder-php/GeocoderLaravel/issues",
-                "source": "https://github.com/geocoder-php/GeocoderLaravel/tree/4.7.0"
+                "source": "https://github.com/geocoder-php/GeocoderLaravel/tree/13.2.2"
             },
-            "time": "2024-03-14T22:56:46+00:00",
-            "published-time": "2024-03-14T22:57:30+00:00"
+            "time": "2026-06-23T19:36:17+00:00"
         },
         {
             "name": "webit/eval-math",
@@ -3294,30 +2930,29 @@
                 "issues": "https://github.com/dbojdo/eval-math/issues",
                 "source": "https://github.com/dbojdo/eval-math/tree/1.0.2"
             },
-            "time": "2025-03-13T13:56:02+00:00",
-            "published-time": "2025-03-25T09:41:48+00:00"
+            "time": "2025-03-13T13:56:02+00:00"
         },
         {
             "name": "willdurand/geocoder",
-            "version": "4.6.0",
+            "version": "5.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/geocoder-php/php-common.git",
-                "reference": "be3d9ed0fddf8c698ee079d8a07ae9520b4a49a1"
+                "reference": "a749e00819d2929bd0ec40fb79853956332970ba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/geocoder-php/php-common/zipball/be3d9ed0fddf8c698ee079d8a07ae9520b4a49a1",
-                "reference": "be3d9ed0fddf8c698ee079d8a07ae9520b4a49a1",
+                "url": "https://api.github.com/repos/geocoder-php/php-common/zipball/a749e00819d2929bd0ec40fb79853956332970ba",
+                "reference": "a749e00819d2929bd0ec40fb79853956332970ba",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.4 || ^8.0"
+                "php": ">=8.2"
             },
             "require-dev": {
                 "nyholm/nsa": "^1.1",
                 "phpunit/phpunit": "^9.5",
-                "symfony/stopwatch": "~2.5"
+                "symfony/stopwatch": "~2.5 || ~5.0"
             },
             "suggest": {
                 "symfony/stopwatch": "If you want to use the TimedGeocoder"
@@ -3325,7 +2960,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "4.1-dev"
+                    "dev-master": "5.1-dev"
                 }
             },
             "autoload": {
@@ -3355,10 +2990,9 @@
                 "geoip"
             ],
             "support": {
-                "source": "https://github.com/geocoder-php/php-common/tree/4.6.0"
+                "source": "https://github.com/geocoder-php/php-common/tree/5.0.0"
             },
-            "time": "2022-07-30T11:09:43+00:00",
-            "published-time": "2022-07-30T11:10:18+00:00"
+            "time": "2025-01-01T15:52:42+00:00"
         }
     ],
     "packages-dev": [],
@@ -3369,5 +3003,5 @@
     "prefer-lowest": false,
     "platform": {},
     "platform-dev": {},
-    "plugin-api-version": "2.11.0"
+    "plugin-api-version": "2.9.0"
 }

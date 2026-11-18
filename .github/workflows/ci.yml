@@ -14,7 +14,7 @@ on:
     tags:
       - 'v*'
   pull_request:
-    branches: [ main, 'dev-v*', 'release/v*' ]
+    branches: [ main, 'dev-v*', 'release/v*', feature/extensions-registry-v2 ]
   workflow_dispatch:
 
 jobs:

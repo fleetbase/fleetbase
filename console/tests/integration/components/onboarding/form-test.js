@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from '@fleetbase/console/tests/helpers';
-import { render, fillIn, click } from '@ember/test-helpers';
+import { render, fillIn, click, settled } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import Service from '@ember/service';
 import OnboardingFormComponent from '@fleetbase/console/components/onboarding/form';
@@ -64,7 +64,14 @@ module('Integration | Component | onboarding/form | onboard', function (hooks) {
         this.orchestratorCalls = [];
         const context = this;
 
+        this.hostedRoutingOffer = false;
+
         class FetchStub extends Service {
+            async get(path) {
+                context.fetched = path;
+
+                return { should_onboard: true, hosted_routing: context.hostedRoutingOffer };
+            }
             async post(path, payload) {
                 context.posted.push({ path, payload });
 
@@ -427,5 +434,35 @@ module('Integration | Component | onboarding/form | onboard', function (hooks) {
         assert.strictEqual(captured.instance.email, null);
         assert.false(captured.instance.emailVerifiedByProvider);
         assert.false(captured.instance.isEmailLocked);
+    });
+    test('the hosted routing choice is not shown or sent unless the API offers it', async function (assert) {
+        const component = await this.build();
+        this.fillValidly(component);
+
+        assert.dom('[data-test-hosted-routing-consent]').doesNotExist();
+
+        await component.onboard.perform();
+
+        assert.false('hosted_routing' in this.posted.at(-1).payload, 'nothing is sent without the offer');
+    });
+
+    test('the first admin sees the hosted routing choice on by default and can turn it off', async function (assert) {
+        this.hostedRoutingOffer = true;
+        const component = await this.build();
+        await component.loadHostedRoutingOffer.last;
+        await settled();
+        this.fillValidly(component);
+
+        assert.strictEqual(this.fetched, 'onboard/should-onboard');
+        assert.dom('[data-test-hosted-routing-consent]').exists();
+        assert.dom('[data-test-hosted-routing-consent]').includesText('Use Fleetbase hosted routing (free)');
+        assert.dom('[data-test-hosted-routing-consent]').includesText('Singapore');
+
+        await component.onboard.perform();
+        assert.true(this.posted.at(-1).payload.hosted_routing, 'on by default');
+
+        component.toggleHostedRouting(false);
+        await component.onboard.perform();
+        assert.false(this.posted.at(-1).payload.hosted_routing, 'the admin turned it off');
     });
 });
