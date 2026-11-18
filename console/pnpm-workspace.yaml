@@ -5,7 +5,7 @@ publicHoistPattern:
   - "*ember-ui*"
   - "*fleetops-data*"
 overrides:
-  "@fleetbase/fleetops-data": "^0.2.3"
+  "@fleetbase/fleetops-data": "^0.2.4"
   "@fleetbase/ember-core": "^0.3.26"
   "@fleetbase/ember-ui": "^0.4.6"
 allowBuilds:
@@ -19,12 +19,13 @@ allowBuilds:
 minimumReleaseAgeExclude:
   - '@fleetbase/ember-core@0.3.26'
   - '@fleetbase/ember-ui@0.4.6'
-  - '@fleetbase/fleetops-data@0.2.3'
-  - '@fleetbase/fleetops-engine@0.6.75'
-  - '@fleetbase/storefront-engine@0.4.31'
-  - '@fleetbase/ledger-engine@0.0.13'
-  - '@fleetbase/customer-portal-engine@0.0.16'
+  - '@fleetbase/fleetops-data@0.2.4'
+  - '@fleetbase/fleetops-engine@0.7.0'
+  - '@fleetbase/storefront-engine@0.5.0'
+  - '@fleetbase/ledger-engine@0.1.0'
+  - '@fleetbase/customer-portal-engine@0.1.0'
   - '@fleetbase/dev-engine@0.2.18'
-  - '@fleetbase/registry-bridge-engine@0.1.11'
-  - '@fleetbase/valhalla-engine@0.0.5'
-  - '@fleetbase/vroom-engine@0.0.5'
+  - '@fleetbase/registry-bridge-engine@0.2.0'
+  - '@fleetbase/valhalla-engine@0.1.0'
+  - '@fleetbase/vroom-engine@0.1.0'
+  - '@fleetbase/ai-engine@0.1.0'
