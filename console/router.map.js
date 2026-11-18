@@ -27,6 +27,11 @@ Router.map(function () {
         this.route('portal-login', { path: '/portal' });
         this.route('oauth-callback', { path: '/oauth/callback' });
     });
+    // "Continue with Fleetbase": an app's consent screen. Outside `console` so a signed-out
+    // user can land here before signing in.
+    this.route('oauth', function () {
+        this.route('authorize');
+    });
     this.route('invite', { path: 'join' }, function () {
         this.route('for-driver', { path: '/fleet/:public_id' });
         this.route('for-user', { path: '/org/:public_id' });
@@ -60,6 +65,7 @@ Router.map(function () {
             this.route('branding');
             this.route('two-fa-settings');
             this.route('oauth-settings');
+            this.route('oauth-apps');
             this.route('platform-api-token');
             this.route('api-consumers');
             this.route('rate-limits');

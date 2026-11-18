@@ -653,6 +653,7 @@ console:
       queue: صف
       socket: سوکت
       oauth: 'ورود با OAuth'
+      oauth-apps: "برنامه‌های OAuth"
       push-notifications: اعلان‌های فشاری
     schedule-monitor:
       schedule-monitor: مانیتور برنامه
@@ -742,6 +743,44 @@ invite:
     invitation-sent-message: شما به پیوستن به سازمان {companyName} در {appName} دعوت شده‌اید. برای پذیرش این دعوت، کد دعوت دریافت‌شده از طریق ایمیل را وارد کنید و روی ادامه کلیک کنید
     invitation-code-sent-text: کد دعوت شما
     accept-invitation-text: پذیرش دعوت
+oauth:
+  authorize:
+    title: "ادامه با Fleetbase"
+    loading: "در حال بررسی درخواست..."
+    heading: "{app} می‌خواهد به حساب Fleetbase شما دسترسی داشته باشد"
+    official: "ساخت Fleetbase"
+    signed-in-as: "وارد شده با {email}"
+    not-you: "شما نیستید؟"
+    organization-label: "سازمانی که به اشتراک گذاشته می‌شود"
+    organization-help: "برنامه فقط می‌تواند این سازمان را ببیند و تغییر دهد. هر زمان بخواهید می‌توانید دسترسی آن را از حساب ← احراز هویت حذف کنید."
+    not-admin: "فقط مدیران می‌توانند آن را به اشتراک بگذارند"
+    no-organization: "شما مدیر هیچ سازمانی نیستید که بتوانید به اشتراک بگذارید. از یکی از مدیران سازمان خود بخواهید برنامه را متصل کند."
+    your-organization: "سازمان شما"
+    will-be-able-to: "{app} می‌تواند:"
+    allow: "اجازه دادن"
+    cancel: "لغو"
+    footnote: "این را با {app} به اشتراک می‌گذارید، نه با Fleetbase."
+    privacy: "سیاست حریم خصوصی"
+    terms: "شرایط"
+    reauthenticate: "برای ادامه دوباره وارد شوید..."
+    errors:
+      generic: "این درخواست انجام نشد."
+      invalid-client: "این برنامه در Fleetbase ثبت نشده یا غیرفعال شده است."
+      invalid-request: "پیوند برنامه معتبر نیست. به برنامه برگردید و دوباره تلاش کنید."
+      invalid-scope: "برنامه دسترسی‌ای خواست که مجاز به داشتن آن نیست."
+      no-organization: "سازمانی را که مدیر آن هستید برای اشتراک با این برنامه انتخاب کنید."
+      go-back: "می‌توانید این صفحه را ببندید و به برنامه برگردید."
+  connected-apps:
+    title: "برنامه‌های متصل"
+    help: "برنامه‌هایی که با حساب Fleetbase خود وارد آن‌ها شده‌اید و کاری که هرکدام می‌تواند انجام دهد. با حذف یک برنامه از آن خارج می‌شوید و دسترسی آن فوراً قطع می‌شود."
+    organization: "به {organization} دسترسی دارد"
+    sign-in-only: "فقط ورود"
+    last-used: "آخرین استفاده {date}"
+    never-used: "هنوز استفاده نشده"
+    remove-button: "حذف دسترسی"
+    remove-title: "{app} حذف شود؟"
+    remove-body: "{app} خارج می‌شود و فوراً دسترسی خود را از دست می‌دهد. برای استفادهٔ دوباره باید دوباره به آن اجازه دهید."
+    removed: "{app} دیگر دسترسی ندارد."
 onboard:
   index:
     title: ایجاد حساب کاربری شما

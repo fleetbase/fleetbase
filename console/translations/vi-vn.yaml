@@ -673,6 +673,7 @@ console:
       queue: Hàng đợi
       socket: Socket
       oauth: 'Đăng nhập OAuth'
+      oauth-apps: "Ứng dụng OAuth"
       push-notifications: Thông báo đẩy
     schedule-monitor:
       schedule-monitor: Giám sát lịch trình
@@ -765,6 +766,44 @@ invite:
       tiếp tục.
     invitation-code-sent-text: Mã lời mời của bạn
     accept-invitation-text: Chấp nhận lời mời
+oauth:
+  authorize:
+    title: "Tiếp tục với Fleetbase"
+    loading: "Đang kiểm tra yêu cầu..."
+    heading: "{app} muốn truy cập tài khoản Fleetbase của bạn"
+    official: "Do Fleetbase phát triển"
+    signed-in-as: "Đã đăng nhập với {email}"
+    not-you: "Không phải bạn?"
+    organization-label: "Tổ chức để chia sẻ"
+    organization-help: "Ứng dụng chỉ có thể xem và thay đổi tổ chức này. Bạn có thể thu hồi quyền truy cập bất cứ lúc nào trong Tài khoản → Xác thực."
+    not-admin: "chỉ quản trị viên mới chia sẻ được"
+    no-organization: "Bạn không quản trị tổ chức nào có thể chia sẻ. Hãy nhờ quản trị viên của tổ chức kết nối ứng dụng."
+    your-organization: "tổ chức của bạn"
+    will-be-able-to: "{app} sẽ có thể:"
+    allow: "Cho phép"
+    cancel: "Hủy"
+    footnote: "Bạn đang chia sẻ với {app}, không phải với Fleetbase."
+    privacy: "Chính sách quyền riêng tư"
+    terms: "Điều khoản"
+    reauthenticate: "Đăng nhập lại để tiếp tục..."
+    errors:
+      generic: "Không thể hoàn tất yêu cầu này."
+      invalid-client: "Ứng dụng này chưa đăng ký với Fleetbase hoặc đã bị tắt."
+      invalid-request: "Liên kết từ ứng dụng không hợp lệ. Hãy quay lại ứng dụng và thử lại."
+      invalid-scope: "Ứng dụng đã yêu cầu quyền truy cập mà nó không được phép có."
+      no-organization: "Chọn một tổ chức bạn quản trị để chia sẻ với ứng dụng này."
+      go-back: "Bạn có thể đóng trang này và quay lại ứng dụng."
+  connected-apps:
+    title: "Ứng dụng đã kết nối"
+    help: "Các ứng dụng bạn đã đăng nhập bằng tài khoản Fleetbase và quyền của từng ứng dụng. Xóa một ứng dụng sẽ đăng xuất bạn khỏi ứng dụng đó và chấm dứt quyền truy cập ngay lập tức."
+    organization: "Có quyền truy cập {organization}"
+    sign-in-only: "Chỉ đăng nhập"
+    last-used: "dùng lần cuối {date}"
+    never-used: "chưa được dùng"
+    remove-button: "Thu hồi quyền truy cập"
+    remove-title: "Xóa {app}?"
+    remove-body: "{app} sẽ bị đăng xuất và mất quyền truy cập ngay lập tức. Để dùng lại, bạn sẽ phải cấp quyền lại."
+    removed: "{app} không còn quyền truy cập."
 onboard:
   index:
     title: Tạo tài khoản của bạn

@@ -1,0 +1,112 @@
+{{page-title (t "oauth.authorize.title")}}
+<div class="flex items-center justify-center">
+    <LogoIcon @size="12" class="rounded-md" />
+</div>
+
+{{#if this.error}}
+    <div class="mt-8 space-y-4" data-test-oauth-error>
+        <InfoBlock @type="error" @icon="triangle-exclamation" @text={{this.error}} />
+        <p class="text-sm text-center text-gray-600 dark:text-gray-400">{{t "oauth.authorize.errors.go-back"}}</p>
+    </div>
+{{else if this.details}}
+    <div class="mt-6 rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800" data-test-oauth-consent>
+        <div class="flex items-center">
+            {{#if this.details.client.logo_url}}
+                <img src={{this.details.client.logo_url}} alt="" class="mr-3 h-10 w-10 rounded-md object-contain" />
+            {{/if}}
+            <div class="min-w-0">
+                <h2 class="truncate text-lg font-semibold text-gray-900 dark:text-white" data-test-oauth-app-name>
+                    {{t "oauth.authorize.heading" app=this.details.client.name}}
+                </h2>
+                <div class="text-xs text-gray-500 dark:text-gray-400">
+                    {{#if this.details.client.official}}
+                        <span class="mr-1 inline-flex items-center rounded bg-blue-100 px-1.5 py-0.5 font-medium text-blue-800 dark:bg-blue-900 dark:text-blue-100">{{t
+                                "oauth.authorize.official"
+                            }}</span>
+                    {{/if}}
+                    {{#if this.details.client.website_url}}
+                        <a href={{this.details.client.website_url}} target="_blank" rel="noopener noreferrer" class="underline">{{this.details.client.redirect_host}}</a>
+                    {{else}}
+                        {{this.details.client.redirect_host}}
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4 flex items-center justify-between rounded-md bg-gray-50 px-3 py-2 text-sm dark:bg-gray-900">
+            <div class="min-w-0 truncate text-gray-700 dark:text-gray-300">
+                {{t "oauth.authorize.signed-in-as" email=this.details.user.email}}
+            </div>
+            <button type="button" class="ml-2 shrink-0 text-xs font-medium text-blue-600 hover:underline dark:text-blue-400" {{on "click" this.switchAccount}} data-test-oauth-switch-account>
+                {{t "oauth.authorize.not-you"}}
+            </button>
+        </div>
+
+        {{#if this.details.requires_organization}}
+            <div class="mt-4">
+                <label for="oauth-organization" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{t "oauth.authorize.organization-label"}}</label>
+                {{#if this.shareableOrganizations.length}}
+                    <select id="oauth-organization" class="form-select mt-1 w-full" {{on "change" this.selectOrganization}} data-test-oauth-organization>
+                        {{#each this.organizations as |organization|}}
+                            <option value={{organization.id}} selected={{eq organization.id this.selectedOrganization}} disabled={{not organization.can_share}}>
+                                {{organization.name}}{{unless organization.can_share (concat " — " (t "oauth.authorize.not-admin"))}}
+                            </option>
+                        {{/each}}
+                    </select>
+                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{t "oauth.authorize.organization-help"}}</p>
+                {{else}}
+                    <InfoBlock @type="warning" @icon="building" @text={{t "oauth.authorize.no-organization"}} class="mt-1" />
+                {{/if}}
+            </div>
+        {{/if}}
+
+        <div class="mt-4">
+            <p class="text-sm font-medium text-gray-900 dark:text-white">{{t "oauth.authorize.will-be-able-to" app=this.details.client.name}}</p>
+            <ul class="mt-2 space-y-2" data-test-oauth-scopes>
+                {{#each this.scopeLines as |line|}}
+                    <li class="flex items-start text-sm text-gray-700 dark:text-gray-300">
+                        <FaIcon @icon="check" class="mr-2 mt-0.5 text-green-600" />
+                        <span>{{line.text}}</span>
+                    </li>
+                {{/each}}
+            </ul>
+        </div>
+
+        <div class="mt-6 flex flex-row space-x-2">
+            <Button
+                @type="default"
+                @text={{t "oauth.authorize.cancel"}}
+                @wrapperClass="flex-1"
+                class="w-full justify-center"
+                @isLoading={{this.deny.isRunning}}
+                @onClick={{perform this.deny}}
+                data-test-oauth-deny
+            />
+            <Button
+                @type="primary"
+                @text={{t "oauth.authorize.allow"}}
+                @wrapperClass="flex-1"
+                class="w-full justify-center"
+                @disabled={{not this.canApprove}}
+                @isLoading={{this.approve.isRunning}}
+                @onClick={{perform this.approve}}
+                data-test-oauth-approve
+            />
+        </div>
+
+        <p class="mt-4 text-xs text-gray-500 dark:text-gray-400">
+            {{t "oauth.authorize.footnote" app=this.details.client.name}}
+            {{#if this.details.client.privacy_url}}
+                <a href={{this.details.client.privacy_url}} target="_blank" rel="noopener noreferrer" class="underline">{{t "oauth.authorize.privacy"}}</a>
+            {{/if}}
+            {{#if this.details.client.terms_url}}
+                ·
+                <a href={{this.details.client.terms_url}} target="_blank" rel="noopener noreferrer" class="underline">{{t "oauth.authorize.terms"}}</a>
+            {{/if}}
+        </p>
+    </div>
+{{else}}
+    <div class="flex justify-center py-12">
+        <Spinner @loadingMessage={{t "oauth.authorize.loading"}} @wrapperClass="flex flex-row items-center" @iconClass="mr-2" />
+    </div>
+{{/if}}
