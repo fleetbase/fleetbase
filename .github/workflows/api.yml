@@ -228,6 +228,13 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-interaction
 
+      # Extensions (Fleet-Ops, Storefront, ...) are their own Composer project in api/extensions. Install it so
+      # mysql:createdb, migrate and sandbox:migrate see their databases and migrations, as an instance does.
+      - name: Install extensions
+        run: |
+          php scripts/extensions-core-platform.php
+          composer install --prefer-dist --no-progress --no-interaction --working-dir=extensions
+
       - name: Generate app key
         run: php artisan key:generate --force
 
