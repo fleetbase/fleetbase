@@ -16,6 +16,9 @@ if ($cacheUrl = getenv('CACHE_URL')) {
     $redis_database = isset($url['path']) ? substr($url['path'], 1) : 'cache';
 }
 
+// Own database for the queue, so cache:clear (FLUSHDB) can't delete jobs. Unset keeps the old behavior.
+$redis_queue_database = env('REDIS_QUEUE_DB', $redis_database);
+
 
 return [
 
@@ -108,6 +111,13 @@ return [
             'password' => $redis_password,
             'port' => env('REDIS_PORT', 6379),
             'database' => $redis_database . '_geocode_cache',
+        ],
+
+        'queue' => [
+            'host' => $redis_host,
+            'password' => $redis_password,
+            'port' => env('REDIS_PORT', 6379),
+            'database' => $redis_queue_database,
         ],
     ],
 
