@@ -1,3 +1,23 @@
+> v0.9.0 (in progress) ~ "Fleetbase Extensions Registry v2"
+
+---
+## Status
+This release is assembled on `feature/extensions-registry-v2` and ships together with the Fleetbase Extensions Registry v2 (fleetbase/registry `release/v2.0.0`, fleetbase/registry-bridge `feature/extensions-registry-v2`, fleetbase/ember-core `feature/extensions-registry-v2`, fleetbase/fleetbase-cli `release/v2.0.0`, fleetbase/registry-infra `release/v0.1.0`). Nothing in it merges to `main` until the registry project is complete. Patch releases (`v0.8.x`) continue from `main` in the meantime; merge `main` into this branch to keep it current.
+
+It is numbered v0.9.0 because v0.8.0 shipped from `main` as the Laravel 12 release and the v0.8.x patch line continues there. `console/package.json` and `docker/Dockerfile` stay on main's version until the release is cut; then a `release/v0.9.0` branch bumps both to 0.9.0, drops "(in progress)" from the line above, and these notes replace the v0.8.x notes below.
+
+---
+## Highlights (planned)
+- **Extensions install without rebuilding the console.** The console mounts prebuilt engine releases at boot from `~registry/v1/engines/runtime`. (#730, needs @fleetbase/ember-core 0.4.0; not yet targeted at this branch because it imports a module that ember-core 0.3.x does not have)
+- **Registry Service client.** Explore, Installed and Purchased read the central Registry Service; instances register with a code; installs run as queued jobs with rollback. (registry-bridge 0.3.0)
+
+---
+## Component Versions (planned)
+- `registry-bridge`: `0.3.0` (0.2.x is the Laravel 12 line released from `main`)
+- `ember-core`: `0.4.0`
+
+---
+
 > v0.8.1 ~ "Migrations run on MySQL 8.4, and extensions can add sortable, grouped columns to any table"
 
 ---
