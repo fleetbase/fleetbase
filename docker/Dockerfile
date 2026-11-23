@@ -181,6 +181,11 @@ RUN curl -L https://github.com/webdevops/go-crond/releases/download/23.12.0/go-c
 COPY docker/crontab ./crontab
 RUN chmod 0600 ./crontab
 
+# The API's start command: Octane, plus optionally extensions:sync and the registry installer's worker
+# (docker/scripts/start-api.sh).
+COPY docker/scripts/start-api.sh ./start-api.sh
+RUN chmod 0755 ./start-api.sh
+
 # Scheduler dev stage
 FROM base AS scheduler-dev
 ENTRYPOINT []
@@ -204,14 +209,14 @@ CMD ["php", "artisan", "queue:work"]
 # Application dev stage
 FROM base AS app-dev
 ENTRYPOINT ["docker-php-entrypoint"]
-CMD ["sh", "-c", "php artisan octane:frankenphp --max-requests=1000 --port=8000 --host=0.0.0.0 --watch"]
+CMD ["sh", "./start-api.sh", "--watch"]
 
 # Application release stage
 FROM base AS app-release
 ENTRYPOINT ["docker-php-entrypoint"]
-CMD ["sh", "-c", "php artisan octane:frankenphp --max-requests=1000 --port=8000 --host=0.0.0.0"] 
+CMD ["sh", "./start-api.sh"]
 
 # Application stage
 FROM base AS app
 ENTRYPOINT ["/sbin/ssm-parent", "-c", ".ssm-parent.yaml", "run", "--", "docker-php-entrypoint"]
-CMD ["sh", "-c", "php artisan octane:frankenphp --max-requests=1000 --port=8000 --host=0.0.0.0"]
+CMD ["sh", "./start-api.sh"]
