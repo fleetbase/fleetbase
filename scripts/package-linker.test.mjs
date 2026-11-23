@@ -14,6 +14,7 @@ import {
     enableSharedPackage,
     enableSharedDependency,
     formatSimpleYaml,
+    backendProjectFor,
     getInstallCommands,
     getInstallModules,
     getResetTargets,
@@ -434,4 +435,88 @@ test('dry-run previews changes without mutating the fixture root', () => {
     assert.equal(fs.readFileSync(path.join(root, 'api', 'composer.json'), 'utf8'), beforeComposerJson);
     assert.equal(fs.existsSync(path.join(root, STATE_FILE)), false);
     assert.match(logs.join('\n'), /Dry run: would update/);
+});
+
+function createManifestFixture() {
+    const root = createFixture();
+    const core = readJson(path.join(root, 'api', 'composer.json'));
+
+    // The layout since the extensions manifest: extensions in api/extensions, core-api and registry-bridge in core.
+    delete core.require['fleetbase/fleetops-api'];
+    core.require['fleetbase/registry-bridge'] = '^0.2.0';
+    writeJson(path.join(root, 'api', 'composer.json'), core);
+    writeJson(path.join(root, 'api', 'extensions', 'composer.json'), {
+        name: 'fleetbase/extensions',
+        require: {
+            'fleetbase/core-platform': '*',
+            'fleetbase/fleetops-api': '^0.6.48',
+        },
+        repositories: {
+            'core-platform': { type: 'path', url: 'core-platform', options: { symlink: false } },
+        },
+    });
+    createPackage(root, 'registry-bridge', '@fleetbase/registry-bridge-engine', 'fleetbase/registry-bridge', { backendVersion: '0.2.0', frontendVersion: '0.2.0' });
+
+    return root;
+}
+
+test('with an extensions manifest, extension backends link there and core packages stay in core', () => {
+    const root = createManifestFixture();
+    const coreBefore = fs.readFileSync(path.join(root, 'api', 'composer.json'), 'utf8');
+
+    assert.equal(backendProjectFor(root, 'fleetbase/fleetops-api').dir, path.join('api', 'extensions'));
+    assert.equal(backendProjectFor(root, 'fleetbase/registry-bridge').dir, 'api', 'core requires registry-bridge');
+    assert.equal(backendProjectFor(root, 'fleetbase/core-api').dir, 'api');
+
+    enableModule(root, 'fleetops');
+
+    const manifest = readJson(path.join(root, 'api', 'extensions', 'composer.json'));
+    assert.equal(fs.readFileSync(path.join(root, 'api', 'composer.json'), 'utf8'), coreBefore, 'core composer.json is untouched');
+    assert.equal(manifest.require['fleetbase/fleetops-api'], '^0.6.48');
+    assert.deepEqual(Object.keys(manifest.repositories), ['local-fleetops', 'core-platform'], 'the path repository comes first and keeps the named shape');
+    assert.deepEqual(manifest.repositories['local-fleetops'], { type: 'path', url: '../../packages/fleetops', options: { symlink: true } });
+
+    const status = getInstallModules(root);
+    assert.deepEqual(
+        status.map((module) => module.slug),
+        ['fleetops']
+    );
+    assert.deepEqual(getInstallCommands(status, root), ['cd console && pnpm install', 'cd api/extensions && composer update fleetbase/fleetops-api fleetbase/core-platform --with-dependencies']);
+
+    disableModule(root, 'fleetops');
+
+    const restored = readJson(path.join(root, 'api', 'extensions', 'composer.json'));
+    assert.deepEqual(Object.keys(restored.repositories), ['core-platform']);
+    assert.equal(restored.require['fleetbase/fleetops-api'], '^0.6.48');
+    assert.equal(fs.readFileSync(path.join(root, 'api', 'composer.json'), 'utf8'), coreBefore);
+});
+
+test('install commands run composer per project when core and extensions are both linked', () => {
+    const root = createManifestFixture();
+
+    runCli(['enable', 'fleetops', 'registry-bridge', '--root', root]);
+    runCli(['enable-shared', 'core-api', '--root', root]);
+
+    const core = readJson(path.join(root, 'api', 'composer.json'));
+    assert.ok(core.repositories.some((repository) => repository.url === '../packages/registry-bridge'));
+    assert.ok(core.repositories.some((repository) => repository.url === '../packages/core-api'));
+    assert.equal(core.repositories.some((repository) => repository.url === '../packages/fleetops'), false);
+
+    assert.deepEqual(getInstallCommands(getInstallModules(root), root), [
+        'cd console && pnpm install',
+        'cd api && composer update fleetbase/registry-bridge fleetbase/core-api --with-dependencies',
+        'cd api/extensions && composer update fleetbase/fleetops-api fleetbase/core-platform --with-dependencies',
+    ]);
+});
+
+test('an extension core still requires (installed before the manifest) stays linked in core', () => {
+    const root = createManifestFixture();
+    const core = readJson(path.join(root, 'api', 'composer.json'));
+    core.require['fleetbase/manifest-extension-api'] = '^1.0.0';
+    writeJson(path.join(root, 'api', 'composer.json'), core);
+
+    enableModule(root, 'manifest-extension');
+
+    assert.ok(readJson(path.join(root, 'api', 'composer.json')).repositories.some((repository) => repository.url === '../packages/manifest-extension'));
+    assert.equal(readJson(path.join(root, 'api', 'extensions', 'composer.json')).require['fleetbase/manifest-extension-api'], undefined);
 });

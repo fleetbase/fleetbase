@@ -149,6 +149,15 @@ RUN su www-data -s /bin/sh -c "composer install --no-scripts --optimize-autoload
 RUN --mount=type=bind,source=docker/scripts/assert-frankenphp-version.php,target=/tmp/assert-frankenphp-version.php \
   php /tmp/assert-frankenphp-version.php /fleetbase/api/vendor/autoload.php
 
+# Install the extensions (api/extensions, a Composer project of its own; see api/extensions/README.md).
+# extensions-core-platform.php first describes the packages core just installed as fleetbase/core-platform,
+# so this installs only what the extensions add. Its own layer: changing core code does not reinstall them.
+COPY --chown=www-data:www-data ./api/extensions/composer.json ./api/extensions/composer.lock /fleetbase/api/extensions/
+COPY --chown=www-data:www-data ./api/scripts/extensions-core-platform.php /fleetbase/api/scripts/
+COPY --chown=www-data:www-data ./api/app/Support/Extensions/CorePlatform.php /fleetbase/api/app/Support/Extensions/
+# Composer reads auth.json only from the project it runs in, so core's GitHub token is passed on as COMPOSER_AUTH.
+RUN su www-data -s /bin/sh -c 'if [ -f auth.json ]; then COMPOSER_AUTH="$(cat auth.json)"; export COMPOSER_AUTH; fi; php scripts/extensions-core-platform.php && composer install --working-dir=extensions --no-scripts --optimize-autoloader --no-dev --no-cache'
+
 # Setup application
 COPY --chown=www-data:www-data ./api /fleetbase/api
 
@@ -171,6 +180,11 @@ RUN chmod +x /fleetbase/api/deploy.sh
 RUN curl -L https://github.com/webdevops/go-crond/releases/download/23.12.0/go-crond.linux.amd64 > /usr/local/bin/go-crond && chmod +x /usr/local/bin/go-crond
 COPY docker/crontab ./crontab
 RUN chmod 0600 ./crontab
+
+# The API's start command: Octane, plus optionally extensions:sync and the registry installer's worker
+# (docker/scripts/start-api.sh).
+COPY docker/scripts/start-api.sh ./start-api.sh
+RUN chmod 0755 ./start-api.sh
 
 # Scheduler dev stage
 FROM base AS scheduler-dev
@@ -195,14 +209,14 @@ CMD ["php", "artisan", "queue:work"]
 # Application dev stage
 FROM base AS app-dev
 ENTRYPOINT ["docker-php-entrypoint"]
-CMD ["sh", "-c", "php artisan octane:frankenphp --max-requests=1000 --port=8000 --host=0.0.0.0 --watch"]
+CMD ["sh", "./start-api.sh", "--watch"]
 
 # Application release stage
 FROM base AS app-release
 ENTRYPOINT ["docker-php-entrypoint"]
-CMD ["sh", "-c", "php artisan octane:frankenphp --max-requests=1000 --port=8000 --host=0.0.0.0"] 
+CMD ["sh", "./start-api.sh"]
 
 # Application stage
 FROM base AS app
 ENTRYPOINT ["/sbin/ssm-parent", "-c", ".ssm-parent.yaml", "run", "--", "docker-php-entrypoint"]
-CMD ["sh", "-c", "php artisan octane:frankenphp --max-requests=1000 --port=8000 --host=0.0.0.0"]
+CMD ["sh", "./start-api.sh"]

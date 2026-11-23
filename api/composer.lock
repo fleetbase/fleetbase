@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "710c92cf9fda78288e70222e2e4f18dc",
+    "content-hash": "73eafff24760ebf9ce65916ad664f24a",
     "packages": [
         {
             "name": "aaronfrancis/fast-paginate",
@@ -2123,16 +2123,16 @@
         },
         {
             "name": "fleetbase/core-api",
-            "version": "2.0.2",
+            "version": "2.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/core-api.git",
-                "reference": "5348fb3f2a46100df0e87d2af9aa58180b40fea5"
+                "reference": "970b2f1a64c0bb027f750078d0826260152215cc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/5348fb3f2a46100df0e87d2af9aa58180b40fea5",
-                "reference": "5348fb3f2a46100df0e87d2af9aa58180b40fea5",
+                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/970b2f1a64c0bb027f750078d0826260152215cc",
+                "reference": "970b2f1a64c0bb027f750078d0826260152215cc",
                 "shasum": ""
             },
             "require": {
@@ -2232,10 +2232,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/core-api/issues",
-                "source": "https://github.com/fleetbase/core-api/tree/v2.0.2"
+                "source": "https://github.com/fleetbase/core-api/tree/v2.0.4"
             },
-            "time": "2026-11-18T04:36:16+00:00",
-            "published-time": "2026-11-18T04:36:33+00:00"
+            "time": "2026-11-19T14:02:04+00:00"
         },
         {
             "name": "fleetbase/countries",
@@ -2463,8 +2462,7 @@
                 "issues": "https://github.com/fleetbase/fleetops/issues",
                 "source": "https://github.com/fleetbase/fleetops/tree/v0.7.1"
             },
-            "time": "2026-11-18T04:36:11+00:00",
-            "published-time": "2026-11-18T04:36:33+00:00"
+            "time": "2026-11-18T04:36:11+00:00"
         },
         {
             "name": "fleetbase/laravel-mysql-spatial",
@@ -19709,5 +19707,5 @@
         "php": ">=8.2 <8.5"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.11.0"
+    "plugin-api-version": "2.9.0"
 }

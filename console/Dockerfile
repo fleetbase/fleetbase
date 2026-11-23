@@ -17,6 +17,9 @@ ENV DISABLE_FLEETBASE_ATTRIBUTION=$DISABLE_FLEETBASE_ATTRIBUTION
 
 # Add the pnpm global bin to the PATH
 ENV PATH=/root/.pnpm/bin:$PATH
+# Write dist/host-modules.json in every build, development included: the API's extension installer checks
+# prebuilt engines against it (REGISTRY_HOST_MODULES_PATH=http://console:4200/host-modules.json).
+ENV FLEETBASE_HOST_MODULES=1
 
 # Copy package metadata first for better dependency caching
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./

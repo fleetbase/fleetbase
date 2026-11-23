@@ -58,6 +58,9 @@ services:
     image: fleetbase/fleetbase-api:latest
     command: ["go-crond", "--verbose", "root:./crontab"]
     restart: unless-stopped
+    volumes:
+      # Extensions installed from the registry (see application)
+      - api_extensions:/fleetbase/api/extensions
     environment:
       DATABASE_URL: "mysql://root@database/fleetbase"
       QUEUE_CONNECTION: redis
@@ -79,6 +82,9 @@ services:
     image: fleetbase/fleetbase-api:latest
     command: ["php", "artisan", "queue:work"]
     restart: unless-stopped
+    volumes:
+      # Extensions installed from the registry (see application)
+      - api_extensions:/fleetbase/api/extensions
     healthcheck:
       test: ["CMD", "php", "artisan", "queue:status"]
       interval: 30s
@@ -119,6 +125,9 @@ services:
     volumes:
       - ./api/.env:/fleetbase/api/.env
       - ./api/storage/app:/fleetbase/api/storage/app
+      # Extensions installed from the registry (api/extensions, its own Composer project): a named volume,
+      # seeded from the image on first start, so installs survive image upgrades. Shared with queue and scheduler.
+      - api_extensions:/fleetbase/api/extensions
     environment:
       ENVIRONMENT: development
       DATABASE_URL: "mysql://root@database/fleetbase"
@@ -133,7 +142,14 @@ services:
       APP_NAME: Fleetbase
       LOG_CHANNEL: daily
       REGISTRY_HOST: https://registry.fleetbase.io
-      REGISTRY_PREINSTALLED_EXTENSIONS: "true"
+      # Installs from the registry run here: the installer's queue worker starts beside Octane and reloads
+      # its workers after each install. Backend packages go to the api_extensions volume, prebuilt console
+      # engines to storage/app/registry-runtime-engines, which this API serves to the console (no rebuild).
+      REGISTRY_INSTALLER_WORKER: "true"
+      REGISTRY_INSTALLER_RELOAD_OCTANE: "true"
+      REGISTRY_HOST_MODULES_PATH: http://console:4200/host-modules.json
+      # After an image upgrade, re-resolve the installed extensions against the new core before starting.
+      EXTENSIONS_SYNC_ON_START: "true"
       OSRM_HOST: https://router.project-osrm.org
       SOCKETCLUSTER_AUTH_ENABLED: ${SOCKETCLUSTER_AUTH_ENABLED:-false}
       SOCKETCLUSTER_AUTH_KEY: ${SOCKETCLUSTER_AUTH_KEY:-}
@@ -155,3 +171,6 @@ services:
       - "8000:80"
     depends_on:
       - application
+
+volumes:
+  api_extensions:

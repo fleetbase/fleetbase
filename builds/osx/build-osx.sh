@@ -234,6 +234,14 @@ rm -rf ./dist/app
 mkdir -p ./dist/app
 cp -R "$APP_DIR"/* ./dist/app/
 
+# build-static.sh runs composer install for core's project only. The extensions (api/extensions) are a
+# second Composer project, described against the core it was just given (see api/extensions/README.md).
+log "📦 Installing the API's Composer projects (core, then extensions)..."
+(cd ./dist/app \
+  && composer install --no-dev -a --no-scripts --ignore-platform-reqs --no-interaction \
+  && php scripts/extensions-core-platform.php \
+  && composer install --working-dir=extensions --no-dev -a --no-scripts --ignore-platform-reqs --no-interaction)
+
 log "Patching build-static.sh to skip git pull and composer install..."
 
 # Skip `git pull`
