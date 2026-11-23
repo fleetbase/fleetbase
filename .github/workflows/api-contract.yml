@@ -449,7 +449,8 @@ jobs:
 
           # Images built since the extensions manifest install extensions in api/extensions, a Composer
           # project of its own beside core's (api/extensions/README.md). Core packages (core-api,
-          # registry-bridge) and images from before the manifest are overlaid in api/ as before.
+          # registry-bridge and the core modules core's composer.json requires) and images from before
+          # the manifest are overlaid in api/ as before.
           docker compose exec -T application cat /fleetbase/api/composer.json > "$RUNNER_TEMP/core-composer.json"
           docker compose exec -T application cat /fleetbase/api/vendor/composer/installed.json > "$RUNNER_TEMP/core-installed.json"
           docker compose exec -T application sh -c 'cat /fleetbase/api/extensions/composer.json 2>/dev/null || echo null' > "$RUNNER_TEMP/extensions-composer.json"

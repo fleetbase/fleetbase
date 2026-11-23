@@ -1,6 +1,6 @@
 # Installed extensions
 
-This folder is a Composer project of its own. Its `composer.json` (the **extensions manifest**) and `composer.lock` list the extensions installed on this instance; core's packages stay in `../composer.json`. Each project has its own lock, and the extensions have their own `vendor/`.
+This folder is a Composer project of its own. Its `composer.json` (the **extensions manifest**) and `composer.lock` list the extensions installed on this instance; core's packages, including the core modules Fleetbase ships with (FleetOps, Storefront, Ledger, Customer Portal, AI, Valhalla, VROOM), stay in `../composer.json` and are upgraded with core. A fresh install has an empty manifest. Each project has its own lock, and the extensions have their own `vendor/`.
 
 - An upstream core upgrade changes only core's `composer.json` and `composer.lock`.
 - Installing, updating or uninstalling an extension changes only the files here. The registry-bridge installer and `registry:install`/`registry:uninstall`/`registry:update` write here.
@@ -9,7 +9,7 @@ This folder is a Composer project of its own. Its `composer.json` (the **extensi
 
 | | Core (`api/`) | Extensions (`api/extensions/`) |
 |---|---|---|
-| Lists | Laravel, `fleetbase/core-api`, `fleetbase/registry-bridge`, … | FleetOps, Storefront, Ledger, … and anything installed from the registry |
+| Lists | Laravel, `fleetbase/core-api`, `fleetbase/registry-bridge` and the core modules (FleetOps, Storefront, Ledger, Customer Portal, AI, Valhalla, VROOM) | Only what is installed on top: from the registry (`registry:install`, the console) or by hand |
 | Vendor | `api/vendor` | `api/extensions/vendor` |
 | Autoloader | registered first | registered after core's (`App\Support\Extensions\Extensions`, called from `bootstrap/app.php`) |
 | Package discovery | both `installed.json` files are read (`App\Support\Extensions\ExtensionsPackageManifest`) | |
@@ -58,7 +58,7 @@ php artisan extensions:migrate-manifest --dry-run   # shows what moves
 php artisan extensions:migrate-manifest
 ```
 
-It moves every package that requires `fleetbase/core-api` (except core-api and registry-bridge) out of core:
+It moves every package that requires `fleetbase/core-api` out of core, except core itself: core-api, registry-bridge and the core modules (`ExtensionsMigrateManifest::CORE_PACKAGES`). It moves them
 
 - from core's `composer.json`, or
 - left in `api/vendor` by an upgrade that replaced `composer.json`/`composer.lock` with the release's.

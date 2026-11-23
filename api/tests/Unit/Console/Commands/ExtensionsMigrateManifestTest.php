@@ -9,8 +9,9 @@ use Tests\Concerns\MakesComposerProjects;
 use Tests\TestCase;
 
 /**
- * An instance installed before the extensions manifest: FleetOps and Pallet in core's composer.json, plus
- * an extension an upgrade left behind in api/vendor (in vendor, no longer in composer.lock).
+ * An instance installed before the extensions manifest: LocoNav and Pallet in core's composer.json beside the
+ * FleetOps core module (which stays), plus an extension an upgrade left behind in api/vendor (in vendor, no
+ * longer in composer.lock).
  */
 class ExtensionsMigrateManifestTest extends TestCase
 {
@@ -27,19 +28,21 @@ class ExtensionsMigrateManifestTest extends TestCase
             installed: ['packages' => [
                 ['name' => 'fleetbase/core-api', 'version' => '1.6.73', 'version_normalized' => '1.6.73.0'],
                 ['name' => 'fleetbase/registry-bridge', 'version' => '0.2.0', 'require' => $requiresCore],
-                ['name' => 'fleetbase/fleetops-api', 'version' => '0.6.74', 'require' => $requiresCore],
+                ['name' => 'fleetbase/fleetops-api', 'version' => '0.7.1', 'require' => $requiresCore],
+                ['name' => 'fleetbase/loconav-integration', 'version' => '0.6.74', 'require' => $requiresCore],
                 ['name' => 'fleetbase/pallet-api', 'version' => 'v0.1.3', 'require' => $requiresCore],
                 ['name' => 'acme/left-behind-api', 'version' => '2.0.0', 'require' => $requiresCore],
                 ['name' => 'laravel/framework', 'version' => '10.x-dev'],
                 ['name' => 'acme/helper', 'version' => '1.0.0'],
             ]],
-            lock: ['packages' => [['name' => 'fleetbase/core-api'], ['name' => 'fleetbase/registry-bridge'], ['name' => 'fleetbase/fleetops-api'], ['name' => 'fleetbase/pallet-api'], ['name' => 'laravel/framework']]],
+            lock: ['packages' => [['name' => 'fleetbase/core-api'], ['name' => 'fleetbase/registry-bridge'], ['name' => 'fleetbase/fleetops-api'], ['name' => 'fleetbase/loconav-integration'], ['name' => 'fleetbase/pallet-api'], ['name' => 'laravel/framework']]],
             require: [
                 'php'                       => '>=8.0 <8.3',
                 'ext-json'                  => '*',
                 'fleetbase/core-api'        => '^1.6.73',
                 'fleetbase/registry-bridge' => '^0.2.0',
-                'fleetbase/fleetops-api'    => '^0.6.74',
+                'fleetbase/fleetops-api'    => '^0.7.1',
+                'fleetbase/loconav-integration'    => '^0.6.74',
                 'fleetbase/pallet-api'      => '^0.1',
                 'laravel/framework'         => '^10.0',
             ],
@@ -67,9 +70,9 @@ class ExtensionsMigrateManifestTest extends TestCase
     private function writeShippedManifest(): void
     {
         $manifest                                       = ExtensionsMigrateManifest::defaultManifest();
-        $manifest['require']['fleetbase/fleetops-api']  = '^0.6.74';
+        $manifest['require']['fleetbase/loconav-integration']  = '^0.6.74';
         $this->writeJson($this->api . '/extensions/composer.json', $manifest);
-        file_put_contents($this->api . '/extensions/composer.lock', '{"packages": [{"name": "fleetbase/core-platform"}, {"name": "fleetbase/fleetops-api"}, {}]}');
+        file_put_contents($this->api . '/extensions/composer.lock', '{"packages": [{"name": "fleetbase/core-platform"}, {"name": "fleetbase/loconav-integration"}, {}]}');
     }
 
     /**
@@ -93,7 +96,7 @@ class ExtensionsMigrateManifestTest extends TestCase
 
         $this->artisan('extensions:migrate-manifest', ['--dry-run' => true])
             ->expectsTable(['Package', 'Required in the manifest as', 'Found in'], [
-                ['fleetbase/fleetops-api', '0.6.74', 'composer.json'],
+                ['fleetbase/loconav-integration', '0.6.74', 'composer.json'],
                 ['fleetbase/pallet-api', 'v0.1.3', 'composer.json'],
                 ['acme/left-behind-api', '2.0.0', 'vendor (not in composer.lock)'],
             ])
@@ -118,7 +121,7 @@ class ExtensionsMigrateManifestTest extends TestCase
             'acme/left-behind-api'    => '2.0.0',
             'fleetbase/core-platform' => '*',
             // Already in the shipped manifest: its constraint stays.
-            'fleetbase/fleetops-api'  => '^0.6.74',
+            'fleetbase/loconav-integration'  => '^0.6.74',
             'fleetbase/pallet-api'    => 'v0.1.3',
         ], $manifest['require']);
         $this->assertSame(['core-platform', 'example', 'git.example.com', 'acme'], array_keys($manifest['repositories']), 'path repositories, the v1 registry and duplicates are not carried over');
@@ -126,7 +129,7 @@ class ExtensionsMigrateManifestTest extends TestCase
         $this->assertStringContainsString('"allow-plugins": {}', (string) file_get_contents($this->api . '/extensions/composer.json'));
 
         $this->assertSame([
-            [['composer', 'remove', 'fleetbase/fleetops-api', 'fleetbase/pallet-api', '--no-interaction', '--no-scripts'], $this->api],
+            [['composer', 'remove', 'fleetbase/loconav-integration', 'fleetbase/pallet-api', '--no-interaction', '--no-scripts'], $this->api],
             // FleetOps is in the manifest's lock already, so it installs at its locked version.
             [['composer', 'update', 'fleetbase/pallet-api', 'acme/left-behind-api', 'fleetbase/core-platform', '--no-interaction'], $this->api . '/extensions'],
         ], $this->composerRuns());
@@ -139,7 +142,7 @@ class ExtensionsMigrateManifestTest extends TestCase
 
     public function test_options_choose_constraints_and_which_packages_move(): void
     {
-        $this->artisan('extensions:migrate-manifest', ['--force' => true, '--keep-constraints' => true, '--keep' => ['fleetbase/fleetops-api', 'acme/left-behind-api'], '--package' => ['acme/helper'], '--composer' => 'composer2'])
+        $this->artisan('extensions:migrate-manifest', ['--force' => true, '--keep-constraints' => true, '--keep' => ['fleetbase/loconav-integration', 'acme/left-behind-api'], '--package' => ['acme/helper'], '--composer' => 'composer2'])
             ->assertSuccessful();
 
         $manifest = $this->readJsonFile($this->api . '/extensions/composer.json');
@@ -153,7 +156,7 @@ class ExtensionsMigrateManifestTest extends TestCase
 
     public function test_only_left_behind_packages_reinstall_core_from_its_lock(): void
     {
-        $this->artisan('extensions:migrate-manifest', ['--force' => true, '--keep' => ['fleetbase/fleetops-api', 'fleetbase/pallet-api'], '--package' => ['acme/not-installed']])->assertSuccessful();
+        $this->artisan('extensions:migrate-manifest', ['--force' => true, '--keep' => ['fleetbase/loconav-integration', 'fleetbase/pallet-api'], '--package' => ['acme/not-installed']])->assertSuccessful();
 
         $this->assertSame(['acme/left-behind-api' => '2.0.0', 'acme/not-installed' => '*', 'fleetbase/core-platform' => '*'], $this->readJsonFile($this->api . '/extensions/composer.json')['require']);
         $this->assertSame([['composer', 'install', '--no-interaction', '--no-scripts'], $this->api], $this->composerRuns()[0]);
@@ -210,9 +213,10 @@ class ExtensionsMigrateManifestTest extends TestCase
         // Without vendor/ or a lock a fleetbase/* package counts as an extension; others do not.
         unlink($this->api . '/vendor/composer/installed.json');
         unlink($this->api . '/composer.lock');
-        $this->writeJson($this->api . '/composer.json', ['require' => ['fleetbase/ledger-api' => '^0.0.13', 'acme/lib' => '^1.0']]);
+        // Core modules (FleetOps, Ledger, …) stay in core either way.
+        $this->writeJson($this->api . '/composer.json', ['require' => ['fleetbase/pallet-api' => '^0.1', 'fleetbase/ledger-api' => '^0.1', 'acme/lib' => '^1.0']]);
         $this->artisan('extensions:migrate-manifest', ['--dry-run' => true])
-            ->expectsTable(['Package', 'Required in the manifest as', 'Found in'], [['fleetbase/ledger-api', '^0.0.13', 'composer.json']])
+            ->expectsTable(['Package', 'Required in the manifest as', 'Found in'], [['fleetbase/pallet-api', '^0.1', 'composer.json']])
             ->assertSuccessful();
 
         unlink($this->api . '/composer.json');

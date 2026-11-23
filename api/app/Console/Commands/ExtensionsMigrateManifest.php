@@ -10,8 +10,9 @@ use Illuminate\Console\Command;
  * One-shot move of extensions from core's api/composer.json into the extensions manifest
  * (api/extensions/composer.json), for instances installed before the manifest existed.
  *
- * An extension here is a package that requires fleetbase/core-api, other than core-api itself and
- * fleetbase/registry-bridge (the installer, which stays in core). Two kinds are moved:
+ * An extension here is a package that requires fleetbase/core-api and is not part of core
+ * (CORE_PACKAGES: core-api, the installer and the first-party modules such as FleetOps, which stay in
+ * core's composer.json). Two kinds are moved:
  *
  *  - extensions core's composer.json still requires (an install made by the old installer, or kept by a merge);
  *  - extensions still in api/vendor that core's composer.lock no longer lists, which is what an upgrade
@@ -25,8 +26,22 @@ class ExtensionsMigrateManifest extends Command
 {
     use RunsComposer;
 
-    /** Packages that require core-api but are part of core. */
-    public const CORE_PACKAGES = ['fleetbase/core-api', 'fleetbase/registry-bridge'];
+    /**
+     * Packages that require core-api but are part of core: core-api, the installer and the first-party
+     * modules Fleetbase ships with. They stay in core's composer.json and are upgraded with core; the
+     * extensions manifest holds only what is installed on top (from the registry or by hand).
+     */
+    public const CORE_PACKAGES = [
+        'fleetbase/core-api',
+        'fleetbase/registry-bridge',
+        'fleetbase/ai',
+        'fleetbase/customer-portal-api',
+        'fleetbase/fleetops-api',
+        'fleetbase/ledger-api',
+        'fleetbase/storefront-api',
+        'fleetbase/valhalla-api',
+        'fleetbase/vroom-api',
+    ];
 
     /** The v1 registry; the Registry Service repository replaces it, so it is not carried over. */
     public const RETIRED_REPOSITORIES = ['https://registry.fleetbase.io', 'https://registry.fleetbase.io/'];

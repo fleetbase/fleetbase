@@ -10,7 +10,7 @@ It is numbered v0.9.0 because v0.8.0 shipped from `main` as the Laravel 12 relea
 ## Highlights (planned)
 - **Extensions install without rebuilding the console.** The console mounts prebuilt engine releases at boot from `~registry/v1/engines/runtime`. (#730, needs @fleetbase/ember-core 0.4.0; not yet targeted at this branch because it imports a module that ember-core 0.3.x does not have)
 - **Registry Service client.** Explore, Installed and Purchased read the central Registry Service; instances register with a code; installs run as queued jobs with rollback. (registry-bridge 0.3.0)
-- **Installed extensions live in their own Composer project.** `api/extensions/composer.json` lists the extensions; core's `api/composer.json` and `composer.lock` list only core, so upgrading core no longer conflicts with installs, and installs never touch core's files. Instances installed before this run `php artisan extensions:migrate-manifest` once after upgrading, before `composer install` (see `api/extensions/README.md`).
+- **Installed extensions live in their own Composer project.** `api/extensions/composer.json` lists the extensions installed on top of core (from the registry or by hand); core's `api/composer.json` and `composer.lock` list core, including the core modules (FleetOps, Storefront, Ledger, Customer Portal, AI, Valhalla, VROOM), so upgrading core no longer conflicts with installs, and installs never touch core's files. Instances installed before this run `php artisan extensions:migrate-manifest` once after upgrading, before `composer install` (see `api/extensions/README.md`).
 
 ---
 ## Component Versions (planned)
