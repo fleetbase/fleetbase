@@ -209,9 +209,9 @@ To publish it without writing code, [Fleetbase AppHelm](https://apphelm.fleetbas
 
 [Passenger](https://github.com/fleetbase/passenger-app) is the rider app for taxi and private-hire operators, for iOS, Android and the web. Riders book a car and see each car class's estimated fare. They follow the driver live, chat with them, and share the trip. Then they pay the final fare, worked out from the actual distance and time, in cash or by card through Ledger, and rate the driver. Requests are offered to nearby drivers on Navigator, one at a time, through Fleet&#8209;Ops adhoc dispatch. The ride itself is the Passenger order config that every organization gets from Fleet&#8209;Ops v0.7.2, so you change dispatch, cancellation, pricing and notifications in the console. Operators rebrand the app and publish it as their own.
 
-Passenger is in early development, so don't use it for real rides yet.
+To publish it without writing code, [Fleetbase AppHelm](https://apphelm.fleetbase.io/passenger?utm_source=github&utm_medium=readme&utm_campaign=launch&utm_content=fleetbase) takes your Fleetbase organization and publishes Passenger as your own branded app in the App Store and Google Play. It gives you a live preview, store screenshots and App Review sign-in, and handles the builds and submission from your own Apple and Google accounts.
 
-[Source code](https://github.com/fleetbase/passenger-app) · [Releases](https://github.com/fleetbase/passenger-app/releases) · [Overview](https://fleetbase.io/platform/passenger)
+[Source code](https://github.com/fleetbase/passenger-app) · [Releases](https://github.com/fleetbase/passenger-app/releases) · [Launch your app](https://apphelm.fleetbase.io/passenger?utm_source=github&utm_medium=readme&utm_campaign=launch&utm_content=fleetbase) · [Overview](https://fleetbase.io/platform/passenger)
 
 </td>
   </tr>
