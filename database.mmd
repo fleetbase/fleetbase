@@ -400,7 +400,7 @@ erDiagram
 
   fleetbase_chat_channels {
     INTUNSIGNED id PK, UK
-    CHAR uuid
+    CHAR uuid UK
     CHAR company_uuid FK
     CHAR created_by_uuid FK
     VARCHAR public_id
@@ -431,7 +431,7 @@ erDiagram
 
   fleetbase_chat_messages {
     INTUNSIGNED id PK, UK
-    CHAR uuid
+    CHAR uuid UK
     VARCHAR public_id
     CHAR company_uuid FK
     CHAR sender_uuid FK
@@ -445,7 +445,7 @@ erDiagram
 
   fleetbase_chat_participants {
     INTUNSIGNED id PK, UK
-    CHAR uuid
+    CHAR uuid UK
     VARCHAR public_id
     CHAR company_uuid FK
     CHAR user_uuid FK
@@ -471,7 +471,7 @@ erDiagram
 
   fleetbase_comments {
     INTUNSIGNED id PK, UK
-    CHAR uuid
+    CHAR uuid UK
     VARCHAR public_id UK
     CHAR company_uuid FK
     CHAR author_uuid FK
@@ -572,7 +572,7 @@ erDiagram
 
   fleetbase_custom_fields {
     INTUNSIGNED id PK, UK
-    CHAR uuid
+    CHAR uuid UK
     VARCHAR public_id
     CHAR company_uuid FK
     CHAR category_uuid
@@ -612,7 +612,7 @@ erDiagram
 
   fleetbase_dashboards {
     BIGINTUNSIGNED id PK, UK
-    CHAR uuid
+    CHAR uuid UK
     CHAR company_uuid
     CHAR user_uuid
     VARCHAR name
@@ -693,7 +693,7 @@ erDiagram
 
   fleetbase_devices {
     INTUNSIGNED id PK, UK
-    CHAR uuid
+    CHAR uuid UK
     VARCHAR public_id
     VARCHAR _key
     CHAR company_uuid FK
@@ -1166,7 +1166,7 @@ erDiagram
 
   fleetbase_inspection_forms {
     INTUNSIGNED id PK, UK
-    CHAR uuid
+    CHAR uuid UK
     VARCHAR _key
     VARCHAR public_id UK
     CHAR company_uuid FK
@@ -1245,7 +1245,7 @@ erDiagram
 
   fleetbase_inspection_submissions {
     INTUNSIGNED id PK, UK
-    CHAR uuid
+    CHAR uuid UK
     VARCHAR _key
     VARCHAR public_id UK
     CHAR company_uuid FK
@@ -1815,7 +1815,7 @@ erDiagram
 
   fleetbase_order_configs {
     INTUNSIGNED id PK, UK
-    CHAR uuid
+    CHAR uuid UK
     VARCHAR public_id
     CHAR company_uuid FK
     CHAR author_uuid FK
@@ -1975,7 +1975,7 @@ erDiagram
   }
 
   fleetbase_permissions {
-    CHAR id
+    CHAR id UK
     VARCHAR name UK
     VARCHAR guard_name UK
     VARCHAR service
@@ -2097,6 +2097,24 @@ erDiagram
     TIMESTAMP updated_at
   }
 
+  fleetbase_push_apps {
+    INTUNSIGNED id PK, UK
+    CHAR uuid UK
+    VARCHAR public_id UK
+    CHAR company_uuid
+    CHAR created_by_uuid
+    VARCHAR name
+    VARCHAR key UK
+    TEXT providers
+    VARCHAR status
+    CHAR owner_uuid
+    VARCHAR owner_type
+    JSON meta
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
   fleetbase_registry_developer_accounts {
     INTUNSIGNED id PK, UK
     CHAR uuid UK
@@ -2118,7 +2136,7 @@ erDiagram
 
   fleetbase_registry_extension_bundles {
     INTUNSIGNED id PK, UK
-    CHAR uuid
+    CHAR uuid UK
     CHAR public_id
     CHAR bundle_id
     CHAR company_uuid FK
@@ -2166,7 +2184,7 @@ erDiagram
 
   fleetbase_registry_extensions {
     INTUNSIGNED id PK, UK
-    CHAR uuid
+    CHAR uuid UK
     CHAR company_uuid FK
     ENUM publisher_type
     CHAR publisher_uuid
@@ -2218,7 +2236,7 @@ erDiagram
 
   fleetbase_registry_users {
     INTUNSIGNED id PK, UK
-    CHAR uuid
+    CHAR uuid UK
     ENUM account_type
     CHAR developer_account_uuid FK
     CHAR company_uuid FK
@@ -2312,7 +2330,7 @@ erDiagram
 
   fleetbase_reports {
     INTUNSIGNED id PK, UK
-    CHAR uuid
+    CHAR uuid UK
     VARCHAR public_id UK
     VARCHAR _key
     CHAR company_uuid FK
@@ -2371,7 +2389,7 @@ erDiagram
   }
 
   fleetbase_roles {
-    CHAR id
+    CHAR id UK
     CHAR company_uuid FK
     VARCHAR name UK
     VARCHAR guard_name UK
@@ -2784,7 +2802,7 @@ erDiagram
 
   fleetbase_telematics {
     INTUNSIGNED id PK, UK
-    CHAR uuid
+    CHAR uuid UK
     VARCHAR public_id
     VARCHAR _key
     CHAR company_uuid FK
@@ -3035,7 +3053,10 @@ erDiagram
     CHAR uuid UK
     VARCHAR public_id
     CHAR user_uuid FK
+    CHAR company_uuid
+    CHAR push_app_uuid
     VARCHAR platform
+    VARCHAR push_provider
     VARCHAR app_identifier
     VARCHAR environment
     MEDIUMTEXT token
@@ -3269,7 +3290,7 @@ erDiagram
 
   fleetbase_warranties {
     INTUNSIGNED id PK, UK
-    CHAR uuid
+    CHAR uuid UK
     VARCHAR _key
     CHAR company_uuid FK
     CHAR vendor_uuid FK
@@ -3365,7 +3386,7 @@ erDiagram
 
   fleetbase_work_orders {
     INTUNSIGNED id PK, UK
-    CHAR uuid
+    CHAR uuid UK
     VARCHAR _key
     VARCHAR public_id UK
     CHAR company_uuid FK

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "73eafff24760ebf9ce65916ad664f24a",
+    "content-hash": "5a6ae7316c38df46abc5ff198e49f471",
     "packages": [
         {
             "name": "aaronfrancis/fast-paginate",
@@ -2123,16 +2123,16 @@
         },
         {
             "name": "fleetbase/core-api",
-            "version": "2.0.4",
+            "version": "2.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/core-api.git",
-                "reference": "970b2f1a64c0bb027f750078d0826260152215cc"
+                "reference": "211454ddb0a863cb97be569d501164824c0d43cf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/970b2f1a64c0bb027f750078d0826260152215cc",
-                "reference": "970b2f1a64c0bb027f750078d0826260152215cc",
+                "url": "https://api.github.com/repos/fleetbase/core-api/zipball/211454ddb0a863cb97be569d501164824c0d43cf",
+                "reference": "211454ddb0a863cb97be569d501164824c0d43cf",
                 "shasum": ""
             },
             "require": {
@@ -2232,9 +2232,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/core-api/issues",
-                "source": "https://github.com/fleetbase/core-api/tree/v2.0.4"
+                "source": "https://github.com/fleetbase/core-api/tree/v2.0.5"
             },
-            "time": "2026-11-19T14:02:04+00:00"
+            "time": "2026-11-24T08:39:08+00:00"
         },
         {
             "name": "fleetbase/countries",
@@ -2373,23 +2373,23 @@
         },
         {
             "name": "fleetbase/fleetops-api",
-            "version": "0.7.1",
+            "version": "0.7.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/fleetops.git",
-                "reference": "c844a12dd207c9e708737046d890ee628741ee03"
+                "reference": "3cd31a21883ea86668ad58c0da9c04cc417a074e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/c844a12dd207c9e708737046d890ee628741ee03",
-                "reference": "c844a12dd207c9e708737046d890ee628741ee03",
+                "url": "https://api.github.com/repos/fleetbase/fleetops/zipball/3cd31a21883ea86668ad58c0da9c04cc417a074e",
+                "reference": "3cd31a21883ea86668ad58c0da9c04cc417a074e",
                 "shasum": ""
             },
             "require": {
                 "barryvdh/laravel-dompdf": "^3.1",
                 "brick/geo": "0.7.2",
                 "cknow/laravel-money": "^8.0",
-                "fleetbase/core-api": "^2.0",
+                "fleetbase/core-api": "^2.0.5 || dev-release/v2.0.5",
                 "geocoder-php/google-maps-places-provider": "^1.4",
                 "giggsey/libphonenumber-for-php": "^8.13",
                 "league/geotools": "^1.1.0",
@@ -2460,9 +2460,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/fleetops/issues",
-                "source": "https://github.com/fleetbase/fleetops/tree/v0.7.1"
+                "source": "https://github.com/fleetbase/fleetops/tree/v0.7.3"
             },
-            "time": "2026-11-18T04:36:11+00:00"
+            "time": "2026-11-24T09:38:33+00:00"
         },
         {
             "name": "fleetbase/laravel-mysql-spatial",
@@ -2609,16 +2609,16 @@
         },
         {
             "name": "fleetbase/registry-bridge",
-            "version": "0.2.0",
+            "version": "0.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fleetbase/registry-bridge.git",
-                "reference": "ee884c17a5c43bb106b42498b102eaecbbad45be"
+                "reference": "0fe2df1c62c2bce7acfc0ffbb1c8c2e094576f32"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fleetbase/registry-bridge/zipball/ee884c17a5c43bb106b42498b102eaecbbad45be",
-                "reference": "ee884c17a5c43bb106b42498b102eaecbbad45be",
+                "url": "https://api.github.com/repos/fleetbase/registry-bridge/zipball/0fe2df1c62c2bce7acfc0ffbb1c8c2e094576f32",
+                "reference": "0fe2df1c62c2bce7acfc0ffbb1c8c2e094576f32",
                 "shasum": ""
             },
             "require": {
@@ -2686,9 +2686,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fleetbase/registry-bridge/issues",
-                "source": "https://github.com/fleetbase/registry-bridge/tree/v0.2.0"
+                "source": "https://github.com/fleetbase/registry-bridge/tree/v0.2.1"
             },
-            "time": "2026-11-17T05:18:54+00:00"
+            "time": "2026-11-19T09:22:12+00:00"
         },
         {
             "name": "fleetbase/storefront-api",
@@ -19707,5 +19707,5 @@
         "php": ">=8.2 <8.5"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.6.0"
 }
