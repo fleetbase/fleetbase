@@ -2234,6 +2234,26 @@ erDiagram
     TIMESTAMP deleted_at
   }
 
+  fleetbase_registry_service_installs {
+    INTUNSIGNED id PK, UK
+    CHAR uuid
+    CHAR company_uuid FK
+    CHAR installed_by_uuid FK
+    VARCHAR extension_id
+    VARCHAR slug
+    VARCHAR name
+    VARCHAR npm_package
+    VARCHAR composer_package
+    VARCHAR version
+    VARCHAR release_id
+    VARCHAR auto_update
+    VARCHAR service_url
+    JSON meta
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+    TIMESTAMP deleted_at
+  }
+
   fleetbase_registry_users {
     INTUNSIGNED id PK, UK
     CHAR uuid UK
@@ -4160,6 +4180,7 @@ erDiagram
   fleetbase_companies ||--o{ fleetbase_registry_extension_installs : "foreign key"
   fleetbase_companies ||--o{ fleetbase_registry_extension_purchases : "foreign key"
   fleetbase_companies ||--o{ fleetbase_registry_extensions : "foreign key"
+  fleetbase_companies ||--o{ fleetbase_registry_service_installs : "foreign key"
   fleetbase_companies ||--o{ fleetbase_registry_users : "foreign key"
   fleetbase_companies ||--o{ fleetbase_report_audit_logs : "foreign key"
   fleetbase_companies ||--o{ fleetbase_report_executions : "foreign key"
@@ -4385,6 +4406,7 @@ erDiagram
   fleetbase_users ||--o{ fleetbase_parts : "foreign key"
   fleetbase_users ||--o{ fleetbase_registry_extension_bundles : "foreign key"
   fleetbase_users ||--o{ fleetbase_registry_extensions : "foreign key"
+  fleetbase_users ||--o{ fleetbase_registry_service_installs : "foreign key"
   fleetbase_users ||--o{ fleetbase_registry_users : "foreign key"
   fleetbase_users ||--o{ fleetbase_report_audit_logs : "foreign key"
   fleetbase_users ||--o{ fleetbase_report_executions : "foreign key"
