@@ -9,7 +9,7 @@
   - an extension page that installs in place;
   - a library for Installed, Purchased and Updates.
 
-  Installs, updates and removals run as queued jobs that the console follows live. Paid extensions check out with Stripe. (registry-bridge 0.3.0)
+  Installs, updates and removals run as queued jobs that the console follows live. Paid extensions check out with Stripe. (registry-bridge 0.3.1)
 - **Extensions install without rebuilding the console.** The console mounts prebuilt engine releases at boot from `~registry/v1/engines/runtime`. The API serves them from `storage/app/registry-runtime-engines`. ([#730](https://github.com/fleetbase/fleetbase/pull/730), ember-core 0.4.0)
 - **Installed extensions live in their own Composer project.**
   - `api/extensions/composer.json` lists the extensions installed on top of core, whether from the registry or by hand.
@@ -27,7 +27,7 @@ Includes everything in v0.8.1–v0.8.3.
 
 ---
 ## Component Versions
-- `registry-bridge`: `0.3.0`
+- `registry-bridge`: `0.3.1`
 - `ember-core`: `0.4.0`
 - `core-api`: `2.0.5`
 - `fleetops`: `0.7.3`
