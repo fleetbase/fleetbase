@@ -203,7 +203,7 @@ To publish it without writing code, [Fleetbase AppHelm](https://apphelm.fleetbas
 <table>
   <tr>
     <td width="34%" valign="top">
-      <img src="https://fleetbase.io/images/screenshots/passenger-app/ios/passenger-app-ride-details-arrived.webp" alt="Passenger: the driver has arrived, with the driver's name, car and number plate and buttons to cancel or message the driver" width="100%" />
+      <img src="https://fleetbase.io/images/screenshots/passenger-app/ios/passenger-app-quotes-list.webp" alt="Passenger's car class choice: Standard and XL on the route map, each with seats, pickup time and an estimated fare, and the payment method" width="100%" />
     </td>
     <td valign="top">
 
