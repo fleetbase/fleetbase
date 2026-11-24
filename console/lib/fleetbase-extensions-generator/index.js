@@ -64,6 +64,8 @@ module.exports = {
 
         let engineCompat;
         try {
+            // ember-core is the console's dependency, resolved from the project root on purpose.
+            // eslint-disable-next-line n/no-extraneous-require
             engineCompat = require(require.resolve('@fleetbase/ember-core/lib/engine-compat', { paths: [this.project.root] }));
         } catch (error) {
             console.log('[Fleetbase] Skipping host-modules.json: this @fleetbase/ember-core has no lib/engine-compat');
