@@ -1,74 +1,63 @@
-> v0.9.0 (in progress) ~ "Fleetbase Extensions Registry v2"
-
----
-## Status
-This release is assembled on `feature/extensions-registry-v2` and ships together with the Fleetbase Extensions Registry v2 (fleetbase/registry `release/v2.0.0`, fleetbase/registry-bridge `feature/extensions-registry-v2`, fleetbase/ember-core `feature/extensions-registry-v2`, fleetbase/fleetbase-cli `release/v2.0.0`, fleetbase/registry-infra `release/v0.1.0`). Nothing in it merges to `main` until the registry project is complete. Patch releases (`v0.8.x`) continue from `main` in the meantime; merge `main` into this branch to keep it current.
-
-It is numbered v0.9.0 because v0.8.0 shipped from `main` as the Laravel 12 release and the v0.8.x patch line continues there. `console/package.json` and `docker/Dockerfile` stay on main's version until the release is cut; then a `release/v0.9.0` branch bumps both to 0.9.0, drops "(in progress)" from the line above, and these notes replace the v0.8.x notes below.
-
----
-## Highlights (planned)
-- **Extensions install without rebuilding the console.** The console mounts prebuilt engine releases at boot from `~registry/v1/engines/runtime`. (#730, needs @fleetbase/ember-core 0.4.0; not yet targeted at this branch because it imports a module that ember-core 0.3.x does not have)
-- **Registry Service client.** Explore, Installed and Purchased read the central Registry Service; instances register with a code; installs run as queued jobs with rollback. (registry-bridge 0.3.0)
-- **Installed extensions live in their own Composer project.** `api/extensions/composer.json` lists the extensions installed on top of core (from the registry or by hand); core's `api/composer.json` and `composer.lock` list core, including the core modules (FleetOps, Storefront, Ledger, Customer Portal, AI, Valhalla, VROOM), so upgrading core no longer conflicts with installs, and installs never touch core's files. Instances installed before this run `php artisan extensions:migrate-manifest` once after upgrading, before `composer install` (see `api/extensions/README.md`).
-- **Docker installs extensions from the registry.** `docker-compose.yml` no longer sets `REGISTRY_PREINSTALLED_EXTENSIONS` (installs were record-only). The installer's worker runs in `application` beside Octane and reloads it after each install, `api/extensions` is a named volume shared with `queue` and `scheduler` and re-synced on start, prebuilt console engines are served by the API, and the console image always writes `host-modules.json` for the compatibility check. See `docker/README.md`.
-
----
-## Component Versions (planned)
-- `registry-bridge`: `0.3.0` (0.2.x is the Laravel 12 line released from `main`)
-- `ember-core`: `0.4.0`
-
----
-
-> v0.8.1 ~ "Migrations run on MySQL 8.4, and extensions can add sortable, grouped columns to any table"
+> v0.9.0 ~ "Fleetbase Extensions Registry v2: install extensions without rebuilding the console"
 
 ---
 ## Highlights
 
-- **Extensions can add fully working columns to another engine's table.** A column an extension registers on a table can now be sorted by data that lives outside that table's model, listed under its own heading in Customize Columns, and left hidden until a user turns it on. Together with the column values, filters and search an extension could already add, an extension no longer needs changes in the engine that owns the table.
-- **Installs and upgrades run on MySQL 8.4 and later.** MySQL 8.4 refuses to create or alter tables whose foreign keys point at a non-unique key, and many Fleetbase foreign keys point at `uuid` columns with an ordinary index. So on 8.4 a fresh install failed at its first such key (`6125 Missing unique key`), and the upgrade to v0.8.0 failed in Fleet-Ops' adhoc dispatch migration (`1553 Cannot drop index '<unknown key name>'`). Migrations now run with that check off for their own database sessions. MySQL 8.0, which the bundled Docker setup uses, was never affected.
-- **An upgrade that stopped in that migration now finishes.** MySQL doesn't roll back schema changes, so a failed v0.8.0 upgrade left part of the migration applied. Running `php artisan migrate` again on v0.8.1 picks up from where it stopped.
-- This is a dependency release: core-api 2.0.2, Fleet-Ops 0.7.1, ember-core 0.3.27 and ember-ui 0.4.7. Nothing changes for an instance that has no extension using the new column hooks.
+- **A new Extensions experience.** Extensions now come from the Fleetbase Registry Service (registry v2):
+  - Discover with featured listings and a category rail;
+  - category pages with a card or list view;
+  - an extension page that installs in place;
+  - a library for Installed, Purchased and Updates.
+
+  Installs, updates and removals run as queued jobs that the console follows live. Paid extensions check out with Stripe. (registry-bridge 0.3.0)
+- **Extensions install without rebuilding the console.** The console mounts prebuilt engine releases at boot from `~registry/v1/engines/runtime`. The API serves them from `storage/app/registry-runtime-engines`. ([#730](https://github.com/fleetbase/fleetbase/pull/730), ember-core 0.4.0)
+- **Installed extensions live in their own Composer project.**
+  - `api/extensions/composer.json` lists the extensions installed on top of core, whether from the registry or by hand.
+  - Core's `api/composer.json` and `composer.lock` list core and the core modules (FleetOps, Storefront, Ledger, Customer Portal, AI, Valhalla, VROOM).
+  - So upgrading core no longer conflicts with installs, and installs never touch core's files. ([#754](https://github.com/fleetbase/fleetbase/pull/754))
+- **Docker installs extensions from the registry.**
+  - The installer's worker runs in `application` next to Octane and reloads it after each install.
+  - `api/extensions` is a named volume shared with `queue` and `scheduler`, and it's re-synced on start.
+  - The console image writes `host-modules.json` for the compatibility check.
+
+  See `docker/README.md`.
+- **Instances register with the registry.** A self-hosted instance uses a one-time code from the registry website, in the admin settings under Registry Service. The Fleetbase Cloud registers itself on boot.
+
+Includes everything in v0.8.1–v0.8.3.
 
 ---
 ## Component Versions
-- `console`: `0.8.1`
-- `core-api`: `2.0.2`
-- `fleetops`: `0.7.1`
-- `storefront`: `0.5.0`
-- `ledger`: `0.1.0`
-- `customer-portal`: `0.1.0`
-- `registry-bridge`: `0.2.0`
-- `ai`: `0.1.0`
-- `valhalla`: `0.1.0`
-- `vroom`: `0.1.0`
-- `dev-engine`: `0.2.18`
-- `ember-ui`: `0.4.7`
-- `ember-core`: `0.3.27`
-- `fleetops-data`: `0.2.4`
-- `iam-engine`: `0.1.13`
+- `registry-bridge`: `0.3.0`
+- `ember-core`: `0.4.0`
+- `core-api`: `2.0.5`
+- `fleetops`: `0.7.3`
+- Works with the Registry Service `v2.0.0` and `@fleetbase/cli` `2.0.0`
 
 ---
-## Core API `2.0.2`
-- **Migrations run on MySQL 8.4.** While `migrate` or `sandbox:migrate` runs, each MySQL connection it uses, including storefront's, has `restrict_fk_on_non_standard_key` off for its session and back on when the run ends. Nothing changes outside migrations, or on MySQL 8.0 and MariaDB.
+## Upgrading
 
-## Core API `2.0.1`
-- **Sort keys registered at runtime.** `Model::addSortHandler('key', fn ($builder, $direction, $request) => …)` lets an extension order a model's list endpoint by a key that is not one of its columns (`?sort=key`, `?sort=-key`), for example by a column of a companion table.
+1. **Instances installed before v0.9.0** keep their extensions in core's `composer.json`. After pulling or unpacking the release, and **before** `composer install` in `api/`, run this in a maintenance window:
+   ```bash
+   php artisan extensions:migrate-manifest --dry-run   # shows what moves
+   php artisan extensions:migrate-manifest
+   ```
+   See `api/extensions/README.md`. Fresh installs start with an empty manifest.
+2. Run `php artisan migrate` (the registry-bridge tables for Registry Service installs and auto-update).
+3. Run a worker on the `installer` queue, and keep the scheduler running (auto-update and re-registration). The Docker setup does both: `REGISTRY_INSTALLER_WORKER=true` and `REGISTRY_INSTALLER_RELOAD_OCTANE=true` on `application`.
+4. Keep `api/extensions` and `api/storage/app/registry-runtime-engines` on persistent storage, so installs survive image upgrades. After an image upgrade, run `php artisan extensions:sync`.
+5. If `console/.npmrc` or your build points the `@fleetbase` npm scope at `https://registry.fleetbase.io`, remove that line. The Registry Service serves only extension packages; the core `@fleetbase/*` packages come from npmjs.
+6. **Self-hosted:** open the admin settings → Registry Service and register the instance with a code from your registry organization.
 
-## Fleet-Ops `0.7.1`
-- **The adhoc dispatch migration finishes on MySQL 8.4 and after a failed run.** Each table and column it adds is created only if it's missing, and its column changes run with MySQL 8.4's foreign key check off for the session.
+   **Fleetbase Cloud:** set
+   - `REGISTRY_SERVICE_URL`;
+   - `REGISTRY_CLOUD_AUTO_REGISTER=true`;
+   - `REGISTRY_CLOUD_PLATFORM_SECRET` (the same value as the Registry Service);
+   - `REGISTRY_PREINSTALLED_EXTENSIONS=true` where every extension is built into the images.
 
-## Ember Core `0.3.27`
-- **`TableColumn.withSort(sortParam)`, `inGroup(group)` and `hiddenByDefault()`** for columns registered into `<extension>:<resource>:table:columns`.
-
-## Ember UI `0.4.7`
-- **Column picker groups.** Customize Columns lists columns that carry a `group` under a heading of that name, after the table's own columns.
-
----
-## Upgrade Steps
-- Pull the new images and restart the API, queue, scheduler and events containers. There are no configuration changes.
-- Run `php artisan migrate` and `php artisan sandbox:migrate`. On an install whose v0.8.0 upgrade stopped in the adhoc dispatch migration, this finishes it. Elsewhere there is nothing new to run.
+   See the registry's `docs/cutover.md`.
 
 ---
 ## Need help?
-Join the discussion on [GitHub Discussions](https://github.com/fleetbase/fleetbase/discussions) or drop by [#fleetbase on Discord](https://discord.com/invite/HnTqQ6zAVn)
+- [GitHub Discussions](https://github.com/fleetbase/fleetbase/discussions)
+- [Discord](https://discord.gg/HnTqQ6zAVn)
+---
