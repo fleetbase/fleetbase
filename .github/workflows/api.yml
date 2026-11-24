@@ -144,13 +144,21 @@ jobs:
   # on SQLite stand-in schemas that never load the spatial connection, so they stay
   # green while a migration or the connection class itself is fatal on MySQL.
   migrate:
-    name: Fresh MySQL Migrate
+    name: Fresh MySQL Migrate (${{ matrix.mysql }})
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
+    # 8.4 turns on restrict_fk_on_non_standard_key by default, as production's RDS 8.4.8 does.
+    # A fresh install still needs core-api's migration hook for the older create migrations; the
+    # last step then proves that, once migrated, no table needs it.
+    strategy:
+      fail-fast: false
+      matrix:
+        mysql: ['8.0-oracle', '8.4.8']
+
     services:
       mysql:
-        image: mysql:8.0-oracle
+        image: mysql:${{ matrix.mysql }}
         env:
           MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
         ports:
@@ -233,3 +241,6 @@ jobs:
 
       - name: Assert both connections migrated
         run: bash ../scripts/ci/assert-migrated.sh
+
+      - name: Assert foreign keys point at unique keys
+        run: bash ../scripts/ci/assert-fk-targets-unique.sh
