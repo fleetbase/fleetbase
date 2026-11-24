@@ -88,6 +88,7 @@ Fleetbase is made up of modules that install into the console as extensions. Eac
 | [Developers](https://www.fleetbase.io/docs/platform/developer-console) | The developer console: API keys, webhooks, socket and system events, and request logs, with separate test and live environments. |
 | [Navigator&nbsp;App](https://github.com/fleetbase/navigator-app) | Open-source driver app for iOS and Android with real-time dispatch, navigation, and proof of delivery. |
 | [Storefront&nbsp;App](https://github.com/fleetbase/storefront-app) | Open-source iOS and Android app for launching your own shop or marketplace. |
+| [Passenger&nbsp;App](https://github.com/fleetbase/passenger-app) | Open-source rider app for iOS, Android and the web, for running your own ride-hailing service on Fleet&#8209;Ops. |
 
 ## Features
 
@@ -151,7 +152,7 @@ Fleetbase is made up of modules that install into the console as extensions. Eac
 
 ## Apps
 
-Fleetbase has two open-source mobile apps, both built with React Native. They connect to Fleetbase Cloud or to your own self-hosted instance, and you can rebrand them and publish them to the App Store and Google Play under your own name.
+Fleetbase has three open-source mobile apps, all built with React Native. They connect to Fleetbase Cloud or to your own self-hosted instance, and you can rebrand them and publish them to the App Store and Google Play under your own name.
 
 ### Navigator App
 
@@ -192,6 +193,25 @@ Fleetbase has two open-source mobile apps, both built with React Native. They co
 To publish it without writing code, [Fleetbase AppHelm](https://apphelm.fleetbase.io/storefront?utm_source=github&utm_medium=readme&utm_campaign=launch&utm_content=fleetbase) takes your Fleetbase store and publishes it as your own branded app: free on the web at your own `yourstore.apphelm.io` address, then in the App Store and Google Play, with the builds and submission handled for you.
 
 [Source code](https://github.com/fleetbase/storefront-app) · [Releases](https://github.com/fleetbase/storefront-app/releases) · [Launch your app](https://apphelm.fleetbase.io/storefront?utm_source=github&utm_medium=readme&utm_campaign=launch&utm_content=fleetbase) · [See it in action](https://bayfront-pharmacy.apphelm.io)
+
+</td>
+  </tr>
+</table>
+
+### Passenger App
+
+<table>
+  <tr>
+    <td width="34%" valign="top">
+      <img src="https://fleetbase.io/images/screenshots/passenger-app/ios/passenger-app-ride-details-arrived.webp" alt="Passenger: the driver has arrived, with the driver's name, car and number plate and buttons to cancel or message the driver" width="100%" />
+    </td>
+    <td valign="top">
+
+[Passenger](https://github.com/fleetbase/passenger-app) is the rider app for taxi and private-hire operators, for iOS, Android and the web. Riders book a car and see each car class's estimated fare. They follow the driver live, chat with them, and share the trip. Then they pay the final fare, worked out from the actual distance and time, in cash or by card through Ledger, and rate the driver. Requests are offered to nearby drivers on Navigator, one at a time, through Fleet&#8209;Ops adhoc dispatch. The ride itself is the Passenger order config that every organization gets from Fleet&#8209;Ops v0.7.2, so you change dispatch, cancellation, pricing and notifications in the console. Operators rebrand the app and publish it as their own.
+
+Passenger is in early development, so don't use it for real rides yet.
+
+[Source code](https://github.com/fleetbase/passenger-app) · [Releases](https://github.com/fleetbase/passenger-app/releases) · [Overview](https://fleetbase.io/platform/passenger)
 
 </td>
   </tr>
