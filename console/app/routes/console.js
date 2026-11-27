@@ -25,6 +25,7 @@ export default class ConsoleRoute extends Route {
     async beforeModel(transition) {
         // `?layout=canvas|classic` picks the shell for the rest of this browser session.
         this.consoleLayout.applyOverride(layoutFromTransition(transition));
+        this.consoleLayout.syncShell();
 
         await this.session.requireAuthentication(transition, 'auth.login');
 

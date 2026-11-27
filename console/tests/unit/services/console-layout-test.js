@@ -110,6 +110,31 @@ module('Unit | Service | console-layout', function (hooks) {
         assert.strictEqual(service.current, 'canvas');
     });
 
+    test('changes are pushed to ember-ui’s shell service when it exists', function (assert) {
+        const service = this.owner.lookup('service:console-layout');
+        assert.false(service.syncShell(), 'no shell service: nothing to tell');
+
+        const layouts = [];
+        this.owner.register(
+            'service:shell',
+            class extends Service {
+                setLayout(layout) {
+                    layouts.push(layout);
+                }
+            }
+        );
+
+        assert.true(service.syncShell());
+        service.applyOverride('classic');
+        service.switchTo('canvas');
+        assert.deepEqual(layouts, ['canvas', 'classic', 'canvas']);
+    });
+
+    test('a shell service without setLayout is left alone', function (assert) {
+        this.owner.register('service:shell', class extends Service {});
+        assert.false(this.owner.lookup('service:console-layout').syncShell());
+    });
+
     test('isLayout and layoutFromTransition', function (assert) {
         assert.true(isLayout('canvas'));
         assert.false(isLayout('Canvas'));

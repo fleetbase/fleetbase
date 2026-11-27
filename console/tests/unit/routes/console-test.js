@@ -60,11 +60,12 @@ module('Unit | Route | console', function (hooks) {
         const route = this.owner.lookup('route:console');
         route.hookService.execute = () => {};
         route.consoleLayout.applyOverride = (value) => order.push(['applyOverride', value]);
+        route.consoleLayout.syncShell = () => order.push('syncShell');
 
         await route.beforeModel({ to: { queryParams: { layout: 'classic' } } });
         await route.beforeModel({});
 
-        assert.deepEqual(order, [['applyOverride', 'classic'], 'requireAuthentication', ['applyOverride', null], 'requireAuthentication']);
+        assert.deepEqual(order, [['applyOverride', 'classic'], 'syncShell', 'requireAuthentication', ['applyOverride', null], 'syncShell', 'requireAuthentication']);
     });
 
     test('afterModel and didTransition fire their universe hooks', async function (assert) {

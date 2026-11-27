@@ -1,4 +1,5 @@
 import Service, { inject as service } from '@ember/service';
+import { getOwner } from '@ember/application';
 import { tracked } from '@glimmer/tracking';
 import window from 'ember-window-mock';
 
@@ -62,6 +63,10 @@ function writeOverride(value) {
  * overrides it for the rest of the browser session, for support and testing;
  * choosing a layout from the account menu saves the option and drops the
  * override.
+ *
+ * Every change (and the console route, at boot) is pushed to ember-ui's
+ * `service:shell` through `setLayout(current)` when that service exists, so
+ * engines and ember-ui components read the layout from one place.
  */
 export default class ConsoleLayoutService extends Service {
     @service currentUser;
@@ -99,6 +104,7 @@ export default class ConsoleLayoutService extends Service {
 
         this.override = value;
         writeOverride(value);
+        this.syncShell();
         return true;
     }
 
@@ -112,6 +118,18 @@ export default class ConsoleLayoutService extends Service {
         this.chosen = layout;
         this.override = null;
         writeOverride(null);
+        this.syncShell();
         return true;
+    }
+
+    /** Tells ember-ui's `shell` service the current layout; a no-op until that service ships. */
+    syncShell() {
+        const shell = getOwner(this).lookup('service:shell');
+        if (shell && typeof shell.setLayout === 'function') {
+            shell.setLayout(this.current);
+            return true;
+        }
+
+        return false;
     }
 }
