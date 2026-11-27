@@ -47,6 +47,26 @@ module('Unit | Route | console', function (hooks) {
         assert.strictEqual(await route.beforeModel({}), undefined);
     });
 
+    test('beforeModel applies a ?layout= override before authenticating', async function (assert) {
+        const order = [];
+        class SessionStub extends Service {
+            isAuthenticated = false;
+            requireAuthentication() {
+                order.push('requireAuthentication');
+            }
+        }
+        this.owner.register('service:session', SessionStub);
+
+        const route = this.owner.lookup('route:console');
+        route.hookService.execute = () => {};
+        route.consoleLayout.applyOverride = (value) => order.push(['applyOverride', value]);
+
+        await route.beforeModel({ to: { queryParams: { layout: 'classic' } } });
+        await route.beforeModel({});
+
+        assert.deepEqual(order, [['applyOverride', 'classic'], 'requireAuthentication', ['applyOverride', null], 'requireAuthentication']);
+    });
+
     test('afterModel and didTransition fire their universe hooks', async function (assert) {
         const route = this.owner.lookup('route:console');
         const executed = [];

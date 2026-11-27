@@ -1,6 +1,18 @@
 /* eslint-env node */
-/** @type {import('tailwindcss').Config} */
+/**
+ * ember-ui's config is the preset: it carries the Map-Canvas+ design-token mapping
+ * (bg-surface, text-muted, bg-chrome, text-info / bg-info-subtle, bg-canvas, rounded-chrome,
+ * shadow-chrome, spacing canvas-left/top/…), each a `var(--fb-*)` from ember-ui's
+ * addon/styles/tokens.css, plus its forms plugin. This file adds the console's own content
+ * paths and extensions on top.
+ *
+ * Note: the console's CSS build runs ember-ui's PostCSS options (see ember-ui's
+ * lib/postcss-options.js), so this file is for tooling that reads the console's own config.
+ *
+ * @type {import('tailwindcss').Config}
+ */
 module.exports = {
+    presets: [require('@fleetbase/ember-ui/tailwind.config.js')],
     darkMode: ['class', '[data-theme="dark"]'],
     content: {
         relative: true,
@@ -121,5 +133,6 @@ module.exports = {
         textColor: ['responsive', 'hover', 'focus', 'dark', 'dark-hover', 'dark-active', 'dark-placeholder'],
         maxWidth: ['responsive', 'hover', 'focus'],
     },
-    plugins: [require('@tailwindcss/forms')],
+    // @tailwindcss/forms comes from the ember-ui preset.
+    plugins: [],
 };
