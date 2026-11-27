@@ -2,7 +2,7 @@ import { module, test } from 'qunit';
 import { visit, click, currentRouteName, find, findAll, settled, triggerKeyEvent, waitUntil } from '@ember/test-helpers';
 import window from 'ember-window-mock';
 import { setupApplicationTest } from '@fleetbase/console/tests/helpers';
-import { setupConsoleBackend, signIn, TEST_USER } from '@fleetbase/console/tests/helpers/console-backend';
+import { setupConsoleBackend, signIn, visitConsole, TEST_USER } from '@fleetbase/console/tests/helpers/console-backend';
 
 /**
  * Both console shells, booted for real: the app, its extensions and the IAM
@@ -29,8 +29,8 @@ function setLayoutOption(owner, layout) {
     owner.lookup('service:current-user').setOption('layout', layout);
 }
 
-async function openIam(owner) {
-    await visit('/');
+async function openIam(context, owner) {
+    await visitConsole(context, '/');
     owner.lookup('service:router').transitionTo('console.iam');
     await settled();
 }
@@ -53,12 +53,12 @@ module('Acceptance | console layouts', function (hooks) {
 
     module('signed in', function (hooks) {
         hooks.beforeEach(async function () {
-            await signIn(this.owner);
+            await signIn(this.owner, this);
         });
 
         module('canvas (the default)', function () {
             test('signing in lands on the console home inside the canvas shell', async function (assert) {
-                await visit('/');
+                await visitConsole(this, '/');
 
                 assert.strictEqual(currentRouteName(), 'console.home', requestLog(this));
                 assert.dom('.fb-canvas[data-console-layout="canvas"]').exists();
@@ -73,7 +73,7 @@ module('Acceptance | console layouts', function (hooks) {
             });
 
             test('the dock navigates into an engine and its sidebar shows inside the flyout', async function (assert) {
-                await visit('/');
+                await visitConsole(this, '/');
                 const iam = dockItem('IAM');
                 assert.ok(iam, `the IAM engine registered a dock module (${findAll('.fb-dock-item').map((el) => el.getAttribute('aria-label'))})`);
 
@@ -91,7 +91,7 @@ module('Acceptance | console layouts', function (hooks) {
             });
 
             test('⌘K opens and closes the command palette', async function (assert) {
-                await visit('/');
+                await visitConsole(this, '/');
                 assert.dom('.fb-command-palette').doesNotExist();
 
                 await triggerKeyEvent(document, 'keydown', 'K', { metaKey: true, ctrlKey: true });
@@ -107,7 +107,7 @@ module('Acceptance | console layouts', function (hooks) {
             });
 
             test('the account menu toggles the theme', async function (assert) {
-                await visit('/');
+                await visitConsole(this, '/');
 
                 await click('.fb-top-bar-account-trigger');
                 await click('[data-theme-choice="dark"]');
@@ -119,7 +119,7 @@ module('Acceptance | console layouts', function (hooks) {
             });
 
             test('the account menu switches to the classic layout and saves the choice', async function (assert) {
-                await visit('/');
+                await visitConsole(this, '/');
                 await click('.fb-top-bar-account-trigger');
                 assert.dom('[data-account-link="switch-layout"]').hasText('Switch to classic layout');
 
@@ -138,7 +138,7 @@ module('Acceptance | console layouts', function (hooks) {
             });
 
             test('signing in lands on the console home in the classic shell', async function (assert) {
-                await visit('/');
+                await visitConsole(this, '/');
 
                 assert.strictEqual(currentRouteName(), 'console.home', requestLog(this));
                 assert.dom('.fb-canvas').doesNotExist();
@@ -148,7 +148,7 @@ module('Acceptance | console layouts', function (hooks) {
             });
 
             test('an engine’s sidebar renders in the classic sidebar', async function (assert) {
-                await openIam(this.owner);
+                await openIam(this, this.owner);
                 await waitUntil(() => find('#sidebar-menu-items')?.childElementCount > 0, { timeout: 10000 });
 
                 assert.true(currentRouteName().startsWith('console.iam'), `${currentRouteName()} — ${requestLog(this)}`);
@@ -157,7 +157,7 @@ module('Acceptance | console layouts', function (hooks) {
             });
 
             test('the user menu toggles dark mode', async function (assert) {
-                await visit('/');
+                await visitConsole(this, '/');
                 const theme = this.owner.lookup('service:theme');
                 theme.setTheme('light');
 
@@ -167,7 +167,7 @@ module('Acceptance | console layouts', function (hooks) {
             });
 
             test('the user menu switches to the new layout', async function (assert) {
-                await visit('/');
+                await visitConsole(this, '/');
                 await click('.next-user-button-trigger');
                 const item = dropdownItem('Switch to the new layout');
                 assert.ok(item, 'the switch is in the user menu');
@@ -179,7 +179,7 @@ module('Acceptance | console layouts', function (hooks) {
             });
 
             test('?layout=canvas overrides the saved choice for the session', async function (assert) {
-                await visit('/?layout=canvas');
+                await visitConsole(this, '/?layout=canvas');
 
                 assert.dom('.fb-canvas').exists();
                 assert.strictEqual(window.sessionStorage.getItem('fleetbase:console-layout'), 'canvas');
@@ -188,7 +188,7 @@ module('Acceptance | console layouts', function (hooks) {
         });
 
         test('?layout=classic overrides the canvas default for the session', async function (assert) {
-            await visit('/?layout=classic');
+            await visitConsole(this, '/?layout=classic');
 
             assert.dom('.fb-canvas').doesNotExist();
             assert.dom('.fleetbase-next-container').exists();

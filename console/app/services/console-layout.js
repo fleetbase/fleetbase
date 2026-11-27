@@ -34,21 +34,21 @@ export function layoutFromTransition(transition) {
     return null;
 }
 
-function readOverride() {
+function readOverride(storage) {
     try {
-        const value = window.sessionStorage.getItem(OVERRIDE_KEY);
+        const value = storage.getItem(OVERRIDE_KEY);
         return isLayout(value) ? value : null;
     } catch {
         return null;
     }
 }
 
-function writeOverride(value) {
+function writeOverride(storage, value) {
     try {
         if (value) {
-            window.sessionStorage.setItem(OVERRIDE_KEY, value);
+            storage.setItem(OVERRIDE_KEY, value);
         } else {
-            window.sessionStorage.removeItem(OVERRIDE_KEY);
+            storage.removeItem(OVERRIDE_KEY);
         }
     } catch {
         // Storage can be unavailable (private mode, blocked site data); the override then lasts until reload.
@@ -71,8 +71,13 @@ function writeOverride(value) {
 export default class ConsoleLayoutService extends Service {
     @service currentUser;
 
-    @tracked override = readOverride();
+    @tracked override = readOverride(this.sessionStore);
     @tracked chosen = null;
+
+    /** Where the session override lives. A getter so tests can stand in a failing storage. */
+    get sessionStore() {
+        return window.sessionStorage;
+    }
 
     get saved() {
         const value = this.currentUser.getOption('layout');
@@ -103,7 +108,7 @@ export default class ConsoleLayoutService extends Service {
         }
 
         this.override = value;
-        writeOverride(value);
+        writeOverride(this.sessionStore, value);
         this.syncShell();
         return true;
     }
@@ -117,7 +122,7 @@ export default class ConsoleLayoutService extends Service {
         this.currentUser.setOption('layout', layout);
         this.chosen = layout;
         this.override = null;
-        writeOverride(null);
+        writeOverride(this.sessionStore, null);
         this.syncShell();
         return true;
     }

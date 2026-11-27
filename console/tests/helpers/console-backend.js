@@ -1,4 +1,5 @@
 import Pretender from 'pretender';
+import { visit, currentRouteName } from '@ember/test-helpers';
 
 /**
  * A stand-in Fleetbase API for acceptance tests, so the real console can boot,
@@ -163,11 +164,70 @@ export function setupConsoleBackend(hooks, { routes = {} } = {}) {
     });
 }
 
+function describe(error) {
+    if (!error) {
+        return String(error);
+    }
+    const stack = (error.stack || '').split('\n').slice(0, 4).join(' | ');
+    return `${error.name || 'Error'}: ${error.message || JSON.stringify(error)}${stack ? ` [${stack}]` : ''}`;
+}
+
+/**
+ * Records why a signed-in boot gave up: the console route aborts the transition
+ * when loading the current user fails, which surfaces in `visit()` as a bare
+ * `TransitionAborted`.
+ */
+function captureBootErrors(owner, log) {
+    const currentUser = owner.lookup('service:current-user');
+    const promiseUser = currentUser.promiseUser.bind(currentUser);
+    currentUser.promiseUser = async (...args) => {
+        try {
+            return await promiseUser(...args);
+        } catch (error) {
+            log.push(`promiseUser failed: ${describe(error)}`);
+            throw error;
+        }
+    };
+
+    const session = owner.lookup('service:session');
+    const invalidateWithLoader = session.invalidateWithLoader.bind(session);
+    session.invalidateWithLoader = (...args) => {
+        log.push(`session invalidated: ${args[0]}`);
+        return invalidateWithLoader(...args);
+    };
+
+    const router = owner.lookup('service:router');
+    router.on('routeWillChange', (transition) => log.push(`→ ${transition.to?.name}`));
+}
+
 /**
  * Signs the test admin in. The session restores through `auth/session` when the
  * application route calls `session.setup()`, exactly as a reload would.
  */
-export async function signIn(owner) {
+export async function signIn(owner, context) {
+    if (context?.backend) {
+        context.backend.boot = [];
+        captureBootErrors(owner, context.backend.boot);
+    }
+
     const session = owner.lookup('service:session');
     await session.session._setup('authenticator:fleetbase', { token: TEST_TOKEN, user: TEST_USER.id }, false);
+}
+
+/** `visit()`, but a failed boot says why: the route reached, the boot log and every request. */
+export async function visitConsole(context, url) {
+    try {
+        await visit(url);
+    } catch (error) {
+        const route = (() => {
+            try {
+                return currentRouteName();
+            } catch {
+                return '(none)';
+            }
+        })();
+        throw new Error(
+            `visit(${url}) failed: ${describe(error)} — route: ${route} — boot: ${(context.backend?.boot || []).join(' ; ')} — requests: ${(context.backend?.requests || []).join(', ')}`
+        );
+    }
 }

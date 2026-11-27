@@ -2,7 +2,7 @@ import { module, test } from 'qunit';
 import { setupTest } from '@fleetbase/console/tests/helpers';
 import Service from '@ember/service';
 import window from 'ember-window-mock';
-import { DEFAULT_LAYOUT, LAYOUTS, OVERRIDE_KEY, isLayout, layoutFromTransition } from '@fleetbase/console/services/console-layout';
+import ConsoleLayoutService, { DEFAULT_LAYOUT, LAYOUTS, OVERRIDE_KEY, isLayout, layoutFromTransition } from '@fleetbase/console/services/console-layout';
 
 class CurrentUserStub extends Service {
     options = {};
@@ -100,7 +100,15 @@ module('Unit | Service | console-layout', function (hooks) {
     });
 
     test('unavailable storage leaves the override in memory only', function (assert) {
-        window.sessionStorage = throwingStorage();
+        this.owner.unregister('service:console-layout');
+        this.owner.register(
+            'service:console-layout',
+            class extends ConsoleLayoutService {
+                get sessionStore() {
+                    return throwingStorage();
+                }
+            }
+        );
         const service = this.owner.lookup('service:console-layout');
 
         assert.strictEqual(service.override, null, 'reading fails quietly');
