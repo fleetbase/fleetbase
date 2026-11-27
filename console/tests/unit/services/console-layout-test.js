@@ -111,6 +111,8 @@ module('Unit | Service | console-layout', function (hooks) {
     });
 
     test('changes are pushed to ember-ui’s shell service when it exists', function (assert) {
+        // ember-ui ships service:shell from phase 3; take it out to cover the console without it.
+        this.owner.unregister('service:shell');
         const service = this.owner.lookup('service:console-layout');
         assert.false(service.syncShell(), 'no shell service: nothing to tell');
 
@@ -131,6 +133,7 @@ module('Unit | Service | console-layout', function (hooks) {
     });
 
     test('a shell service without setLayout is left alone', function (assert) {
+        this.owner.unregister('service:shell');
         this.owner.register('service:shell', class extends Service {});
         assert.false(this.owner.lookup('service:console-layout').syncShell());
     });
