@@ -35,6 +35,8 @@ export const TEST_USER = Object.freeze({
     email_verified_at: '2026-01-01T00:00:00.000Z',
     permissions: [],
     policies: [],
+    // Required: currentUser.getUserSnapshot() serializes the role, and real users always carry one embedded.
+    role: Object.freeze({ id: 'role-1', uuid: 'role-1', name: 'Administrator', guard_name: 'sanctum', company_uuid: 'company-1', permissions: [], policies: [] }),
 });
 
 export const TEST_TOKEN = 'test-token';
@@ -85,7 +87,7 @@ export function replyFor(verb, url, request, routes = {}) {
     }
 
     if (key === 'GET users/me') {
-        return json(200, { user: { ...TEST_USER } });
+        return json(200, { user: { ...TEST_USER, role: { ...TEST_USER.role } } });
     }
 
     if (key === 'GET users/locale') {
