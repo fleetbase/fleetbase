@@ -263,3 +263,17 @@ body[data-theme='dark'] .oauth-provider-google .oauth-provider-logo-google svg {
     width: 14px;
     height: 14px;
 }
+
+/*
+ * Map-Canvas+ shell (layout option `canvas`). The canvas fills the viewport; the
+ * chrome floats over it and the route renders in the content layer between the insets.
+ */
+.console-canvas {
+    position: fixed;
+    inset: 0;
+}
+
+.console-canvas .console-canvas-section {
+    height: 100%;
+    min-height: 0;
+}

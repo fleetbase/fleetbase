@@ -1,3 +1,9 @@
+# feature/map-canvas: ember-ui and ember-core come from their submodules (packages/*,
+# checked out on their feature/map-canvas commits) so the unreleased canvas shell
+# loads. Swap back to the published versions when they are released.
+packages:
+  - "../packages/ember-core"
+  - "../packages/ember-ui"
 linkWorkspacePackages: deep
 preferWorkspacePackages: true
 publicHoistPattern:
@@ -6,8 +12,8 @@ publicHoistPattern:
   - "*fleetops-data*"
 overrides:
   "@fleetbase/fleetops-data": "^0.2.4"
-  "@fleetbase/ember-core": "^0.3.27"
-  "@fleetbase/ember-ui": "^0.4.7"
+  "@fleetbase/ember-core": "workspace:*"
+  "@fleetbase/ember-ui": "workspace:*"
 allowBuilds:
   "@fortawesome/fontawesome-common-types": false
   "@fortawesome/fontawesome-svg-core": false
@@ -16,8 +22,6 @@ allowBuilds:
   core-js: false
   fsevents: false
 minimumReleaseAgeExclude:
-  - '@fleetbase/ember-core@0.3.27'
-  - '@fleetbase/ember-ui@0.4.7'
   - '@fleetbase/fleetops-data@0.2.4'
   - '@fleetbase/fleetops-engine@0.7.3'
   - '@fleetbase/storefront-engine@0.5.0'

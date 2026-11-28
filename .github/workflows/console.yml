@@ -31,6 +31,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # feature/map-canvas: console/pnpm-workspace.yaml links @fleetbase/ember-ui and
+      # @fleetbase/ember-core from their submodules so the unreleased canvas shell loads.
+      # Check out just those two (public repos; .gitmodules lists them by SSH URL).
+      - name: Check out the ember-ui and ember-core submodules
+        working-directory: .
+        run: |
+          git config --global url."https://github.com/".insteadOf "git@github.com:"
+          git submodule update --init --depth 1 packages/ember-ui packages/ember-core
+          git -C packages/ember-ui log --oneline -1
+          git -C packages/ember-core log --oneline -1
+
       - name: Setup Node.js ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v4
         with:

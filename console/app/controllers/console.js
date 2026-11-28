@@ -18,10 +18,25 @@ export default class ConsoleController extends Controller {
     @service intl;
     @service universe;
     @service abilities;
+    @service consoleLayout;
     @tracked organizations = [];
     @tracked menuItems = [];
-    @tracked userMenuItems = [];
     @tracked organizationMenuItems = [];
+
+    /** The classic header's user menu: the switch to the canvas layout. */
+    userMenuItems = [
+        {
+            id: 'switch-layout-user-nav-item',
+            wrapperClass: 'switch-layout-user-nav-item',
+            href: 'javascript:;',
+            text: 'Switch to the new layout',
+            action: 'switchLayout',
+            params: 'canvas',
+        },
+    ];
+
+    /** The canvas account menu's extra links: the switch back to the classic layout. */
+    accountLinks = [{ id: 'switch-layout', label: 'Switch to classic layout', action: 'switchLayout', params: ['classic'] }];
 
     get currentRouteClass() {
         return dasherize(this.router.currentRouteName.replace(/\./g, ' '));
@@ -36,6 +51,16 @@ export default class ConsoleController extends Controller {
         if (typeof this[action] === 'function') {
             this[action](...params);
         }
+    }
+
+    /**
+     * Switches between the canvas and classic shells and saves the choice.
+     *
+     * @param {String} layout `canvas` or `classic`
+     * @void
+     */
+    @action switchLayout(layout) {
+        this.consoleLayout.switchTo(layout);
     }
 
     /**

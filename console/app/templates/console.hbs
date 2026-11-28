@@ -1,30 +1,48 @@
 {{page-title (t "app.name")}}
-<Layout::Container>
-    <Layout::Header
-        @brand={{@model}}
-        @menuItems={{this.menuItems}}
-        @organizationMenuItems={{this.organizationMenuItems}}
-        @userMenuItems={{this.userMenuItems}}
-        @onAction={{this.onAction}}
-        @showSidebarToggle={{true}}
-    />
-    <Layout::Main class={{this.currentRouteClass}}>
-        <Layout::Sidebar />
-        <Layout::Section>
-            {{outlet}}
-        </Layout::Section>
-        <ResourceContextPanel />
-        <DocsPanel />
-    </Layout::Main>
-    <Layout::MobileNavbar
-        @brand={{@model}}
-        @user={{this.user}}
-        @organizations={{this.organizations}}
-        @menuItems={{this.menuItems}}
-        @extensions={{this.extensions}}
-        @onAction={{this.onAction}}
-    />
-</Layout::Container>
+{{#if this.consoleLayout.isCanvas}}
+    <Layout::Canvas class="console-canvas {{this.currentRouteClass}}" data-console-layout="canvas">
+        <:default>
+            <Layout::Section class="console-canvas-section">
+                {{outlet}}
+            </Layout::Section>
+            <ResourceContextPanel />
+            <DocsPanel />
+        </:default>
+        <:chrome>
+            <Layout::ContextBar @brand={{@model}} />
+            <Layout::Dock />
+            <Layout::TopBar @onAction={{this.onAction}} @accountLinks={{this.accountLinks}} />
+        </:chrome>
+    </Layout::Canvas>
+    <CommandPalette />
+{{else}}
+    <Layout::Container>
+        <Layout::Header
+            @brand={{@model}}
+            @menuItems={{this.menuItems}}
+            @organizationMenuItems={{this.organizationMenuItems}}
+            @userMenuItems={{this.userMenuItems}}
+            @onAction={{this.onAction}}
+            @showSidebarToggle={{true}}
+        />
+        <Layout::Main class={{this.currentRouteClass}}>
+            <Layout::Sidebar />
+            <Layout::Section>
+                {{outlet}}
+            </Layout::Section>
+            <ResourceContextPanel />
+            <DocsPanel />
+        </Layout::Main>
+        <Layout::MobileNavbar
+            @brand={{@model}}
+            @user={{this.user}}
+            @organizations={{this.organizations}}
+            @menuItems={{this.menuItems}}
+            @extensions={{this.extensions}}
+            @onAction={{this.onAction}}
+        />
+    </Layout::Container>
+{{/if}}
 <ChatContainer />
 <ConsoleWormhole />
 <ImpersonatorTray />

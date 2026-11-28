@@ -2,6 +2,7 @@ import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
 import { action } from '@ember/object';
 import removeBootLoader from '../utils/remove-boot-loader';
+import { layoutFromTransition } from '../services/console-layout';
 import '@fleetbase/leaflet-routing-machine';
 
 export default class ConsoleRoute extends Route {
@@ -12,6 +13,7 @@ export default class ConsoleRoute extends Route {
     @service currentUser;
     @service intl;
     @service oauthAuthorization;
+    @service consoleLayout;
 
     /**
      * Require authentication to access all `console` routes.
@@ -21,6 +23,10 @@ export default class ConsoleRoute extends Route {
      * @memberof ConsoleRoute
      */
     async beforeModel(transition) {
+        // `?layout=canvas|classic` picks the shell for the rest of this browser session.
+        this.consoleLayout.applyOverride(layoutFromTransition(transition));
+        this.consoleLayout.syncShell();
+
         await this.session.requireAuthentication(transition, 'auth.login');
 
         this.hookService.execute('console:before-model', this.session, this.router, transition);

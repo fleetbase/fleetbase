@@ -311,8 +311,33 @@ module('Unit | Controller | console | reload timers and defaults', function (hoo
         // Read before anything writes them: a @tracked initializer only runs on first access.
         assert.deepEqual(controller.organizations, []);
         assert.deepEqual(controller.menuItems, []);
-        assert.deepEqual(controller.userMenuItems, []);
         assert.deepEqual(controller.organizationMenuItems, []);
+    });
+
+    test('both layouts offer the switch to the other one', function (assert) {
+        const controller = this.build();
+
+        assert.deepEqual(
+            controller.userMenuItems.map(({ action, params }) => [action, params]),
+            [['switchLayout', 'canvas']],
+            'the classic user menu switches to canvas'
+        );
+        assert.deepEqual(
+            controller.accountLinks.map(({ action, params }) => [action, params]),
+            [['switchLayout', ['classic']]],
+            'the canvas account menu switches to classic'
+        );
+    });
+
+    test('switchLayout saves the choice through the console-layout service', function (assert) {
+        const controller = this.build();
+        const calls = [];
+        controller.consoleLayout.switchTo = (layout) => calls.push(layout);
+
+        controller.onAction('switchLayout', 'classic');
+        controller.switchLayout('canvas');
+
+        assert.deepEqual(calls, ['classic', 'canvas']);
     });
 
     test('joining an organization reloads the console once the timer fires', async function (assert) {
